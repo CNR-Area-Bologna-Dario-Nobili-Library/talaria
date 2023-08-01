@@ -126,7 +126,7 @@ export function requestDeleteUser(id,library_id,message) {
   };
 } */
 
-export function requestGetLibrariesList(page='1',query=null,filterBy=null,filterVal=null,excludeIds=[]) {
+export function requestGetLibrariesList(page='1',query=null,filterBy=null,filterVal=null,excludeIds=[]) {  
   return {
     type: REQUEST_GET_LIBRARIES_LIST,
     page,
@@ -134,6 +134,7 @@ export function requestGetLibrariesList(page='1',query=null,filterBy=null,filter
     filterBy,
     filterVal,
     excludeIds,
+    pageSize:1000,  //fixed pageSize cause we didn't implemented pagination but want to show all libraries
   };
 }
 

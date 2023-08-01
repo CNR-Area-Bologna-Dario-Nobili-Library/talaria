@@ -259,6 +259,7 @@ export function* requestGetLibrariesListSaga(action = {}) {
     query: action.query ? action.query : '',
     filterBy: action.filterBy ? action.filterBy : '',
     filterVal: action.filterBy ? action.filterVal : '',
+    pageSize: action.pageSize ? action.pageSize : '',
     excludeIds: action.excludeIds? action.excludeIds:[]
   };
   try {
