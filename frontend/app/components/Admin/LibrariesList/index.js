@@ -142,7 +142,16 @@ const LibrariesList = (props) => {
                     </Col>
                 </Row>
                 </div>*/}
-            
+            {Object.keys(pagination).length>0 &&
+                <Pagination
+                    total={total}
+                    count={count}
+                    per_page={per_page}
+                    current_page={current_page}
+                    total_pages={total_pages}
+                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize, multiFilter )}
+                />    
+            }
             <div className="librariesList list-wrapper">
                 {<Row className="list-head">
                     <div className="select-checkbox">
@@ -156,9 +165,9 @@ const LibrariesList = (props) => {
                             </Button>}
                         </div>
                     </div>
-                    <div className="select-counter">
+                    <div className="select-counter">                        
                         <FormattedMessage {...messages.LibrarySelected} /> {selectedLibraries.length} di {data.length} 
-                    </div>
+                    </div>                    
                 </Row>}
                 <Loader show={loading}>
                     <div className="list-header">

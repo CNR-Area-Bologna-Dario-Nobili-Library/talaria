@@ -123,7 +123,16 @@ const InstitutionsList = (props) => {
                     </Col>
                 </Row>
                 </div>*/}
-            
+            {Object.keys(pagination).length>0 &&
+                <Pagination
+                    total={total}
+                    count={count}
+                    per_page={per_page}
+                    current_page={current_page}
+                    total_pages={total_pages}
+                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize, multiFilter )}
+                />    
+            }
             <div className="institutionsList list-wrapper">
                 {<Row className="list-head">
                     <div className="select-checkbox">
