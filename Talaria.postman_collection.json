@@ -144,13 +144,80 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/admin/libraries",
+							"raw": "{{url}}/admin/libraries?profile_type=2&status=1&institution_type=1&identifier=1,34343443&subject=2&country=105",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"admin",
 								"libraries"
+							],
+							"query": [
+								{
+									"key": "profile_type",
+									"value": "2"
+								},
+								{
+									"key": "status",
+									"value": "1"
+								},
+								{
+									"key": "institution_type",
+									"value": "1"
+								},
+								{
+									"key": "identifier",
+									"value": "1,34343443"
+								},
+								{
+									"key": "subject",
+									"value": "2"
+								},
+								{
+									"key": "country",
+									"value": "105"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Institutions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{bearer_manager}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/admin/institutions?status=1&institution_type=1&country=105",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"admin",
+								"institutions"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "1"
+								},
+								{
+									"key": "institution_type",
+									"value": "1"
+								},
+								{
+									"key": "country",
+									"value": "105"
+								}
 							]
 						}
 					},
@@ -337,7 +404,7 @@
 					},
 					{
 						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
+						"value": "Bearer {{bearer_librarian_mario}}"
 					}
 				],
 				"url": {
@@ -1590,7 +1657,7 @@
 		},
 		{
 			"key": "bearer_manager",
-			"value": "",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImE0M2VmOTg4Njk1MzRhNTQxN2RlNThmYTkzZmRmZGE0NDE3NWNmZTVjYjAzMTk2Yzk4NDg2MTc5Nzk2NjgxNmJhN2E2NjcyYzczMDk2M2E0In0.eyJhdWQiOiIxIiwianRpIjoiYTQzZWY5ODg2OTUzNGE1NDE3ZGU1OGZhOTNmZGZkYTQ0MTc1Y2ZlNWNiMDMxOTZjOTg0ODYxNzk3OTY2ODE2YmE3YTY2NzJjNzMwOTYzYTQiLCJpYXQiOjE2OTE2NjIwNTUsIm5iZiI6MTY5MTY2MjA1NSwiZXhwIjoxNjkxNzQ4NDU1LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.mJCawFjJGWSXWxtyEp5cUM2d_FjRa2dIvVriZaVICxJwe_U3hQlbjHizlZRkFzVm1_-VawjdHwk9Sq5_Rpfy7U73tW9n5btAO3d8TxElcpCWoL1fDv8j8AScee-jtC8fIDODcdXCKEtZwO-TChHkPnf-g5o2_T_drDeK9Z6eajImCmDamHgYB13B_LQpF2DWBG6XKv3r-v2WZ0XZBTuesBJ36bfeh-aTEfhZeUtGMVKK1zBNCYvKhEmYKIDH8iKBYFIk5g_RFezPSDuEmm5flyacRDiDMqip0VzxrMz0oh2Lsv9RVvcXS07Zidt5QO8FXWBGRtjsJuZgvbgZMki27HI16r4RKTsd4yLtFPbSNJfIsD7-InIs8-WPhonAaWcSnDHSnBAYXThKdNpbS3mMeg02qVTVATvUhU3uiw0UVj7wngxE6QmFcj-Ew9QORuzNFaHN-sAU1fZuWqxlUPb3Jn9z6sK8j-fYSfxxXOPDld1YmtLDIHEAoJpPAy3f_G0lDyOlp4-yt7UukJFx8vL62F2NkxUOGTXUx_hM1fLpdTehuqmxGh2inpbeHybrHIM_K3A0auY1_z2C2U_WJMRoXbNyEAzPoxo6nG7442DDbu5otGZwH_VBAE38ISqnu_egV0yPGAPh54VsO9JENpUHoml9upU19nPFdpWcFsYawQQ",
 			"type": "default"
 		}
 	]
