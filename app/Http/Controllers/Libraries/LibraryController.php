@@ -266,25 +266,25 @@ class LibraryController extends ApiController
             $this->model = $this->model->byCountry($request->input('country')); 
         }
 
+        if($request->has('institution'))
+        {        
+            $this->model = $this->model->byInstitution($request->input('institution')); 
+        }
+
         if($request->has('institution_type'))
         {        
             $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
         }
 
-        
-
-
-        /*
-           //identifier is specified as (Type,Val) es: 1,'xxx' means ISIL=XXX
-        if($identifier)         
-        {            
-            [$identifierTyp,$identifierVal]=explode(',',$identifier);  
-            $collection->whereHas('identifiers', function ($q) use ($identifierTyp,$identifierVal) {
-                $q->where('identifier_id', '=', $identifierTyp)
-                ->where('cod','=',$identifierVal);
-            });
+        if($request->has('profile_type'))
+        {        
+            $this->model = $this->model->byProfileType($request->input('profile_type')); 
         }
-        */
+
+        if($request->has('status'))
+        {        
+            $this->model = $this->model->byStatus($request->input('status')); 
+        }
 
 
 

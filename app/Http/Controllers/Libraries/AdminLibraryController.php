@@ -95,11 +95,27 @@ class AdminLibraryController extends AdminApiController
          {        
              $this->model = $this->model->byCountry($request->input('country')); 
          }
+
+         if($request->has('institution'))
+        {        
+            $this->model = $this->model->byInstitution($request->input('institution')); 
+        }
  
          if($request->has('institution_type'))
          {        
              $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
          }
+
+
+        if($request->has('profile_type'))
+        {        
+            $this->model = $this->model->byProfileType($request->input('profile_type')); 
+        }
+
+        if($request->has('status'))
+        {        
+            $this->model = $this->model->byStatus($request->input('status')); 
+        }
  
          return parent::index($request);    
      }

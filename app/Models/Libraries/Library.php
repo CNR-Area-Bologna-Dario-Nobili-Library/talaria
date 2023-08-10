@@ -236,6 +236,10 @@ class Library extends BaseModel
         return $query->where('country_id',$countryId);        
     }
 
+    public function scopeByInstitution($query,$institutionId) {
+        return $query->where('institution_id',$institutionId);        
+    }
+
     public function scopeByInstitutionType($query,$institutionTypeId) {
         return $query->whereHas('institution', function ($q) use ($institutionTypeId) {
             $q->where('institution_type_id', '=', $institutionTypeId);            
@@ -247,6 +251,16 @@ class Library extends BaseModel
             $q->where('identifier_id', '=', $identifierTyp)->where('cod','=',$identifierVal);           
         });      
     }
+
+    
+    public function scopeByProfileType($query,$profileType) {
+        return $query->where('profile_type',$profileType);        
+    }
+
+    public function scopeByStatus($query,$status) {
+        return $query->where('status',$status);        
+    }
+
 
 
 
