@@ -125,6 +125,19 @@ class Institution extends BaseModel
         return count($this->libraries)==0;
     }
 
+    public function scopeByCountry($query,$countryId) {
+        return $query->where('country_id',$countryId);        
+    }
+
+    public function scopeByInstitutionType($query,$institutionTypeId) {       
+        return $query->where('institution_type_id', '=', $institutionTypeId);                    
+    }
+
+
+    public function scopeByStatus($query,$status) {
+        return $query->where('status',$status);        
+    }
+
 
 
 

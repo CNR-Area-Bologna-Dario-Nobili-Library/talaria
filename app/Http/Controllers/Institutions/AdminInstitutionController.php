@@ -37,4 +37,26 @@ class AdminInstitutionController extends AdminApiController
         return $this->response->array($collection->toArray());
     }
 
+    //override     
+    public function index(Request $request)
+    {        
+        if($request->has('country'))
+        {        
+            $this->model = $this->model->byCountry($request->input('country')); 
+        }    
+        
+        if($request->has('institution_type'))
+        {        
+            $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
+        }
+        
+        if($request->has('status'))
+        {        
+            $this->model = $this->model->byStatus($request->input('status')); 
+        }
+
+        return parent::index($request);    
+    }
+
+
 }    
