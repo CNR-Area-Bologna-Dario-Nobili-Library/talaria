@@ -198,11 +198,11 @@
 					},
 					{
 						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
+						"value": "Bearer {{bearer_librarian_mario}}"
 					}
 				],
 				"url": {
-					"raw": "{{url}}/libraries?subject=1&q=ff&filterBy=town&filterVal=ffff&identifier=1,ffff",
+					"raw": "{{url}}/libraries?profile_type=2&status=1&institution_type=1&identifier=1,34343443&subject=2&country=105",
 					"host": [
 						"{{url}}"
 					],
@@ -211,24 +211,28 @@
 					],
 					"query": [
 						{
-							"key": "subject",
+							"key": "profile_type",
+							"value": "2"
+						},
+						{
+							"key": "status",
 							"value": "1"
 						},
 						{
-							"key": "q",
-							"value": "ff"
-						},
-						{
-							"key": "filterBy",
-							"value": "town"
-						},
-						{
-							"key": "filterVal",
-							"value": "ffff"
+							"key": "institution_type",
+							"value": "1"
 						},
 						{
 							"key": "identifier",
-							"value": "1,ffff"
+							"value": "1,34343443"
+						},
+						{
+							"key": "subject",
+							"value": "2"
+						},
+						{
+							"key": "country",
+							"value": "105"
 						}
 					]
 				}
@@ -423,22 +427,23 @@
 				"header": [
 					{
 						"key": "Accept",
-						"value": "application/json"
+						"value": "application/json",
+						"type": "text"
 					},
 					{
 						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
+						"value": "Bearer {{bearer_librarian_mario}}",
+						"type": "text"
 					},
 					{
 						"key": "Content-Type",
-						"name": "Content-Type",
 						"value": "application/json",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"cippassssss\",\n    \"email\": \"coppola.odone@example.com\"\n}",
+					"raw": "{\n\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1581,11 +1586,11 @@
 		},
 		{
 			"key": "bearer_librarian_mario",
-			"value": ""
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImU0ZTY4N2YxNzJmZGVlMDQzZWNhNzAzMWMzYTVjYWViYzVlYTkxNDNhMzhjNjA0M2ZiM2JjYzczNTU0YmVkNTI0NzQ4NDBlMTY1MDM3ZWNlIn0.eyJhdWQiOiIxIiwianRpIjoiZTRlNjg3ZjE3MmZkZWUwNDNlY2E3MDMxYzNhNWNhZWJjNWVhOTE0M2EzOGM2MDQzZmIzYmNjNzM1NTRiZWQ1MjQ3NDg0MGUxNjUwMzdlY2UiLCJpYXQiOjE2OTE2NjA4NDMsIm5iZiI6MTY5MTY2MDg0MywiZXhwIjoxNjkxNzQ3MjQzLCJzdWIiOiI2Iiwic2NvcGVzIjpbXX0.JlrpYvUHm-Kdkn_boLOIo_XxbZRKL9b89U5eL1CpL771lEY9B4VBQiLl4d_rYwUt5vWcHzkkZneTcQJBALq0rfoa1Kf2RX6W2SKrglZ7Mz4ghviSDpaqtHmBHreMJoy7WpKO6D7tVUHa2r-dcc0II_-P7o3pDRgUweNhBK1YMb4X6-o9CTctlw8aTqPfzWjG5gCIrIMccAHKXQ96WByE1hq9fiKaPuM14R1ZPxkz14b0aDbb-hrQVdHpyAWl7GTQT0i_MCwtyScIW5V6nhZ-d7jdA9OsnqT1Dr0t9bPPk0rCElqqO09exgmyPO7cdMdbsrQc8DZ52bRRw84_DdV55SnHR8KQaR_3nQVmsSzp-UTFKxcV1Q5I0RPK0uK_C7GknHI6FjSJx6T_nrvWbjejf8tvai4-egq2pJEKADrK6qw7XjLDIIs_GsCW_qYJs92RobxSbLThFxxhnYowQn1-u5g3NRhvzn-2S7CcKF_qQ2uJrPlEgM7UpZ9CMIIi5kBe5hBxapP_u7iX-FtcqpgE6aXu921I-19tt8i4povvMg8844rKH35aNxB2BwoepJyrxHnCtPHUdFEh2sWossYari2LuHfjwYH7WQ7Th0244dP2_1vSJTlgLqmkRKVosiQv5fFRJeY5-rqt9CWYwfoaxwYirfJDNRX6Z3Nm4ZY3IuI"
 		},
 		{
 			"key": "bearer_manager",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImE2MzA4ZTdhNzJlZjM2YWJmYzQ1NDEzNmJjYTM4MDNhMjFjNjhiZjlhYzAxNzU3ODg2ZGMwYTE1ZWE0YjQ4NzQzOTA5ZDE1ZTQ0ZGNkZDQ5In0.eyJhdWQiOiIxIiwianRpIjoiYTYzMDhlN2E3MmVmMzZhYmZjNDU0MTM2YmNhMzgwM2EyMWM2OGJmOWFjMDE3NTc4ODZkYzBhMTVlYTRiNDg3NDM5MDlkMTVlNDRkY2RkNDkiLCJpYXQiOjE2Nzg3OTE1MTcsIm5iZiI6MTY3ODc5MTUxNywiZXhwIjoxNjc4ODc3OTE3LCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.IcbTEzvgnLCazb2eQVRE7PmdvWwCSOStWZtiE3W5nfunPTiVL7m4FkRjcSv8Sk6b_CXF0hcA2cGGOst0UyeEQL3mUzB7RXkdhXp45520O4TCALEUqa6-RHytFjy0XCtgueLcvFOETvFHqq_hXZ99Ldjb0oUSYoY8BKY-2Mkh60O5eaqoD-_m72HJbmcASbUmzVbT5JXbzFX0N2cfxyFYt937CmNcspnSIxhFFdFi8IyytgaKSP08BsBCKLHQsYRgyuU_tsdL3srE5xf0X81ZF_7X_sO5185z6r2LGU6aeOEofjQEwUbj1qahpX8frUzf-MMVQbZToMY-DGg5BavkHXXaVqUWSgjcHBsScPGVrvrqKGa8RWbY41kZzXnNzSsuUW0k7g91EoNlHo4-wJb6W_4D5fslPwtm5jIdvUmW6YST9aXJkzm5yvEgWmfYVVX804vXiCEGeRJqvOaB8nnJxHJukcXxInuSgbSxn0LgOwFsSoKDP2JE7KSzI298PfP8dINMpWr8DX3Od9Wonv4oSlp55IdsmeDNOBJkAqKXNlk93ETqDL1Relpd_cOolGms0xSFOF3DRJ_Zx4HorfwI9aMsGUokXl0K_ixBo9fHjD_Tcx3kqNSrmozhEwi-YOCkCdDPcdU32GgOyXegpfmafBA2AIwO8ANt89_cQDA3X_I",
+			"value": "",
 			"type": "default"
 		}
 	]
