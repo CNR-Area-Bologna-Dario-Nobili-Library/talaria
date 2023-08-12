@@ -193,6 +193,7 @@ export const fields = {
     },
     ill_phone: {
         type: "text",
+        required: true,
         name: "ill_phone",
         label: 'ill_phone',
         group: "step_1",
