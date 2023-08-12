@@ -93,6 +93,8 @@ class Library extends BaseModel
         'state', //Regione o Stato (EmiliaRomagna, Illinois
         'url',
         'opac',
+        'ill_email',        
+        'ill_phone',
         'profile_type', //1-borr, 2-borr+lend
 
         /*info amministrative */
