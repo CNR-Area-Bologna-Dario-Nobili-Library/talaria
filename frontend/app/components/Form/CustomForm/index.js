@@ -34,7 +34,7 @@ const CustomForm = (props) => {
         fields = {},
         searchOptionList,
         messages,
-        cancelButton= true,
+        backButton= true,
         // requestData,
         fieldsGroups = {},
     } = props
@@ -214,7 +214,7 @@ const CustomForm = (props) => {
     return (
         Object.keys(fields).length > 0 &&
             (<Card className="card-form">
-                <CardBody className="p-4">
+                <CardBody className="p-1">
                     { title && <h3>{title}</h3>  }
                     <Form onSubmit={onSubmit} noValidate className={props.className}>
                         <div className="form-groups">
@@ -487,7 +487,7 @@ const CustomForm = (props) => {
                             <Button color={submitColor} disabled={isSubmitDisabled} type="submit" block>
                             {submitText?submitText:intl.formatMessage(formMessages.submit)}
                             </Button>
-                            {cancelButton && 
+                            {backButton && 
                                 <Button color="secondary" onClick={() => props.history.goBack() } >
                                     {intl.formatMessage(formMessages.cancel)}
                                 </Button> 
