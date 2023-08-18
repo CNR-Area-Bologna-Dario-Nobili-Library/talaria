@@ -15,14 +15,14 @@ const InputSearch = (props) => {
         setQuery(q)
         if(searchOnChange){
             submitCallBack(q);
-            setQuery('');
+            //setQuery('');
         } 
     }
     
     const handleSubmit = (e) => {
         e.preventDefault()
         submitCallBack(query)
-        setQuery('')
+        //setQuery('')
     }
     
     return (
@@ -36,11 +36,11 @@ const InputSearch = (props) => {
                     type="text" 
                     name="inputQuery" 
                     id="inputQuery" />
-                <InputGroupAddon addonType="append">
+                {!searchOnChange && <InputGroupAddon addonType="append">
                     <Button type="submit" color="orange" className="searchBtn">
                         <i className={`${icon ? icon : 'fa-solid fa-magnifying-glass'}`}></i>
                     </Button>
-                </InputGroupAddon>
+                </InputGroupAddon>}
             </InputGroup>
         </Form>
     )
