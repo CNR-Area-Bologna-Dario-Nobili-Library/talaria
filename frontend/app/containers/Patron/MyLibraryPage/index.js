@@ -136,7 +136,7 @@ function MyLibraryPage(props) {
             title_id={props.titles} 
             fields={fields}            
             messages={messages}
-            cancelButton={false}
+            backButton={false}
           /> 
       }{isNew && 
           <CustomForm 
@@ -148,7 +148,7 @@ function MyLibraryPage(props) {
             department_id={departmentOptionList} 
             title_id={props.titles}             
             messages={messages}
-            cancelButton={false}
+            backButton={false}
             onChangeData={(field_name, value) => handleChangeData(field_name, value)}
             onPlacesSearch={(search)=>dispatch(requestSearchPlacesByText(search))}
             places={props.places}
