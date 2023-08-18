@@ -144,7 +144,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/admin/libraries?profile_type=2&status=1&institution_type=1&identifier=1,34343443&subject=2&country=105",
+							"raw": "{{url}}/admin/libraries?profile_type=2&status=1&institution_type=1&identifier_type=1&identifier_code=bo015&subject=2&country=105&q=bla bla",
 							"host": [
 								"{{url}}"
 							],
@@ -166,8 +166,12 @@
 									"value": "1"
 								},
 								{
-									"key": "identifier",
-									"value": "1,34343443"
+									"key": "identifier_type",
+									"value": "1"
+								},
+								{
+									"key": "identifier_code",
+									"value": "bo015"
 								},
 								{
 									"key": "subject",
@@ -176,6 +180,10 @@
 								{
 									"key": "country",
 									"value": "105"
+								},
+								{
+									"key": "q",
+									"value": "bla bla"
 								}
 							]
 						}
@@ -269,7 +277,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/libraries?profile_type=2&status=1&institution_type=1&identifier=1,34343443&subject=2&country=105",
+					"raw": "{{url}}/libraries?profile_type=2&status=1&institution_type=1&identifier_type=1&identifier_code=bo015&subject=2&country=105&q=bla bla",
 					"host": [
 						"{{url}}"
 					],
@@ -290,8 +298,12 @@
 							"value": "1"
 						},
 						{
-							"key": "identifier",
-							"value": "1,34343443"
+							"key": "identifier_type",
+							"value": "1"
+						},
+						{
+							"key": "identifier_code",
+							"value": "bo015"
 						},
 						{
 							"key": "subject",
@@ -300,6 +312,10 @@
 						{
 							"key": "country",
 							"value": "105"
+						},
+						{
+							"key": "q",
+							"value": "bla bla"
 						}
 					]
 				}
