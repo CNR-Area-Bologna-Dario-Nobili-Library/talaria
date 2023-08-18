@@ -33,6 +33,8 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_GET_COUNTRIES_OPTIONLIST, 
       REQUEST_LIBRARYSUBJECT_OPTIONLIST,      
       REQUEST_GET_INSTITUTIONS_OPTIONLIST,
+      REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,
+      REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
       UPLOAD_REQUEST
     } from './constants';
 import {
@@ -63,7 +65,9 @@ import {
   requestPickupSuccess,
   requestGetCountriesOptionListSuccess,
   requestGetInstitutionsOptionListSuccess,
+  requestGetInstitutionTypesOptionListSuccess,
   requestLibrarySubjectOptionListSuccess,
+  requestLibraryIdentifierTypesOptionListSuccess,
   uploadSuccess
 } from './actions';
 
@@ -95,6 +99,8 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     getCountriesOptionsList,
     getLibrariesSubjects,        
     getInstitutionsOptionList,
+    getInstitutionTypesOptionList,
+    getLibrariesIdentifierTypesOptionList,
 } from '../../utils/api'    
 
 import {getOA,getPubmedReferenceByPMID,getFindISSN,getFindISBN, getFindISSN_ACNP} from '../../utils/apiExternal';
@@ -251,16 +257,27 @@ export function* requestGetInstitutionsOptionListSaga(action) {
   }
 }
 
+export function* requestGetInstitutionTypesOptionListSaga(action) {
+  const options = {
+    method: 'get',
+    query: action.request ? action.request : ""
+  }
+  try {
+    const request = yield call(getInstitutionTypesOptionList, options);
+    yield put(requestGetInstitutionTypesOptionListSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
 
 export function* requestGetLibrariesListSaga(action = {}) {
   const options = {
     method: 'get',
-    page: action.page ? action.page : '1',
-    query: action.query ? action.query : '',
-    filterBy: action.filterBy ? action.filterBy : '',
-    filterVal: action.filterBy ? action.filterVal : '',
+    page: action.page ? action.page : '1',    
     pageSize: action.pageSize ? action.pageSize : '',
-    excludeIds: action.excludeIds? action.excludeIds:[]
+    excludeIds: action.excludeIds? action.excludeIds:[],
+    ...action.options
   };
   try {
     const request = yield call(getLibrariesList, options);
@@ -787,6 +804,19 @@ export function* requestLibrarySubjectOptionListSaga(action) {
   }
 }
 
+export function*  requestLibraryIdentifierTypesOptionListSaga(action) {
+  const options = {
+    method: 'get',
+    query: action.request ? action.request : ""
+  }
+  try {
+    const request = yield call(getLibrariesIdentifierTypesOptionList, options);
+    yield put(requestLibraryIdentifierTypesOptionListSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
 export function* requestGetCountriesOptionListSaga(action) {
   const options = {
     method: 'get',
@@ -896,7 +926,11 @@ export default function* librarySaga() {
   yield takeLatest(REQUEST_LIBRARYSUBJECT_OPTIONLIST, requestLibrarySubjectOptionListSaga);
   yield takeLatest(REQUEST_GET_COUNTRIES_OPTIONLIST, requestGetCountriesOptionListSaga);
 
+  yield takeLatest(REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST, requestLibraryIdentifierTypesOptionListSaga);
+
   yield takeLatest(REQUEST_GET_INSTITUTIONS_OPTIONLIST, requestGetInstitutionsOptionListSaga);
+  yield takeLatest(REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST, requestGetInstitutionTypesOptionListSaga);
+
 
 
 

@@ -204,6 +204,7 @@
 
   "app.components.LibraryStatus.upgradeProfileButton":"???Full profile yükseltme yapın!",
   "app.components.LibraryStatus.profileData": "???Library Profile",
+  "app.components.LibrarySearchPanel.header": "???Library search",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"???Full profile yükseltme yapın",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"???Full'e yükseltin",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"???Full profile geçerseniz diğer kütüphanelerden ILL talepleri alabileceksiniz. <br/><br/> Yükseltme için aşağıdaki düğmeye tıklayın ve kütüphanenizin katalog ve belirteç ayarlarını kontrol edin.  (DD taleplerini karşılamak için bu bilgiler gereklidir)",

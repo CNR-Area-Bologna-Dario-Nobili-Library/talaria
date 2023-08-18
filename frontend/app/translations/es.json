@@ -204,6 +204,7 @@
 
   "app.components.LibraryStatus.upgradeProfileButton":"Actualizar a perfil FULL!",
   "app.components.LibraryStatus.profileData": "???Library Profile",
+  "app.components.LibrarySearchPanel.header": "???Library search",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Actualizar a perfil FULL!",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Actualizar a FULL",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Elevando a categoría FULL podrá recibir peticiones de otras bibliotecas.<br/><br/>Si quiere cambiar haga click en el botón a continuación y compruebe el catálogo de su biblioteca y la configuración de identificadores (esta información debe completarse para servir las peticiones DD)",

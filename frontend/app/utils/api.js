@@ -256,6 +256,12 @@ export const getLibrariesSubjects = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/subjects/option-items?label=name&q=${query}`, options)
 };
 
+export const getLibrariesIdentifierTypesOptionList = (options) => {
+  options = getOption(options);
+  const query = options.query;
+  return request(`${BASE_URL}/api/v1/libraries/identifiers/option-items?label=name&q=${query}`, options)
+};
+
 // Reference //
 export const getReferencesList = (options) => {
   const page = options.page;
@@ -629,16 +635,20 @@ export const updateLibrary = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/${library_id}?include=institution,country,departments`, options)
 };
 
-export const getLibrariesList = (options) => {
+export const getLibrariesList = (options) => {  
   const page = options.page;
   const pageSize = options.pageSize;
-  const query = options.query;
-  const filterBy = options.filterBy;
-  const filterVal = options.filterVal;  
+  const query = options.query?options.query:'';  
   const excludeIds= options.excludeIds;
+  const profileType=options.profile_type?options.profile_type:''
+  const country=options.country?options.country:''
+  const institution_type=options.institution_type?options.institution_type:''
+  const subject=options.subject?options.subject:''
+  const identifier_type=options.identifier_type?options.identifier_type:''
+  const identifier_code=options.identifier_code?options.identifier_code:''
 
   options = getOption(options);
-  return request(`${BASE_URL}/api/v1/libraries/?page=${page}&pageSize=${pageSize}&q=${query}&filterBy=${filterBy}&filterVal=${filterVal}&excludeIds=${excludeIds}`, options)
+  return request(`${BASE_URL}/api/v1/libraries/?page=${page}&pageSize=${pageSize}&profile_type=${profileType}&country=${country}&subject=${subject}&institution_type=${institution_type}&identifier_type=${identifier_type}&identifier_code=${identifier_code}&q=${query}&excludeIds=${excludeIds}`, options)
 };
 
 export const getLibrariesListNearTo = (options) => {
@@ -700,10 +710,7 @@ export const getInstitutionsOptionList = (options) => {
 
 export const getInstitutionTypesList = (options) => {
   const page = options.page;
-  const pageSize=options.pageSize
-  const query = options.query;
-  const filterBy = options.filterBy;
-  const filterVal = options.filterVal;  
+  const pageSize=options.pageSize    
   
   let qstringpar="";    
   if(pageSize) qstringpar+="&pageSize="+pageSize;

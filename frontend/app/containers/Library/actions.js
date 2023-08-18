@@ -46,8 +46,12 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_GET_LIBRARY_DESK_SUCCESS,
    REQUEST_GET_COUNTRIES_OPTIONLIST, REQUEST_GET_COUNTRIES_OPTIONLIST_SUCCESS,
    REQUEST_LIBRARYSUBJECT_OPTIONLIST, REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS,
-   REQUEST_GET_INSTITUTIONS_OPTIONLIST,
-  REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
+   REQUEST_GET_INSTITUTIONS_OPTIONLIST,   
+   REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
+   REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,
+   REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
+   REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
+   REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,  
    UPLOAD_REQUEST,
    UPLOAD_PROGRESS,
    UPLOAD_FAILURE,
@@ -126,15 +130,13 @@ export function requestDeleteUser(id,library_id,message) {
   };
 } */
 
-export function requestGetLibrariesList(page='1',query=null,filterBy=null,filterVal=null,excludeIds=[]) {  
+export function requestGetLibrariesList(options,page='1',pageSize=20,excludeIds=[]) {  
   return {
     type: REQUEST_GET_LIBRARIES_LIST,
-    page,
-    query,
-    filterBy,
-    filterVal,
+    options,    
     excludeIds,
-    pageSize:1000,  //fixed pageSize cause we didn't implemented pagination but want to show all libraries
+    page,
+    pageSize
   };
 }
 
@@ -187,6 +189,20 @@ export function requestGetInstitutionsOptionList(request) {
 export function requestGetInstitutionsOptionListSuccess(result) {
   return {
     type: REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
+    result
+  };
+}
+
+export function requestGetInstitutionTypesOptionList(request) {
+  return {
+    type: REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,
+    request
+  };
+}
+
+export function requestGetInstitutionTypesOptionListSuccess(result) {
+  return {
+    type: REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
     result
   };
 }
@@ -645,6 +661,20 @@ export function requestGetCountriesOptionList(request) {
   export function requestLibrarySubjectOptionListSuccess(result) {
     return {
       type: REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS,
+      result
+    };
+  }
+
+  export function requestLibraryIdentifierTypesOptionList(request) {
+    return {
+      type: REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
+      request
+    };
+  }
+  
+  export function requestLibraryIdentifierTypesOptionListSuccess(result) {
+    return {
+      type: REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,
       result
     };
   }

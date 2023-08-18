@@ -35,7 +35,7 @@ export const BorrowingRequestData = (props) => {
 
 const BorrowingDetail = (props) => {
     console.log('BorrowingDetail', props)
-    const {data,sendRequestToLender,findLender,lendersList,requestDetailPath,isRequesting,isDelivering,directUnfillCallback, unfillCallback,directFulfillCallback, fulfillCallback,deliverCallback} = props
+    const {data,sendRequestToLender,findLender,lendersList,pagination,requestDetailPath,isRequesting,isDelivering,directUnfillCallback, unfillCallback,directFulfillCallback, fulfillCallback,deliverCallback} = props
     const intl = useIntl()
 
     return (<div className="borrowingDetail">               
@@ -52,7 +52,7 @@ const BorrowingDetail = (props) => {
                         check holdings on available catalogs !
                     </div>
                     }
-                    <BorrowingChooseLender selectLenderCb={sendRequestToLender} findLender={findLender} lendersList={lendersList}/>                                                                
+                    <BorrowingChooseLender selectLenderCb={sendRequestToLender} findLender={findLender}  pagination={pagination} lendersList={lendersList}/>                                                                
                 </div>
                 }                
                 {isDelivering && <BorrowingRequestOperations data={data} sendRequestToLender={sendRequestToLender} findLender={findLender} lendersList={lendersList} unfillCallback={canPatronReqDirectManaged(data)?directUnfillCallback:unfillCallback} fulfillCallback={canPatronReqDirectManaged(data)?directFulfillCallback:fulfillCallback} deliverCallback={deliverCallback}/>}

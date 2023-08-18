@@ -30,6 +30,7 @@ import Toaster from "./Toaster/Loadable"
 // Library
 // import UsersList from './Library/UsersList';
 import MyLibraryForm from './Library/MyLibraryForm';
+import LibrarySearchForm from './Library/LibrarySearchForm'
 
 
 // Admin
@@ -88,4 +89,5 @@ export {
   Loader,
   SideBar,
   SimpleList,
+  LibrarySearchForm
 }

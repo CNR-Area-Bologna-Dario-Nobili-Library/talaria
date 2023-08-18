@@ -204,6 +204,7 @@
 
   "app.components.LibraryStatus.upgradeProfileButton":"Upgrade to FULL profile!",
   "app.components.LibraryStatus.profileData": "Library Profile",
+  "app.components.LibrarySearchPanel.header": "Library search",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Upgrade to FULL profile",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Upgrade to FULL",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Upgrading to full profile you'll be able to receive ILL requests from other libraries.<br/><br/>If you want to upgrade click on button below and check your library's catalogs and identifiers settings (this information must be filled in order to fullfill DD requests)",

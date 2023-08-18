@@ -28,6 +28,7 @@ const BorrowingRequestPage = (props) => {
     const isDelivering=params.op && params.op==='deliver'
     const borrowing=library.borrowing
     const lendersList=library.libraryOptionList;
+    const pagination=library.libraryOptionList.pagination
     //const tagsOptionList=library.tagsOptionList
     
     const queryString=window.location.search;
@@ -138,10 +139,11 @@ const BorrowingRequestPage = (props) => {
         dispatch(requestChangeStatusBorrowing(params.id,match.params.library_id,'requested',requestfields,intl.formatMessage({id: "app.requests.requestedMessage"}),filter))    
     }
 
-    const findLender = (options) => {
-        console.log("findLender",options)        
-        //todo dispatch (filtered by option, cat ...) ...
-        dispatch(requestGetLibrariesList(1,null,'profile_type',2,match.params.library_id)) //filtered by lender only (excluding this library)
+    const findLender = (options) => { 
+        console.log("findLender",options)                
+        //filtered by lender only (excluding this library)        
+        const params={...options,'profile_type':2}
+        dispatch(requestGetLibrariesList(params,1,null,match.params.library_id)) 
     }
 
     const directUnfillCallback=(requestfields,filter=null) => {
@@ -188,7 +190,7 @@ const BorrowingRequestPage = (props) => {
                     title={isNew?messages.headerNew:messages.headerDetail}
                 />                 
                 {(isRequest && !isEdit && Object.keys(borrowing).length>0) &&                                 
-                    <BorrowingDetail requestDetailPath={requestDetailPath} history={props.history} data={borrowing} sendRequestToLender={sendRequestToLender} findLender={findLender} lendersList={lendersList} isDelivering={isDelivering} isRequesting={isRequesting} directUnfillCallback={directUnfillCallback} unfillCallback={unfillCallback} directFulfillCallback={directFulfillCallback} fulfillCallback={fulfillCallback} deliverCallback={deliverCallback}/>                      
+                    <BorrowingDetail requestDetailPath={requestDetailPath} history={props.history} data={borrowing} sendRequestToLender={sendRequestToLender} findLender={findLender} lendersList={lendersList} pagination={pagination} isDelivering={isDelivering} isRequesting={isRequesting} directUnfillCallback={directUnfillCallback} unfillCallback={unfillCallback} directFulfillCallback={directFulfillCallback} fulfillCallback={fulfillCallback} deliverCallback={deliverCallback}/>                      
                 ||
                 (isNew && isMounted) &&                 
                 <ReferenceForm    

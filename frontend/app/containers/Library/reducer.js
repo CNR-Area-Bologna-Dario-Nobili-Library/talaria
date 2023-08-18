@@ -33,6 +33,8 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_COUNTRIES_OPTIONLIST, REQUEST_GET_COUNTRIES_OPTIONLIST_SUCCESS,
   REQUEST_LIBRARYSUBJECT_OPTIONLIST, REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS, 
   REQUEST_GET_INSTITUTIONS_OPTIONLIST,REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
+  REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
+  REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,
   UPLOAD_REQUEST,
   UPLOAD_SUCCESS,
   UPLOAD_FAILURE,
@@ -78,6 +80,8 @@ export const initialState = {
   librarySubjectOptionList: [],
   countriesOptionList: [],
   institutionsOptionList: [],
+  institutionTypesOptionList: [],
+  libraryIdentifierTypesOptionList:[],
   error: null,
   user: {},
 };
@@ -167,6 +171,14 @@ const libraryReducer = (state = initialState, action) =>
           draft.institutionsOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );        
           break;
 
+          case REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST:
+            draft.error = action.error;
+            break;
+          case REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS:
+            draft.error = initialState.error;
+            draft.institutionTypesOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );        
+            break;  
+
 
 
        case REQUEST_GET_LIBRARIES_LIST:
@@ -177,6 +189,7 @@ const libraryReducer = (state = initialState, action) =>
         draft.libraryOptionList.loading = false;
         draft.error = initialState.error;
         draft.libraryOptionList = action.result
+        draft.libraryOptionList.pagination = action.result.meta.pagination
         break;
 
         case REQUEST_GET_LIBRARY_TAGS_OPTIONLIST:
@@ -310,6 +323,14 @@ const libraryReducer = (state = initialState, action) =>
         case REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS:
           draft.error = initialState.error;
           draft.librarySubjectOptionList = action.result.sort((a, b) => { return (a.id > b.id) ? 1 : -1 }).map(item => { return {value: item.id, label: item.name} } );
+          break;  
+
+        case REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST:
+          draft.error = action.error;
+          break;
+        case REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS:
+          draft.error = initialState.error;
+          draft.libraryIdentifierTypesOptionList = action.result.sort((a, b) => { return (a.id > b.id) ? 1 : -1 }).map(item => { return {value: item.id, label: item.name} } );
           break;  
 
       case UPLOAD_PROGRESS:
