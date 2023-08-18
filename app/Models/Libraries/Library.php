@@ -246,10 +246,15 @@ class Library extends BaseModel
         });
     }
 
-    public function scopeByIdentifier($query,$identifierTyp,$identifierVal) {
-        return $query->whereHas('identifiers', function ($q) use ($identifierTyp,$identifierVal) {
-            $q->where('identifier_id', '=', $identifierTyp)->where('cod','=',$identifierVal);           
-        });      
+    public function scopeByIdentifier($query,$identifierTyp,$identifierVal) {        
+        if(isset($identifierVal))
+        
+            return $query->whereHas('identifiers', function ($q) use ($identifierTyp,$identifierVal) {
+                if(isset($identifierTyp) && isset($identifierVal) )                
+                    $q=$q->where('identifier_id', '=', $identifierTyp)->where('cod','like','%'.$identifierVal.'%');         
+                else if(isset($identifierVal))
+                    $q=$q->where('cod','like','%'.$identifierVal.'%');           
+            });              
     }
 
     

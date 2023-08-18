@@ -242,46 +242,44 @@ class LibraryController extends ApiController
 
     //override     
     public function index(Request $request)
-    {        
+    {                
         //$u=Auth::user();                      
         //if (!($u->hasRole('super-admin')||$u->hasRole('manager'))) 
         
         //filter active only
         $this->model=$this->model->active();
 
-        if($request->has('identifier'))
-        {
-            [$identifierTyp,$identifierVal]=explode(',',$request->input('identifier'));  
-
-            $this->model = $this->model->byIdentifier($identifierTyp,$identifierVal); 
+        if($request->has('identifier_type')||$request->has('identifier_code'))
+        {         
+            $this->model = $this->model->byIdentifier($request->input('identifier_type'),$request->input('identifier_code')); 
         }
 
-        if($request->has('subject'))
+        if($request->has('subject') && $request->input('subject')!='' && $request->input('subject')>0)
         {        
             $this->model = $this->model->bySubject($request->input('subject')); 
         }
 
-        if($request->has('country'))
+        if($request->has('country')&& $request->input('country')!='' && $request->input('country')>0)
         {        
             $this->model = $this->model->byCountry($request->input('country')); 
         }
 
-        if($request->has('institution'))
+        if($request->has('institution')&& $request->input('institution')!='' && $request->input('institution')>0)
         {        
             $this->model = $this->model->byInstitution($request->input('institution')); 
         }
 
-        if($request->has('institution_type'))
+        if($request->has('institution_type')&& $request->input('institution_type')!='' && $request->input('institution_type')>0)
         {        
             $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
         }
 
-        if($request->has('profile_type'))
+        if($request->has('profile_type')&& $request->input('profile_type')!='' && $request->input('profile_type')>0)
         {        
             $this->model = $this->model->byProfileType($request->input('profile_type')); 
         }
 
-        if($request->has('status'))
+        if($request->has('status')&& $request->input('status')!='' && $request->input('status')>0)
         {        
             $this->model = $this->model->byStatus($request->input('status')); 
         }
