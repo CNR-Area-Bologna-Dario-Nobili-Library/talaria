@@ -323,7 +323,7 @@
   "app.libraries.granted_permissions": "Privilegios de Usuarios",
   "app.libraries.institution_type_id": "Tipo de Institución",
   "app.libraries.institution_country_id": "País",  
-  "app.libraries.alt_name": "Nombre alternativo ",
+  "app.libraries.alt_name": "Nombre de la biblioteca alternativo ",
   "app.libraries.dd_user_cost":"Costo por artículo",
   "app.libraries.suggested_institution_name":"Nombre de Institución sugerido",
   "app.libraries.projects_label": "Proyecto o Consorcio",

@@ -202,7 +202,7 @@ lon: {
 
 name: {
     id: 'app.libraries.name',
-    defaultMessage: 'Name',
+    defaultMessage: 'Library Name',
   },
 
 alt_name: {
