@@ -21,7 +21,7 @@ use App\Resolvers\StatusResolver;
 class Library extends BaseModel
 {
     use ModelPermissionsTrait;
-    
+    public $simpleSearchFields = ['name', 'alt_name', 'address', 'town'];
     protected $forceDeleting=true; //overrides softdelete => force delete!  
     public static function bootSoftDeletes() {}  
 

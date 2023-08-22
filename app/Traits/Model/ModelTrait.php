@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use DateTime;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Wildside\Userstamps\Userstamps;
+use Illuminate\Support\Facades\Log;
 
 
 trait ModelTrait
@@ -254,11 +255,19 @@ trait ModelTrait
         return \DB::table(self::$table)->select(self::$stringIdentifies)->where('id', $id)->first();
     }
 
-    public function scopeSimpleSearch($query, $q)
+    public function scopeSimpleSearch($query,  $q)
     {
-        $q = trim($q);
+        $text = trim($q);
+        $keywords = explode(' ', $text);
 
-        return $query->where($this->simpleSearchField, 'like', '%'. $q .'%');
+        return $query->where(function ($query) use ($keywords) {
+            foreach ($this->simpleSearchFields as $field) {
+                foreach ($keywords as $keyword) {
+                    $query->orWhere($field, 'like', '%' . $keyword . '%');
+                }
+            }
+            //Log::info("MODEL query " . $query->toSql());
+        });
     }
 
     public function scopeFilterByField ($query,$field,$val) {
