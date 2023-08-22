@@ -20,6 +20,10 @@ export default defineMessages({
     id: `app.global.cancel`,
     defaultMessage: 'Cancel',
   },
+  reset: {
+    id: `app.global.resetAll`,
+    defaultMessage: 'Reset all',
+  },
   submit: {
     id: 'app.global.submit',
     defaultMessage: 'Submit',

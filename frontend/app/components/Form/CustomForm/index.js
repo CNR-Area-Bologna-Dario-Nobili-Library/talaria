@@ -37,6 +37,7 @@ const CustomForm = (props) => {
         backButton= true,
         // requestData,
         fieldsGroups = {},
+        resetButton=false,
     } = props
 
     const intl = useIntl();
@@ -209,6 +210,10 @@ const CustomForm = (props) => {
         }
        
         return
+    }
+
+    const resetAllFields = () => {
+        setFormData({})
     }
 
     return (
@@ -490,6 +495,11 @@ const CustomForm = (props) => {
                             {backButton && 
                                 <Button color="secondary" onClick={() => props.history.goBack() } >
                                     {intl.formatMessage(formMessages.cancel)}
+                                </Button> 
+                            }
+                            {resetButton && 
+                                <Button color="secondary" onClick={() => resetAllFields() } >
+                                    {intl.formatMessage(formMessages.reset)}
                                 </Button> 
                             }
                         </div>
