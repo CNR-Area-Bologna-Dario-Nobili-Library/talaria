@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminApiController;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
+use Hamcrest\Type\IsInteger;
 
 class AdminLibraryController extends AdminApiController
 {
@@ -79,40 +80,37 @@ class AdminLibraryController extends AdminApiController
      public function index(Request $request)
      {                          
  
-         if($request->has('identifier'))
-         {
-             [$identifierTyp,$identifierVal]=explode(',',$request->input('identifier'));  
- 
-             $this->model = $this->model->byIdentifier($identifierTyp,$identifierVal); 
-         }
- 
-         if($request->has('subject'))
-         {        
-             $this->model = $this->model->bySubject($request->input('subject')); 
-         }
- 
-         if($request->has('country'))
-         {        
-             $this->model = $this->model->byCountry($request->input('country')); 
-         }
+        if($request->has('identifier_type')||$request->has('identifier_code'))
+        {         
+            $this->model = $this->model->byIdentifier($request->input('identifier_type'),$request->input('identifier_code')); 
+        }
 
-         if($request->has('institution'))
+        if($request->has('subject') && $request->input('subject')!='' && is_numeric($request->input('subject')))
+        {        
+            $this->model = $this->model->bySubject($request->input('subject')); 
+        }
+
+        if($request->has('country')&& $request->input('country')!='' && is_numeric($request->input('country')))
+        {        
+            $this->model = $this->model->byCountry($request->input('country')); 
+        }
+
+        if($request->has('institution')&& $request->input('institution')!='' && is_numeric($request->input('institution')))
         {        
             $this->model = $this->model->byInstitution($request->input('institution')); 
         }
- 
-         if($request->has('institution_type'))
-         {        
-             $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
-         }
 
+        if($request->has('institution_type')&& $request->input('institution_type')!='' && is_numeric($request->input('institution_type')))
+        {        
+            $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
+        }
 
-        if($request->has('profile_type'))
+        if($request->has('profile_type')&& $request->input('profile_type')!='' && is_numeric($request->input('profile_type')))
         {        
             $this->model = $this->model->byProfileType($request->input('profile_type')); 
         }
 
-        if($request->has('status'))
+        if($request->has('status')&& $request->input('status')!='' && is_numeric($request->input('status')))
         {        
             $this->model = $this->model->byStatus($request->input('status')); 
         }

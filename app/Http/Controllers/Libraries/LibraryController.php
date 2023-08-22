@@ -254,32 +254,32 @@ class LibraryController extends ApiController
             $this->model = $this->model->byIdentifier($request->input('identifier_type'),$request->input('identifier_code')); 
         }
 
-        if($request->has('subject') && $request->input('subject')!='' && $request->input('subject')>0)
+        if($request->has('subject') && $request->input('subject')!='' && is_numeric($request->input('subject')))
         {        
             $this->model = $this->model->bySubject($request->input('subject')); 
         }
 
-        if($request->has('country')&& $request->input('country')!='' && $request->input('country')>0)
+        if($request->has('country')&& $request->input('country')!='' && is_numeric($request->input('country')))
         {        
             $this->model = $this->model->byCountry($request->input('country')); 
         }
 
-        if($request->has('institution')&& $request->input('institution')!='' && $request->input('institution')>0)
+        if($request->has('institution')&& $request->input('institution')!='' && is_numeric($request->input('institution')))
         {        
             $this->model = $this->model->byInstitution($request->input('institution')); 
         }
 
-        if($request->has('institution_type')&& $request->input('institution_type')!='' && $request->input('institution_type')>0)
+        if($request->has('institution_type')&& $request->input('institution_type')!='' && is_numeric($request->input('institution_type')))
         {        
             $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
         }
 
-        if($request->has('profile_type')&& $request->input('profile_type')!='' && $request->input('profile_type')>0)
+        if($request->has('profile_type')&& $request->input('profile_type')!='' && is_numeric($request->input('profile_type')))
         {        
             $this->model = $this->model->byProfileType($request->input('profile_type')); 
         }
 
-        if($request->has('status')&& $request->input('status')!='' && $request->input('status')>0)
+        if($request->has('status')&& $request->input('status')!='' && is_numeric($request->input('status')))
         {        
             $this->model = $this->model->byStatus($request->input('status')); 
         }
