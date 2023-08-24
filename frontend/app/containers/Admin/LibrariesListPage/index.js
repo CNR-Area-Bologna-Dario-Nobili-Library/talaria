@@ -60,12 +60,12 @@ const LibrariesListPage = (props) => {
                 match={match}   
                 editPath={editPath}             
                 searchOptions={{
-                    getSearchList: (page, pageSize, searchFilter ) => {
+                    getSearchList: (page, pageSize, searchFilter ) => {                        
                         history.push(match.url)
                         searchFilter={...searchFilter}
-                        dispatch(requestGetLibrariesList(page,pageSize,searchFilter))
+                        dispatch(requestGetLibrariesList(searchFilter,page,pageSize))
                     },
-                    searchOnChange: true
+                    searchOnChange: false
                 }}
                 deleteLibrary={deleteLibrary}    
                 changeStatusLibrary={changeStatusLibrary}            

@@ -79,7 +79,6 @@ const BorrowingChooseLender = (props) => {
     }
 
     const doSearch = (params) => {
-        console.log("Store search params:",params)
         setSearchParams( state => ({
             ...state,
             ...params

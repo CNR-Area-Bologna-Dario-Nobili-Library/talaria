@@ -12,10 +12,11 @@ import ApplyTag from '../../ApplyTag';
 import CustomCheckBox from 'components/Form/CustomCheckBox';
 import SectionTitle from 'components/SectionTitle';
 import './style.scss';
+import AdminLibrarySearchPanel from '../../../containers/Admin/AdminLibrarySearchPanel'
 
 const LibrariesList = (props) => {
     console.log('LibrariesList', props)
-    const { editPath,loading, data, pagination, searchOptions, tagsOptionList, removeTagFromRequest,deleteLibrary, changeStatusLibrary} = props
+    const { editPath,loading, data, pagination, searchOptions, deleteLibrary, changeStatusLibrary} = props
     const {total_pages, current_page,total,count,per_page} = pagination
     const intl = useIntl();
     const [mounted, setMounted] = useState(false)    
@@ -23,12 +24,7 @@ const LibrariesList = (props) => {
     const [disableToolbar,setDisableToolbar]=useState(false);
     const [disableCancelFilter,setDisableCancelFilter]=useState(true);
 
-    const [multiFilter, setMultiFilter ] = useState(
-        {
-            query: '',
-            labelIds:[],            
-        }
-    );
+    const [multiFilter, setMultiFilter ] = useState({});
 
     const handleIds = (ids, id) => {
         if(ids.includes(id)){
@@ -48,31 +44,16 @@ const LibrariesList = (props) => {
        setDisableToolbar(selectedLibraries.length == 0)
     }, [selectedLibraries])
 
-    useEffect( ()=> {
+    /*useEffect( ()=> {
         mounted ? searchOptions.getSearchList(current_page, per_page, multiFilter ) : null
         if(multiFilter.query != "" || (multiFilter.labelIds && multiFilter.labelIds.length>0) )
             setDisableCancelFilter(false);
         else setDisableCancelFilter(true);            
-    }, [multiFilter])
+    }, [multiFilter])*/
 
     /* const linkTo = (path) => {
         history.push(path)
      }; */
-
-    
-    const handleCancelFilter = () => {
-        setMultiFilter({
-            query: '',
-            labelIds:[],            
-        })
-    }
-
-    const toggleTagFilter = (labelId) => {
-        setMultiFilter( state => ({
-            query: state.query,
-            labelIds: handleIds(state.labelIds, labelId),            
-        }))
-    };
 
     
     const toggleAllCheckbox = (e) => {
@@ -85,8 +66,18 @@ const LibrariesList = (props) => {
     }
 
 
-
+    const doSearch = (params) => {        
+        setMultiFilter( state => ({
+            ...state,
+            ...params
+        }));            
+    }
     
+    useEffect(() => {                        
+        searchOptions.getSearchList(1,20,multiFilter)
+    }, [multiFilter])
+
+
     
 
     // var disableToolbarClass = disableToolbar? 'disabled':'';
@@ -96,52 +87,8 @@ const LibrariesList = (props) => {
         <>
             <SectionTitle 
                 title={props.sectionTitle}
-            />
-            {/*<div className="search-filter-bar">
-                <Row>
-                    <Col md={4} sm={12}>
-                        {searchOptions &&
-                            <InputSearch
-                                submitCallBack={(query) => { 
-                                    setMultiFilter( state => ({
-                                        query:query,
-                                        labelIds:state.labelIds,                                        
-                                    }) )
-                                } 
-                                }
-                                query={multiFilter.query}
-                                searchOnChange={searchOptions.searchOnChange ? searchOptions.searchOnChange : false}
-                            />
-                        }
-                    </Col>                    
-                    <Col md={3} sm={5}>
-                        {applyTags && <FilterSelect 
-                                type={"tags"} 
-                                options={tagsOptionList} 
-                                selectedIds={multiFilter.labelIds}
-                                submitCallBack={(labelId) => setMultiFilter( state => ({
-                                    query: state.query,
-                                    labelIds: handleIds(state.labelIds, labelId),                                    
-                        }) ) } /> 
-                    }
-                    </Col>
-                    <Col md={3} sm={5}>                    
-                    </Col>
-                    <Col sm={2}>{!disableCancelFilter && <a href="#" onClick={handleCancelFilter} className="btn btn-link active"><FormattedMessage {...messages.ResetAll} /></a> }</Col>
-                </Row>
-                <Row>
-                    <Col md={12} className="activeFilters">                    
-                    { tagsOptionList && multiFilter.labelIds && multiFilter.labelIds.length>0 &&
-                     <ul id="labelsActiveFilter" className="filtersList">    
-                      {multiFilter.labelIds.map( el => 
-                         <li key={el} className="tagFilter">{tagsOptionList.filter( (listItem) => (listItem.value===el))[0].label} <i className="fa-solid fa-xmark"  onClick={() => toggleTagFilter(el) }></i></li>
-                        ) 
-                      }
-                      </ul>
-                    }
-                    </Col>
-                </Row>
-                </div>*/}
+            />           
+            <AdminLibrarySearchPanel searchCallback={(filters)=>doSearch(filters)}/>            
             {Object.keys(pagination).length>0 &&
                 <Pagination
                     total={total}
@@ -149,7 +96,7 @@ const LibrariesList = (props) => {
                     per_page={per_page}
                     current_page={current_page}
                     total_pages={total_pages}
-                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize, multiFilter )}
+                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize,multiFilter)}
                 />    
             }
             <div className="librariesList list-wrapper">
@@ -197,11 +144,7 @@ const LibrariesList = (props) => {
                                     key={`lib-${lib.id}`}
                                     data={lib}                                    
                                     editPath={editPath}
-                                    toggleSelection={() => toggleLibrary(lib.id)}
-                                    //removeTag={removeTagFromRequest? (tagId) => {
-                                    //    removeTagFromRequest(req.id,tagId, multiFilter) 
-                                    //}:undefined}                                    
-                                    //deleteLibrary={() => deleteLibrary(lib.id,multiFilter)}
+                                    toggleSelection={() => toggleLibrary(lib.id)}               
                                     checked={selectedLibraries.includes(lib.id)}
                                     deleteLibrary={()=>deleteLibrary(lib.id,multiFilter)}
                                     changeStatusLibrary={(status)=>changeStatusLibrary(lib.id,status,multiFilter)}
@@ -223,7 +166,7 @@ const LibrariesList = (props) => {
                     per_page={per_page}
                     current_page={current_page}
                     total_pages={total_pages}
-                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize, multiFilter )}
+                    linkToPage={(page, pagesize) => searchOptions.getSearchList(page,pagesize,multiFilter)}
                 />    
             }
             </>

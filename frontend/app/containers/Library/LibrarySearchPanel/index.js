@@ -7,34 +7,30 @@ import {requestGetCountriesOptionList, requestLibrarySubjectOptionList,requestGe
 /*requestGetlibraryIdentifiersOptionList*/} from '../actions'
 import makeSelectLibrary, {isLibraryLoading} from '../selectors';
 import {LibrarySearchForm, Loader} from 'components';
-
+import {fields} from './fields';
 
 
 
 function LibrarySearchPanel(props) {
     const intl = useIntl();
-    const {isLoading, dispatch, searchCallback,library} = props    
+    const {dispatch, searchCallback,library} = props    
          
-    useEffect(() => {      
-        if(!isLoading) {
+    useEffect(() => {              
             dispatch(requestGetCountriesOptionList())
             dispatch(requestGetInstitutionTypesOptionList())         
             dispatch(requestLibrarySubjectOptionList())   
-            dispatch(requestLibraryIdentifierTypesOptionList()) 
-            }
+            dispatch(requestLibraryIdentifierTypesOptionList())             
     }, []) 
 
-    return (
-        <Loader show={isLoading}>
+    return (        
             <LibrarySearchForm 
+                searchFields={fields}
                 searchCallback={(params)=>searchCallback(params)} 
                 institutionTypesOptionList={library.institutionTypesOptionList}
                 countriesOptionList={library.countriesOptionList}
                 subjectOptionList={library.librarySubjectOptionList}   
                 identifierTypesOptionList={library.libraryIdentifierTypesOptionList}             
             />
-
-        </Loader>
     )
 
         
@@ -42,8 +38,7 @@ function LibrarySearchPanel(props) {
 
 
 
-const mapStateToProps = createStructuredSelector({
-    isLoading: isLibraryLoading(),
+const mapStateToProps = createStructuredSelector({    
     library: makeSelectLibrary(),    
 });
   

@@ -7,22 +7,19 @@ const BASE_ADMIN_URL=BASE_URL+"/api/v1/admin";
 
 // Libraries //
 export const admin_getLibrariesList = (options) => {
-    const page = options.page;
-    const pageSize=options.pageSize
-    const query = options.query;
-    const filterBy = options.filterBy;
-    const filterVal = options.filterVal;  
+  const page = options.page;
+  const pageSize = options.pageSize;
+  const query = options.query?options.query:'';    
+  const profileType=options.profile_type?options.profile_type:''
+  const country=options.country?options.country:''
+  const institution_type=options.institution_type?options.institution_type:''
+  const status=options.status?options.status:''
+  const subject=options.subject?options.subject:''
+  const identifier_type=options.identifier_type?options.identifier_type:''
+  const identifier_code=options.identifier_code?options.identifier_code:''
 
-    let qstringpar="";    
-    if(pageSize) qstringpar+="&pageSize="+pageSize;
-    //if(params && params.labelIds && params.labelIds.length>0) qstringpar+="&tagIds="+params.labelIds.join(',')+"";      
-    /*if(query) qstringpar+="&q="+query;
-    if(filterBy) qstringpar+="&filterBy="+filterBy;
-    if(filterVal) qstringpar+="&filterVal="+filterVal;*/
-      
-    options = getOption(options);
-
-    return request(`${BASE_ADMIN_URL}/libraries/?page=${page}${qstringpar}`, options)
+  options = getOption(options);
+  return request(`${BASE_ADMIN_URL}/libraries/?page=${page}&pageSize=${pageSize}&status=${status}&profile_type=${profileType}&country=${country}&subject=${subject}&institution_type=${institution_type}&identifier_type=${identifier_type}&identifier_code=${identifier_code}&q=${query}`, options)
   };
 
 export const admin_deleteLibrary = (options) => {

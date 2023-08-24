@@ -89,9 +89,6 @@ export const initialState = {
   librarySubjectOptionList: [],
   roles: [],
   resources: [],
-  libraryList: {    
-    data: [],
-  },
   places: {},
 };
 
@@ -272,14 +269,14 @@ const AdminReducer = (state = initialState, action) =>
         break;
       case REQUEST_GET_COUNTRIES_OPTIONLIST_SUCCESS:
         draft.error = initialState.error;
-        draft.countriesOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );
+        draft.countriesOptionList =  action.result.sort((a, b) => { return (a.id > b.id) ? 1 : -1 }).map(item => { return {value: item.id, label: item.name} } );
         break;
       case REQUEST_LIBRARYSUBJECT_OPTIONLIST:
         draft.error = action.error;
         break;
       case REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS:
         draft.error = initialState.error;
-        draft.librarySubjectOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );
+        draft.librarySubjectOptionList =  action.result.sort((a, b) => { return (a.id > b.id) ? 1 : -1 }).map(item => { return {value: item.id, label: item.name} } );
         break;
       case REQUEST_GET_INSTITUTION_TYPE_LIST:
         draft.loading = true;
@@ -348,7 +345,8 @@ const AdminReducer = (state = initialState, action) =>
           case REQUEST_GET_LIBRARY_LIST_SUCCESS:
             draft.loading = false;
             draft.error = initialState.error;
-            draft.libraryList = action.result;
+            draft.libraryOptionList = action.result;
+            draft.libraryOptionList.pagination = action.result.meta.pagination
             break;  
     }
   });

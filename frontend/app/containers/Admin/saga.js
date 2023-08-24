@@ -227,13 +227,11 @@ export function* requestUpdateLibrarySaga(action) {
 export function* requestGetLibrariesListSaga(action = {}) {
   const options = {
     method: 'get',
-    page: action.page ? action.page : '1',
-    pageSize: action.pageSize ? action.pageSize : null,
-    /* implement library list filtering
-    query: action.query ? action.query : '',
-    filterBy: action.filterBy ? action.filterBy : '',
-    filterVal: action.filterBy ? action.filterVal : '',*/
+    page: action.page ? action.page : '1',    
+    pageSize: action.pageSize ? action.pageSize : '',    
+    ...action.options
   };
+  
   try {
     const request = yield call(admin_getLibrariesList, options);
     yield put(requestGetLibrariesListSuccess(request));

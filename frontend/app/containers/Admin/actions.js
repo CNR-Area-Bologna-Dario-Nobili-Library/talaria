@@ -132,12 +132,12 @@ export function requestUsersOptionListSuccess(result) {
   };
 }
 
-export function requestGetLibrariesList(page = '1', pageSize, searchFilter) {
+export function requestGetLibrariesList(options,page = '1', pageSize=20) {
   return {
     type: REQUEST_GET_LIBRARIES_LIST,
+    options,        
     page,
-    pageSize,
-    searchFilter,    
+    pageSize
   };
 }
 

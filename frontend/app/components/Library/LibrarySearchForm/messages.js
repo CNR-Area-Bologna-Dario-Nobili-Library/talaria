@@ -36,5 +36,15 @@ export default defineMessages({
     id: `app.libraries.identifier_code`,
     defaultMessage: 'identifier_code',
   },
+
+  status: {
+    id: `app.libraries.status`,
+    defaultMessage: 'Status',
+  },
+
+  profile_type: {
+    id: `app.libraries.profile_type`,
+    defaultMessage: 'Profile type',
+  },
 });
 
