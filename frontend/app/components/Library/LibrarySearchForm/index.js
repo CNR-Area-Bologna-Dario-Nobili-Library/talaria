@@ -32,29 +32,16 @@ const LibrarySearchForm = (props) => {
 
     const doSearch=(formData)=> 
     {        
-            let params={
-                'query':formData.name,
-                'country': formData.country_id,
-                'subject': formData.subject_id,
-                'institution_type': formData.institution_type_id,
-                'identifier_type': formData.identifier_type_id,
-                'identifier_code': formData.identifier_code,
-            }
-
-            if(formData.profile_type)
-            {    params={
-                    ...params,
-                    'profile_type': formData.profile_type
-                }
-            }
-
-            if(formData.status)
-            {
-                params={
-                    ...params,
-                    'status': formData.status
-                }
-            }
+        let params={
+            'query':formData.name,
+            'country': formData.country_id,
+            'subject': formData.subject_id,
+            'institution_type': formData.institution_type_id,
+            'identifier_type': formData.identifier_type_id,
+            'identifier_code': formData.identifier_code,
+            'profile_type': formData.profile_type,
+            'status': formData.status
+        }
 
         
         searchCallback(params);
