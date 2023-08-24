@@ -11,7 +11,7 @@ class DocdelRequest extends BaseModel
 {
     protected $table = 'docdel_requests';
     
-    protected $simpleSearchField="pub_title"; //ricerca sul riferimento
+    protected $simpleSearchFields = ['part_title', 'pub_title', 'authors', 'part_authors'];
 
     protected $fillable=[
         'reference_id',
@@ -120,7 +120,11 @@ class DocdelRequest extends BaseModel
     {
         $text = trim($q);
         return $query->whereHas('reference', function ($query2) use ($text) {
-                $query2->where($this->simpleSearchField, 'like', '%'. $text .'%');
+            $query2->where(function ($query) use ($text) {
+                foreach ($this->simpleSearchFields as $field) {
+                    $query->orWhere($field, 'like', '%' . $text . '%');
+                }
+            });
         });
     }
 }

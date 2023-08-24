@@ -26,7 +26,7 @@ const LIBRARY_DIFFERENT_PROFILES = (process.env.LIBRARY_DIFFERENT_PROFILES && pr
 
 const RegisterLibrary = (props) => {
     console.log('RegisterLibrary', props)
-    const messages= {...wizardMessages,...globalMessages}
+    const messages= {...globalMessages,...wizardMessages}
     
     let [institutionPresent, setInstitutionPresent] = useState(false)
     let [currentStep, setCurrentStep] = useState(1)

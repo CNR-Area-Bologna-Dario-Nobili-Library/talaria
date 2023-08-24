@@ -281,6 +281,12 @@ lon: {
 //   defaultMessage: 'Longtitude',
 // },
 
+name: {
+  id: 'app.libraries.name',
+  defaultMessage: 'Library name',
+},
+
+
 alt_name: {
   id: 'app.libraries.alt_name',
   defaultMessage: 'Alternative name',
