@@ -14,6 +14,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",    
         options: "profile_type",
         order: 2,
+        hasselect:true
     },
 
 
@@ -24,6 +25,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",    
         options: "status",
         order: 3,
+        hasselect:true
     },
 
     institution_type_id: {
@@ -32,7 +34,8 @@ export const fields = {
         name: "institution_type_id",
         width: "col-md-4 col-sm-12",     
         options: "institution_type_id",
-        order: 4,        
+        order: 4,
+        hasselect:true
     },
 
     country_id: {
@@ -42,6 +45,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",    
         options: "country_id",
         order: 5,
+        hasselect:true
     },
 
     subject_id: {
@@ -51,6 +55,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",       
         options: "subject_id",
         order: 6,
+        hasselect:true
     },  
 
     identifier_type_id: {
@@ -60,6 +65,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",        
         options: "identifier_type_id",
         order: 7,
+        hasselect:true
     },
 
     identifier_code: {
