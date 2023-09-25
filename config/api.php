@@ -238,7 +238,7 @@ return [
         'secret' => env('CLIENT_SECRET', 'xxxx'),
     ],
 
-    'page_size' => 20,
+    'page_size' => 50,
 
     'user_default_roles' => [
         'registered',
