@@ -14,6 +14,7 @@ export const fields = {
         width: "col-md-4 col-sm-12",    
         options: "status",
         order: 3,
+        hasselect:true
     },
 
     institution_type_id: {
@@ -22,7 +23,8 @@ export const fields = {
         name: "institution_type_id",
         width: "col-md-4 col-sm-12",     
         options: "institution_type_id",
-        order: 4,        
+        order: 4,  
+        hasselect:true      
     },
 
     country_id: {
@@ -32,5 +34,6 @@ export const fields = {
         width: "col-md-4 col-sm-12",    
         options: "country_id",
         order: 5,
+        hasselect:true
     },    
 }
