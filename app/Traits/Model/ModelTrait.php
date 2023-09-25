@@ -22,7 +22,7 @@ trait ModelTrait
 
     protected static $stringIdentifies = 'name';
 
-    protected $simpleSearchField="name"; //default field for SimpleSearch on collection
+    protected $simpleSearchFields=["name"]; //default field for SimpleSearch on collection
 
     protected $constantFields=[]; //array di campi i cui valori sono definiti come costanti in config/constants.php
 
