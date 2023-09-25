@@ -77,9 +77,9 @@ class Institution extends BaseModel
         return $query->where($params);
     }
 
-     //filter only active (not suspended) libraries
-     public function scopeActive($query) {
-        return $query->where('status','=',config("constants.institution_status.enabled")); 
+     //filter only active Institutions
+     public function scopeActive($query) {        
+        return $this->scopeByStatus($query,config("constants.institution_status.enabled")); 
     }
 
 

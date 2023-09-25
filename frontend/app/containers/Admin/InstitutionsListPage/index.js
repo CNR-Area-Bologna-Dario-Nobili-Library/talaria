@@ -63,7 +63,7 @@ const InstitutionsListPage = (props) => {
                         searchFilter={...searchFilter}
                         dispatch(requestGetInstitutionsList(page,pageSize,searchFilter))
                     },
-                    searchOnChange: true
+                    searchOnChange: false
                 }}
                 deleteInstitution={deleteInstitution}    
                 changeStatusInstitution={changeStatusInstitution}            

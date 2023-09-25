@@ -12,6 +12,7 @@ import ApplyTag from '../../ApplyTag';
 import CustomCheckBox from 'components/Form/CustomCheckBox';
 import SectionTitle from 'components/SectionTitle';
 import './style.scss';
+import AdminInstitutionSearchPanel from '../../../containers/Admin/AdminInstitutionSearchPanel'
 
 const InstitutionsList = (props) => {
     console.log('InstitutionsList', props)
@@ -23,11 +24,7 @@ const InstitutionsList = (props) => {
     const [disableToolbar,setDisableToolbar]=useState(false);
     const [disableCancelFilter,setDisableCancelFilter]=useState(true);
 
-    const [multiFilter, setMultiFilter ] = useState(
-        {
-            query: '',
-            labelIds:[],            
-        }
+    const [multiFilter, setMultiFilter ] = useState(       
     );
 
     const handleIds = (ids, id) => {
@@ -48,12 +45,12 @@ const InstitutionsList = (props) => {
        setDisableToolbar(selectedInstitutions.length == 0)
     }, [selectedInstitutions])
 
-    useEffect( ()=> {
+    /*useEffect( ()=> {
         mounted ? searchOptions.getSearchList(current_page, per_page, multiFilter ) : null
         if(multiFilter.query != "" || (multiFilter.labelIds && multiFilter.labelIds.length>0) )
             setDisableCancelFilter(false);
         else setDisableCancelFilter(true);            
-    }, [multiFilter])
+    }, [multiFilter])*/
 
     
     const handleCancelFilter = () => {
@@ -71,6 +68,18 @@ const InstitutionsList = (props) => {
     const toggleInstitution = (id) => {
         setSelectedInstitutions(state => ( handleIds([...state], id)))
     }    
+
+    const doSearch = (params) => {        
+        setMultiFilter( state => ({
+            ...state,
+            ...params
+        }));            
+    }
+    
+    useEffect(() => {                        
+        searchOptions.getSearchList(1,20,multiFilter)
+    }, [multiFilter])
+
 
     return (
         mounted &&
@@ -123,6 +132,7 @@ const InstitutionsList = (props) => {
                     </Col>
                 </Row>
                 </div>*/}
+            <AdminInstitutionSearchPanel searchCallback={(filters)=>doSearch(filters)}/>             
             {Object.keys(pagination).length>0 &&
                 <Pagination
                     total={total}

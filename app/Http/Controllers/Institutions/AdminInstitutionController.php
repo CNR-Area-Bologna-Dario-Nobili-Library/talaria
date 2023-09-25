@@ -40,17 +40,17 @@ class AdminInstitutionController extends AdminApiController
     //override     
     public function index(Request $request)
     {        
-        if($request->has('country'))
+        if($request->has('country')&& $request->input('country')!='' && is_numeric($request->input('country')))
         {        
             $this->model = $this->model->byCountry($request->input('country')); 
-        }    
-        
-        if($request->has('institution_type'))
+        }
+
+        if($request->has('institution_type')&& $request->input('institution_type')!='' && is_numeric($request->input('institution_type')))
         {        
             $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
         }
-        
-        if($request->has('status'))
+
+        if($request->has('status')&& $request->input('status')!='' && is_numeric($request->input('status')))
         {        
             $this->model = $this->model->byStatus($request->input('status')); 
         }

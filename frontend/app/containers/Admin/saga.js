@@ -291,10 +291,7 @@ export function* requestGetInstitutionsListSaga(action = {}) {
     method: 'get',
     page: action.page ? action.page : '1',
     pageSize: action.pageSize ? action.pageSize : null,
-    /* implement library list filtering
-    query: action.query ? action.query : '',
-    filterBy: action.filterBy ? action.filterBy : '',
-    filterVal: action.filterBy ? action.filterVal : '',*/
+    ...action.options
   };
   try {
     const request = yield call(admin_getInstitutionsList, options);

@@ -309,12 +309,12 @@ return {
   };
 } */
 
-export function requestGetInstitutionsList(page = '1', pageSize, searchFilter) {
+export function requestGetInstitutionsList(page = '1',  pageSize=20,   options   ) {
   return {
     type: REQUEST_GET_INSTITUTIONS_LIST,
     page,
     pageSize,
-    searchFilter    
+    options    
   };
 }
 

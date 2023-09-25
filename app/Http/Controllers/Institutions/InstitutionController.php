@@ -68,6 +68,16 @@ class InstitutionController extends ApiController
     {        
         //filter active only
         $this->model=$this->model->active();
+                
+        if($request->has('country')&& $request->input('country')!='' && is_numeric($request->input('country')))
+        {        
+            $this->model = $this->model->byCountry($request->input('country')); 
+        }
+
+        if($request->has('institution_type')&& $request->input('institution_type')!='' && is_numeric($request->input('institution_type')))
+        {        
+            $this->model = $this->model->byInstitutionType($request->input('institution_type')); 
+        }
 
         return parent::index($request);    
     }
