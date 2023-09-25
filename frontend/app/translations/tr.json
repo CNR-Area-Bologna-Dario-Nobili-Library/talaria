@@ -701,7 +701,7 @@
   "app.routes.InstitutionNew": "Yeni kullanıcı",
   "app.routes.InstitutionTypeNew": "Yeni kurum türü",
   "app.routes.InstitutionType": "Kurum türü",
-  "app.routes.InstitutionTypes": "Kurum türleri (Kurum seçerken eklenmiş diğer kurumlar altında Institution not present'i seçip kendi kurumunuzu ekleyin)",
+  "app.routes.InstitutionTypes": "Kurum türleri",
   "app.routes.MyInstitution": "Benim kurumum",
   "app.routes.Projects": "Projeler",
   "app.routes.MyProject": "Benim projem",

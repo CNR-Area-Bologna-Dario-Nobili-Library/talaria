@@ -205,7 +205,7 @@
   "app.components.LibraryStatus.upgradeProfileButton":"Aggiorna al Profilo Completo!",
   "app.components.LibraryStatus.profileData": "Profilo Biblioteca",
   "app.components.LibrarySearchPanel.header": "Ricerca biblioteca",
-  "app.components.InstitutionSearchPanel.header":"Ricerca Enti",
+  "app.components.InstitutionSearchPanel.header":"Ricerca istituzioni",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Aggiorna a Profilo Completo",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Aggiorna il profilo",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Effettuando l'aggiornamento al profilo completo potrai ricevere richieste ILL da altre biblioteche.<br/><br/>Se desideri eseguire l'aggiornamento, fai clic sul pulsante in basso e controlla le impostazioni dei cataloghi e degli identificativi della tua biblioteca (queste informazioni devono essere compilate per poter evadere le richieste DD)",
