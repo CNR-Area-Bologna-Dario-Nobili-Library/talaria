@@ -205,6 +205,7 @@
   "app.components.LibraryStatus.upgradeProfileButton":"Upgrade to FULL profile!",
   "app.components.LibraryStatus.profileData": "Library Profile",
   "app.components.LibrarySearchPanel.header": "Library search",
+  "app.components.InstitutionSearchPanel.header":"Istitution search",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Upgrade to FULL profile",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Upgrade to FULL",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Upgrading to full profile you'll be able to receive ILL requests from other libraries.<br/><br/>If you want to upgrade click on button below and check your library's catalogs and identifiers settings (this information must be filled in order to fullfill DD requests)",
@@ -338,6 +339,12 @@
   "app.libraries.ill_IFLA_voucher": "IFLA vouchers are accepted",
   "app.libraries.ill_cost_in_voucher": "IFLA voucher value",  
   "app.libraries.library_coordinates_Validity": "The latitude or longitude can be accepted in either decimal format (e.g., +33.56, -33.56) or in degrees format (e.g., 40°20'38''N).",
+
+  "app.institutions.name": "Institution",
+  "app.institutions.status": "Status",
+  "app.institutions.status.disabled":"Disabled",
+  "app.institutions.status.enabled":"Enabled",
+  "app.institutions.status.pending":"Pending",
 
   "app.references.labels": "Tags",
   "app.references.labelAs": "Tag as",

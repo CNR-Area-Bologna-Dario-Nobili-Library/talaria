@@ -205,6 +205,7 @@
   "app.components.LibraryStatus.upgradeProfileButton":"Aggiorna al Profilo Completo!",
   "app.components.LibraryStatus.profileData": "Profilo Biblioteca",
   "app.components.LibrarySearchPanel.header": "Ricerca biblioteca",
+  "app.components.InstitutionSearchPanel.header":"Ricerca Enti",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Aggiorna a Profilo Completo",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Aggiorna il profilo",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Effettuando l'aggiornamento al profilo completo potrai ricevere richieste ILL da altre biblioteche.<br/><br/>Se desideri eseguire l'aggiornamento, fai clic sul pulsante in basso e controlla le impostazioni dei cataloghi e degli identificativi della tua biblioteca (queste informazioni devono essere compilate per poter evadere le richieste DD)",
@@ -338,6 +339,12 @@
   "app.libraries.ill_IFLA_voucher": "Accettati voucher IFLA",
   "app.libraries.ill_cost_in_voucher": "Valore voucher IFLA",  
   "app.libraries.library_coordinates_Validity": "La latitudine o la longitudine possono essere accettate sia in formato decimale (ad es. +33.56, -33.56) che in formato in gradi (ad es. 40°20'38''N).",
+
+  "app.institutions.name": "Ente",
+  "app.institutions.status": "Stato",
+  "app.institutions.status.disabled":"Disabilitato",
+  "app.institutions.status.enabled":"Abilitato",
+  "app.institutions.status.pending":"In attesa",
 
   "app.references.labels": "Etichette",
   "app.references.labelAs": "Etichetta come",
