@@ -176,12 +176,12 @@ class LibraryController extends ApiController
 
         $model->status=config("constants.library_status.new");
 
-        if (!is_numeric($request->input('lon'))) {
+        if (!empty($loncoordinates) && !is_numeric($request->input('lon'))) {
             $loncoordinates = $request->input('lon');
             $lon = Helper::convertCoordinateToDecimal($loncoordinates);
             $model->lon= $lon;
         }
-        if (!is_numeric($request->input('lat'))) {
+        if (!empty($loncoordinates) && !is_numeric($request->input('lat'))) {
             $latcoordinates = $request->input('lat');
             $lat = Helper::convertCoordinateToDecimal($latcoordinates);
             $model->lat= $lat;

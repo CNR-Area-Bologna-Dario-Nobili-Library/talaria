@@ -159,7 +159,11 @@ class PatronDocdelRequest extends BaseModel
     {
         $text = trim($q);
         return $query->whereHas('reference', function ($query2) use ($text) {
-                $query2->where($this->simpleSearchField, 'like', '%'. $text .'%');
+            $query2->where(function ($query) use ($text) {
+                foreach ($this->simpleSearchFields as $field) {
+                    $query->orWhere($field, 'like', '%' . $text . '%');
+                }
+            });
         });
     }
 

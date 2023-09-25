@@ -55,7 +55,7 @@ const CustomForm = (props) => {
 
         if (!isIdentifierFound)
         {
-                if (formData.identifier_type_id!==null && formData.library_identifiers_txt!==null)
+                if (formData.identifier_type_id!==null && formData.identifier_type_id.value!=='Select' && formData.library_identifiers_txt!==null)
                 {
                     const unique_id = uuid();
                     const newList = list.concat({
@@ -282,15 +282,16 @@ const CustomForm = (props) => {
                                                                             field.options.filter(opt => opt.value === props.requestData[field.name])[0] : // filtriamo
                                                                             formData[field.name]   // nel caso di interazioni allora mostraiamo il valore appena scelto dall utente
                                                                         }
-                                                                        options={
-                                                                            props[field.name] &&
-                                                                            field.options === field.name ?
-                                                                            props[field.name] :
-                                                                            !props[field.name] &&
-                                                                            field.options === field.name ?
-                                                                            [] :
-                                                                            field.options
-                                                                        }
+                                                                        options={[
+                                                                            ...(field.hasselect && !field.required ? [{ label: "Select", value: "Select" }] : []),
+                                                                            ...(props[field.name] &&
+                                                                                field.options === field.name
+                                                                                ? props[field.name]
+                                                                                : !props[field.name] && field.options === field.name
+                                                                                ? []
+                                                                                : field.options)
+                                                                        ]}
+
                                                                         searchOptionList={field.search ? searchOptionList : {} }
                                                                         handleChange={(value) => handleChange(value, field.name, field.order)}
                                                                         />  

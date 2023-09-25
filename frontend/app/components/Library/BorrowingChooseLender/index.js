@@ -85,6 +85,10 @@ const BorrowingChooseLender = (props) => {
         }));        
     }
 
+    const [selectedTab, setSelectedTab] = useState('ALL');
+    const handleTabClick = (tabName) => {
+        setSelectedTab(tabName);
+    };
 
     useEffect(() => {
         //findLenderByCat(0)        
@@ -95,18 +99,20 @@ const BorrowingChooseLender = (props) => {
                 <h3>{intl.formatMessage({id: 'app.requests.borrowing_lender_list_title'})}</h3>                                                          
                 <ul className="nav nav-tabs" id="LenderListTab" role="tablist">
                     <li className="nav-item" role="presentation">
-                        <button className="nav-link active" id="alllist-tab" data-toggle="tab" role="tab" aria-controls="alllist" aria-selected="true" data-target="#alllist">ALL</button>
+                        <button className={`nav-link ${selectedTab === 'ALL' ? 'active' : ''}`} id="alllist-tab" onClick={() => handleTabClick('ALL')} > ALL </button>                    
                     </li>                      
                     <li className={`nav-item ${!catalog_filter_enabled?'disabled':''}`} role="presentation">
-                        <button className="nav-link" id="cat1list-tab" data-toggle="tab" role="tab" aria-controls="cat1list" aria-selected="false"  data-target="#cat1list">CATALOG1</button>
+                        <button className={`nav-link ${selectedTab === 'CATALOG1' ? 'active' : ''}`} id="cat1list-tab" onClick={() => handleTabClick('CATALOG1')}> CATALOG1 </button>
                     </li>
                     <li className={`nav-item ${!catalog_filter_enabled?'disabled':''}`} role="presentation">
-                        <button className="nav-link" id="cat2list-tab" data-toggle="tab" role="tab" aria-controls="cat2list" aria-selected="false" data-target="#cat2list">CATALOG2</button>
+                        <button className={`nav-link ${selectedTab === 'CATALOG2' ? 'active' : ''}`} id="cat2list-tab" onClick={() => handleTabClick('CATALOG2')} > CATALOG2 </button>
                     </li>                      
                 </ul>                
                 <div className='tab-content' id="LenderListTabContent">                       
-                    <div className="tab-pane fade show active" id="alllist" role="tabpanel" aria-labelledby="alllist-tab">      
-                    <div className='' id="LibrariesListResult">
+                <div className={`tab-pane fade ${selectedTab === 'ALL' ? 'show active' : ''}`} id="alllist" role="tabpanel">
+                <div className='tab-content' id="LenderListTabContent"> 
+                <div className="tab-pane fade show active" id="alllist" role="tabpanel" aria-labelledby="alllist-tab"> 
+                <div className='' id="LibrariesListResult">
                         <LibrarySearchPanel searchCallback={(filters)=>doSearch({page:1,pageSize:15,...filters})}/>
                         {lendersList.loading && <div className="w-50 mx-auto my-3 text-center"><i className="fa-solid fa-spinner fa-spin-pulse fa-2x"></i></div>}
                         {lendersList.data && lendersList.data.length>0 &&
@@ -205,8 +211,18 @@ const BorrowingChooseLender = (props) => {
                             </div>                     
                         }  
                     </div>
-                    <div class="tab-pane fade" id="cat1list" role="tabpanel" aria-labelledby="cat1list-tab">empty list</div>
-                    <div class="tab-pane fade" id="cat2list" role="tabpanel" aria-labelledby="cat2list-tab">empty list</div>                        
+                    </div>
+                    </div>
+                    {/* Tab 2 Content */}
+                    <div className={`tab-pane fade ${selectedTab === 'CATALOG1' ? 'show active' : ''}`} id="cat1list" role="tabpanel">
+                        <h4>CATALOG1 tab</h4>
+                        <p>You can write your code here for the CATALOG1 tab.</p>
+                    </div>
+                    {/* Tab 3 Content */}
+                    <div className={`tab-pane fade ${selectedTab === 'CATALOG2' ? 'show active' : ''}`} id="cat2list" role="tabpanel">
+                        <h4>CATALOG2 tab</h4>
+                        <p>You can write your code here for the CATALOG2 tab.</p>
+                    </div>
                 </div>
             </div>
     );

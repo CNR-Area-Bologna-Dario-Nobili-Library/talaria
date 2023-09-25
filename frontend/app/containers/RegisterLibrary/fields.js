@@ -130,6 +130,7 @@ export const fields = {
         group: "step_1",
         options: "country_id",
         order: 10,
+        hasselect: true
     },
     state: {
         type: "text",
@@ -219,6 +220,7 @@ export const fields = {
         group: "step_1",
         options: "institution_type_id",
         order: 19,
+        hasselect: false
        // selectedOption: "institution_type_id"
     },
     institution_country_id: {
@@ -229,7 +231,8 @@ export const fields = {
         group: "step_1",
         options: "institution_country_id",
         order: 20,
-        selectedOption: "institution_country_id"
+        selectedOption: "institution_country_id",
+        hasselect: false
     },
     institution_id: {
         type: "custom-select",
@@ -239,7 +242,8 @@ export const fields = {
         group: "step_1",
         options: "institution_id",
         order: 21,
-        selectedOption: "id"
+        selectedOption: "id",
+        hasselect: false
     },
     suggested_institution_name: {
         type: "text",
@@ -269,6 +273,7 @@ export const fields = {
         group: "step_1",
         required: true,
         order: 24,
+        hasselect: false
     },
 
     identifiers_label: {
@@ -291,6 +296,7 @@ export const fields = {
         group: "step_1",
         options: "identifier_type_id",
         order: 26,
+        hasselect: false
     },
  
     library_identifiers_txt: {
@@ -331,6 +337,7 @@ export const fields = {
         group: "step_1",
         hidden:true,
         order: 30,
+        hasselect: false
     },
 
     subject_label: {
@@ -352,6 +359,7 @@ export const fields = {
         group: "step_1",
         options: "subject_id",        
         order: 32,
+        hasselect: false
     },
 
 

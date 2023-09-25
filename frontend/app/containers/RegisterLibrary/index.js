@@ -495,6 +495,7 @@ const RegisterLibrary = (props) => {
                                     var itemexists = itemsreport.findIndex(x => x.field_name==key && x.value==data[key]); 
                                     if (itemexists < 0)
                                     {
+                                        if (data[key]!=='Select')
                                         itemsreport.push({
                                             field_name: key,
                                             value: data[key],
@@ -574,8 +575,15 @@ const RegisterLibrary = (props) => {
                     <Button onClick={onBackPressed} className='backButton'> 
                         {intl.formatMessage(globalMessages.back)} 
                     </Button>
-                    <Button color="brown" className="rightAlignButton" onClick={() => dispatch(requestPostPublicLibrary(data, intl.formatMessage(wizardMessages.createMessage)))}>
-                        {intl.formatMessage(globalMessages.submit)} 
+                    <Button color="brown" className="rightAlignButton" onClick={() => {
+                        for (const key in data) {
+                            if (data[key] === 'Select') {
+                                delete data[key];
+                            }
+                        }
+                        console.log("before submitting " + JSON.stringify(data));
+                        dispatch(requestPostPublicLibrary(data, intl.formatMessage(wizardMessages.createMessage)));
+                    }}>{intl.formatMessage(globalMessages.submit)} 
                     </Button>
                     </div>
                 </div>
