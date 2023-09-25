@@ -219,15 +219,15 @@ class Library extends BaseModel
 
     //filter only active (not suspended) libraries
     public function scopeActive($query) {
-        return $query->where('status',config("constants.library_status.enabled")); 
+        return $this->scopeByStatus($query,config("constants.library_status.enabled")); 
     }
 
     public function scopeLender($query) {
-        return $query->where('profile_type',2); //1=borrow, 2=borrow+lender
+        return $query->where('profile_type',config("constants.library_profile_type.full")); 
     }
 
     public function scopeBorrower($query) {
-        return $query->where('profile_type',1); //1=borrow, 2=borrow+lender
+        return $query->where('profile_type',config("constants.library_profile_type.basic"));
     }
 
     public function scopeBySubject($query,$subjectId) {
