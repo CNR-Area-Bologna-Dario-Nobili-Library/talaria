@@ -27,10 +27,9 @@ const Pagination = (props) => {
                         {per_page}
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem onClick={() => linkToPage(1, 5)}>5</DropdownItem>
-                        <DropdownItem onClick={() => linkToPage(1, 10)}>10</DropdownItem>
                         <DropdownItem onClick={() => linkToPage(1, 20)}>20</DropdownItem>
                         <DropdownItem onClick={() => linkToPage(1, 50)}>50</DropdownItem>
+                        <DropdownItem onClick={() => linkToPage(1, 100)}>100</DropdownItem>                        
                         {/* <DropdownItem divider/>
                         <DropdownItem onClick={() => setPageSize(50)}>ALL</DropdownItem> */}
                     </DropdownMenu>
