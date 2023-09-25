@@ -341,6 +341,7 @@
   "app.libraries.library_coordinates_Validity": "La latitud o la longitud se pueden aceptar en formato decimal (p. ej., +33,56, -33,56) o en formato de grados (p. ej., 40°20'38''N).",
 
   "app.institutions.status": "Estado",
+  "app.institutions.institution_type_id": "Tipo de Institución",
   "app.institutions.status.disabled":"Desactivado",
   "app.institutions.status.enabled":"Activo",
   "app.institutions.status.pending":"Pendiente",

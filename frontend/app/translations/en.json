@@ -341,6 +341,7 @@
   "app.libraries.library_coordinates_Validity": "The latitude or longitude can be accepted in either decimal format (e.g., +33.56, -33.56) or in degrees format (e.g., 40°20'38''N).",
 
   "app.institutions.name": "Institution",
+  "app.institutions.institution_type_id": "Institution type",
   "app.institutions.status": "Status",
   "app.institutions.status.disabled":"Disabled",
   "app.institutions.status.enabled":"Enabled",

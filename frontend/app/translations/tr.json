@@ -341,9 +341,10 @@
   "app.libraries.library_coordinates_Validity": "Enlem veya boylam kesir sayı  (örneğin; +33.56, -33.56) veya derece formatında (örneğin; 40°20'38''N) girebilirsiniz",
   
   "app.institutions.name": "Kurum",
-  "app.institutions.status": "???Status",
-  "app.institutions.status.disabled":"???Disabled",
-  "app.institutions.status.enabled":"???Enabled",
+  "app.institutions.status": "Durumu",
+  "app.institutions.institution_type_id": "Kurum türleri",
+  "app.institutions.status.disabled":"Deaktif",
+  "app.institutions.status.enabled":"Aktif",
   "app.institutions.status.pending":"???Pending",
   
   "app.references.labels": "Etiketler",

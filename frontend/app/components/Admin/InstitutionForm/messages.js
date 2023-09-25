@@ -13,7 +13,7 @@ export default defineMessages({
     defaultMessage: 'Institution form',
   },
   institution_type_id: {
-    id: `${scope}.institution_type_id`,
+    id: `app.institutions.institution_type_id`,
     defaultMessage: "Institution Type ID",
   },
   country_id: {

@@ -15,7 +15,7 @@ export default defineMessages({
     defaultMessage: "Institution name",
   },
   institution_type_id: {
-    id: `app.libraries.institution_type_id`,
+    id: `app.institutions.institution_type_id`,
     defaultMessage: "Institution Type ID",
   },
   country_id: {
