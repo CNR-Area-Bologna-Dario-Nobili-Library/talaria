@@ -283,7 +283,7 @@ const CustomForm = (props) => {
                                                                             formData[field.name]   // nel caso di interazioni allora mostraiamo il valore appena scelto dall utente
                                                                         }
                                                                         options={[
-                                                                            ...(field.hasselect && !field.required ? [{ label: "Select", value: "Select" }] : []),
+                                                                            ...(field.hasselect && !field.required ? [{ label: intl.formatMessage({id: 'app.components.CustomForm.select'}), value: "Select" }] : []),
                                                                             ...(props[field.name] &&
                                                                                 field.options === field.name
                                                                                 ? props[field.name]
