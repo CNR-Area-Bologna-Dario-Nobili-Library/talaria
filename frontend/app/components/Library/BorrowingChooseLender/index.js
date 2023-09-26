@@ -101,12 +101,16 @@ const BorrowingChooseLender = (props) => {
                     <li className="nav-item" role="presentation">
                         <button className={`nav-link ${selectedTab === 'ALL' ? 'active' : ''}`} id="alllist-tab" onClick={() => handleTabClick('ALL')} > ALL </button>                    
                     </li>                      
+                    {catalog_filter_enabled && 
+                    <>
                     <li className={`nav-item ${!catalog_filter_enabled?'disabled':''}`} role="presentation">
                         <button className={`nav-link ${selectedTab === 'CATALOG1' ? 'active' : ''}`} id="cat1list-tab" onClick={() => handleTabClick('CATALOG1')}> CATALOG1 </button>
                     </li>
                     <li className={`nav-item ${!catalog_filter_enabled?'disabled':''}`} role="presentation">
                         <button className={`nav-link ${selectedTab === 'CATALOG2' ? 'active' : ''}`} id="cat2list-tab" onClick={() => handleTabClick('CATALOG2')} > CATALOG2 </button>
                     </li>                      
+                    </>
+                    }
                 </ul>                
                 <div className='tab-content' id="LenderListTabContent">                       
                 <div className={`tab-pane fade ${selectedTab === 'ALL' ? 'show active' : ''}`} id="alllist" role="tabpanel">
