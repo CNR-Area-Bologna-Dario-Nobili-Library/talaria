@@ -52,7 +52,6 @@
   "app.global.department": "Fakülte/Enstitü",
   "app.global.patron": "Kullanıcı",
   "app.global.librarian": "Kütüphaneci",
-  "app.global.librarianfull": "Yetkili Kütüphaneci",
   "app.global.title": "Nitelik",
   "app.global.label": "Etiket",
   "app.global.pending": "Beklemede",
@@ -204,8 +203,8 @@
 
   "app.components.LibraryStatus.upgradeProfileButton":"Full profile yükseltme yapın!",
   "app.components.LibraryStatus.profileData": "Kütüphane Profili",
-  "app.components.LibrarySearchPanel.header": "???Library search",
-  "app.components.InstitutionSearchPanel.header":"???Istitution search",
+  "app.components.LibrarySearchPanel.header": "Kütüphane arama",
+  "app.components.InstitutionSearchPanel.header":"Kurum arama",
   "app.components.UpgradeLibraryProfile.upgradeProfileTitle":"Full profile yükseltme yapın",
   "app.components.UpgradeLibraryProfile.upgradeProfileButton":"Full profile yükseltin",
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Full profile geçerseniz diğer kütüphanelerden ILL talepleri alabileceksiniz. <br/><br/> Yükseltme için aşağıdaki düğmeye tıklayın ve kütüphanenizin katalog ve belirteç ayarlarını kontrol edin.  (DD taleplerini karşılamak için bu bilgiler gereklidir)",
@@ -345,7 +344,7 @@
   "app.institutions.institution_type_id": "Kurum türleri",
   "app.institutions.status.disabled":"Deaktif",
   "app.institutions.status.enabled":"Aktif",
-  "app.institutions.status.pending":"???Pending",
+  "app.institutions.status.pending":"Bekliyor",
   
   "app.references.labels": "Etiketler",
   "app.references.labelAs": "Olarak etiketle",

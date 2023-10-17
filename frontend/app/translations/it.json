@@ -52,7 +52,6 @@
   "app.global.department": "Dipartimento/Istituto",
   "app.global.patron": "Utente",
   "app.global.librarian": "Bibliotecario",
-  "app.global.librarianfull": "Full Bibliotecario",
   "app.global.title": "Qualifica",
   "app.global.label": "Etichetta",
   "app.global.pending": "In attesa",

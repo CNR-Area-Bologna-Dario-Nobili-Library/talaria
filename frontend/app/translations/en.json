@@ -52,7 +52,6 @@
   "app.global.department": "Department/Institute",
   "app.global.patron": "User",
   "app.global.librarian": "Librarian",
-  "app.global.librarianfull": "Full Librarian",
   "app.global.title": "Qualification",
   "app.global.label": "Tag",
   "app.global.pending": "Pending",
