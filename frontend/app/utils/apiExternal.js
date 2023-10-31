@@ -1,16 +1,16 @@
 import request from "./request";
 
-const PMID_API_URL='https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi'
+const PMID_API_URL=process.env.PMID_API_URL
                     
-const OPENACCESSBUTTON_API_URL='https://api.openaccessbutton.org'
+const OPENACCESSBUTTON_API_URL=process.env.OPENACCESSBUTTON_API_URL
 
-const OPENSTREETMAP_API_URL='https://nominatim.openstreetmap.org'
+const OPENSTREETMAP_API_URL=process.env.OPENSTREETMAP_API_URL
 
-const FIND_ISSN_SERVICE_URL='https://issn.org/api'  //sample
+const FIND_ISSN_SERVICE_URL=process.env.FIND_ISSN_SERVICE_URL
 
-const FIND_ISBN_SERVICE_URL='https://sbn.it/api' //sample
+const FIND_ISBN_SERVICE_URL=process.env.FIND_ISBN_SERVICE_URL
 
-const FIND_ISSN_ACNP_URL='https://acnp.bo.it/....' //sample
+const FIND_ISSN_ACNP_URL=process.env.FIND_ISSN_ACNP_URL
 
 
 
