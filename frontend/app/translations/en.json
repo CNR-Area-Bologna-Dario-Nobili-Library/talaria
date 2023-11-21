@@ -678,6 +678,8 @@
   "app.routes.RequestNew": "New request",
   "app.routes.RequestDetail": "Request detail",
   "app.routes.Operators": "Operators",
+  "app.routes.PendingOperators": "???Pending Operators",
+  "app.routes.NewOperator": "???Add operator",
   "app.routes.Searches": "Searches",
   "app.routes.Requests": "Requests",
   "app.routes.MyLibraries": "My libraries",

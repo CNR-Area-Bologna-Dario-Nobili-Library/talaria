@@ -168,6 +168,14 @@ export default defineMessages({
         id: `${scope}.LibraryStatus`,
         defaultMessage: 'Status',
     },
+    PendingOperators: {
+        id: `${scope}.PendingOperators`,
+        defaultMessage: 'Pending operators',
+    },
+    NewOperator: {
+        id: `${scope}.NewOperator`,
+        defaultMessage: 'New operator',
+    },    
     Lending: {
         id: `${scope}.Lending`,
         defaultMessage: 'Lending',

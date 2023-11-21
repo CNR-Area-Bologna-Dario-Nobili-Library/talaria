@@ -37,20 +37,21 @@ const routes = [
   {
     path: '/manage', name: `MyLibrary`, header: true, component: SubRouteSwitch, permissions: ['manage','borrow','lend','manage-users','deliver'],resource: {type: 'libraries', key: 'library_id',},
     children: [            
-      { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage/', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'], sidebar: true, order:1},            
+      { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'], sidebar: true, order:1},
       { path: '/edit', icon: 'edit', exact: true, name: `LibraryProfile`,  url:'/manage/edit', component: ManageLibraryPage, permissions: ['manage'], sidebar:true,order:2},      
-      { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'], sidebar:false},      
-      /* NOT IMPLEMENTED
-      { path: '/subscriptions', icon: 'file-contract', exact: true, name: `Subscriptions`, component: Fake, url: '/manage/subscriptions',permissions: ['manage'], sidebar: true, order:2},      
-      { path: '/subscriptions/renew', icon: 'calendar', exact: true, name: `RenewSubscription`, component: Fake,permissions: ['manage']},      
-      { path: '/operators', icon: 'user-cog', exact: true, name: `Operators`, component: Fake,url: '/manage/operators', permissions: ['manage'],sidebar: true, order:3 },      
-      { path: '/service', icon: 'cog',exact: true, name: `LibraryServices`, component: Fake,url: '/manage/service',permissions: ['manage'],sidebar: true, order:4  },      
-      { path: '/linkingservices', icon: 'link', exact: true, name: `LibraryLinkingServices`, component: Fake,url: '/manage/linkingservices',permissions: ['manage'],sidebar: true, order:5  },
-      */
+      { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'], sidebar:false},                  
+      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: Fake,url: '/manage/operators', permissions: ['manage','borrow','lend','manage-users','deliver'],sidebar: true, order:3},      
+      //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
+      { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: Fake, permissions: ['manage'], sidebar: true, order:4, level:1},
+      { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: Fake, permissions: ['manage'], sidebar: true, order:5, level:1},      
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/manage/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:6 },
       { path: '/pickup',  exact: true,icon: 'truck',name: `Pickup`, component: PickupsPage,url: '/manage/pickup', permissions: ['manage'], hide: hidePatronRoutes(),sidebar: true, order:8 },
       { path: '/pickup/:id?/:op?', exact: true, name: `PickupUpdate`, component: PickupPage, permissions: ['manage'], sidebar: false},            
       /* NOT IMPLEMENTED
+      { path: '/subscriptions', icon: 'file-contract', exact: true, name: `Subscriptions`, component: Fake, url: '/manage/subscriptions',permissions: ['manage'], sidebar: true, order:2},      
+      { path: '/subscriptions/renew', icon: 'calendar', exact: true, name: `RenewSubscription`, component: Fake,permissions: ['manage']},            
+      { path: '/service', icon: 'cog',exact: true, name: `LibraryServices`, component: Fake,url: '/manage/service',permissions: ['manage'],sidebar: true, order:4  },      
+      { path: '/linkingservices', icon: 'link', exact: true, name: `LibraryLinkingServices`, component: Fake,url: '/manage/linkingservices',permissions: ['manage'],sidebar: true, order:5  },      
        { path: '/departments', icon: 'building',  name: `LibraryDepartments`, component: Fake,url: '/manage/departments',permissions: ['manage','manage-users'], hide: hidePatronRoutes(),sidebar: true, order:7  },
        { path: '/catalogs', icon: 'database', exact: true, name: `Catalogs`, component: Fake,url: '/manage/catalogs', permissions: ['manage'],sidebar: true, order:9 },
       { path: '/protocols', icon: 'network-wired', exact: true, name: `Protocols`, component: Fake,url: '/manage/protocols', permissions: ['manage'],sidebar: true, order:10 },                      

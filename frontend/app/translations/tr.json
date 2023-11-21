@@ -678,6 +678,8 @@
   "app.routes.RequestNew": "Yeni talep",
   "app.routes.RequestDetail": "Ayrıntı talep et",
   "app.routes.Operators": "Operatörler",
+  "app.routes.PendingOperators": "???Pending Operators",
+  "app.routes.NewOperator": "???Add operator",
   "app.routes.Searches": "Aramalar",
   "app.routes.Requests": "Talepler",
   "app.routes.MyLibraries": "Kütüphanelerim",

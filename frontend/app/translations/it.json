@@ -678,6 +678,8 @@
   "app.routes.RequestNew": "Nuova richiesta",
   "app.routes.RequestDetail": "Dettaglio richiesta",
   "app.routes.Operators": "Operatori",
+  "app.routes.PendingOperators": "Operatori in attesa",
+  "app.routes.NewOperator": "Aggiungi operatore",
   "app.routes.Searches": "Ricerche",
   "app.routes.Requests": "Richieste",
   "app.routes.MyLibraries": "Le mie biblioteche",

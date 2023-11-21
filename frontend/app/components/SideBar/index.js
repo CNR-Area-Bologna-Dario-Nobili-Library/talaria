@@ -33,8 +33,9 @@ function SideBar(props) {
             return 0;  
           })
           .map((route) => {
+            //NOTE: we manage "children menu items" adding some margin-left using level_xx CSS classes
             return <NavLink
-              className="nav-link btn"
+              className={`${route.level ? 'nav-link btn level_'+route.level : 'nav-link btn'}`}              
               key={route.name}
               exact
               to={`${route.url ? route.url : route.path}`}

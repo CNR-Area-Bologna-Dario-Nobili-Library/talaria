@@ -677,6 +677,8 @@
   "app.routes.RequestNew": "Nueva petición",
   "app.routes.RequestDetail": "Detalles de la petición",
   "app.routes.Operators": "Operadores/as",
+  "app.routes.PendingOperators": "???Pending Operators",
+  "app.routes.NewOperator": "???Add operator",
   "app.routes.Searches": "Búsquedas",
   "app.routes.Requests": "Peticiones",
   "app.routes.MyLibraries": "Mis bibliotecas",
