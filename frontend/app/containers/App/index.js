@@ -57,13 +57,14 @@ function App(props) {
         <Route path={"/forgot-password/:reset_token?"} component={({match}) => <ForgotPassword {...authProps} history={history} match={match}  changeLang={changeLanguage}/>} />
         <Route path="/idp-callback/:refresh_token" component={IdpPage}  changeLang={changeLanguage}/>
         <Route path="/public/library/:library_id" component={({match}) => <Fake {...authProps} match={match} headermenu={true}  changeLang={changeLanguage} /> }  />        
-
+        <Route path="/join2lib/:library_id" component={({match}) =>  props.isLogged?<Fake {...authProps} match={match} headermenu={true}  changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />
+        <Route path="/work4lib/:library_id" component={({match}) =>  props.isLogged?<Fake {...authProps} match={match} headermenu={true}  changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />
                 
         <Route path="/openurl" component={({match,history}) => props.isLogged?<ImportReference byOpenURL={true} {...authProps} history={history} match={match} headermenu={true}  changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} />}  />        
         <Route path="/newreference" component={({match,history}) => props.isLogged?<ImportReference byOpenURL={false} {...authProps} history={history} match={match} headermenu={true}  changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} />}  />        
 
         <Route path="/login" component={(match) => <LoginPage {...authProps}  match={match} headermenu={true} changeLang={changeLanguage}/>}/>
-
+        
         <Route path="/user" component={({match}) =>  props.isLogged?<UserPage {...authProps} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         <Route path="/patron" component={({match}) =>  props.isLogged?<PatronPage {...authProps} headermenu={true} changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         <Route path="/admin" component={({match}) =>  props.isLogged?<AdminPage {...authProps} headermenu={true} changeLang={changeLanguage}  />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />        
@@ -72,15 +73,15 @@ function App(props) {
 
         <Route path="/register-library" component={({match}) =>  props.isLogged?<RegisterLibraryPage {...authProps} headermenu={false} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         {/*NOT USED <Route path="/associate-library/:library_id" component={({match}) =>  props.isLogged?<AssociateLibraryPage history={history} match={match} {...authProps}  changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />*/}             
-        {<Route path="/patron/my-libraries/new/:library_id" component={({match}) =>  props.isLogged?<MyLibraryPage history={history} match={match} {...authProps}  changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />}             
+        {/*<Route path="/patron/my-libraries/new/:library_id" component={({match}) =>  props.isLogged?<MyLibraryPage history={history} match={match} {...authProps}  changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />*/}             
         
         <Route path="/project/:project_id" component={({match}) =>  props.isLogged?<HomePage {...authProps}  match={match} headermenu={true} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         <Route path="/consortium/:consortium_id" component={({match}) =>  props.isLogged?<HomePage {...authProps}  match={match} headermenu={true} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         <Route path="/institution/:institution_id" component={({match}) =>  props.isLogged?<HomePage {...authProps}  match={match}  headermenu={true} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> } />
         <Route path="/alpe" component={({match}) =>  props.isLogged?<HomePage {...authProps}  match={match} headermenu={true} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} />}/>        
 
-        <Route path="/autherror" component={() => <NotAuthorizedPage {...authProps} changeLang={changeLanguage} /> }/>   
-        <Route component={() => <NotFoundPage {...authProps} changeLang={changeLanguage} /> } path="*" />           
+        <Route path="/autherror" component={() => <NotAuthorizedPage {...authProps} changeLang={changeLanguage} /> }/>           
+        <Route path="*" component={() => <NotFoundPage {...authProps} changeLang={changeLanguage} /> } />
       </Switch>
   );
 }
