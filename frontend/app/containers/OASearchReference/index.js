@@ -8,6 +8,7 @@ import makeSelectOASearchReference, {isOASearchReferenceLoading} from './selecto
 
 import OASearchReferenceForm from '../../components/OASearchReferenceForm';
 import { set } from 'lodash';
+import { parseAuthors } from '../../utils/openurl';
 
 
 const OASearchReference = (props) => {
@@ -78,24 +79,6 @@ const findReferenceBySearchParams = (query) => {
 }
 
 
-const parseAuthors = (authors)=> {
-  let text="";
-
-  authors.map( a => { 
-      let str=(a.family && a.given)?a.given+" "+a.family:
-      (a.firstName && a.lastName)?a.firstName+" "+a.lastName:
-      a.fullName?a.fullName:
-      a.name?a.name:''
-
-      if(str)
-      {
-          text+=(text!='')?", ":''
-          text+=str;
-      }
-  })
-
-  return text;
-}
 
 const parseFromOAButton = (reference) => {
   let obj={}
@@ -234,7 +217,7 @@ useEffect ( () => {
       
       
       //setRefData({...refData,oa_link:oareference.url})
-      //if(oareference.found && oareference.url)
+      //if(oareference.found && oareference.url) 
       //    setOALink(oareference.url);
      
   }

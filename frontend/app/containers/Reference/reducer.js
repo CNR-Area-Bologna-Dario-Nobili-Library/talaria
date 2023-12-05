@@ -39,7 +39,7 @@ case REQUEST_GET_REFERENCE:
       draft.loading = false;
       draft.error = initialState.error;
       draft.reference={};
-      draft.reference = action.result?action.result:{};
+      draft.reference = action.result?action.result.metadata:{};
       break;
     }
 });

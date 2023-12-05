@@ -83,22 +83,43 @@ export const generateOpenURL = (reference) => {
     }
 
     console.log("generatedOpenURL:",url)
-    
+     
     return url;
 }
 
-//TODO: check and finish
+export const parseAuthors = (authors)=> {
+    let text="";
+  
+    authors.map( a => { 
+        let str=(a.family && a.given)?a.given+" "+a.family:
+        (a.firstName && a.lastName)?a.firstName+" "+a.lastName:
+        a.fullName?a.fullName:
+        a.name?a.name:''
+  
+        if(str)
+        {
+            text+=(text!='')?", ":''
+            text+=str;
+        }
+    })
+  
+    return text;
+  }
+
+
 export const parsePubmedReference = (reference) => {
     let newref={}
     newref['material_type']=1; 
     Object.keys(reference).map ( (k)=>{
         let v=reference[k];
 
-        switch (k) {
+        switch (k) { 
             case 'crossref_type':
                  if(v=="journal-article")
                     newref['material_type']=1; 
                  break; 
+            case 'abstract':
+                newref['abstract']=v; break;     
             case 'journal':
                 newref['pub_title']=v; break;
             case 'title':
@@ -112,10 +133,17 @@ export const parsePubmedReference = (reference) => {
             case 'issue':
                         newref['issue']=v; break;                                                        
             case 'issn':
-                    newref['issn']=v[0]; break;                     
+                    newref['issn']=v; break;                     
+            case 'publisher':
+                    newref['publisher']=v; break;                                         
             case 'abstract':
-                    newref['abstract']=v; break;                             
-
+                    newref['abstract']=v; break; 
+            case 'doi':
+                    newref['doi']=v; break;          
+            case 'pmid':
+                    newref['pmid']=v; break;                              
+            case 'author':       
+                    newref["part_authors"]=parseAuthors(v);  break;     
         }
     })
     return newref;
@@ -124,7 +152,7 @@ export const parsePubmedReference = (reference) => {
 export const parseOpenURL = (params) => {    
 
     const queryString = require('query-string');
-    const queryArr = queryString.parse(params,{arrayFormat:'none'});
+    const queryArr = queryString.parse(params,{arrayFormat:'bracket'});
     console.log("Openurl->params",queryArr);
 
     let ref={}

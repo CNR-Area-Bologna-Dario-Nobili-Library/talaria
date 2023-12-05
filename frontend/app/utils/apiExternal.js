@@ -18,7 +18,7 @@ const FIND_ISSN_ACNP_URL=process.env.FIND_ISSN_ACNP_URL
 //Get PMID Metadata using OpenAccessButton API
 export const getOAReferenceByID = (options) => {
     const id=options.id
-    return request(`${OPENACCESSBUTTON_API_URL}/metadata?id=${id}`,  {method: 'get'})
+    return request(`${OPENACCESSBUTTON_API_URL}/find?pmid=${id}`,  {method: 'get'})
 };
 
 //Find OA and get metadata by DOI/PMID/Title
