@@ -20,7 +20,7 @@ import {Redirect} from 'react-router-dom'
 import resourcesMap from '../../routes/resources';
 import {checkRole} from '../../utils/permissions'
 
-
+ 
 export function ImportReference(props) {
   console.log("ImportReference:",props)  
 
@@ -45,7 +45,7 @@ export function ImportReference(props) {
 
   useEffect(() => {    
 
-   let newurl="/login"
+   let newurl="/user/dashboard"
 
   //it comes from /newreference or /openurl?xxxx and we want to go in the component specific for
   //the user depending on his roles (so in /patron/references or in library/<libid>/borrowing/)  
@@ -55,26 +55,20 @@ export function ImportReference(props) {
     //he's a patron
     if( (!props.auth.permissions.resources || props.auth.permissions.resources.length==0) && (props.auth.permissions.roles && props.auth.permissions.roles.length==2 && checkRole(props.auth,"patron")) ) 
         newurl="/patron/references/new"+(querystring?querystring:'')        
-    else if (props.auth.permissions.resources && (Object.keys(props.auth.permissions.resources).length==1))    
-    {      
-        //if he has only one resources => redirect to "specific resource" dashboard
-        let res="";
-        let resid="";
-        
-        if(props.auth.permissions.resources.libraries)
-        {
-            res="libraries";
-            resid=props.auth.permissions.resources.libraries[0].resource.id;        
+    else //if he is an operator and has only one library => try to import openurl in this library's borrowing
+    if (props.auth.permissions.resources && (Object.keys(props.auth.permissions.resources).length==1) && (props.auth.permissions.resources.libraries && props.auth.permissions.resources.libraries.length==1))    
+    {                      
+            let res="libraries";
+            let resid=props.auth.permissions.resources.libraries[0].resource.id;   
+            let canBorrow=props.auth.permissions.resources.libraries[0].permissions.includes("borrow")||props.auth.permissions.resources.libraries[0].permissions.includes("manage")
 
-            newurl=resourcesMap[res]+resid+"/borrowing/new"+(querystring?querystring:'');
-        }       
+            //can borrow on this library
+            if(canBorrow)
+              newurl=resourcesMap[res]+resid+"/borrowing/new"+(querystring?querystring:'');               
     }    
     else {
-      //TODO: in case of multiple roles/resources we should load the "preferred dashboard"
-      //otherwise it will be redirected to login page  
-    }
-
-    //console.log("NEWURL:",newurl)    
+      //in case of multiple roles/resources or multiple institutions or multiple libraries will be redirected to landing page
+    }    
     setRedirUrl(newurl)
   
    }         

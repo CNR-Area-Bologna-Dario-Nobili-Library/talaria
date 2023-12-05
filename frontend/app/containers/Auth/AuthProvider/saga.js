@@ -82,7 +82,7 @@ export function* signupAuthSaga(action) {
     if(action.redirect && action.redirect!=null)
       yield put(push(action.redirect));
     else 
-      yield put(push('/login')); 
+      yield put(push('/user/dashboard')); 
 
   } catch(e) {
     yield put(requestError(e.message));

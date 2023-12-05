@@ -78,7 +78,7 @@ function HeaderBar(props) {
                 
                   { isLogged && (
                       <>
-                        <Link className="nav-link" to="/login">
+                        <Link className="nav-link" to="/user/dashboard">
                         <i className="fa-solid fa-2x fa-user d-table-cell"></i>                        
                         <span className="user-name d-none d-md-table-cell align-middle px-3">                          
                           {subStringer(auth.user.name, 10)}                          
@@ -155,14 +155,19 @@ function HeaderBar(props) {
                         {/*<DropdownItem header tag="div" className="text-center">
                           <FormattedMessage {...messages.UserAccount} />
                         </DropdownItem>
-                        <DropdownItem onClick={() => linkTo("/patron/my-libraries")}><i className="fa-solid fa-user"></i><span>Patron</span></DropdownItem>*/}
+                        <DropdownItem onClick={() => linkTo("/patron/my-libraries")}><i className="fa-solid fa-user"></i><span>Patron</span></DropdownItem>*/}                        
                           <Row className="head item">
                               <i className="fa-solid fa-user"></i>
                               <span><FormattedMessage {...messages.Profile} /></span> 
                           </Row>
                           <Row className="item">
+                            <NavLink to="/user/dashboard" activeClassName="current">                              
+                              <span><FormattedMessage {...messages.Dashboard} /></span>  
+                            </NavLink>
+                          </Row>
+                          <Row className="item">
                             <NavLink to="/user/user-profile" activeClassName="current">
-                              <span><FormattedMessage {...messages.Profile} /></span>  
+                              <span><FormattedMessage {...messages.EditProfile} /></span>  
                             </NavLink>
                           </Row>
                           <Row className="item">

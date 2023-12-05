@@ -6,6 +6,7 @@
 import React, { useEffect,useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {Redirect} from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
@@ -15,7 +16,7 @@ import { LoginForm, BasePage } from "components";
 import {useIntl} from 'react-intl';
 import history from 'utils/history';
 import resourcesMap from '../../../routes/resources';
-import LandingPage from '../../LandingPage';
+//import LandingPage from '../../LandingPage';
 import './style.scss';
 import {checkRole} from '../../../utils/permissions'
 
@@ -34,7 +35,7 @@ function LoginPage(props) {
   const google_enabled=(process.env.GOOGLE_LOGIN && process.env.GOOGLE_LOGIN=="true")?true:false; 
 
   
-  const [authChecked, setAuthChecked]=useState(false);
+  //const [authChecked, setAuthChecked]=useState(false);
 
   useEffect(() => {
     if(fb_enabled||google_enabled)
@@ -42,7 +43,7 @@ function LoginPage(props) {
       // this.props.prepareGoogle()    
   },[]);
 
-  useEffect( () => {
+  /*useEffect( () => {
     console.log("LoginPage - CHECK REDIRECT");
  
     //LOGIN CHECK
@@ -74,24 +75,32 @@ function LoginPage(props) {
         }
         //else if (projects,consortiums ....)
       
-        if(res!="")
-          history.push(resourcesMap[res]+resid);
+        //if(res!="")
+        //  history.push(resourcesMap[res]+resid);
       }                      
     }
     //else continue with login form...
     
   setAuthChecked(true);
 
-  },[props.isLogged/*props.auth*/])
+  },[props.isLogged])
+  */
 
   //MAIN
-  return (
-  <BasePage {...props} routes={[]} messages={messages} headermenu={false}>      
-      <h1 className="header">{intl.formatMessage({id:'app.containers.HomePage.header'})}</h1>  
-      {authChecked && !props.isLogged && !props.auth.oauth.token && <LoginForm {...props} login={(request) => props.dispatch(requestLogin(request))} />}    
-      {authChecked && props.isLogged && <LandingPage {...props}></LandingPage>}   
+  return (                
+    <>
+      {/*authChecked &&*/ !props.isLogged && !props.auth.oauth.token && 
+        
+          <BasePage {...props} routes={[]} messages={messages} headermenu={false}> 
+          <h1 className="header">{intl.formatMessage({id:'app.containers.HomePage.header'})}</h1>
+          <LoginForm {...props} login={(request) => props.dispatch(requestLogin(request))} />
+          </BasePage>
+
+      }    
+      {/*authChecked &&*/ props.isLogged &&  <Redirect to="/user/dashboard"/>}             
       {/*{props.auth.oauth.token && !props.auth.user.is_verified && <VerificationForm {...props} auth={props.auth} verify={(request) => props.dispatch(requestVerification(request))} logout={(request) => props.dispatch(requestLogout(request))} newtoken={(request) => props.dispatch(requestNewToken(request))} />}*/}                
-  </BasePage>)
+    </>
+  )
   
 }
 

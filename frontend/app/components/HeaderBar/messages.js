@@ -21,6 +21,14 @@ export default defineMessages({
     id: `${scope}.Profile`,
     defaultMessage: 'Profile',
   },
+  EditProfile: {
+    id: `${scope}.EditProfile`,
+    defaultMessage: 'Edit User Profile',
+  },
+  Dashboard: {
+    id: `${scope}.Dashboard`,
+    defaultMessage: 'Dashboard',
+  },
   ChangePassword: {
     id: `${scope}.ChangePassword`,
     defaultMessage: 'Change Password',
