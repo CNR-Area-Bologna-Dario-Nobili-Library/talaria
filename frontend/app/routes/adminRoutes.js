@@ -27,7 +27,7 @@ const routes = [
   },*/  
   { path: '/libraries',  name: `Libraries`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],sidebar: true,
     children: [      
-      { path: '/', exact: true, icon: 'fa-solid fa-landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},
+      { path: '/', exact: true, icon: 'landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},
       //{ path: '/new', icon: 'plus', name: `LibraryCreateNew`, component: LibraryPage,  url: '/library/new', sidebar: true,order:2},
       //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},      
       { path: '/:id?/:op?',  name: `Libraries`,component: LibraryPage, sidebar: false},      
@@ -37,12 +37,12 @@ const routes = [
   },
   { path: '/institutions',  name: `Institutions`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
     children: [
-      { path: '/institution-types', exact: true, icon: 'fa-solid fa-list-ul',  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: true,order:3},      
+      { path: '/institution-types', exact: true, icon: 'list-ul',  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: true,order:3},      
       { path: '/institution-types/:id?/:op?', exact: true, name: `InstitutionType`, component: InstitutionTypePage, sidebar: false  },
       { path: '/institution-types/:page?', exact: true,  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: false},
       { path: '/institution-types/new',exact: true, icon: 'plus', name: `InstitutionTypeNew`, url: `/institutions/institution-types/new`, component: InstitutionTypePage,  sidebar: true,order:4 },      
 
-      { path: '/', exact: true, icon: 'fa-solid fa-building', name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, sidebar:true, order:1},
+      { path: '/', exact: true, icon: 'building', name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, sidebar:true, order:1},
       { path: '/:id?/:op?', exact:true,name: `Institutions`, component: InstitutionPage, sidebar: false },
       { path: '/:page?', exact: true, name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, },            
       { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
