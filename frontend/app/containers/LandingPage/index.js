@@ -9,6 +9,10 @@ import {useIntl} from 'react-intl';
 import RegisterLibrary from '../RegisterLibrary'
 import MyLibraryPage from '../Patron/MyLibraryPage'
 import { NavLink } from 'react-router-dom';
+import LandingPageAdminBox from '../../components/LandingPageAdminBox';
+import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox';
+import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
+import LandingPagePatronBox from '../../components/LandingPagePatronBox';
 
 
 function LandingPage(props) {
@@ -20,7 +24,7 @@ function LandingPage(props) {
 
   const intl=useIntl();  
  
-  const [PatronReg,setPatronReg]=useState (true);
+  /*const [PatronReg,setPatronReg]=useState (true);
   const togglePatronReg = () => {setPatronReg(true); setLibraryReg(false);}
   const [LibraryReg,setLibraryReg]=useState (false);
   const toggleLibraryReg = () => {setLibraryReg(true); setPatronReg(false);}  
@@ -30,13 +34,13 @@ function LandingPage(props) {
     togglePatronReg()
   else toggleLibraryReg()
     
-  }, [patrons_enabled])
+  }, [patrons_enabled])*/
 
   return (                      
-        (props.auth.permissions.roles && props.auth.permissions.roles.includes("registered") && 
+        /*(props.auth.permissions.roles && props.auth.permissions.roles.includes("registered") && 
           (!props.auth.permissions.resources || props.auth.permissions.resources.length==0) 
           && 
-       <>
+       <>       
        <p>{intl.formatMessage({id:'app.containers.LandingPage.intro'})}</p>       
        <p>{intl.formatMessage({id:'app.containers.LandingPage.intro_library'})}</p>       
        {patrons_enabled && 
@@ -64,7 +68,7 @@ function LandingPage(props) {
         </div>
         </>
        ||
-       <>
+       <>       
        <p>You've multiple roles, please choose one from below</p>
         Roles List:
         <ul>
@@ -73,7 +77,40 @@ function LandingPage(props) {
           <li>Role 3</li>
         </ul>
       </>)
+    */    
+   <>
+   <h1>User dashboard / Landing Page</h1>
+      <div className="container">
+        {(props.auth.permissions.roles.length==1 && props.auth.permissions.roles.includes("registered") )&& Object.keys(props.auth.permissions.resources).length==0 &&
+           <div>just registered</div>
+        }
+        {(props.auth.permissions.roles.length>=1 && props.auth.permissions.roles.includes("patron") ) && 
+        <div>Patron</div>
+        }
+        <br/>
+        {(props.auth.permissions.roles.length==0)&& 
+           <div>NO ROLES</div>
+        }
+        <br/>         
+        {(props.auth.permissions.roles.length>=1)&& 
+           <div>ONE/MANY ROLES (including "registered") </div>
+        }
+        <br/>
+        {props.auth.permissions.resources.libraries && props.auth.permissions.resources.libraries.length>=1 && 
+           <div>ONE/MANY LIBRARIES</div>
+        }       
+        {props.auth.permissions.resources.institutions && props.auth.permissions.resources.institutions.length>=1 && 
+           <div>ONE/MANY INSTITUTIONS</div>
+        }               
+        <hr/>
+        
+        <LandingPagePatronBox title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
+        <LandingPageLibrariesBox title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
+        <LandingPageInstitutionsBox title="Institutions Box" auth={props.auth} match={props.match}/>
+        <LandingPageAdminBox title="Administration Box" auth={props.auth} match={props.match}/>        
       
+      </div>    
+    </>
   );
 }
 
