@@ -12,7 +12,7 @@ const LandingPageLibrariesBox = (props) => {
     
     return (      
                         
-            <LandingPageBox  title={title} canCollapse={canCollapse} collapsed={collapsed} >
+            <LandingPageBox iconClass="fa-solid fa-landmark" title={title} canCollapse={canCollapse} collapsed={collapsed} >
             <p>bla bla bla</p>                
             {auth.permissions.resources.libraries && auth.permissions.resources.libraries.length>=1 && /* or pending requests */       
                 <div>Current Libraries permissions Component + pending </div>                    

@@ -3,7 +3,7 @@ import {Card,CardBody, CardHeader} from 'reactstrap'
 import './style.scss'
 
 const LandingPageBox = (props) => {
-    const {customClass,canCollapse=true,collapsed=false, title} = props
+    const {customClass,canCollapse=true,collapsed=false, title, iconClass=""} = props
 
     const [openBox,setOpenBox]=useState(canCollapse?!collapsed:true)  
     
@@ -13,7 +13,7 @@ const LandingPageBox = (props) => {
                 {canCollapse && <a className="toggle-box-link" onClick={()=>setOpenBox(!openBox)}>
                     <i className={`fas ${openBox?'fa-toggle-on':'fa-toggle-off'}`}></i> 
                 </a>}
-                {title}
+                {iconClass?<i className={iconClass}></i>:''} {title}
             </CardHeader>                              
             {openBox && <CardBody className="p-4">                               
                 {props.children}

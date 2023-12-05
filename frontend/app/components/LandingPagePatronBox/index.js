@@ -12,7 +12,7 @@ const LandingPagePatronBox = (props) => {
     
     return (      
                          
-            <LandingPageBox  title={title} canCollapse={canCollapse} collapsed={collapsed} >
+            <LandingPageBox iconClass="fa-solid fa-user" title={title} canCollapse={canCollapse} collapsed={collapsed} >
             <p>bla bla bla</p>                
             <div>join to library component (select a library from dropdown or preselected)
               <br/>

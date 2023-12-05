@@ -12,7 +12,7 @@ const LandingPageInstitutionsBox = (props) => {
     
     return (
          (auth.permissions.resources.institutions && auth.permissions.resources.institutions.length>=1 /* or pending requests */  &&                                        
-            <LandingPageBox  title={title} canCollapse={canCollapse} collapsed={collapsed} >
+            <LandingPageBox iconClass="fa-solid fa-building" title={title} canCollapse={canCollapse} collapsed={collapsed} >
                 <p>Institutions permissions + pending</p>
                 <Button color="success" onClick={()=>go()} >
                     GO
