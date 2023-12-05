@@ -58,9 +58,17 @@ function HomePage(props) {
        <h1 className="header">{intl.formatMessage({id:'app.containers.HomePage.header'})}</h1>
        <h3 className="subheader mb-5">{intl.formatMessage({id:'app.containers.HomePage.subHeader'})}</h3>
        
-      {/* OPENURL/PUBMED TEST
-        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/openurl?url_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Actx&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&rft.atitle=Acoustic%2C+volumetric%2C+and+spectroscopic+studies+of+formamide+with+2-alkoxyethanols+at+different+temperatures&rft.aufirst=Anjali&rft.aulast=Awasthi&rft.date=2012&rft.epage=151&rft.genre=article&rft.issn=0021-9614&rft.jtitle=JOURNAL+OF+CHEMICAL+THERMODYNAMICS&rft.pages=144-151&rft.spage=144&rft.stitle=J+CHEM+THERMODYN&rft.volume=53&rfr_id=info%3Asid%2Fwww.isinet.com%3AWoK%3AWOS&rft.au[]=Awasthi%2C+Aashees&rft_id[]=info%3Adoi%2F10.1016%2Fj.jct.2012.04.024"}>TEST OPENURL</a> <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/openurl?sid=Entrez:PubMed&id=pmid:29120751"}>TEST PUBMED</a><br/>
-      */}
+      { //OPENURL/PUBMED TEST
+      <>
+        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/openurl?url_ver=Z39.88-2004&url_ctx_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Actx&rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&rft.atitle=Acoustic%2C+volumetric%2C+and+spectroscopic+studies+of+formamide+with+2-alkoxyethanols+at+different+temperatures&rft.aufirst=Anjali&rft.aulast=Awasthi&rft.date=2012&rft.epage=151&rft.genre=article&rft.issn=0021-9614&rft.jtitle=JOURNAL+OF+CHEMICAL+THERMODYNAMICS&rft.pages=144-151&rft.spage=144&rft.stitle=J+CHEM+THERMODYN&rft.volume=53&rfr_id=info%3Asid%2Fwww.isinet.com%3AWoK%3AWOS&rft.au[]=Awasthi%2C+Aashees&rft_id[]=info%3Adoi%2F10.1016%2Fj.jct.2012.04.024"}>TEST OPENURL</a> 
+        <br/><br/>
+        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/openurl?sid=Entrez:PubMed&id=pmid:29120751"}>TEST PUBMED</a><br/>
+        <br/><br/>
+        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/user/join2lib/3"}>TEST Join2lib</a><br/>
+        <br/><br/>
+        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/user/work4lib/3"}>TEST Work4lib</a><br/>
+      </>
+      }
       <br/>
       <OASearchReference           
         onFound={(reference)=>foundOA(reference)}        
