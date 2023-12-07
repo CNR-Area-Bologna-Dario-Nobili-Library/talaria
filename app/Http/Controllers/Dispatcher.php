@@ -95,7 +95,7 @@ class Dispatcher extends BaseController
         $order = $request->input('sortInfo', 'desc');
         $q = $request->input('q');
 
-        $collection = $model->select( array_unique(array_merge([$label], explode(',', $value))) );
+        $collection = $model->select( array_unique(array_merge(explode(',',$label), explode(',', $value))) );
 
         if($excludeIds)
         {
