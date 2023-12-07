@@ -3,17 +3,33 @@ import {Button} from 'reactstrap'
 import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import {useIntl} from 'react-intl'
 
 const LandingPageAdminBox = (props) => {
     const {auth,title, match,canCollapse,collapsed}=props
+    
+    const intl=useIntl();  
    
     return (
     
         (auth.permissions.roles && ( auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager") || auth.permissions.roles.includes("accountant")) ) &&                     
             <LandingPageBox iconClass="fa-solid fa-gear" title={title} canCollapse={canCollapse} collapsed={collapsed} >                
-                <Link className="btn btn-success" to="/admin" >
-                    GO
-                </Link>
+                <p>bla bla bla ....</p>    
+                {auth.permissions.roles.includes("super-admin") && 
+                <Link className="btn btn-primary" to="/admin" >
+                    <i className={`fa-solid fa-gear`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AdminDashboard'})}
+                </Link>}
+
+                {auth.permissions.roles.includes("manager") && 
+                <Link className="btn btn-primary" to="/admin" >
+                    <i className={`fa-solid fa-home`}></i> {intl.formatMessage({id:'app.components.HeaderBar.ManagerDashboard'})}
+                </Link>}
+
+                {auth.permissions.roles.includes("accountant") && 
+                <Link className="btn btn-primary" to="/admin" >
+                    <i className={`fa-solid fa-wallet`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AccountantDashboard'})}
+                </Link>}
+
 
             </LandingPageBox>
         
