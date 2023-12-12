@@ -43,7 +43,7 @@ const LandingPageLibrariesBox = (props) => {
                     )}
                   </div>                    
                   }
-                  {match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 && /* or pending requests */  
+                  {/*match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 && /* or pending requests */  
                   <div>
                       <h3>Pending operators requests (mathing email address or DB data)</h3>
                       bla bla bla ....
