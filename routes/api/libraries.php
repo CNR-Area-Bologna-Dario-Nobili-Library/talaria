@@ -90,9 +90,7 @@ Route::group([
     ], function () {
         Route::get('identifiers/option-items', 'IdentifierController@optionList')->name('option-items');                       
     });
-
-    
-
+   
     Route::post('public', 'LibraryController@publicCreate')->name('public-create');
     Route::get('', 'LibraryController@index')->name('index');
     Route::get('nearto', 'LibraryController@nearTo')->name('nearto');
@@ -100,6 +98,7 @@ Route::group([
     Route::get('{id}', 'LibraryController@show')->where('id', '[0-9]+')->name('show');
     Route::get('{id}/departments', 'LibraryController@departments')->where('id', '[0-9]+')->name('departments');
     Route::put('{id}', 'LibraryController@update')->where('id', '[0-9]+')->name('update');    
+    //Route::get('{id}/operators', 'LibraryController@operators')->where('id', '[0-9]+')->name('operators');
     //Route::put('{id}', 'LibraryController@renewSubscription')->where('id', '[0-9]+')->name('renewSubscription');    
 
 

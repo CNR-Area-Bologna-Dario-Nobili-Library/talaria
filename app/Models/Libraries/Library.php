@@ -322,8 +322,8 @@ class Library extends BaseModel
     }
 
     public function operators($ability=null){               
-
-        /*$users = User::all();      //WARNING: may be slow!!   
+                
+         /*$users = User::all();      //WARNING: may be slow!!   
         $lib=self::find($this->id);
         $filtered=new Collection();
 
@@ -335,12 +335,16 @@ class Library extends BaseModel
             });        
         }
         return $filtered;*/
-        
+
+        /*NEW CODE: 
         $perms=$this->hasManyThrough(Permission::class, Ability::class, 'entity_id')
             ->where('abilities.entity_type', self::class);    
         $perm_ability=$ability?$perms->where('abilities.name',$ability):$perms;
         $operators=User::whereIn('id',$perm_ability->get()->unique('entity_id')->pluck('entity_id'));
-        return $operators;
+        return $operators;*/
+
+        /*BEST CODE */
+        return $this->user_with_permissions();
     }
 
     public function manageOperators() {

@@ -14,6 +14,7 @@ use App\Models\Libraries\Identifier;
 use App\Models\Projects\Project;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
+use App\Models\Users\UserTransformer;
 
 //use Illuminate\Support\Facades\Auth;
 
@@ -52,9 +53,14 @@ class LibraryController extends ApiController
     public function departments(Request $request, $id)
     {
         $departments = $this->model->findOrFail($id)->departments()->select('name', 'id')->get();
-
         return $this->collection($departments, new DepartmentTransformer());
     }
+
+    /*public function operators(Request $request, $id,$ability=null)
+    {                        
+        $operators = $this->model->findOrFail($id)->operators($ability); //findOrFail($id)->operators($ability)->get();        
+        return $operators;        
+    }*/
 
     public function store(Request $request)
     {
