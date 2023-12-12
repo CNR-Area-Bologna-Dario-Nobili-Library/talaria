@@ -4,7 +4,7 @@ import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 
-const LandingPageInstitutionsBox = (props) => {
+const LandingPageConsortiaBox = (props) => {
     const {auth,title,match,canCollapse,collapsed}=props
 
     const badgeType = (p) => {
@@ -17,25 +17,24 @@ const LandingPageInstitutionsBox = (props) => {
 
         return ty;
     }
-    
+
     return (
-         (auth.permissions.resources.institutions && auth.permissions.resources.institutions.length>=1 /* or pending requests */  &&                                        
+         (auth.permissions.resources.consortia && auth.permissions.resources.consortia.length>=1 /* or pending requests */  &&                                        
             <LandingPageBox iconClass="fa-solid fa-building" title={title} canCollapse={canCollapse} collapsed={collapsed} >
-                <p>Institutions permissions + pending</p>
-                { auth.permissions.resources.institutions.map((res,i)=> (
+                <p>Consortia permissions + pending</p>
+                { auth.permissions.resources.consortia.map((res,i)=> (
                     <div className="permissionsBox" key={`row-${res.resource.id}`}>                            
                         <span>{res.resource.name}</span>
                         <span>{res.permissions.map((p,i)=>(
                             <span className={"badge "+badgeType(p)}>{p}</span>
                         ))}</span> 
-                        <Link className="btn btn-sm btn-primary" to={'/institution/'+res.resource.id} key={'ins'+res.resource.id}>GO!</Link> 
+                        <Link className="btn btn-sm btn-primary" to={'/consortium/'+res.resource.id} key={'cons'+res.resource.id}>GO!</Link> 
                     </div>)
                 )}
-
 
             </LandingPageBox>        
         )|| <></>        
     )
 }
 
-export default LandingPageInstitutionsBox;
+export default LandingPageConsortiaBox;

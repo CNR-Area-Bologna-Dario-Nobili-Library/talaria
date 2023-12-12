@@ -11,6 +11,8 @@ import MyLibraryPage from '../Patron/MyLibraryPage'
 import { NavLink } from 'react-router-dom';
 import LandingPageAdminBox from '../../components/LandingPageAdminBox';
 import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox';
+import LandingPageProjectsBox from '../../components/LandingPageProjectsBox';
+import LandingPageConsortiaBox from '../../components/LandingPageConsortiaBox';
 import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
 import LandingPagePatronBox from '../../components/LandingPagePatronBox';
 
@@ -103,11 +105,14 @@ function LandingPage(props) {
            <div>ONE/MANY INSTITUTIONS</div>
         }               
         <hr/>
-        
-        <LandingPagePatronBox title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
-        <LandingPageLibrariesBox title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
-        <LandingPageInstitutionsBox title="Institutions Box" auth={props.auth} match={props.match}/>
-        <LandingPageAdminBox title="Administration Box" auth={props.auth} match={props.match}/>        
+        <div className='landingBoxes d-flex flex-row justify-content-start flex-wrap'>          
+          <LandingPagePatronBox title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
+          <LandingPageLibrariesBox title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>          
+          <LandingPageInstitutionsBox title="Institutions Box" auth={props.auth} match={props.match}/>
+          <LandingPageProjectsBox title="Projects Box" auth={props.auth} match={props.match}/>
+          <LandingPageConsortiaBox title="Consortia Box" auth={props.auth} match={props.match}/>
+          <LandingPageAdminBox title="Administration Box" auth={props.auth} match={props.match}/>                  
+        </div>
       
       </div>    
     </>

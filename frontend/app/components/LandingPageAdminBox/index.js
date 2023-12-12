@@ -19,13 +19,13 @@ const LandingPageAdminBox = (props) => {
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-gear`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AdminDashboard'})}
                 </Link>}
-
-                {auth.permissions.roles.includes("manager") && 
+                &nbsp;
+                {auth.permissions.roles.includes("super-admin","manager") && 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-home`}></i> {intl.formatMessage({id:'app.components.HeaderBar.ManagerDashboard'})}
                 </Link>}
-
-                {auth.permissions.roles.includes("accountant") && 
+                &nbsp;
+                {auth.permissions.roles.includes("super-admin","accountant") && 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-wallet`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AccountantDashboard'})}
                 </Link>}

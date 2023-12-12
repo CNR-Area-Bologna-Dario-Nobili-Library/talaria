@@ -27,9 +27,9 @@ const LandingPageLibrariesBox = (props) => {
     return (      
                         
             <LandingPageBox iconClass="fa-solid fa-landmark" title={title} canCollapse={canCollapse} collapsed={collapsed} >
-            <p>bla bla bla</p>                
-            {auth.permissions.resources.libraries && auth.permissions.resources.libraries.length>=1 && /* or pending requests */       
-                <>
+            <p>bla bla bla</p>                            
+            <>
+                  {auth.permissions.resources.libraries && auth.permissions.resources.libraries.length>=1 && 
                   <div>
                       <h3>Current permissions</h3>
                       { auth.permissions.resources.libraries.map((res,i)=> (
@@ -42,23 +42,19 @@ const LandingPageLibrariesBox = (props) => {
                         </div>)
                     )}
                   </div>                    
+                  }
+                  {match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 && /* or pending requests */  
                   <div>
-                      <h3>Pending operators requests</h3>
+                      <h3>Pending operators requests (mathing email address or DB data)</h3>
                       bla bla bla ....
                   </div>                    
-                </>
-            }
-
-            {match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 &&
-              <>
-                <b>Want to be operator of the Library ID: {match.params.library_id} ?</b>
-                <button>ACCEPT/DENY</button>
-              </>
-            } 
-            
-                <br/><br/>
-                <button>Register library</button>            
-
+                  }                            
+                  <br/><br/>
+                  Are you a librarian and want to register a new library into the system?
+                  <br/>
+                  <Link className="btn btn-sm btn-primary" to={'/register-library/'}>Register your library</Link>       
+                
+            </>                                                      
             </LandingPageBox>        
         
     )
