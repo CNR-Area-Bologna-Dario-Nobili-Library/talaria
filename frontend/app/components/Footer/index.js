@@ -45,12 +45,6 @@ function Footer(props) {
           </div>
           <div className="footer-menu">          
             <>
-              {props.isLogged && 
-              <NavLink to="/register-library" activeClassName="current">
-                {/* <i className="fa-solid fa-book"></i> */}
-                <span><FormattedMessage {...messages.registerNewLibrary} /></span>
-              </NavLink>
-              }
               <a href="https://l.cnr.it/talaria-software-manual" target="_blank">
                  {intl.formatMessage({id: 'app.global.software_manual'})}
               </a>
