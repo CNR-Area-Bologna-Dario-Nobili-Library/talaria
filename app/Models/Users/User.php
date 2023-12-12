@@ -22,6 +22,7 @@ use App\Models\Requests\PatronDocdelRequest;
 class User extends UserBase
 {
     protected static $observerClass = UserObserver::class;
+    public $simpleSearchFields = ['name', 'surname','full_name','email'];
 
     /**
      * The attributes that are mass assignable.
