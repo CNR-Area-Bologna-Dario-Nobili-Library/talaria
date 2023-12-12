@@ -582,24 +582,24 @@ export const getUsersList = (options) => {
   const page = options.page;
   const query = options.query;
   options = getOption(options);
-  return request(`${BASE_URL}/api/v1/users/users?page=${page}&q=${query}`, options)
+  return request(`${BASE_URL}/api/v1/users/?page=${page}&q=${query}`, options)
 };
 
 export const createUser = (options) => {
   options = getOption(options);
-  return request(`${BASE_URL}/api/v1/users/users?include=roles,resources`, options)
+  return request(`${BASE_URL}/api/v1/users/?include=roles,resources`, options)
 };
 
 export const getUser = (options) => {
   const user_id = options.id
   options = getOption(options);
-  return request(`${BASE_URL}/api/v1/users/users/${user_id}?include=roles,resources`, options)
+  return request(`${BASE_URL}/api/v1/users/${user_id}?include=roles,resources`, options)
 };
 
 export const updateUser = (options) => {
   const user_id = options.body.id
   options = getOption(options);
-  return request(`${BASE_URL}/api/v1/users/users/${user_id}?include=roles,resources`, options)
+  return request(`${BASE_URL}/api/v1/users/${user_id}?include=roles,resources`, options)
 };
 
 export const getUsersOptionsList = (options) => {

@@ -32,10 +32,10 @@ Route::group([
     'as' => 'api.v1.users.',
 ], function () {
     Route::get('option-items', 'UserController@optionList')->name('option-items');
-    Route::get('users', 'UserController@index')->name('index');
-    Route::get('users/{user}', 'UserController@show')->name('show');
-    Route::put('users/{user}', 'UserController@update')->name('update');
-    Route::post('users', 'UserController@store')->name('create');
+    Route::get('', 'UserController@index')->name('index');
+    Route::get('{user}', 'UserController@show')->name('show');
+    Route::put('{user}', 'UserController@update')->name('update');
+    Route::post('', 'UserController@store')->name('create');
     Route::get('roles', 'RolePermissionController@index')->name('roles-index');
 });
 
