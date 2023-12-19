@@ -53,7 +53,7 @@
   "app.global.patron": "User",
   "app.global.librarian": "Librarian",
   "app.global.title": "Qualification",
-  "app.global.label": "Tag",
+  "app.global.label": "Label",
   "app.global.pending": "Pending",
   "app.global.enabled": "Enabled",
   "app.global.disabled": "Disabled",
