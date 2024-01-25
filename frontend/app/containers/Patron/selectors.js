@@ -13,42 +13,55 @@ const makeSelectPatron = () =>
     substate => substate,
   );
 
-const isPatronLoading = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.loading)
-);
+const isPatronLoading = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.loading,
+  );
 
-const labelsOptionListSelector = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.labelsOptionList)
-);
+const labelsOptionListSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.labelsOptionList,
+  );
 
-const groupsOptionListSelector = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.groupsOptionList)
-);
+const groupsOptionListSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.groupsOptionList,
+  );
 
-const placesSelector = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.places)
-);
+const placesSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.places,
+  );
 
+const titlesSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.titlesOptionList,
+  );
 
-const titlesSelector = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.titlesOptionList)
-);
+const libraryListSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.libraryList,
+  );
 
-const libraryListSelector = () => 
-createSelector(
-  selectPatronDomain,
-  substate => (substate.libraryList)
-);
+const librariesSelector = () =>
+  createSelector(
+    selectPatronDomain,
+    substate => substate.libraryOptionList,
+  );
 
 export default makeSelectPatron;
-export {  isPatronLoading,labelsOptionListSelector,groupsOptionListSelector,placesSelector,titlesSelector,libraryListSelector };
+export {
+  isPatronLoading,
+  labelsOptionListSelector,
+  groupsOptionListSelector,
+  placesSelector,
+  titlesSelector,
+  libraryListSelector,
+  librariesSelector,
+};

@@ -1,46 +1,46 @@
 import React from 'react';
-import {Button} from 'reactstrap'
-import './style.scss'
+import { Button } from 'reactstrap';
+import './style.scss';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import JointoLibPage from '../../containers/Patron/JointoLibPage';
 
-const LandingPagePatronBox = (props) => {
-    const {auth,title,match,history,canCollapse,collapsed}=props
+const LandingPagePatronBox = props => {
+  const { auth, title, match, history,canCollapse, collapsed } = props;     
     
-    const fromOpenURLorPubmed=history && history.location && history.location.search.includes("byopenurl") 
-    
-    return (      
-                         
-            <LandingPageBox iconClass="fa-solid fa-user" title={title} canCollapse={canCollapse} collapsed={collapsed} >
-            <p>bla bla bla</p>                
-            <div>join to library component (select a library from dropdown or preselected)
-              <br/>
-              ..... .... ... ....
-              {match && match.path=='/user/join2lib/:library_id?' && match.params.library_id && match.params.library_id>0 &&            
-                <>  
-                  <b>PRE SELECTED Library ID passed: {match.params.library_id}</b>                                                           
-                </>
-              }
-              ..... .... ... ....
-              <br/>
-              <button>join to library</button>                 
-            </div>
-            <br/>                        
-            {auth.permissions.roles && auth.permissions.roles.includes("patron") &&  
-                <>
-                  <div>Belongings Libraries Component  (+ pending) </div>                  
-                  <br/><br/>                               
-                  <button>Go To Reference Page</button>
-                  &nbsp;
-                  {fromOpenURLorPubmed && <Link className="btn btn-sm btn-success" to={'/patron/references/new'+(history.location.search?history.location.search:'')}>Import from openurl</Link>
-                  ||<Link className="btn btn-sm btn-info" to={'/patron/references/new'}>New reference</Link>}                            
-                </>
-              }
-            </LandingPageBox>        
-        
-    )
-}
+  const fromOpenURLorPubmed=history && history.location && history.location.search.includes("byopenurl") 
+
+  const go = () => {
+    alert('GO!!!');
+  };
+
+  return (
+    <LandingPageBox
+      iconClass="fa-solid fa-user"
+      title={title}
+      canCollapse={canCollapse}
+      collapsed={collapsed}
+    >
+      {match &&
+        match.path === '/user/join2lib/:library_id?' &&
+        match.params.library_id &&
+        match.params.library_id > 0 && (
+          <>
+            <b>PRE SELECTED Library ID passed: {match.params.library_id}</b>
+          </>
+        )}
+      <JointoLibPage {...props} /> {/* Include JointoLibPage here */}
+      <br />      
+      {auth.permissions.roles && auth.permissions.roles.includes("patron") &&  
+        <div className="row">
+          <div className="col-md-6">          
+            {fromOpenURLorPubmed && <Link className="btn btn-sm btn-success btn-block" to={'/patron/references/new'+(history.location.search?history.location.search:'')}>Import from openurl/pmid</Link>
+            ||<Link className="btn btn-sm btn-success btn-block" to={'/patron/references/new'}>New reference</Link>}                            
+          </div>                  
+        </div>
+      }
+    </LandingPageBox>
+  );
+};
 
 export default LandingPagePatronBox;
-
-              
