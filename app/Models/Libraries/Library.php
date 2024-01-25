@@ -344,7 +344,11 @@ class Library extends BaseModel
         return $operators;*/
 
         /*BEST CODE */
-        return $this->user_with_permissions();
+        return $this->user_with_permissions()->filter(function ($u) use($ability) {
+            if($ability && $u["permissions"] && is_array($u["permissions"]) )
+                return in_array($ability,$u["permissions"]);            
+            else return $u;
+        });
     }
 
     public function manageOperators() {
