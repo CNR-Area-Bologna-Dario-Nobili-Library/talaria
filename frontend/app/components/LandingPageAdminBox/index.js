@@ -10,8 +10,7 @@ const LandingPageAdminBox = (props) => {
     
     const intl=useIntl();  
    
-    return (
-    
+    return (            
         (auth.permissions.roles && ( auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager") || auth.permissions.roles.includes("accountant")) ) &&                     
             <LandingPageBox iconClass="fa-solid fa-gear" title={title} canCollapse={canCollapse} collapsed={collapsed} >                
                 <p>bla bla bla ....</p>    
@@ -20,12 +19,12 @@ const LandingPageAdminBox = (props) => {
                     <i className={`fa-solid fa-gear`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AdminDashboard'})}
                 </Link>}
                 &nbsp;
-                {auth.permissions.roles.includes("super-admin","manager") && 
+                {(auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager")) && 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-home`}></i> {intl.formatMessage({id:'app.components.HeaderBar.ManagerDashboard'})}
                 </Link>}
                 &nbsp;
-                {auth.permissions.roles.includes("super-admin","accountant") && 
+                {(auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("accountant") )&& 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-wallet`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AccountantDashboard'})}
                 </Link>}

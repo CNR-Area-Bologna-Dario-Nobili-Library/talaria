@@ -22,7 +22,7 @@ function LandingPage(props) {
 
   const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 
-  const {match}=props
+  const {match,history}=props
 
   const intl=useIntl();  
  
@@ -106,12 +106,12 @@ function LandingPage(props) {
         }               
         <hr/>
         <div className='landingBoxes d-flex flex-row justify-content-start flex-wrap'>          
-          <LandingPagePatronBox title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
-          <LandingPageLibrariesBox title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>          
-          <LandingPageInstitutionsBox title="Institutions Box" auth={props.auth} match={props.match}/>
-          <LandingPageProjectsBox title="Projects Box" auth={props.auth} match={props.match}/>
-          <LandingPageConsortiaBox title="Consortia Box" auth={props.auth} match={props.match}/>
-          <LandingPageAdminBox title="Administration Box" auth={props.auth} match={props.match}/>                  
+          <LandingPagePatronBox history={history} title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
+          <LandingPageLibrariesBox history={history} title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>          
+          <LandingPageInstitutionsBox history={history} title="Institutions Box" auth={props.auth} match={props.match}/>
+          <LandingPageProjectsBox history={history} title="Projects Box" auth={props.auth} match={props.match}/>
+          <LandingPageConsortiaBox history={history} title="Consortia Box" auth={props.auth} match={props.match}/>
+          <LandingPageAdminBox history={history} title="Administration Box" auth={props.auth} match={props.match}/>                  
         </div>
       
       </div>    

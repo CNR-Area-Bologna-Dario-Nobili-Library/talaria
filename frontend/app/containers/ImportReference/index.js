@@ -45,7 +45,7 @@ export function ImportReference(props) {
 
   useEffect(() => {    
 
-   let newurl="/user/dashboard"
+   let newurl="/user/dashboard"+(querystring?querystring:'')
 
   //it comes from /newreference or /openurl?xxxx and we want to go in the component specific for
   //the user depending on his roles (so in /patron/references or in library/<libid>/borrowing/)  
