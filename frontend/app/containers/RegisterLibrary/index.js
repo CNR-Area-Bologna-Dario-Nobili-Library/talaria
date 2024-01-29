@@ -433,8 +433,8 @@ const RegisterLibrary = (props) => {
     // }
 
     return (
-        /*<BasePage {...props} routes={[]} messages={wizardMessages} headermenu={false}>*/
-        <>
+        <BasePage {...props} routes={[]} messages={wizardMessages} headermenu={false}>
+    
             <h2>{intl.formatMessage(wizardMessages.header)}</h2>
             <br></br>
               <Navigation 
@@ -588,8 +588,8 @@ const RegisterLibrary = (props) => {
                     </div>
                 </div>
             }
-        {/*</BasePage>*/}
-        </>
+        </BasePage>
+        
     )
 }
 
