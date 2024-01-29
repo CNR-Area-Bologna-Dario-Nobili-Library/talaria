@@ -15,6 +15,7 @@ use App\Models\Projects\Project;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
 use App\Models\Users\UserTransformer;
+use Illuminate\Support\Facades\Auth;
 
 //use Illuminate\Support\Facades\Auth;
 
@@ -56,11 +57,32 @@ class LibraryController extends ApiController
         return $this->collection($departments, new DepartmentTransformer());
     }
 
-    /*public function operators(Request $request, $id,$ability=null)
-    {                        
-        $operators = $this->model->findOrFail($id)->operators($ability); //findOrFail($id)->operators($ability)->get();        
-        return $operators;        
-    }*/
+    //only admin,comunity manager and library manager can see operators
+    public function operators(Request $request, $id)
+    {    
+        $lib=$this->model->findOrFail($id);
+        
+        $this->authorize($lib); //NOTE: will call authorize('operators',$lib) that calls LibraryPolicy->operators($u,$model)...
+
+        $operators = $this->model->findOrFail($id)->operators($request->input("ability")); //findOrFail($id)->operators($ability)->get();                
+        return $operators;                
+    }
+
+     //only admin,comunity manager and library manager can see operators
+     //TODO
+     public function pending_operators(Request $request, $id)
+     {    
+         /*
+         $lib=$this->model->findOrFail($id);
+         
+         $this->authorize($lib); 
+
+         
+ 
+         $operators = $this->model->findOrFail($id)->operators($request->input("ability")); //findOrFail($id)->operators($ability)->get();                
+         return $operators;                
+         */
+     }
 
     public function store(Request $request)
     {
@@ -134,6 +156,11 @@ class LibraryController extends ApiController
     public function renewSubscription(Request $request,$id) {
 
         /* TODO
+
+        $lib=$this->model->findOrFail($id);
+        
+        $this->authorize($lib); //NOTE: will call authorize('renewSubscription',$lib) that calls LibraryPolicy->renewSubscription($u,$model)...
+
         
         if (!empty($this->validate))
             $this->validate($request, $this->validate);

@@ -67,7 +67,7 @@ const ReferenceCitation = props => {
                         <span className="pmid">{intl.formatMessage({id: "app.references.pmid"})} <span><a href={"https://pubmed.ncbi.nlm.nih.gov/"+data.pmid} target="_blank"><i className="fa-solid fa-arrow-up-right-from-square"></i> {data.pmid}</a></span></span>
                     }
                     {data.doi && 
-                        <span className="pmid">{intl.formatMessage({id: "app.references.doi"})} <span><a href={"https://doi.org/"+data.doi} target="_blank"><i className="fa-solid fa-arrow-up-right-from-square"></i> {data.doi}</a></span></span>
+                        <span className="doi">{intl.formatMessage({id: "app.references.doi"})} <span><a href={"https://doi.org/"+data.doi} target="_blank"><i className="fa-solid fa-arrow-up-right-from-square"></i> {data.doi}</a></span></span>
                     }
                 </div>
             </div>}

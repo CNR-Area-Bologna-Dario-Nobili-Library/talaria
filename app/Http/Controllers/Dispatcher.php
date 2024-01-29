@@ -95,6 +95,7 @@ class Dispatcher extends BaseController
         $order = $request->input('sortInfo', 'desc');
         $q = $request->input('q');
 
+        //now accept multiple label (so you can specify which fields you want returned back)
         $collection = $model->select( array_unique(array_merge(explode(',',$label), explode(',', $value))) );
 
         if($excludeIds)

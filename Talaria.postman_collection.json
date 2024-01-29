@@ -371,7 +371,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{url}}/libraries/1/operators",
+					"raw": "{{url}}/libraries/1/operators?ability=manage",
 					"host": [
 						"{{url}}"
 					],
@@ -379,6 +379,12 @@
 						"libraries",
 						"1",
 						"operators"
+					],
+					"query": [
+						{
+							"key": "ability",
+							"value": "manage"
+						}
 					]
 				}
 			},
@@ -1729,7 +1735,7 @@
 		},
 		{
 			"key": "bearer_librarian_mario",
-			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImUwNWZlNmRmOTdmNTFmMjJhNmYzNTdjM2JjMjYzNTBjZTU3NjEwZjc3OWFhYzNjOGZmMjU2NWVjYmY3YmUxOTYwZTFiZmZhNzIyY2M1ZjBlIn0.eyJhdWQiOiIxIiwianRpIjoiZTA1ZmU2ZGY5N2Y1MWYyMmE2ZjM1N2MzYmMyNjM1MGNlNTc2MTBmNzc5YWFjM2M4ZmYyNTY1ZWNiZjdiZTE5NjBlMWJmZmE3MjJjYzVmMGUiLCJpYXQiOjE3MDE5Mzc3OTcsIm5iZiI6MTcwMTkzNzc5NywiZXhwIjoxNzAyMDI0MTk3LCJzdWIiOiI3Iiwic2NvcGVzIjpbXX0.UuAv7xaZ2AvJqVYrRw0PpZsESRb7Kj-lVWMi0LZxh9pYdZ4ewIwpin8hdGx7XMHgFVs7qKyK2u_WDIzDfe5-kw0CzHRis0hDLyQVMza2hNeiHohEqXf8a2GoBDQmk_IeddQj9qI7KPMMTBn9YLXmBnP6obxCSbPa2HdipJFsvyEoeoP1hOi5n9_g-pjSSYZavu775bSb7gwWS10RtIeFeWYLWjJ9Tx6kZVChgD4E4coPi2RW8xxo0maw403xXb3II-T6jwI7vH4qWYW4xCpil-L2NEVfO-wbc7T4tNv3q0XQJSfxOUPxSN3jwO_tRz0a85RhY08CivWZVd6586YQ44LQb5zZ2rLD7QRJrhKXo_YsE7IC0jE57_OELLZxSZkO-iL0yRzn7w7MKrH_Yt1v8ang9ACLxTkutI8hj2bvWNhqSV0S1kHANratP8yomWgR0AEV6rZtAf4NQKTlr_8wnMuwEhs8KAPAw_w_CHPbp9b9_BikA8v_J0KrTcuN4qw7ySr50DXdZ3i8GEdJaRJUY7OlqIA3eobQMMUXK6OGbeXAPgnnPXfXhoi9e7JHvRi1JRF4og4ztw6NWD14aD55Mo7hMgTeAcxmlircSXPVyvO9m8RaR-S4Hj4HmDw3fG1sNeaHcUtiBtFqLFHrLyoyGNpNVnYttlkGo4SDOIxEjrY"
+			"value": ""
 		},
 		{
 			"key": "bearer_manager",

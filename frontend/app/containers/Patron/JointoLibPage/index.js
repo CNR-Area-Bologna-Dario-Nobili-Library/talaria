@@ -286,6 +286,30 @@ function JointoLibPage(props) {
 
           <div className="col-md-4">
             <div className="form-group">
+              <label htmlFor="label">Label</label>
+              <input
+                type="text"
+                id="label"
+                name="label"
+                className="form-control"
+              />
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="form-group">
+              <label htmlFor="label">Label</label>
+              <input
+                type="text"
+                id="label"
+                name="label"
+                className="form-control"
+              />
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            <div className="form-group">
               <label htmlFor="department_id">Department</label>
               <Select
                 name="department_id"
@@ -318,18 +342,6 @@ function JointoLibPage(props) {
                 type="text"
                 id="userReferent"
                 name="user_referent"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="label">Label</label>
-              <input
-                type="text"
-                id="label"
-                name="label"
                 className="form-control"
               />
             </div>
@@ -374,6 +386,7 @@ function JointoLibPage(props) {
         <button type="submit" className="btn btn-primary">
           {isNew ? 'Join to Library' : 'Update'}
         </button>
+        </form>
 
         <BelongingLibraries
           librariesToDisplay={librariesToDisplay}
@@ -387,7 +400,7 @@ function JointoLibPage(props) {
           handleGoToMyLibraries={handleGoToMyLibraries}
           auth={auth}
         />
-      </form>
+     
     </>
   );
 }

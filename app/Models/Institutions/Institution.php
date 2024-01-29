@@ -82,7 +82,7 @@ class Institution extends BaseModel
         return $this->scopeByStatus($query,config("constants.institution_status.enabled")); 
     }
 
-
+    //TODO: take code from library->operators function!
     public function operators($ability=null){               
 
         /*$users = User::all();      //WARNING: may be slow!!   

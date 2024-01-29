@@ -22,7 +22,7 @@ class UserPolicy extends BasePolicy
 
     public function optionList(User $user, Model $model)
     {
-      //Any libraru manager can search for users (i.e. to invite them as operator)
+      //Any admin/comm manager or library manager can search for users (i.e. to invite them as operator)
      foreach($user->getAbilities() as $abil)
      {
          if($abil->name=="manage" && $abil->entity_type=='App\Models\Libraries\Library')

@@ -63,4 +63,14 @@ class LibraryPolicy extends BasePolicy
         //altrimenti si crea un loop infinito
         return false;
     }
+
+    //only library manager can see his operators
+    public function operators(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
+    //only library manager can see his operators
+    public function pending_operators(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
 }
