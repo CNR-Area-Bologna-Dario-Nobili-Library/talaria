@@ -16,7 +16,7 @@ import {
 } from '../actions';
 import { requestMyLibraries } from '../actions';
 import { fields, fieldsIsNew } from './fields';
-
+import BelongingLibraries from '../BelongingLibraries/';
 import { requestGetLibrary } from 'containers/Library/actions';
 import {
   placesSelector,
@@ -39,33 +39,32 @@ function JointoLibPage(props) {
   const departments = props.library.departmentOptionList || []; // Ensure departmentOptionList is not undefined
   const titles = props.titles || []; // Ensure titles is not undefined
   const libraries = props.libraries || [];
+  /*Paging*/
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5); // default items per page::
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = currentPage * itemsPerPage;
+  /*Map Selection*/
+  const [selectedMarker, setSelectedMarker] = useState({});
+  const [showMapForm, setShowMapForm] = useState(false);
+  const Library_id_URL = match.params.library_id;
+  const [SelectedLibraryID, setSelectedLibraryID] = useState('');
+  const [selectedValueAll, setselectedValueAll] = useState(null);
+  const librariesList = patron.my_libraries.data;
+  const librariesToDisplay = librariesList.slice(startIndex, endIndex);
 
   // Function to handle changes in items per page
   const handleItemsPerPageChange = event => {
     setItemsPerPage(Number(event.target.value));
-    setCurrentPage(1); // Reset to first page when items per page changes
+    setCurrentPage(currentPage); // Reset to first page when items per page changes
   };
-
-  // Calculate the start and end index for the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = currentPage * itemsPerPage;
-
-  const [selectedMarker, setSelectedMarker] = useState({});
-  const [showMapForm, setShowMapForm] = useState(false);
-
-  const librariesList = patron.my_libraries.data;
-  const Library_id_URL = match.params.library_id;
-  const [selectedLibFromUrl, setSelectedLibFromUrl] = useState(Library_id_URL);
-  const [SelectedLibraryID, setSelectedLibraryID] = useState('');
-  const librariesToDisplay = librariesList.slice(startIndex, endIndex);
-
-  const [selectedValueAll, setselectedValueAll] = useState(null);
-  const [totalItems, setTotalItems] = useState(10); // Total number of items, you can fetch this from your data source
 
   const handleGoToReferenceManager = () => {
     history.push('/patron/references/new');
+  };
+
+  const handleGoToMyLibraries = () => {
+    history.push('/patron/my-libraries');
   };
 
   // Function to handle page change
@@ -112,7 +111,9 @@ function JointoLibPage(props) {
   };
 
   const handleLibraryChange = event => {
-    var libraryFromMap = options.findIndex(option => option.value === parseInt(event, 10));
+    var libraryFromMap = options.findIndex(
+      option => option.value === parseInt(event, 10),
+    );
     var value = libraryFromMap !== -1 ? options[libraryFromMap] : options[0];
     setselectedValueAll(value);
     handleStateUpdate(value.value);
@@ -123,20 +124,20 @@ function JointoLibPage(props) {
     var selectedLibFromUrl = options.findIndex(
       option => option.value === parseInt(LibraryID, 10),
     );
-    var value = selectedLibFromUrl !== -1 ? options[selectedLibFromUrl] : options[0];
+    var value =
+      selectedLibFromUrl !== -1 ? options[selectedLibFromUrl] : options[0];
     setselectedValueAll(value);
     handleStateUpdate(LibraryID);
     setShowMapForm(false);
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(requestLibraryDepartmentsOptionList());
     };
     fetchData();
-  //}, [selectedLibrary, SelectedLibraryID]);
-}, [SelectedLibraryID]);
+    //}, [selectedLibrary, SelectedLibraryID]);
+  }, [SelectedLibraryID]);
 
   const handleChangeData = (field_name, value) => {
     //Usato per aggiornare le tendine con dipartimenti/... un base alla biblio scelta
@@ -184,7 +185,6 @@ function JointoLibPage(props) {
   const handleMarkerClick = event => {
     console.log('Marker clicked. State updated.');
   };
-
 
   const statusClass = status => {
     switch (status) {
@@ -282,43 +282,6 @@ function JointoLibPage(props) {
                 <i className="fas fa-map-marker-alt" />{' '}
               </button>
             </div>
-
-            {/* <div className="form-group">
-              <label htmlFor="library_id">Library</label>
-              <div className="d-flex align-items-center">
-                {' '}
-                <select
-                  name="library_id"
-                  id="library_id"
-                  className="form-control custom-select"
-                  onChange={handleLibraryChange}
-                  value={
-                    selectedLibFromUrl || SelectedLibraryID || selectedLibrary
-                  }
-                  disabled={Library_id_URL > 0 ? true : false}
-                >
-                  {libraries.map((library, index) => {
-                  return (
-                    <option
-                      key={index}
-                      value={library.value}
-                      disabled={librariesToDisplay.some(item => item.library_id === library.value) ? true : false}
-                    >
-                      {library.label}
-                    </option>
-                  );
-                  })}
-                </select>
-                <button
-                  className="btn btn-success ml-2" 
-                  type="button"
-                  onClick={handleShowMapForm}
-                  disabled={Library_id_URL > 0 ? true : false}
-                >
-                  <i className="fas fa-map-marker-alt" />{' '}
-                </button>
-              </div>
-            </div> */}
           </div>
 
           <div className="col-md-4">
@@ -412,160 +375,18 @@ function JointoLibPage(props) {
           {isNew ? 'Join to Library' : 'Update'}
         </button>
 
-        <hr class="separator" />
-
-        <div className="container mt-4">
-          <h3 className="mb-4">
-            <b>Belonging Libraries</b>
-          </h3>
-          <br />
-          <div className="row mb-3">
-            <div className="col-md-4">
-              <div className="font-weight-bold">Library</div>
-            </div>
-            <div className="col-md-2">
-              <div className="font-weight-bold">Date</div>
-            </div>
-            <div className="col-md-2">
-              <div className="font-weight-bold">Status</div>
-            </div>
-            <div className="col-md-4">
-              <div className="font-weight-bold">Details</div>
-            </div>
-          </div>
-          {librariesToDisplay.map((library, index) => (
-            <div className="row mb-3 row-separator" key={index}>
-              <div className="col-md-4">
-                <div>{library.name}</div>
-              </div>
-              <div className="col-md-2">
-                <div>
-                  {library.created_at && <p>{library.created_at}</p>}
-                  {!library.created_at && <p>06/12/2023</p>}
-                </div>
-              </div>
-              <div className="col-md-2">
-                <div>
-                  <div
-                    className={`status-point ${statusClass(library.status)}`}
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-4">
-                <div>
-                  {library.department_name && (
-                    <>
-                      {library.department_name}
-                      <br />
-                    </>
-                  )}
-                  {library.title_name && (
-                    <>
-                      {library.title_name}
-                      <br />
-                    </>
-                  )}
-                  {library.user_referent && (
-                    <>
-                      {library.user_referent}
-                      <br />
-                    </>
-                  )}
-                  {library.user_service_phone && (
-                    <>
-                      {library.user_service_phone}
-                      <br />
-                    </>
-                  )}
-                  {library.user_service_email && (
-                    <>
-                      {library.user_service_email}
-                      <br />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
-          <hr /> {/* Separator */}
-          <div className="row mt-3 align-items-center">
-            {/* Showing results text on the left */}
-            <div className="col-md-4">
-              <p>
-                Showing {startIndex}-{endIndex} results out of {totalItems}
-              </p>
-            </div>
-
-            {/* Pagination in the center */}
-            <div className="col-md-4 d-flex justify-content-center">
-              <nav aria-label="Page navigation">
-                <ul className="pagination">
-                  {Array.from(
-                    { length: Math.ceil(librariesList.length / itemsPerPage) },
-                    (_, i) => (
-                      <li
-                        className={`page-item ${
-                          currentPage === i + 1 ? 'active' : ''
-                        }`}
-                        key={i}
-                      >
-                        <button
-                          type="button"
-                          className="page-link"
-                          onClick={() => handlePageChange(i + 1)}
-                        >
-                          {i + 1}
-                        </button>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </nav>
-            </div>
-
-            {/* Dropdown on the right */}
-            <div className="col-md-4 d-flex justify-content-end">
-              <select
-                id="items-per-page-select"
-                className="form-control"
-                value={itemsPerPage}
-                onChange={handleItemsPerPageChange}
-              >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={15}>15</option>
-              </select>
-            </div>
-          </div>
-          <hr /> {/* Separator */}
-        </div>
-
-        <br />
-        <br />
-        <div className="row">
-          <div className="col-md-6">
-            <button
-              className="btn btn-success btn-block"
-              onClick={() => handleGoToReferenceManager()}
-              type="button"
-            >
-              Go to Reference Manager
-            </button>
-          </div>
-
-          {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
-            <div className="col-md-6">
-              <button
-                className="btn btn-primary btn-block"
-                onClick={() => handleGoToReferenceManager()}
-                type="button"
-              >
-                Go to My Libraries
-              </button>
-            </div>
-          )}
-        </div>
+        <BelongingLibraries
+          librariesToDisplay={librariesToDisplay}
+          librariesList={librariesList}
+          currentPage={currentPage}
+          handlePageChange={handlePageChange}
+          itemsPerPage={itemsPerPage}
+          handleItemsPerPageChange={handleItemsPerPageChange}
+          statusClass={statusClass}
+          handleGoToReferenceManager={handleGoToReferenceManager}
+          handleGoToMyLibraries={handleGoToMyLibraries}
+          auth={auth}
+        />
       </form>
     </>
   );

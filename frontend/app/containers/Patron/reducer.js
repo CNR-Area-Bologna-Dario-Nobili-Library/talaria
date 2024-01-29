@@ -171,7 +171,8 @@ const PatronReducer = (state = initialState, action) =>
             user_service_email: lib.user_service_email,
             preferred: lib.preferred,
             label: lib.label,
-            created_at: lib.library.data.created_at  
+            //created_at: lib.library.data.created_at  
+            created_at: lib.created_at  
           } 
         });
         draft.my_libraries.pagination =  action.result.meta.pagination
