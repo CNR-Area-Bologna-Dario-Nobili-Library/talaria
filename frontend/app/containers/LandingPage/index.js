@@ -106,8 +106,8 @@ function LandingPage(props) {
         }               
         <hr/>
         <div className='landingBoxes d-flex flex-row justify-content-start flex-wrap'>          
-          <LandingPagePatronBox history={history} title="Patron Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>
-          <LandingPageLibrariesBox history={history} title="Libraries Box" auth={props.auth} match={props.match} canCollapse={false} collapsed={false}/>          
+          <LandingPagePatronBox history={history} title="Patron Box" auth={props.auth} match={props.match}/>
+          <LandingPageLibrariesBox history={history} title="Libraries Box" auth={props.auth} match={props.match}/>          
           <LandingPageInstitutionsBox history={history} title="Institutions Box" auth={props.auth} match={props.match}/>
           <LandingPageProjectsBox history={history} title="Projects Box" auth={props.auth} match={props.match}/>
           <LandingPageConsortiaBox history={history} title="Consortia Box" auth={props.auth} match={props.match}/>

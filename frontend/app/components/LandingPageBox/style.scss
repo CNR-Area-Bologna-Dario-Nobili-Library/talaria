@@ -1,17 +1,19 @@
+@import '../../scss/variables';
 .landingPageBox {    
     margin:10px;
     padding:0;
 
     & .card-header {
-        margin-right: 10px;
+      
     }
     
-    h1.landingBoxTitle {
-        text-align: left;
+    .landingBoxTitle {
+        text-align: left;             
+        padding-right: 25px;
     }
 
     & .toggle-box-link {
         right: 5px;
-        position: absolute;
+        position: absolute;             
     }
 }

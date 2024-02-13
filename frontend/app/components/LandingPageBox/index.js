@@ -8,14 +8,14 @@ const LandingPageBox = (props) => {
     const [openBox,setOpenBox]=useState(canCollapse?!collapsed:true)  
     
     return (
-        <Card className="landingPageBox p-2">
+        <Card className="landingPageBox">
             <CardHeader className="landingBoxTitle">                                
                 {canCollapse && <a className="toggle-box-link" onClick={()=>setOpenBox(!openBox)}>
                     <i className={`fas ${openBox?'fa-toggle-on':'fa-toggle-off'}`}></i> 
                 </a>}
                 {iconClass?<i className={iconClass}></i>:''} {title}
             </CardHeader>                              
-            {openBox && <CardBody className="p-4">                               
+            {openBox && <CardBody className="">                               
                 {props.children}
             </CardBody>}
         </Card>
