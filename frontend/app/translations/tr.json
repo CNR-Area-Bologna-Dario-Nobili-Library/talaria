@@ -293,6 +293,12 @@
   "app.containers.BorrowingPage.headerArchive":"Arşiv", 
   "app.containers.BorrowingPage.header":"Bekleyen talepler", 
 
+  "app.containers.BelongingLibraries.header": "???Belonging Libraries",
+  "app.containers.BelongingLibraries.library":"???Library",
+  "app.containers.BelongingLibraries.date":"???Date",
+  "app.containers.BelongingLibraries.status":"???Status",
+  "app.containers.BelongingLibraries.details":"???Details",
+
   "app.containers.DeliveryPage.header":"Bekleyen talepler",   
 
   "app.libraries.institution_id": "Kurum",

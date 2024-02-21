@@ -10,7 +10,6 @@ import {
   requestUpdateAccessToLibrary,
   requestGetTitlesOptionList,
   requestLibraryOptionList,
-  requestLibraryDepartmentsOptionList,
   requestGetLibraryListNearTo,
   requestSearchPlacesByText,
 } from '../actions';
@@ -52,25 +51,26 @@ function JointoLibPage(props) {
   const [selectedValueAll, setselectedValueAll] = useState(null);
   const librariesList = patron.my_libraries.data;
   const librariesToDisplay = librariesList.slice(startIndex, endIndex);
+  const [preferred, setPreferred] = useState(null);
 
   // Function to handle changes in items per page
-  const handleItemsPerPageChange = event => {
-    setItemsPerPage(Number(event.target.value));
-    setCurrentPage(currentPage); // Reset to first page when items per page changes
-  };
+  // const handleItemsPerPageChange = event => {
+  //   setItemsPerPage(Number(event.target.value));
+  //   setCurrentPage(currentPage); // Reset to first page when items per page changes
+  // };
 
-  const handleGoToReferenceManager = () => {
-    history.push('/patron/references/new');
-  };
+  // const handleGoToReferenceManager = () => {
+  //   history.push('/patron/references/new');
+  // };
 
-  const handleGoToMyLibraries = () => {
-    history.push('/patron/my-libraries');
-  };
+  // const handleGoToMyLibraries = () => {
+  //   history.push('/patron/my-libraries');
+  // };
 
-  // Function to handle page change
-  const handlePageChange = pageNumber => {
-    setCurrentPage(pageNumber);
-  };
+  // // Function to handle page change
+  // const handlePageChange = pageNumber => {
+  //   setCurrentPage(pageNumber);
+  // };
 
   const handleShowMapForm = () => {
     setShowMapForm(!showMapForm); // Toggle the value
@@ -120,6 +120,18 @@ function JointoLibPage(props) {
     setShowMapForm(false);
   };
 
+  const handleEdit = (library_id, id) => {
+    history.push('/patron/my-libraries/' + library_id + '/edit/' + id);
+  };
+
+  const handleDelete = libraryToDelete => {
+    alert('Delete action' + JSON.stringify(libraryToDelete));
+    // Implement your delete logic here
+    // Remove the library from the state or send a delete request to the server
+    // Update the librariesList state accordingly
+    // Example: setLibrariesList(updatedLibrariesList);
+  };
+
   const handleMarkerSelection = LibraryID => {
     var selectedLibFromUrl = options.findIndex(
       option => option.value === parseInt(LibraryID, 10),
@@ -131,14 +143,6 @@ function JointoLibPage(props) {
     setShowMapForm(false);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(requestLibraryDepartmentsOptionList());
-    };
-    fetchData();
-    //}, [selectedLibrary, SelectedLibraryID]);
-  }, [SelectedLibraryID]);
-
   const handleChangeData = (field_name, value) => {
     //Usato per aggiornare le tendine con dipartimenti/... un base alla biblio scelta
     if (field_name === 'library_id' && value)
@@ -149,7 +153,6 @@ function JointoLibPage(props) {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
-
     if (isNew) {
       // Check if params.library_id exists and is greater than 0
       if (params.library_id && parseInt(params.library_id, 10) > 0) {
@@ -167,6 +170,7 @@ function JointoLibPage(props) {
           requestAccessToLibrary({
             ...data,
             user_id: props.auth.user.id,
+            url: params,
           }),
         );
       }
@@ -184,21 +188,6 @@ function JointoLibPage(props) {
 
   const handleMarkerClick = event => {
     console.log('Marker clicked. State updated.');
-  };
-
-  const statusClass = status => {
-    switch (status) {
-      case 0:
-        return 'disabled';
-        break;
-      case 1:
-        return 'success';
-        break;
-      case 2:
-        return 'pending';
-        break;
-    }
-    return status;
   };
 
   return (
@@ -240,8 +229,6 @@ function JointoLibPage(props) {
                 <button onClick={() => handleMarkerSelection(marker.id)}>
                   Select this Library
                 </button>
-                {/* <NavLink className="btn btn-info" to={"/public/library/" + marker.id}>Library detail</NavLink> */}
-                {/* <NavLink className="btn btn-primary" to="#" onClick={() => chooseMarkerFromMap(marker)}>Subscribe to this library</NavLink> */}
               </div>
             </div>
           )}
@@ -272,6 +259,7 @@ function JointoLibPage(props) {
                 value={selectedValueAll || selectedValue}
                 isDisabled={Library_id_URL > 0}
                 isSearchable // Enables searching
+                required
               />
               <button
                 className="btn btn-success ml-2"
@@ -292,23 +280,26 @@ function JointoLibPage(props) {
                 id="label"
                 name="label"
                 className="form-control"
+                required
               />
             </div>
           </div>
 
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="department_id">Department</label>
-              <Select
-                name="department_id"
-                id="department_id"
-                options={departments.map((dept, index) => ({
-                  value: dept.value,
-                  label: dept.label,
-                }))}
-              />
+          {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
+            <div className="col-md-4">
+              <div className="form-group">
+                <label htmlFor="department_id">Department</label>
+                <Select
+                  name="department_id"
+                  id="department_id"
+                  options={departments.map((dept, index) => ({
+                    value: dept.value,
+                    label: dept.label,
+                  }))}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <div className="col-md-4">
             <div className="form-group">
               <label htmlFor="titleId">Title</label>
@@ -367,6 +358,7 @@ function JointoLibPage(props) {
                 id="user_service_email"
                 name="user_service_email"
                 className="form-control"
+                required
               />
             </div>
           </div>
@@ -376,19 +368,13 @@ function JointoLibPage(props) {
         </button>
 
         <BelongingLibraries
-          librariesToDisplay={librariesToDisplay}
           librariesList={librariesList}
-          currentPage={currentPage}
-          handlePageChange={handlePageChange}
-          itemsPerPage={itemsPerPage}
-          handleItemsPerPageChange={handleItemsPerPageChange}
-          statusClass={statusClass}
-          handleGoToReferenceManager={handleGoToReferenceManager}
-          handleGoToMyLibraries={handleGoToMyLibraries}
-          auth={auth}
+          gridtitleiconLink="/patron/my-libraries"
+          history={history}
+          dispatch={dispatch}
+          showeditbutton={true}
         />
       </form>
-     
     </>
   );
 }
@@ -397,13 +383,9 @@ const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
   places: placesSelector(),
   titles: titlesSelector(),
-  libraries: librariesSelector(),
+  libraries: librariesSelector(), //Populate librairies in dropdown
   patron: makeSelectPatron(),
   isLoading: isPatronLoading(),
-  libraryList: libraryListSelector(),
-
-  //librarydepartments: librarydepartmentSelector(),
-  // Add other selectors if needed
 });
 
 function mapDispatchToProps(dispatch) {

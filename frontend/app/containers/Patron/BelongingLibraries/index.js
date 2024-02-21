@@ -1,111 +1,208 @@
 import React from 'react';
+import { Button } from 'reactstrap';
+import { requestUpdateAccessToLibrary } from '../actions';
+import {useIntl} from 'react-intl'
+import globalMessages from 'utils/globalMessages';
+import messages from './messages'; 
 
 const BelongingLibraries = ({
-  librariesToDisplay,
-  startIndex,
-  endIndex,
-  totalItems,
   librariesList,
-  currentPage,
-  handlePageChange,
-  itemsPerPage,
-  handleItemsPerPageChange,
-  statusClass,
-  handleGoToReferenceManager,
-  handleGoToMyLibraries,
-  auth,
+  gridtitleiconLink,
+  history,
+  dispatch,
+  showeditbutton,
 }) => {
-    
-    return (
+  const preferredStarClass = pref => {
+    switch (pref) {
+      case false:
+        return 'notpreferred';
+        break;
+      case true:
+        return 'preferred';
+        break;
+      default:
+        return 'notpreferred';
+        break;
+    }
+    return pref;
+  };
+  const statusClass = status => {
+    switch (status) {
+      case 0:
+        return 'disabled';
+        break;
+      case 1:
+        return 'success';
+        break;
+      case 2:
+        return 'pending';
+        break;
+    }
+    return status;
+  };
+  const intl = useIntl()
+
+  const onSetIsPreferred = (id, libid, ispreferred) => {
+    dispatch(
+      requestUpdateAccessToLibrary({
+        preferred: ispreferred,
+        library_id: libid,
+        id,
+        noredirectToMyLibraries: true,
+      }),
+    );
+  };
+
+  return (
     <div className="container mt-4">
-     
       <br />
       <div className="container mt-4">
-          <h3 className="mb-4">
-            <b>Belonging Libraries</b>
-          </h3>
-          <br />
-          <div className="row mb-3">
-            <div className="col-md-4">
-              <div className="font-weight-bold">Library</div>
-            </div>
-            <div className="col-md-2">
-              <div className="font-weight-bold">Date</div>
-            </div>
-            <div className="col-md-2">
-              <div className="font-weight-bold">Status</div>
-            </div>
-            <div className="col-md-4">
-              <div className="font-weight-bold">Details</div>
+        <h3 className="mb-4">
+          <b>{intl.formatMessage(messages.header)}</b>{' '}
+          {showeditbutton ? (
+            <i
+              className="fas fa-edit"
+              onClick={() => history.push(gridtitleiconLink)}
+              style={{ cursor: 'pointer' }}
+            />
+          ) : null}
+        </h3>
+        <br />
+        <div className="row mb-3">
+          <div className="col-md-1">
+            <div className="font-weight-bold" />
+          </div>
+          <div className="col-md-4">
+            <div className="font-weight-bold">{intl.formatMessage(messages.library)}
             </div>
           </div>
-          {librariesToDisplay.map((library, index) => (
-            <div className="row mb-3 row-separator" key={index}>
-              <div className="col-md-4">
-                <div>{library.name}</div>
-                <div>{library.label}</div>
-
-              </div>
-              
-              <div className="col-md-2">
-                <div>
-                {library.created_at}
-                </div>
-              </div>
-              <div className="col-md-2">
-                <div>
-                  <div
-                    className={`status-point ${statusClass(library.status)}`}
-                  />
-                </div>
-              </div>
-
-              <div className="col-md-4">
-                <div>
-                  {library.department_name && (
-                    <>
-                      {library.department_name}
-                      <br />
-                    </>
-                  )}
-                  {library.title_name && (
-                    <>
-                      {library.title_name}
-                      <br />
-                    </>
-                  )}
-                  {library.user_referent && (
-                    <>
-                      {library.user_referent}
-                      <br />
-                    </>
-                  )}
-                  {library.user_service_phone && (
-                    <>
-                      {library.user_service_phone}
-                      <br />
-                    </>
-                  )}
-                  {library.user_service_email && (
-                    <>
-                      {library.user_service_email}
-                      <br />
-                    </>
-                  )}
-                </div>
+          <div className="col-md-2">
+            <div className="font-weight-bold">{intl.formatMessage(messages.date)}</div>
+          </div>
+          <div className="col-md-2 d-flex align-items-center justify-content-center">
+            {' '}
+            <div className="font-weight-bold">{intl.formatMessage(messages.status)}</div>
+          </div>
+          <div className="col-md-3">
+            <div className="font-weight-bold">{intl.formatMessage(messages.details)}</div>
+          </div>
+          {/* {(showEditButton || showDeleteButton) && (
+            <div className="col-md-2">
+              <div className="font-weight-bold">Actions</div>
+            </div>
+          )} */}
+        </div>
+        {librariesList.map((library, index) => (
+          <div className="row mb-3 row-separator" key={index}>
+            <div className="col-md-1">
+              <div>
+                {' '}
+                <Button
+                  onClick={() =>
+                    onSetIsPreferred(
+                      library.id,
+                      library.library_id,
+                      library.preferred === 1 ? 0 : 1,
+                    )
+                  }
+                  color="default"
+                >
+                  {
+                    <i
+                      className={`fa-solid fa-star preferred-star ${preferredStarClass(
+                        library.preferred === 1,
+                      )}`}
+                    />
+                  }
+                </Button>
               </div>
             </div>
-          ))}
-          <hr /> {/* Separator */}
-          <div className="row mt-3 align-items-center">
-            {/* Showing results text on the left */}
+
+            <div className="col-md-4">
+              <div>{library.name}</div>
+              <div>{library.label}</div>
+            </div>
+
+            <div className="col-md-2">
+              <div>{new Date(library.created_at).toLocaleDateString()}</div>{' '}
+            </div>
+            <div className="col-md-2">
+              <div>
+                <div
+                  className={`status-point ${statusClass(library.status)}`}
+                />
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <div>
+                {library.department_name && (
+                  <>
+                    {library.department_name}
+                    <br />
+                  </>
+                )}
+                {library.title_name && (
+                  <>
+                    {library.title_name}
+                    <br />
+                  </>
+                )}
+                {library.user_referent && (
+                  <>
+                    {library.user_referent}
+                    <br />
+                  </>
+                )}
+                {library.user_service_phone && (
+                  <>
+                    {library.user_service_phone}
+                    <br />
+                  </>
+                )}
+                {library.user_service_email && (
+                  <>
+                    {library.user_service_email}
+                    <br />
+                  </>
+                )}
+              </div>
+            </div>
+            {/* <div className="col-md-2">
+              <div className="btn-group">
+                {showEditButton && (
+                  <a
+                    href="#"
+                    className="btn btn-icon"
+                    onClick={() => handleEdit(library.library_id, library.id)}
+                  >
+                    <i className="fa-solid fa-pen-to-square" />
+                  </a>
+                )}
+
+                {showDeleteButton && (
+                  <a
+                    href="#"
+                    className="btn btn-icon"
+                    onClick={() => handleDelete(library.library_id, library.id)}
+                  >
+                    <i className="fa-solid fa-trash" />
+                  </a>
+                )}
+              </div>
+            </div> */}
+          </div>
+        ))}
+        <hr />
+        {/* <div className="row mt-3 align-items-center">
+            
             <div className="col-md-4">
               <p>
                 Showing {startIndex}-{endIndex} results out of {totalItems}
               </p>
             </div>
 
-            {/* Pagination in the center */}
+           
             <div className="col-md-4 d-flex justify-content-center">
               <nav aria-label="Page navigation">
                 <ul className="pagination">
@@ -132,7 +229,6 @@ const BelongingLibraries = ({
               </nav>
             </div>
 
-            {/* Dropdown on the right */}
             <div className="col-md-4 d-flex justify-content-end">
               <select
                 id="items-per-page-select"
@@ -146,34 +242,34 @@ const BelongingLibraries = ({
               </select>
             </div>
           </div>
-          <hr /> {/* Separator */}
+          <hr />  */}
+      </div>
+
+      <br />
+      <br />
+      {/* <div className="row">
+        <div className="col-md-6">
+          <button
+            className="btn btn-success btn-block"
+            onClick={() => handleGoToReferenceManager()}
+            type="button"
+          >
+            Go to Reference Manager
+          </button>
         </div>
 
-        <br />
-        <br />
-        <div className="row">
+        {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
           <div className="col-md-6">
             <button
-              className="btn btn-success btn-block"
-              onClick={() => handleGoToReferenceManager()}
+              className="btn btn-primary btn-block"
+              onClick={() => handleGoToMyLibraries()}
               type="button"
             >
-              Go to Reference Manager
+              Go to My Libraries
             </button>
           </div>
-
-          {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
-            <div className="col-md-6">
-              <button
-                className="btn btn-primary btn-block"
-                onClick={() => handleGoToMyLibraries()}
-                type="button"
-              >
-                Go to My Libraries
-              </button>
-            </div>
-          )}
-        </div>
+        )}
+      </div> */}
     </div>
   );
 };
