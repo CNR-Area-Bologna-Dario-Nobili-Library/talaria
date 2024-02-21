@@ -216,6 +216,7 @@ function JointoLibPage(props) {
           placesFreeSearchPlaceholder={intl.formatMessage(
             messages.placesFreeSearchPlaceholder,
           )}
+          
           getMarkers={pos => dispatch(requestGetLibraryListNearTo(pos))}
           markers={props.libraryList}
           onMarkerClick={handleMarkerClick}
@@ -234,6 +235,8 @@ function JointoLibPage(props) {
           )}
         />
       )}
+
+      
 
       <form onSubmit={handleSubmit} className="container mt-3">
         <div className="row">
@@ -386,6 +389,8 @@ const mapStateToProps = createStructuredSelector({
   libraries: librariesSelector(), //Populate librairies in dropdown
   patron: makeSelectPatron(),
   isLoading: isPatronLoading(),
+  libraryList: libraryListSelector() //populate libaries to map
+
 });
 
 function mapDispatchToProps(dispatch) {
