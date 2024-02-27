@@ -100,7 +100,7 @@ const authReducer = (state = initialState, action) =>
           // console.log('case REQUEST_PERMISSIONS_SUCCESS', action.result)
           draft.loading = false;
           draft.error = initialState.error;
-          draft.permissions = action.result;
+          draft.permissions = action.result.data;
         break;
       case REQUEST_NEW_TOKEN:
           draft.loading = true;
