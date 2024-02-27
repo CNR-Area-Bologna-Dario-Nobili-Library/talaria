@@ -391,6 +391,274 @@
 			"response": []
 		},
 		{
+			"name": "Delete Library Operators",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/libraries/4/operators/7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"4",
+						"operators",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Library Operators",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "permissions",
+							"value": "borrow, manage-users",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/libraries/4/operators/7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"4",
+						"operators",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Library Pending Operators",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/libraries/4/pending_operators?status=0",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"4",
+						"pending_operators"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Library Pending Operators Update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "abilities",
+							"value": "manage",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/libraries/1/pending_operators/8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"1",
+						"pending_operators",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Library Pending Operators Show",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/libraries/1/pending_operators/8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"1",
+						"pending_operators",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Library Pending Operators Store",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "abilities",
+							"value": "lend",
+							"type": "default"
+						},
+						{
+							"key": "entity_id",
+							"value": "1",
+							"type": "default"
+						},
+						{
+							"key": "entity_type",
+							"value": "App\\Models\\Libraries\\Library",
+							"type": "default"
+						},
+						{
+							"key": "user_id",
+							"value": "7",
+							"type": "default"
+						},
+						{
+							"key": "user_email",
+							"value": "",
+							"type": "default"
+						},
+						{
+							"key": "user_name",
+							"value": "",
+							"type": "default"
+						},
+						{
+							"key": "user_surname",
+							"value": "",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/libraries/1/pending_operators/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"1",
+						"pending_operators",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Library Pending Operators Drop",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/libraries/1/pending_operators/7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"1",
+						"pending_operators",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Projects",
 			"request": {
 				"auth": {
@@ -643,66 +911,6 @@
 			"response": []
 		},
 		{
-			"name": "User Roles",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
-					}
-				],
-				"url": {
-					"raw": "{{url}}/users/roles",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"users",
-						"roles"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "User Roles and resources",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
-					}
-				],
-				"url": {
-					"raw": "{{url}}/users/2?include=roles,resources",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"users",
-						"2"
-					],
-					"query": [
-						{
-							"key": "include",
-							"value": "roles,resources"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Users",
 			"request": {
 				"method": "GET",
@@ -729,6 +937,254 @@
 						{
 							"key": "label",
 							"value": "name,email"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Roles",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/1/roles",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"1",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Permissions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/6/permissions",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"6",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Resources",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/6/resources",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"6",
+						"resources"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Roles and resources",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/users/1?include=roles,resources",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"1"
+					],
+					"query": [
+						{
+							"key": "include",
+							"value": "roles,resources"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Permissions",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/auth/permissions",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Resources",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/auth/resources",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"resources"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Auth Update Resources",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "status",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "abilities",
+							"value": "borrow,lend",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/auth/resources/7",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"resources",
+						"7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Me with roles and res",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/auth/me?include=roles,resources",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"me"
+					],
+					"query": [
+						{
+							"key": "include",
+							"value": "roles,resources"
 						}
 					]
 				}
@@ -795,66 +1251,6 @@
 						{
 							"key": "include",
 							"value": "granted_permissions"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Permissions",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
-					}
-				],
-				"url": {
-					"raw": "{{url}}/auth/permissions",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"auth",
-						"permissions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Me with roles and res",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer {{bearer}}"
-					}
-				],
-				"url": {
-					"raw": "{{url}}/auth/me?include=roles,resources",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"auth",
-						"me"
-					],
-					"query": [
-						{
-							"key": "include",
-							"value": "roles,resources"
 						}
 					]
 				}
