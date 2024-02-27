@@ -358,7 +358,7 @@ export function* requestAccessToLibrarySaga(action) {
     const request = yield call(requestAccessToLibrary, options);
     yield call(userPermissionsSaga) //update roles in user profiles
     yield call(requestMyLibrariesSaga);
-    yield put(push("/patron/my-libraries"))
+    //yield put(push("/patron/my-libraries"))
     yield call(() => toast.success(action.message))
   } catch(e) {
     yield put(requestError(e.message));
@@ -389,12 +389,14 @@ export function* requestUpdateAccessToLibrarySaga(action) {
     method: 'put',
     body: action.request,
     id: action.request.id,
-    library_id: action.request.library_id
+    library_id: action.request.library_id,
   };
   try {
+    const noredirectToMyLibraries = options.body.noredirectToMyLibraries;
     const request = yield call(updateAccessToLibrary, options);
     yield call(requestMyLibrariesSaga);
-    yield put(push("/patron/my-libraries"));
+    if (!noredirectToMyLibraries)
+      yield put(push("/patron/my-libraries"));
     if(action.message){
       yield call(() => toast.success(action.message))
     }

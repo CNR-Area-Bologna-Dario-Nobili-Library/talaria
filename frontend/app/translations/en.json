@@ -293,7 +293,14 @@
   "app.containers.BorrowingPage.headerArchive":"Archive", 
   "app.containers.BorrowingPage.header":"Pending requests", 
 
-  "app.containers.DeliveryPage.header":"Pending requests",   
+  "app.containers.BelongingLibraries.header": "Belonging Libraries",
+  "app.containers.BelongingLibraries.library":"Library",
+  "app.containers.BelongingLibraries.date":"Date",
+  "app.containers.BelongingLibraries.status":"Status",
+  "app.containers.BelongingLibraries.details":"Details",
+
+
+  "app.containers.DeliveryPage.header":"Pending requests",
 
   "app.libraries.institution_id": "Institution",
   "app.libraries.subject_id": "Disciplinary sector",  
