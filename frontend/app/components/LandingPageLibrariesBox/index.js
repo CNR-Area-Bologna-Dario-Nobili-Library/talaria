@@ -3,6 +3,7 @@ import {Button} from 'reactstrap'
 import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import {formatDateTime} from '../../utils/dates';
 
 const LandingPageLibrariesBox = (props) => {
     const {auth,title,match,history,canCollapse,collapsed}=props
@@ -51,13 +52,26 @@ const LandingPageLibrariesBox = (props) => {
                               ||<Link className="btn btn-sm btn-info" to={'/library/'+res.resource.id+"/borrowing/new"} key={'borrlink'+res.resource.id}>New request</Link>                                                                                    
                             )}                            
                         </div>)
-                    )}
+                      )}
                   </div>                    
                   }
                   {/*match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 && /* or pending requests */  
+                  auth.permissions.tempresources && auth.permissions.tempresources.libraries && 
                   <div>
-                      <h3>Pending operators requests (matching email address or DB data)</h3>
-                      bla bla bla ....
+                      <h3>Pending/Rejected requests</h3>
+                      { auth.permissions.tempresources.libraries.map((res,i)=> (
+                        <div className="permissionsBox" key={`row-${res.resource.id}`}>                            
+                            <span>{res.resource.name}</span>
+                            <span>{res.permissions.map((p,i)=>(
+                              <span key={"badge_temp_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
+                            ))}</span>                                                        
+                            <span>{res.status}</span>
+                            <span>{formatDateTime(res.created_at)}</span>
+                            <span>{formatDateTime(res.updated_at)}</span>
+                            {res.status==0 && <Link className="btn btn-sm btn-success" to="#">Accept</Link>}
+                            {res.status==0 && <Link className="btn btn-sm btn-danger" to="#">Reject</Link>}
+                        </div>)
+                      )}
                   </div>                    
                   }                            
                   <br/><br/>
