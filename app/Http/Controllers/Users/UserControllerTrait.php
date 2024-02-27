@@ -1,5 +1,9 @@
 <?php namespace App\Http\Controllers\Users;
 
+use App\Models\Users\AbilitiesTransformer;
+use App\Models\Users\AllPermissionsAndRolesTransformer;
+use App\Models\Users\RolesTransformer;
+use App\Models\Users\User;
 use App\Traits\ApiTrait;
 use Event;
 use Illuminate\Http\Request;
@@ -144,6 +148,22 @@ trait UserControllerTrait
         });
 
         return $this->response->paginator($collection, new $this->transformer())->morph();
+    }
+
+    public function permissions (Request $request, User $user) {   
+        
+        $this->authorize($user);
+        return $this->response->item($user, new AllPermissionsAndRolesTransformer())->morph();                    
+    }
+
+    public function roles (Request $request, User $user) {        
+        $this->authorize($user);
+        return $this->response->item($user, new RolesTransformer())->morph();                    
+    }
+
+    public function resources (Request $request, User $user) {        
+        $this->authorize($user);
+        return $this->response->item($user, new AbilitiesTransformer())->morph();                    
     }
 
 }

@@ -18,41 +18,36 @@ Route::group([
     'middleware' => ['api','auth:api'],
     'prefix' => 'auth',
     ], function () {
-    Route::get('me', ['as' => 'auth.me.show', 'uses' => 'Auth\AuthController@me']);
+    Route::get('me', ['as' => 'auth.me.show', 'uses' => 'Auth\AuthController@me']); //user profile (can specify '?include=roles,resources,tempresources')
     Route::put('me', ['as' => 'auth.me.update', 'uses' => 'Auth\AuthController@updateMe']);
-//    Route::put('change-password', ['as' => 'auth.password.change-password', 'uses' => 'Auth\PasswordController@changePassword']);
-    Route::get('permissions', ['as' => 'auth.permissions', 'uses' => 'Auth\AuthController@permissions']); //i.e. roles
-    Route::get('resources', ['as' => 'auth.resources', 'uses' => 'Auth\AuthController@resources']);       //i.e. abilities
-    Route::get('pending_resources', ['as' => 'auth.pending_resources', 'uses' => 'Auth\AuthController@pendingresources']);
-    Route::put('pending_resources/{res}', ['as' => 'auth.pending_resources.update', 'uses' => 'Auth\AuthController@pendingresourcesUpdate'])->where('res', '[0-9]+');
-    Route::delete('pending_resources/{res}', ['as' => 'auth.pending_resources.update', 'uses' => 'Auth\AuthController@pendingresourcesUpdate'])->where('res', '[0-9]+');
-
+//    Route::put('change-password', ['as' => 'auth.password.change-password', 'uses' => 'Auth\PasswordController@changePassword']);        
+    Route::get('permissions', ['as' => 'auth.permissions', 'uses' => 'Auth\AuthController@permissions']); //roles + abilities/resources + pending!        
+    Route::get('resources', ['as' => 'auth.resources', 'uses' => 'Auth\AuthController@resources']);       //only abilities (no pending)          
+    Route::put('resources/{resourceId}',['as' => 'auth.updateMyResourcesStatus', 'uses' =>  'Auth\AuthController@updateMyResourcesStatus'])->where('resourceId', '[0-9]+');  //update(accept/reject) abilities
 });
 
 Route::group([
     'namespace' => 'Users',
     'prefix' => 'users',
     'middleware' => ['api','auth:api',],
-    'as' => 'api.v1.users.',
+    'as' => 'api.v1.users.', 
 ], function () {
-    Route::get('option-items', 'UserController@optionList')->name('option-items');
+    Route::get('option-items', 'UserController@optionList')->name('option-items'); //can specify ?label=name,email to get name/email fields
     Route::get('', 'UserController@index')->name('index');
-    Route::get('{user}', 'UserController@show')->name('show');
+    Route::get('{user}', 'UserController@show')->name('show');  // (can specify '?include=roles,resources,tempresources')
     Route::put('{user}', 'UserController@update')->name('update');
     Route::post('', 'UserController@store')->name('create');
     
-    //Roles
-    Route::get('roles', 'RolePermissionController@index')->name('roles-index');
-    Route::get('{user}/roles', 'UserController@roles')->where('user', '[0-9]+');
-    Route::put('{user}/roles/{role}', 'UserController@roles')->where('user', '[0-9]+')->name('user-roles-update');   
-    Route::delete('{user}/roles/{role}', 'UserController@roles')->where('user', '[0-9]+')->name('user-roles-delete');   
-    Route::post('{user}/roles', 'UserController@roles')->where('user', '[0-9]+')->name('user-roles-store');   
+    //Roles and permissions
+    Route::get('roles', 'RolePermissionController@index')->name('roles-index'); //all available roles
+    Route::get('{user}/roles', 'UserController@roles')->where('user', '[0-9]+'); //user's roles    
+    Route::get('{user}/permissions', 'UserController@permissions')->where('user', '[0-9]+');       //user's roles,abilities/resources + pending! 
+    Route::get('{user}/resources', 'UserController@resources')->where('user', '[0-9]+');       //user's roles,abilities/resources 
 
-    //Abilities
-    Route::get('{user}/resources', 'UserController@resources')->where('user', '[0-9]+');      
-    Route::put('{user}/resources/{res}', 'UserController@resources')->where('user', '[0-9]+')->name('user-resources-update');  
-    Route::delete('{user}/resources/{res}', 'UserController@resources')->where('user', '[0-9]+')->name('user-resources-delete');  
-    Route::post('{user}/resources', 'UserController@resources')->where('user', '[0-9]+')->name('user-resources-store');  
+    //TO DO: implement these API (for admin)
+    //Route::put('{user}/roles', 'UserController@updateRoles')->where('user', '[0-9]+')->name('user-roles-update');   
+    //Route::delete('{user}/roles', 'UserController@deleteRoles')->where('user', '[0-9]+')->name('user-roles-delete');   
+    //Route::post('{user}/roles', 'UserController@storeRoles')->where('user', '[0-9]+')->name('user-roles-store');           
 });
 
 Route::group([

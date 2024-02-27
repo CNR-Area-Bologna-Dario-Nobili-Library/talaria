@@ -1,7 +1,9 @@
 <?php
 namespace App\Traits\Auth;
 
+use App\Models\Users\TemporaryAbility;
 use Illuminate\Cache\TaggableStore;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
@@ -19,6 +21,18 @@ trait RolesAbilitiesPermissionsTrait
     public function permissions() {
         return $this->abilities()->wherePivot('forbidden', false);
     }
+
+     //all temporary permissions by user ID/email
+     public function pending_resources() {
+        
+        $temp_abilities=new Collection();
+        $temp_abilities=$temp_abilities->merge(TemporaryAbility::select()->byUserID($this->id)->get());        
+        $temp_abilities=$temp_abilities->merge(TemporaryAbility::select()->byUserEmail($this->email)->get());        
+        
+        return $temp_abilities;
+
+     }
+
 
     public function serializeAuthorizations($items) {
         if(is_string($items))
@@ -184,6 +198,7 @@ trait RolesAbilitiesPermissionsTrait
     public function syncAbilities() {
 
     }
+
 
 //    public function syncMacroAbilities($resources) {
 //        $abilities = [];

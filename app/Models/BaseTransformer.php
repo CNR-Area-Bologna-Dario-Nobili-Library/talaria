@@ -64,20 +64,20 @@ class BaseTransformer extends TransformerAbstract
     }
 
     protected function applyPolicy(Model $model, $to_merge)
-    {
-
-        //disallow policy because Admin/manager haven't abilities and can manage everything!
+    {                
         $user=Auth::user();                      
-        if (!(!is_null($user) && ($user->hasRole('super-admin')||$user->hasRole('manager')))) 
+     
+        //disallow policy because Admin/manager haven't abilities and can manage everything!
+        if ((!is_null($user) && ($user->hasRole('super-admin')||$user->hasRole('manager')))) 
             $this->disallow_policy=true; 
-
+        
         if($this->disallow_policy !== true)
-        {
+        {            
             $policy = $this->getPolicy();
             $excludes = [];
 
             foreach ($policy as $permission => $fields)
-            {                
+            {                                
                 //se l'utente non è settato nessun campo viene nascosto
                 //utile per le azioni che lanciate da command o dalla queue
                 //NOTA: 24/11/2020 ho aggiunto il controllo sul nr delle abilities altrimenti la $user->cannot si pianta! (probabile bugfix i Bouncer)
@@ -97,13 +97,17 @@ class BaseTransformer extends TransformerAbstract
                     }
 
                 }
-            }
+               
 
+            }
+          
+        
             if(count($excludes))
             {
                 $this->getCurrentScope()->getManager()->parseExcludes($excludes);
             }
         }
+    
 
         return array_merge($model->toArray(), $to_merge);
     }
@@ -146,8 +150,8 @@ class BaseTransformer extends TransformerAbstract
 //        return $fields;
 //    }
 
-    public function applyTransform(Model $model, $to_merge=[])
-    {
+    public function applyTransform(Model $model, $to_merge=[])    
+    {                  
         $to_merge=array_merge($this->mapFieldsConstant($model),$to_merge);
 
         $fields = $this->applyPolicy($model, $to_merge);

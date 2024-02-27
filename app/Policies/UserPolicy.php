@@ -35,7 +35,29 @@ class UserPolicy extends BasePolicy
 //        return true;
 //    }
 
-    public function viewRoles(User $user, Model $model) {
+    //only owner (or admin) can see his roles/permissions....    
+    public function viewRoles(User $user, Model $model) {               
         return $user->id === $model->id;
+    }
+
+    //only owner (or admin) can see his roles/permissions....    
+    public function permissions(User $user, Model $model) {               
+        return $this->viewRoles($user,$model);
+    }
+
+    //only owner (or admin) can see his roles/permissions....    
+    public function roles(User $user, Model $model) {               
+        return $this->viewRoles($user,$model);
+    }
+
+    //only owner (or admin) can see his roles/permissions....    
+    public function resources(User $user, Model $model) {               
+        return $this->viewRoles($user,$model);
+    }
+   
+    //anyone can get user's data (mainly public fields) but only admins/library man can see roles/permissions ...
+    public function show(User $user, Model $model)
+    {
+        return true;
     }
 }

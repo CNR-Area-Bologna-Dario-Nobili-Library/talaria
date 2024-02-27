@@ -98,16 +98,18 @@ Route::group([
     Route::get('{id}', 'LibraryController@show')->where('id', '[0-9]+')->name('show');
     Route::get('{id}/departments', 'LibraryController@departments')->where('id', '[0-9]+')->name('departments');
     Route::put('{id}', 'LibraryController@update')->where('id', '[0-9]+')->name('update');     
-       
+           
     Route::get('{id}/operators', 'LibraryController@operators')->where('id', '[0-9]+')->name('operators');
-    Route::put('{id}/operators/{user}', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('user', '[0-9]+')->name('operatorsUpdate');
-    Route::delete('{id}/operators/{user}', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('user', '[0-9]+')->name('operatorsDelete');
-    Route::post('{id}/pending_operators', 'LibraryController@operatorsStore')->where('id', '[0-9]+')->name('pending_operatorsStore');
-    Route::get('{id}/pending_operators', 'LibraryController@pending_operators')->where('id', '[0-9]+')->name('pending_operators');
-    Route::put('{id}/pending_operators/{user}', 'LibraryController@pending_operatorsUpdate')->where('id', '[0-9]+')->where('user', '[0-9]+')->name('pending_operatorsUpdate');
-    Route::delete('{id}/pending_operators/{user}', 'LibraryController@pending_operatorsDelete')->where('id', '[0-9]+')->where('user', '[0-9]+')->name('pending_operatorsDelete');
-
-    //Route::put('{id}', 'LibraryController@renewSubscription')->where('id', '[0-9]+')->name('renewSubscription');    
+    //TODO Route::get('{id}/operators/{userid}', 'LibraryController@operatorsShow')->where('id', '[0-9]+')->name('operators');
+    Route::put('{id}/operators/{userid}', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsUpdate');
+    Route::delete('{id}/operators/{userid}', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsDelete');                    
+    Route::get('{id}/pending_operators', 'LibraryController@pending_operators')->where('id', '[0-9]+')->name('pending_operators');      
+    Route::get('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsShow')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsShow'); //TODO
+    Route::put('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsUpdate')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsUpdate');
+    Route::delete('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsDelete')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsDelete');
+    Route::post('{id}/pending_operators', 'LibraryController@pending_operatorsStore')->where('id', '[0-9]+')->name('pending_operatorsStore');    
+        
+    //TODO Route::put('{id}', 'LibraryController@renewSubscription')->where('id', '[0-9]+')->name('renewSubscription');    
 
 
 

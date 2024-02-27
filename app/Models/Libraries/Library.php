@@ -17,6 +17,7 @@ use App\Models\Users\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Expression;
 use App\Resolvers\StatusResolver;
+use App\Models\Users\TemporaryAbility;
 
 class Library extends BaseModel
 {
@@ -349,6 +350,14 @@ class Library extends BaseModel
                 return in_array($ability,$u["permissions"]);            
             else return $u;
         });
+    }
+
+    public function pending_operators($status=null){             
+        
+        if(isset($status))
+            return TemporaryAbility::byLibrary($this->id)->byStatus($status)->get();
+        
+        else return TemporaryAbility::byLibrary($this->id)->get();        
     }
 
     public function manageOperators() {

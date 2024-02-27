@@ -43,11 +43,7 @@ class AbilitiesTransformer extends BaseLightTransformer
                     'permissions' => \Arr::pluck($perms, 'name')
                 ];
             }
-        }
-//        $token_perms = [
-//            "roles" => $model->roles->pluck('name'),
-//            "resources" => $resources_array,
-//        ];
+        }       
         return $resources_array;
     }
 }

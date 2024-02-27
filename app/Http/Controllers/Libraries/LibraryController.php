@@ -14,8 +14,12 @@ use App\Models\Libraries\Identifier;
 use App\Models\Projects\Project;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
+use App\Models\Users\TemporaryAbility;
+use App\Models\Users\TemporaryAbilityTransformer;
+use App\Models\Users\User;
 use App\Models\Users\UserTransformer;
 use Illuminate\Support\Facades\Auth;
+use Whoops\Util\TemplateHelper;
 
 //use Illuminate\Support\Facades\Auth;
 
@@ -62,27 +66,146 @@ class LibraryController extends ApiController
     {    
         $lib=$this->model->findOrFail($id);
         
-        $this->authorize($lib); //NOTE: will call authorize('operators',$lib) that calls LibraryPolicy->operators($u,$model)...
+        $this->authorize($lib); //NOTE: will call Gate::authorize('operators',$lib) that calls LibraryPolicy->operators($u,$model)...
 
-        $operators = $this->model->findOrFail($id)->operators($request->input("ability")); //findOrFail($id)->operators($ability)->get();                
+        $operators = $lib->operators($request->input("ability")); //can filter by ability (to see only manager, borrower ...)        
+                
         return $operators;                
     }
+    
+    //Update operator's permission (it means remove all and add new ones)
+    // we can pass a string "permissions: borrow,lend" then "diff" from actual permission to sync Bouncer DB tables
+    public function operatorsUpdate(Request $request, $id,$userid) {
+        $lib=$this->model->findOrFail($id);
+        $user=User::findOrFail($userid);
 
-     //only admin,comunity manager and library manager can see operators
-     //TODO
+        $this->authorize($lib);         
+        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library"); //objects collection
+        
+        if($request->input("permissions")){
+
+            $newperms=explode(",",$request->input("permissions"));
+
+            //removing all current permissions that were not passed in the params            
+            foreach($lib_userabilities as $oldabil)
+            {
+                if(!in_array($oldabil->name,$newperms))                    
+                    $user->disallow($oldabil->name,$lib);                            
+            }
+
+            //adding new permissions specified in the params 
+            foreach($newperms as $newabil)
+                $user->allow($newabil,$lib);                        
+
+        }        
+        
+        //return updated list
+        return $lib->operators();
+    }
+    
+    //Remove all library abilities from the selected operators
+    public function operatorsDelete(Request $request, $id,$userid) {
+        $lib=$this->model->findOrFail($id);
+        $user=User::findOrFail($userid);
+
+        $this->authorize($lib);         
+        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library");
+        
+        foreach($lib_userabilities as $luabil)
+        {
+            $user->disallow($luabil->name,$lib);        
+        }
+
+        //return updated list
+        return $lib->operators();        
+    }
+
+     //only admin,comunity manager and library manager can see operators                   
      public function pending_operators(Request $request, $id)
      {    
-         /*
+         
          $lib=$this->model->findOrFail($id);
          
-         $this->authorize($lib); 
-
-         
+         $this->authorize($lib);          
  
-         $operators = $this->model->findOrFail($id)->operators($request->input("ability")); //findOrFail($id)->operators($ability)->get();                
-         return $operators;                
-         */
+         $temp_abilities =$lib->pending_operators($request->input("status"));       //can filter by "?status=0,1,2"         
+         
+         return $this->response->collection($temp_abilities, new TemporaryAbilityTransformer())->morph();             
+         //return $this->response->array($temp_abilities->toArray());         
      }
+     
+     public function pending_operatorsShow(Request $request, $id,$pendingid){
+        $lib=$this->model->findOrFail($id);
+        
+         
+        $this->authorize($lib);    
+        
+        $tempPerm=TemporaryAbility::findOrFail($pendingid); 
+
+        if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library    (and i manage the library)                                                                    
+            return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
+
+        
+     }
+
+     public function pending_operatorsStore(Request $request, $id){
+        
+        $lib=$this->model->findOrFail($id);
+         
+        $this->authorize($lib);    
+                
+        $tempPerm=new TemporaryAbility($request->all());
+
+        if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library                                                    
+        {
+            $tempPerm->save();        
+            //return $tempPerm;
+            return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
+        }
+        
+     }
+
+     public function pending_operatorsUpdate(Request $request, $id,$pendingid){
+        
+        $lib=$this->model->findOrFail($id);
+         
+        $this->authorize($lib);    
+        
+        $tempPerm=TemporaryAbility::findOrFail($pendingid);
+        
+        if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library       
+        {
+            $fillable = $tempPerm->getFillable();    
+                
+            $update = array_filter($request->only($fillable), function($val)
+            {
+                return !is_null($val);
+            });
+            
+
+            $tempPerm = $tempPerm->fill($update);
+                                
+            $tempPerm->save();
+            
+            //return $tempPerm;
+            return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
+        }
+        
+     }
+
+     public function pending_operatorsDelete(Request $request, $id,$pendingid){
+        
+        $lib=$this->model->findOrFail($id);
+         
+        $this->authorize($lib);    //can manage library (i'm the lib manager)
+        
+       $tempPerm=TemporaryAbility::findOrFail($pendingid);
+       if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library       
+       {            
+            $tempPerm->forceDelete();                           
+       }
+     }
+
 
     public function store(Request $request)
     {

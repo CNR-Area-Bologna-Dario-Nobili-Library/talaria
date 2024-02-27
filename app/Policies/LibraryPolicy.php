@@ -69,8 +69,41 @@ class LibraryPolicy extends BasePolicy
         return $this->canManage($user,$model);
     }
 
+    //only library manager can update his operators
+    public function operatorsUpdate(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+    
+    //only library manager can delete his operators
+    public function operatorsDelete(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
+
     //only library manager can see his operators
     public function pending_operators(User $user,Model $model){
         return $this->canManage($user,$model);
     }
+
+    //only library manager can update his operators
+    public function pending_operatorsUpdate(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
+    public function pending_operatorsShow(User $user,Model $model){        
+        return $this->canManage($user,$model);
+    }
+
+    //only library manager can delete his operators
+    public function pending_operatorsDelete(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
+    //only library manager can create(invite) new operators
+    public function pending_operatorsStore(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
+
+    
 }

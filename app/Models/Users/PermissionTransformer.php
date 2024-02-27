@@ -17,8 +17,7 @@ class PermissionTransformer extends BaseTransformer
 
 
     public function transform(Model $model)
-    {
-        dd($model);
+    {   
         $to_merge = [
             'test' => 'hello user',
         ];

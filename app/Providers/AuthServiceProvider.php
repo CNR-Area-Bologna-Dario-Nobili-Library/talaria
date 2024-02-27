@@ -44,7 +44,10 @@ use App\Policies\BorrowingDocdelRequestPolicy;
 use App\Policies\DocdelRequestTagPolicy;
 use App\Policies\DocdelRequestPolicy;
 use App\Models\Requests\DocdelRequestTag;
+use App\Models\Title;
+use App\Models\Users\TemporaryAbility;
 use App\Policies\IdentifierPolicy;
+use App\Policies\TemporaryAbilityPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Laravel\Passport\Passport;
@@ -83,7 +86,8 @@ class AuthServiceProvider extends ServiceProvider
         Identifier::class=>ListBasePolicy::class,
         IdentifierLibrary::class=>BasePolicy::class,
         DocdelRequestTag::class => DocdelRequestTagPolicy::class,
-        DocdelRequest::class => DocdelRequestPolicy::class
+        DocdelRequest::class => DocdelRequestPolicy::class,
+        TemporaryAbility::class=>TemporaryAbilityPolicy::class
       
     ];
 

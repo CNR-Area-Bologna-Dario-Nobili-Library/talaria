@@ -1,7 +1,8 @@
 <?php namespace App\Traits\Http\Auth;
 
-use App\Models\Users\AuthResourceTransformer;
-use App\Models\Users\PermissionTransformer;
+use App\Models\Users\AbilitiesTransformer;
+use App\Models\Users\AllPermissionsAndRolesTransformer;
+use App\Models\Users\TemporaryAbility;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -78,10 +79,11 @@ trait AuthControllerTrait
 	/**
 	 * Handle a permission request.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param  \Illuminate\Http\Request  $request 
 	 * @return \Illuminate\Http\Response
-	 */
-	public function permissions(Request $request)
+	 */	     
+     //OLD
+     /*public function permissions(Request $request) 
 	{
 		if (Auth::check()) {
 			$user = Auth::user();
@@ -102,6 +104,7 @@ trait AuthControllerTrait
                     return $item->entity_name;
                 })
                 ->groupBy(['resource','entity_id']);
+                              
 //            return $this->response->collection($resources, new PermissionTransformer);
             $resources_array = [];
             foreach ($resources as $class=>$items) {
@@ -119,19 +122,27 @@ trait AuthControllerTrait
             $token_perms = [
                 "roles" => $user->roles->pluck('name'),
 //                "permissions" => $user->abilities,
-                "resources" => $resources_array,
+                "resources" => $resources_array,                
             ];
 //			$token_perms = base64_encode((string)json_encode($token_perms));
-			return $this->response->array($token_perms);
+			return $this->response->array($token_perms);            
 		}
 		return $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
-	}
+	}*/
+
+    //Get all user's permissions
+    public function permissions(Request $request) {
+        if (Auth::check()) {
+            $user = Auth::user();		
+		    return $this->response->item($user, new AllPermissionsAndRolesTransformer())->morph();        
+        }
+    }
 
 	public function resources(Request $request)
     {
         if (Auth::check()) {
             $user = Auth::user();
-            $resources = $user->abilities()
+            /*$resources = $user->abilities()
                 ->select('abilities.entity_id','abilities.entity_type','abilities.name')
                 ->distinct()
                 ->get()
@@ -142,8 +153,66 @@ trait AuthControllerTrait
                     return $item;
                 })
                 ->groupBy(['entity_type', 'entity_id']);
-            return $this->response->array($resources);
+            return $this->response->array($resources);*/
+
+            return $this->response->item($user, new AbilitiesTransformer())->morph();
         }
+    }
+    
+    //used by user to Accept/Reject temporary permissions
+    public function updateMyResourcesStatus(Request $request, $resourceId){
+        
+        if (Auth::check()) {
+            $user = Auth::user();
+            
+            $tempPerm=TemporaryAbility::findOrFail($resourceId); 
+
+            
+
+            $newstatus = intval($request->input(['status'])); //accept only status                
+            $userToApply=null;
+            
+            //apply new status (accept/reject to the pending permission)
+            //if new status==1 (accept) => apply ability to user
+            //if new status==2 (reject) => simply change new status and return                
+            if( isset($newstatus) && isset($tempPerm->entity_id) && isset($tempPerm->entity_type) && isset($tempPerm->abilities))  
+            {
+                    $className=$tempPerm->entity_type;
+                    $entity=$className::findOrFail($tempPerm->entity_id);  //NOTE: entity_type is like  'App\\Models\\Libraries\\Library' .....
+
+                    //Extract user from temporary perm mathing email/user_id stored in the TempAbility (in order to apply perm to it)
+                    if(isset($tempPerm->user_id))
+                        $userToApply=User::findOrFail($tempPerm->user_id);
+                    else if(isset($tempPerm->user_email))
+                        $userToApply=User::firstOrFail()->where('email','=',$tempPerm->user_email)->first();
+
+                    $this->authorize($tempPerm);    //will call TemporaryAbilityPolicy->updateMyResourcesStatus() in order to check if authorized user can apply temppermission
+                   
+                    //enable
+                    if($newstatus==config("constants.temporary_ability_status.accepted") &&  $userToApply && $user && $entity && isset($tempPerm->abilities))
+                    {
+                        $abils=explode(',',$tempPerm->abilities);                        
+                        
+                        foreach($abils as $abil)
+                            $userToApply->allow($abil,$entity);
+                        
+                        //remove from DB (we've to use forceDeleting cause by default softdelete is enabled to all models)
+                        $tempPerm->forceDelete();
+
+                    }
+                    else if ($newstatus==config("constants.temporary_ability_status.waiting")|| $newstatus==config("constants.temporary_ability_status.rejected"))
+                    {
+                        //status update (in case of rejected/waiting)
+                        $tempPerm->fill(["status"=>$newstatus]);
+                        $tempPerm->save();
+                    }
+                    
+                    return $tempPerm;               
+
+            }                            
+                                                             
+        }
+        return false;
     }
 
 //	private function permissionResources(User $user) {

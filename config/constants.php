@@ -96,4 +96,10 @@ return [
         'PaperCopy'=>2,
         'File'=>1,        
     ],
+
+    'temporary_ability_status' => [
+        'accepted'=>1,
+        'rejected'=>2,
+        'waiting'=>0          
+    ]
 ]; 
