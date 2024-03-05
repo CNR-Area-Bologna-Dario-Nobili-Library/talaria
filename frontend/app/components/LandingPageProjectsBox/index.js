@@ -28,7 +28,7 @@ const LandingPageProjectsBox = (props) => {
                      <div>
                         <h3>Current permissions</h3>
                         { auth.permissions.resources.projects.map((res,i)=> (
-                            <div className="permissionsBox" key={`row-${res.resource.id}`}>                            
+                            <div className="permissionsBox" key={`row-${i}`}>                            
                                 <span>{res.resource.name}</span>
                                 <span>{res.permissions.map((p,i)=>(
                                     <span className={"badge "+badgeType(p)}>{p}</span>
@@ -43,7 +43,7 @@ const LandingPageProjectsBox = (props) => {
                     <div>
                         <h3>Pending/Rejected requests</h3>
                         { auth.permissions.tempresources.projects.map((res,i)=> (
-                            <div className="permissionsBox" key={`row-${res.resource.id}`}>                            
+                            <div className="permissionsBox" key={`pendrow-${i}`}>                            
                                 <span>{res.resource.name}</span>
                                 <span>{res.permissions.map((p,i)=>(
                                 <span key={"badge_temp_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
