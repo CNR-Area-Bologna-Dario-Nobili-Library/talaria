@@ -158,8 +158,11 @@
   "app.containers.LibrariesListPage.edit": "Edit",
   "app.containers.LibrariesListPage.askChangeStatusMessage":"Apply this status?",
   "app.containers.LibrariesListPage.statusAppliedMessage": "Status applied correctly",
-  
-  
+
+  "app.containers.LibraryOperatorsPage.askRemoveOperatorMessage":"Remove operator?",
+  "app.containers.LibraryOperatorEditPermissionPage.header":"Edit permissions",
+  "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Update permessions?",
+
   "app.containers.RegisterNewLibrary.header": "Register your library",
   "app.containers.RegisterNewLibrary.link": "Register your library",
   "app.containers.RegisterNewLibrary.step_1": "General information",
@@ -261,6 +264,11 @@
   "app.components.findOA.oapubnotfound":"OA version not found.",
   "app.components.findOA.oapubverify":"Check if the publication is OA",
   "app.components.findOA.oafindButton":"Check OA availability",
+
+  "app.components.PendingOperatorsList.header": "Pending Operators", 
+  "app.components.PendingOperatorsList.PendingOperatorsNotFound":  "Operators not found",
+  "app.components.OperatorsList.header": "Operators", 
+  "app.components.OperatorsList.OperatorsNotFound": "Operators not found", 
 
   "app.components.InstitutionsList.InstitutionsNotFound":"No institutions",
   "app.components.InstitutionsList.InstitutionSelected":"Selected",
@@ -687,8 +695,8 @@
   "app.routes.RequestNew": "New request",
   "app.routes.RequestDetail": "Request detail",
   "app.routes.Operators": "Operators",
-  "app.routes.PendingOperators": "???Pending Operators",
-  "app.routes.NewOperator": "???Add operator",
+  "app.routes.PendingOperators": "Pending Operators",
+  "app.routes.NewOperator": "Add operator",
   "app.routes.Searches": "Searches",
   "app.routes.Requests": "Requests",
   "app.routes.MyLibraries": "My libraries",
@@ -699,8 +707,9 @@
   "app.routes.Delivery": "Delivery",
   "app.routes.BorrowingArchive": "Borrowing archive",
   "app.routes.LendingArchive": "Lending archive",
-  "app.routes.DeliveryArchive": "Delivery archive",
+  "app.routes.DeliveryArchive": "Delivery archive",  
   "app.routes.Pickup": "Pickup",
+  "app.routes.LibraryStatus":"Status",
   "app.routes.LibraryServices": "Services",
   "app.routes.LibraryLinkingServices": "Linking services",
   "app.routes.LibraryUsers": "Patrons",

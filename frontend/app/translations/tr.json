@@ -159,7 +159,10 @@
   "app.containers.LibrariesListPage.askChangeStatusMessage":"Bu durumu uygula?",
   "app.containers.LibrariesListPage.statusAppliedMessage": "Durum başarıyla uygulandı",
   
-  
+  "app.containers.LibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.LibraryOperatorEditPermissionPage.header":"???Edit permissions",
+  "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
+
   "app.containers.RegisterNewLibrary.header": "Kütüphanenizi kayıt yaptırın",
   "app.containers.RegisterNewLibrary.link": "Kütüphanenizi kayıt yaptırın",
   "app.containers.RegisterNewLibrary.step_1": "Genel bilgi",
@@ -261,6 +264,11 @@
   "app.components.findOA.oapubnotfound":"OA sürümü bulunamadı",
   "app.components.findOA.oapubverify":"Yayının OA olmadığını kontrol edin",
   "app.components.findOA.oafindButton":"OA erişim durumunu kontrol edin",
+
+  "app.components.PendingOperatorsList.header": "???Pending Operators", 
+  "app.components.PendingOperatorsList.PendingOperatorsNotFound":  "???Operators not found",
+  "app.components.OperatorsList.header": "Operatörler", 
+  "app.components.OperatorsList.OperatorsNotFound": "???Operators not found", 
 
   "app.components.InstitutionsList.InstitutionsNotFound":"Kurum yok",
   "app.components.InstitutionsList.InstitutionSelected":"Seçili",
@@ -700,6 +708,7 @@
   "app.routes.LendingArchive": "Ödünç verme arşivi",
   "app.routes.DeliveryArchive": "Teslimat arşivi",
   "app.routes.Pickup": "Teslim alma",
+  "app.routes.LibraryStatus":"???Status",
   "app.routes.LibraryServices": "Hizmetler",
   "app.routes.LibraryLinkingServices": "Bağlantı hizmetleri",
   "app.routes.LibraryUsers": "Kullanıcılar",

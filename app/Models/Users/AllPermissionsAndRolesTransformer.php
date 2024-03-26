@@ -6,14 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\ParamBag;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-
+ 
 class AllPermissionsAndRolesTransformer extends BaseTransformer
 {
+
+    //OLD
     public function transform($model)
-    {
+    {  
         $restr=new AbilitiesTransformer();
         $temprestr=new TemporaryAbilitiesTransformer();
-        $rolestr=new RolesTransformer();
+        $rolestr=new RolesTransformer();        
         return [
             'roles'=>$rolestr->transform($model),
             'resources'=>$restr->transform($model),
@@ -21,7 +23,34 @@ class AllPermissionsAndRolesTransformer extends BaseTransformer
         ];
 
     }
+/* //NEW
+    protected $defaultIncludes = [
+        'tempresources',    
+        'roles'    ,
+        'resources'
+    ];
 
+
+
+    public function includeTempResources(Model $model)
+    {        
+         return $this->collection($model->pending_resources(), new TemporaryAbilityTransformer());
+    }
+
+    
+    public function includeRoles(Model $model)
+    {
+        return $this->item($model, new RolesTransformer());
+
+    }
+
+    public function includeResources(Model $model)
+    {
+        return $this->item($model, new AbilitiesTransformer());
+    }
+    */
+
+    
     /****  TEMP CODE  *****
     
 

@@ -14,6 +14,7 @@ use App\Models\Libraries\Identifier;
 use App\Models\Projects\Project;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
+use App\Models\ArrayTransformer;
 use App\Models\Users\TemporaryAbility;
 use App\Models\Users\TemporaryAbilityTransformer;
 use App\Models\Users\User;
@@ -80,27 +81,33 @@ class LibraryController extends ApiController
         $user=User::findOrFail($userid);
 
         $this->authorize($lib);         
-        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library"); //objects collection
-        
-        if($request->input("permissions")){
+        if($userid != Auth::user()->id) //manager cannot change own permissions
+        {
+            $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library"); //objects collection
+            
+            if($request->input("permissions")){
 
-            $newperms=explode(",",$request->input("permissions"));
+                $newperms=explode(",",$request->input("permissions"));
 
-            //removing all current permissions that were not passed in the params            
-            foreach($lib_userabilities as $oldabil)
-            {
-                if(!in_array($oldabil->name,$newperms))                    
-                    $user->disallow($oldabil->name,$lib);                            
+                //removing all current permissions that were not passed in the params            
+                foreach($lib_userabilities as $oldabil)
+                {
+                    if(!in_array($oldabil->name,$newperms))                    
+                        $user->disallow($oldabil->name,$lib);                            
+                }
+
+                //adding new permissions specified in the params 
+                foreach($newperms as $newabil)
+                    $user->allow($newabil,$lib);                        
+
             }
-
-            //adding new permissions specified in the params 
-            foreach($newperms as $newabil)
-                $user->allow($newabil,$lib);                        
-
-        }        
+            //return updated list
+            return $lib->operators();
+        }
         
-        //return updated list
-        return $lib->operators();
+        $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));        
+        
+        
     }
     
     //Remove all library abilities from the selected operators
@@ -108,16 +115,32 @@ class LibraryController extends ApiController
         $lib=$this->model->findOrFail($id);
         $user=User::findOrFail($userid);
 
-        $this->authorize($lib);         
-        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library");
-        
-        foreach($lib_userabilities as $luabil)
+        $this->authorize($lib);     
+        if($userid != Auth::user()->id) //manager cannot delete itself
         {
-            $user->disallow($luabil->name,$lib);        
-        }
+        
+            $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library");
+            
+            foreach($lib_userabilities as $luabil)
+            {
+                $user->disallow($luabil->name,$lib);        
+            }
 
-        //return updated list
-        return $lib->operators();        
+            //return updated list
+            return $lib->operators();        
+        }
+        
+        $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));        
+    }
+      
+      public function operatorsAbilities(Request $request, $id,$userid) {
+        $lib=$this->model->findOrFail($id);
+        $user=User::findOrFail($userid);
+
+        $this->authorize($lib);         
+        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library");               
+               
+        return $lib_userabilities->values()->all();              
     }
 
      //only admin,comunity manager and library manager can see operators                   
@@ -204,6 +227,10 @@ class LibraryController extends ApiController
        {            
             $tempPerm->forceDelete();                           
        }
+
+       $temp_abilities =$lib->pending_operators(); 
+         
+       return $this->response->collection($temp_abilities, new TemporaryAbilityTransformer())->morph();             
      }
 
 

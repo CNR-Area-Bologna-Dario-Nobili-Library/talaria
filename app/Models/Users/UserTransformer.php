@@ -42,15 +42,18 @@ class UserTransformer extends BaseTransformer
         return $this->item($model, new RolesTransformer());
 
     }
-
+ 
     public function includeResources(Model $model)
     {        
             return $this->item($model, new AbilitiesTransformer());
     }
 
     public function includeTempResources(Model $model)
-    {        
-        return $this->item($model, new TemporaryAbilitiesTransformer());
+    {  
+        //OLD      
+        return $this->item($model, new TemporaryAbilitiesTransformer());       
+        // NEW
+        //return $this->collection($model->pending_resources(), new TemporaryAbilityTransformer());
     }
 
     public function includeDeliveries(Model $model)

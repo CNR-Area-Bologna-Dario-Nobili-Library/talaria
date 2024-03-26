@@ -4,9 +4,10 @@ import './style.scss';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 import { formatDateTime } from '../../utils/dates';
+import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
-const LandingPageLibrariesBox = props => {
-  const { auth, title, match, history, canCollapse, collapsed } = props;
+const LandingPageLibrariesBox = (props) => {
+  const {auth,title,match,history,canCollapse,collapsed}=props
 
   const fromOpenURLorPubmed =
     history &&
@@ -14,35 +15,6 @@ const LandingPageLibrariesBox = props => {
     history.location.search.includes('byopenurl');
 
   console.log('LandingPageLibrariesBox', props);
-
-  const badgeType = p => {
-    let ty = 'badge-info';
-
-    switch (p) {
-      case 'manage':
-        ty = 'badge-danger';
-        break;
-      case 'borrow':
-      case 'ill-borrow':
-        ty = 'badge-primary';
-        break;
-      case 'lend':
-      case 'ill-lend':
-        ty = 'badge-secondary';
-        break;
-      case 'deliver':
-        ty = 'badge-info';
-        break;
-      case 'manage-users':
-        ty = 'badge-light';
-        break;
-      case 'manage-licenses':
-        ty = 'badge-dark';
-        break;
-    }
-
-    return ty;
-  };
 
   const statusClass = status => {
     switch (status) {
@@ -92,7 +64,7 @@ const LandingPageLibrariesBox = props => {
                         {res.permissions.map((p, index) => (
                           <span
                             key={`badge_perm_${index}`}
-                            className={`badge ${badgeType(p)}`}
+                            className={`badge ${permissionBadgeClass(p)}`}
                           >
                             {p}
                           </span>
@@ -191,7 +163,7 @@ const LandingPageLibrariesBox = props => {
                           {res.permissions.map((p, index) => (
                             <span
                               key={`badge_temp_perm_${index}`}
-                              className={`badge ${badgeType(p)}`}
+                              className={`badge ${permissionBadgeClass(p)}`}
                             >
                               {p}
                             </span>
@@ -252,6 +224,6 @@ const LandingPageLibrariesBox = props => {
     </LandingPageBox>
   );
 };
-
+    
 export default LandingPageLibrariesBox;
 

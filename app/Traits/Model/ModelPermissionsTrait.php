@@ -20,6 +20,9 @@ trait ModelPermissionsTrait
         return collect($this->user_permissions()->get()->map(function ($u) use($class, $id){
             return [
                 'user_id'    => $u->id,
+                'name'=>$u->name,
+                'surname'=> $u->surname,
+                'email'=> $u->email,
                 'full_name'    => $u->full_name,
                 'permissions'    => $u->object_abilities($class, $id),
             ];

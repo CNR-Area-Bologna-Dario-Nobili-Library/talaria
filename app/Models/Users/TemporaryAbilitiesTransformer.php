@@ -5,7 +5,7 @@ use App\Models\BaseTransformer;
 use App\Models\Users\UserLightTransformer;
 use Illuminate\Database\Eloquent\Model;
 
-//NOTE: $model is always a User model!!!
+//NOTE: $model is always a User model!!! 
 class TemporaryAbilitiesTransformer extends BaseTransformer
 {
 
@@ -24,7 +24,8 @@ class TemporaryAbilitiesTransformer extends BaseTransformer
                 'resource'=>[
                     'id'=>$element->entity_id,
                     'name'=>$entity->name
-                ],                
+                ], 
+                'id'=>$element->id,               
                 'permissions'=>explode(',',$element->abilities),
                 'tempresid'=>$element->id,
                 'status'=>$element->status,
