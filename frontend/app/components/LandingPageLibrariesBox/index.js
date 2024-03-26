@@ -226,4 +226,3 @@ const LandingPageLibrariesBox = (props) => {
 };
     
 export default LandingPageLibrariesBox;
-
