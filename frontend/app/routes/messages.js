@@ -175,7 +175,11 @@ export default defineMessages({
     NewOperator: {
         id: `${scope}.NewOperator`,
         defaultMessage: 'New operator',
-    },    
+    },  
+    EditOperator: {
+        id: `${scope}.EditOperator`,
+        defaultMessage: 'Edit operator',
+    },  
     Lending: {
         id: `${scope}.Lending`,
         defaultMessage: 'Lending',

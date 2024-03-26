@@ -35,7 +35,12 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_GET_INSTITUTIONS_OPTIONLIST,
       REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,
       REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
-      UPLOAD_REQUEST
+      UPLOAD_REQUEST,
+      REQUEST_GET_LIBRARY_OPERATORS,REQUEST_GET_LIBRARY_PENDING_OPERATORS,
+      REQUEST_GET_LIBRARY_OPERATOR, 
+      REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
+      REQUEST_REMOVE_LIBRARY_OPERATOR,
+      REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR
     } from './constants';
 import {
   requestError,
@@ -68,7 +73,11 @@ import {
   requestGetInstitutionTypesOptionListSuccess,
   requestLibrarySubjectOptionListSuccess,
   requestLibraryIdentifierTypesOptionListSuccess,
-  uploadSuccess
+  uploadSuccess,
+  requestGetLibraryOperatorsSuccess,requestGetLibraryPendingOperatorsSuccess,requestGetLibraryOperatorSuccess,
+  requestGetLibraryOperators,
+  requestRemoveLibraryOperatorSuccess,
+  requestRemoveLibraryPendingOperatorSuccess
 } from './actions';
 
 import { toast } from "react-toastify";
@@ -101,6 +110,11 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     getInstitutionsOptionList,
     getInstitutionTypesOptionList,
     getLibrariesIdentifierTypesOptionList,
+    getLibraryOperators,getLibraryPendingOperators,
+    getLibraryOperator,
+    updateLibraryOperator,
+    deleteLibraryOperator,
+    deleteLibraryPendingOperator
 } from '../../utils/api'    
 
 import {getOA,getPubmedReferenceByPMID,getFindISSN,getFindISBN, getFindISSN_ACNP} from '../../utils/apiExternal';
@@ -831,6 +845,111 @@ export function* requestGetCountriesOptionListSaga(action) {
   }
 }
 
+
+export function* requestLibraryGetOperatorsSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,    
+  }
+
+  try {
+    const request = yield call(getLibraryOperators, options);
+    yield put(requestGetLibraryOperatorsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestLibraryGetOperatorSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,    
+    userid:action.userid,  
+  }
+
+  try {
+    const request = yield call(getLibraryOperator, options);
+    yield put(requestGetLibraryOperatorSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestUpdateLibraryOperatorPermissionsSaga(action) {
+  const options = {
+    method: 'put',
+    library_id:action.library_id,
+    userid: action.userid,
+    body: {           
+      permissions: action.permissions
+    }
+  }  
+
+  try {
+    const request = yield call(updateLibraryOperator, options);    
+    yield put (requestGetLibraryOperators(action.library_id))    
+    yield put (push("/library/"+action.library_id+"/manage/operators"));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+export function* requestDeleteLibraryOperatorSaga(action) {
+  const options = {
+    method: 'delete',
+    library_id:action.library_id,
+    userid: action.userid,    
+  }  
+
+  try {
+    const request = yield call(deleteLibraryOperator, options);    
+    //yield put (requestGetLibraryOperators(action.library_id))    
+    //yield put (push("/library/"+action.library_id+"/manage/operators"));
+    yield put (requestRemoveLibraryOperatorSuccess(request));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+export function* requestDeleteLibraryPendingOperatorSaga(action) {
+  const options = {
+    method: 'delete',
+    library_id:action.library_id,
+    pendingid: action.pendingid,    
+  }  
+
+  try {        
+    const request = yield call(deleteLibraryPendingOperator, options);    
+    yield put (requestRemoveLibraryPendingOperatorSuccess(request));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+
+
+
+export function* requestLibraryGetPendingOperatorsSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,      
+  }
+
+  try {
+    const request = yield call(getLibraryPendingOperators, options);
+    yield put(requestGetLibraryPendingOperatorsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+
 export function* requestFindISSNISBNsaga(action) {
   
   //data { material_type: 1..5, issn:xxx, title:xxxx, isbn:xxxx}
@@ -932,6 +1051,12 @@ export default function* librarySaga() {
   yield takeLatest(REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST, requestGetInstitutionTypesOptionListSaga);
 
 
+  yield takeLatest(REQUEST_GET_LIBRARY_OPERATORS,requestLibraryGetOperatorsSaga);
+  yield takeLatest(REQUEST_GET_LIBRARY_OPERATOR,requestLibraryGetOperatorSaga);
+  yield takeLatest(REQUEST_GET_LIBRARY_PENDING_OPERATORS,requestLibraryGetPendingOperatorsSaga);
+  yield takeLatest(REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,requestUpdateLibraryOperatorPermissionsSaga);
+  yield takeLatest(REQUEST_REMOVE_LIBRARY_OPERATOR,requestDeleteLibraryOperatorSaga);
+  yield takeLatest(REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,requestDeleteLibraryPendingOperatorSaga);
 
 
   yield takeLatest(REQUEST_GET_ISSN_ISBN,requestFindISSNISBNsaga);

@@ -5,30 +5,15 @@ import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 import {formatDateTime} from '../../utils/dates';
 
+import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
+
 const LandingPageLibrariesBox = (props) => {
     const {auth,title,match,history,canCollapse,collapsed}=props
 
     const fromOpenURLorPubmed=history && history.location && history.location.search.includes("byopenurl") 
 
     console.log("LandingPageLibrariesBox",props)
-
-    const badgeType = (p) => {
-        let ty="badge-info";
-
-        switch (p) {
-          case 'manage': ty="badge-danger"; break;          
-          case 'borrow':
-          case 'ill-borrow': ty="badge-primary"; break;          
-          case 'lend': 
-          case 'ill-lend': ty="badge-secondary"; break;
-          case 'deliver': ty="badge-info"; break;
-          case 'manage-users': ty="badge-light"; break;
-          case 'manage-licenses': ty="badge-dark"; break;       
-        }
-
-        return ty;
-    }
-    
+   
     return (      
                         
             <LandingPageBox iconClass="fa-solid fa-landmark" title={title} canCollapse={canCollapse} collapsed={collapsed} >
@@ -41,7 +26,7 @@ const LandingPageLibrariesBox = (props) => {
                         <div className="permissionsBox" key={`row-${i}`}>                            
                             <span>{res.resource.name}</span>
                             <span>{res.permissions.map((p,i)=>(
-                              <span key={"badge_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
+                              <span key={"badge_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
                             ))}</span> 
 
                             <Link className="btn btn-sm btn-primary" to={'/library/'+res.resource.id} key={'lib'+res.resource.id}>GO!</Link>                             
@@ -63,7 +48,7 @@ const LandingPageLibrariesBox = (props) => {
                         <div className="permissionsBox" key={`pendrow-${i}`}>                            
                             <span>{res.resource.name}</span>
                             <span>{res.permissions.map((p,i)=>(
-                              <span key={"badge_temp_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
+                              <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
                             ))}</span>                                                        
                             <span>{res.status}</span>
                             <span>{formatDateTime(res.created_at)}</span>

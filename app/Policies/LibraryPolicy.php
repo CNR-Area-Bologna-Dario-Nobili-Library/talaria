@@ -79,6 +79,10 @@ class LibraryPolicy extends BasePolicy
         return $this->canManage($user,$model);
     }
 
+    //only library manager can view his operators abilities
+    public function operatorsAbilities(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }  
 
     //only library manager can see his operators
     public function pending_operators(User $user,Model $model){

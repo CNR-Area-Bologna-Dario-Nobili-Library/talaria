@@ -12,6 +12,9 @@ import PickupPage from '../containers/Library/PickupPage/Loadable';
 import LendingPage from '../containers/Library/LendingPage';
 import LendingRequestPage from '../containers/Library/LendingRequestPage';
 import LibraryStatusPage from '../containers/Library/LibraryStatusPage/Loadable';
+import LibraryPendingOperatorsPage from '../containers/Library/LibraryPendingOperatorsPage/Loadable';
+import LibraryOperatorsPage from '../containers/Library/LibraryOperatorsPage/Loadable';
+import LibraryOperatorEditPermissionPage from '../containers/Library/LibraryOperatorEditPermissionPage/Loadable';
 import UpgradeLibraryProfilePage from '../containers/Library/UpgradeLibraryProfilePage/Loadable';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
@@ -40,10 +43,11 @@ const routes = [
       { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'], sidebar: true, order:1},
       { path: '/edit', icon: 'edit', exact: true, name: `LibraryProfile`,  url:'/manage/edit', component: ManageLibraryPage, permissions: ['manage'], sidebar:true,order:2},      
       { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'], sidebar:false},                  
-      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: Fake,url: '/manage/operators', permissions: ['manage','borrow','lend','manage-users','deliver'],sidebar: true, order:3},      
+      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage','borrow','lend','manage-users','deliver'],sidebar: true, order:3},      
       //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
-      { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: Fake, permissions: ['manage'], sidebar: true, order:4, level:1},
+      { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: LibraryPendingOperatorsPage, permissions: ['manage'], sidebar: true, order:4, level:1},      
       { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: Fake, permissions: ['manage'], sidebar: true, order:5, level:1},      
+      { path: '/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: LibraryOperatorEditPermissionPage, permissions: ['manage'], sidebar: false},
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/manage/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:6 },
       { path: '/pickup',  exact: true,icon: 'truck',name: `Pickup`, component: PickupsPage,url: '/manage/pickup', permissions: ['manage'], hide: hidePatronRoutes(),sidebar: true, order:8 },
       { path: '/pickup/:id?/:op?', exact: true, name: `PickupUpdate`, component: PickupPage, permissions: ['manage'], sidebar: false},            

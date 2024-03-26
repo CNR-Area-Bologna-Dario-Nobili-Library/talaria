@@ -459,6 +459,35 @@
 			"response": []
 		},
 		{
+			"name": "Library Operators Abilities",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bearer_librarian_mario}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/libraries/4/operators/6",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"libraries",
+						"4",
+						"operators",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Library Pending Operators",
 			"request": {
 				"method": "GET",

@@ -262,6 +262,47 @@ export const getLibrariesIdentifierTypesOptionList = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/identifiers/option-items?label=name&q=${query}`, options)
 };
 
+//Library Operators 
+export const getLibraryOperators = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators`, options)
+};
+
+export const getLibraryOperator = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  const userid = options.userid  
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
+};
+
+export const updateLibraryOperator = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  const userid = options.userid      
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
+};
+
+export const deleteLibraryOperator = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  const userid = options.userid      
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
+};
+
+export const getLibraryPendingOperators = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/pending_operators`, options)
+};
+
+export const deleteLibraryPendingOperator = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  const pendingid = options.pendingid
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/pending_operators/${pendingid}`, options)
+};
+
 // Reference //
 export const getReferencesList = (options) => {
   const page = options.page;

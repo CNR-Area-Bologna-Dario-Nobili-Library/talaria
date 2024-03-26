@@ -100,11 +100,11 @@ Route::group([
     Route::put('{id}', 'LibraryController@update')->where('id', '[0-9]+')->name('update');     
            
     Route::get('{id}/operators', 'LibraryController@operators')->where('id', '[0-9]+')->name('operators');
-    //TODO Route::get('{id}/operators/{userid}', 'LibraryController@operatorsShow')->where('id', '[0-9]+')->name('operators');
-    Route::put('{id}/operators/{userid}', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsUpdate');
-    Route::delete('{id}/operators/{userid}', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsDelete');                    
+    Route::get('{id}/operators/{userid}', 'LibraryController@operatorsAbilities')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsAbilities'); //get operator's library abilities
+    Route::put('{id}/operators/{userid}', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsUpdate'); //update operator's library abilities
+    Route::delete('{id}/operators/{userid}', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsDelete');   //delete operator's library abilities                 
     Route::get('{id}/pending_operators', 'LibraryController@pending_operators')->where('id', '[0-9]+')->name('pending_operators');      
-    Route::get('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsShow')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsShow'); //TODO
+    //TODO CHECK Route::get('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsShow')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsShow'); 
     Route::put('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsUpdate')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsUpdate');
     Route::delete('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsDelete')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsDelete');
     Route::post('{id}/pending_operators', 'LibraryController@pending_operatorsStore')->where('id', '[0-9]+')->name('pending_operatorsStore');    

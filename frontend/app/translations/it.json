@@ -158,7 +158,10 @@
   "app.containers.LibrariesListPage.edit": "Modifica",
   "app.containers.LibrariesListPage.askChangeStatusMessage":"Applicare questo stato?",
   "app.containers.LibrariesListPage.statusAppliedMessage": "Stato cambiato correttamente",
-  
+
+  "app.containers.LibraryOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
+  "app.containers.LibraryOperatorEditPermissionPage.header":"Modifica permessi",
+  "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Modificare i permessi?",
   
   "app.containers.RegisterNewLibrary.header": "Registra la tua biblioteca",
   "app.containers.RegisterNewLibrary.link": "Registra la tua biblioteca",
@@ -261,6 +264,11 @@
   "app.components.findOA.oapubnotfound":"Versione OA non disponibile",
   "app.components.findOA.oapubverify":"Verifica se la pubblicazione esiste in OA",
   "app.components.findOA.oafindButton":"Trova OA",  
+
+  "app.components.PendingOperatorsList.header": "Operatori in attesa", 
+  "app.components.PendingOperatorsList.PendingOperatorsNotFound": "Nessun operatore",
+  "app.components.OperatorsList.header": "Operatori", 
+  "app.components.OperatorsList.OperatorsNotFound": "Nessun operatore", 
 
   "app.components.InstitutionsList.InstitutionsNotFound":"Nessuna istituzione",
   "app.components.InstitutionsList.InstitutionSelected":"Selezionato",
@@ -700,6 +708,7 @@
   "app.routes.LendingArchive": "Archivio Lending",
   "app.routes.DeliveryArchive": "Archivio Consegna",
   "app.routes.Pickup": "Punti di consegna",
+  "app.routes.LibraryStatus":"Stato",
   "app.routes.LibraryServices": "Servizi",
   "app.routes.LibraryLinkingServices": "Servizi di linking",
   "app.routes.LibraryUsers": "I miei utenti",

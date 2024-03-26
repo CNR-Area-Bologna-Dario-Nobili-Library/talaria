@@ -32,7 +32,7 @@ Route::group([
     'middleware' => ['api','auth:api',],
     'as' => 'api.v1.users.', 
 ], function () {
-    Route::get('option-items', 'UserController@optionList')->name('option-items'); //can specify ?label=name,email to get name/email fields
+    Route::get('option-items', 'UserController@optionList')->name('option-items'); //can specify ?label=name,email to get name/email fields, and q=xxx to search on name/surname/full_name/email
     Route::get('', 'UserController@index')->name('index');
     Route::get('{user}', 'UserController@show')->name('show');  // (can specify '?include=roles,resources,tempresources')
     Route::put('{user}', 'UserController@update')->name('update');
