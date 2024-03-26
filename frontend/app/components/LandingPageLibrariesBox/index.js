@@ -1,88 +1,257 @@
 import React from 'react';
-import {Button} from 'reactstrap'
-import './style.scss'
+import { Button } from 'reactstrap';
+import './style.scss';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
-import {formatDateTime} from '../../utils/dates';
+import { formatDateTime } from '../../utils/dates';
 
-const LandingPageLibrariesBox = (props) => {
-    const {auth,title,match,history,canCollapse,collapsed}=props
+const LandingPageLibrariesBox = props => {
+  const { auth, title, match, history, canCollapse, collapsed } = props;
 
-    const fromOpenURLorPubmed=history && history.location && history.location.search.includes("byopenurl") 
+  const fromOpenURLorPubmed =
+    history &&
+    history.location &&
+    history.location.search.includes('byopenurl');
 
-    console.log("LandingPageLibrariesBox",props)
+  console.log('LandingPageLibrariesBox', props);
 
-    const badgeType = (p) => {
-        let ty="badge-info";
+  const badgeType = p => {
+    let ty = 'badge-info';
 
-        switch (p) {
-          case 'manage': ty="badge-danger"; break;          
-          case 'borrow':
-          case 'ill-borrow': ty="badge-primary"; break;          
-          case 'lend': 
-          case 'ill-lend': ty="badge-secondary"; break;
-          case 'deliver': ty="badge-info"; break;
-          case 'manage-users': ty="badge-light"; break;
-          case 'manage-licenses': ty="badge-dark"; break;       
-        }
-
-        return ty;
+    switch (p) {
+      case 'manage':
+        ty = 'badge-danger';
+        break;
+      case 'borrow':
+      case 'ill-borrow':
+        ty = 'badge-primary';
+        break;
+      case 'lend':
+      case 'ill-lend':
+        ty = 'badge-secondary';
+        break;
+      case 'deliver':
+        ty = 'badge-info';
+        break;
+      case 'manage-users':
+        ty = 'badge-light';
+        break;
+      case 'manage-licenses':
+        ty = 'badge-dark';
+        break;
     }
-    
-    return (      
-                        
-            <LandingPageBox iconClass="fa-solid fa-landmark" title={title} canCollapse={canCollapse} collapsed={collapsed} >
-            <p>bla bla bla</p>                                      
-            <>
-                  {auth.permissions.resources.libraries && auth.permissions.resources.libraries.length>=1 && 
-                  <div>                      
-                      <h3>Current permissions</h3>
-                      { auth.permissions.resources.libraries.map((res,i)=> (
-                        <div className="permissionsBox" key={`row-${i}`}>                            
-                            <span>{res.resource.name}</span>
-                            <span>{res.permissions.map((p,i)=>(
-                              <span key={"badge_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
-                            ))}</span> 
 
-                            <Link className="btn btn-sm btn-primary" to={'/library/'+res.resource.id} key={'lib'+res.resource.id}>GO!</Link>                             
-                            &nbsp;                            
-                            { (res.permissions.includes("borrow")||res.permissions.includes("manage") ) && 
-                            (
-                              fromOpenURLorPubmed && (<Link className="btn btn-sm btn-success" to={'/library/'+res.resource.id+"/borrowing/new"+(history.location.search?history.location.search:'')} key={'openurllink'+res.resource.id}>Import from Openurl/Pubmed</Link>) 
-                              ||<Link className="btn btn-sm btn-info" to={'/library/'+res.resource.id+"/borrowing/new"} key={'borrlink'+res.resource.id}>New request</Link>                                                                                    
-                            )}                            
-                        </div>)
-                      )}
-                  </div>                    
-                  }
-                  {/*match && match.path=='/user/work4lib/:library_id?' && match.params.library_id && match.params.library_id>0 && /* or pending requests */  
-                  auth.permissions.tempresources && auth.permissions.tempresources.libraries && 
-                  <div>
-                      <h3>Pending/Rejected requests</h3>
-                      { auth.permissions.tempresources.libraries.map((res,i)=> (
-                        <div className="permissionsBox" key={`pendrow-${i}`}>                            
-                            <span>{res.resource.name}</span>
-                            <span>{res.permissions.map((p,i)=>(
-                              <span key={"badge_temp_perm_"+i} className={"badge "+badgeType(p)}>{p}</span>
-                            ))}</span>                                                        
-                            <span>{res.status}</span>
-                            <span>{formatDateTime(res.created_at)}</span>
-                            <span>{formatDateTime(res.updated_at)}</span>
-                            {res.status==0 && <Link className="btn btn-sm btn-success" to="#">Accept</Link>}
-                            {res.status==0 && <Link className="btn btn-sm btn-danger" to="#">Reject</Link>}
-                        </div>)
-                      )}
-                  </div>                    
-                  }                            
-                  <br/><br/>
-                  Are you a librarian and want to register a new library into the system?
-                  <br/>
-                  <Link className="btn btn-sm btn-primary" to={'/register-library/'}>Register your library</Link>       
-                
-            </>                                                      
-            </LandingPageBox>        
-        
-    )
-}
+    return ty;
+  };
+
+  const statusClass = status => {
+    switch (status) {
+      case 0:
+        return 'pending';
+        break;
+      // case 1: return 'success'; break;
+      case 2:
+        return 'disabled';
+        break;
+    }
+    return status;
+  };
+
+  return (
+    <LandingPageBox
+      iconClass="fa-solid fa-landmark"
+      title={title}
+      canCollapse={canCollapse}
+      collapsed={collapsed}
+    >
+      <>
+        {auth.permissions.resources.libraries &&
+          auth.permissions.resources.libraries.length >= 1 && (
+            <div className="container">
+              <h3 className="text-center mb-4">Current Permissions</h3>
+              <div className="div-responsive">
+                <div className="div-table">
+                  <div className="div-table-row">
+                    <div className="div-table-header" style={{ width: '25%' }}>
+                      Library
+                    </div>
+                    <div className="div-table-header" style={{ width: '42%' }}>
+                      Permissions
+                    </div>
+                    <div
+                      className="div-table-header"
+                      style={{ width: '33%', textAlign: 'center' }}
+                    >
+                      Actions
+                    </div>
+                  </div>
+                  {auth.permissions.resources.libraries.map((res, i) => (
+                    <div className="div-table-row" key={`row-${i}`}>
+                      <div className="div-table-cell">{res.resource.name}</div>
+                      <div className="div-table-cell">
+                        {res.permissions.map((p, index) => (
+                          <span
+                            key={`badge_perm_${index}`}
+                            className={`badge ${badgeType(p)}`}
+                          >
+                            {p}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="div-table-cell d-flex justify-content-center align-items-center">
+                        <div className="div-current-actions text-center">
+                          <Link
+                            className="btn btn-sm btn-primary mb-2"
+                            to={'/library/' + res.resource.id}
+                          >
+                            Visit This Library
+                          </Link>
+                          {(res.permissions.includes('borrow') ||
+                            res.permissions.includes('manage')) && (
+                            <>
+                            
+                              {fromOpenURLorPubmed && (
+                                <Link
+                                  className="btn btn-sm btn-success mb-2"
+                                  to={
+                                    '/library/' +
+                                    res.resource.id +
+                                    '/borrowing/new' +
+                                    (history.location.search
+                                      ? history.location.search
+                                      : '')
+                                  }
+                                  key={'openurllink' + res.resource.id}
+                                >
+                                  Import from Openurl/Pubmed
+                                </Link>
+                              )}
+                              {!fromOpenURLorPubmed && (
+                                <Link
+                                  className="btn btn-sm btn-info mb-2"
+                                  to={
+                                    '/library/' +
+                                    res.resource.id +
+                                    '/borrowing/new'
+                                  }
+                                  key={'borrlink' + res.resource.id}
+                                >
+                                  New request
+                                </Link>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        <br />
+        <br />
+        {auth.permissions.tempresources &&
+          auth.permissions.tempresources.libraries &&
+          auth.permissions.tempresources.libraries.filter(
+            res => res.status === 0 || res.status === 2,
+          ).length > 0 && (
+            <div className="container">
+              <h3 className="text-center mb-4">Pending/Rejected Requests</h3>
+              <div className="div-responsive">
+                <div className="div-table">
+                  <div className="div-table-row">
+                    <div className="div-table-header" style={{ width: '25%' }}>
+                      Library
+                    </div>
+                    <div className="div-table-header" style={{ width: '19%' }}>
+                      Permissions
+                    </div>
+                    <div className="div-table-header" style={{ width: '10%' }}>
+                      Status
+                    </div>
+                    <div className="div-table-header" style={{ width: '13%' }}>
+                      Created
+                    </div>
+                    <div className="div-table-header" style={{ width: '13%' }}>
+                      Updated
+                    </div>
+                    <div className="div-table-header" style={{ width: '20%' }}>
+                      Actions
+                    </div>
+                  </div>
+                  {auth.permissions.tempresources.libraries
+                    .filter(res => res.status === 0 || res.status === 2) // Filter the libraries with status 0 or status 2
+                    .map((res, i) => (
+                      <div className="div-table-row" key={`pendrow-${i}`}>
+                        <div className="div-table-cell">
+                          {res.resource.name}
+                        </div>
+                        <div className="div-table-cell">
+                          {res.permissions.map((p, index) => (
+                            <span
+                              key={`badge_temp_perm_${index}`}
+                              className={`badge ${badgeType(p)}`}
+                            >
+                              {p}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="div-table-cell">
+                          <div
+                            className={`status-point ${statusClass(
+                              res.status,
+                            )}`}
+                          />
+                        </div>
+                        <div className="div-table-cell">
+                          {formatDateTime(res.created_at)}
+                        </div>
+                        <div className="div-table-cell">
+                          {formatDateTime(res.updated_at)}
+                        </div>
+                        <div className="div-table-cell">
+                          {res.status === 2 ? (
+                            <div>No Actions, Request Rejected</div>
+                          ) : (
+                            <div className="div-actions">
+                              <a
+                                className="btn btn-success btn-sm"
+                                href="#"
+                                onClick={() => props.onAccept(res.tempresid)}
+                              >
+                                Accept
+                              </a>
+                              <a
+                                className="btn btn-danger btn-sm"
+                                href="#"
+                                onClick={() => props.onReject(res.tempresid)}
+                              >
+                                Reject
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+        <div className="container text-center mt-5">
+          <p>
+            Are you a librarian and want to register a new library into the
+            system?
+          </p>
+          <a className="btn btn-primary" href="/register-library/">
+            Register Your Library
+          </a>
+        </div>
+      </>
+    </LandingPageBox>
+  );
+};
 
 export default LandingPageLibrariesBox;
+

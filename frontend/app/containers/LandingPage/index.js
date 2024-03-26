@@ -3,29 +3,62 @@
  * LandingPage
  *
  */
-import React, { useState,useEffect } from 'react';
-import {useIntl} from 'react-intl';
-
-import RegisterLibrary from '../RegisterLibrary'
-import MyLibraryPage from '../Patron/MyLibraryPage'
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useIntl } from 'react-intl';
+import { useCallback } from 'react';
 import LandingPageAdminBox from '../../components/LandingPageAdminBox';
 import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox';
 import LandingPageProjectsBox from '../../components/LandingPageProjectsBox';
 import LandingPageConsortiaBox from '../../components/LandingPageConsortiaBox';
 import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
 import LandingPagePatronBox from '../../components/LandingPagePatronBox';
-
-
+import { requestPermissions } from '../Auth/AuthProvider/actions';
+import { requestAcceptPermission, requestRejectPermission } from './actions';
+import request from '../../utils/request';
 function LandingPage(props) {
-  console.log("LandingPage:",props)
+  console.log('LandingPage:', props);
+  const { dispatch } = props;
 
-  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+  const patrons_enabled =
+    process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS == 'true'
+      ? true
+      : false;
+  const { match, history } = props;
+  const intl = useIntl();
+  const [resourceId, setResourceId] = useState(null); // State to track resource ID
+  const [refreshPermissions, setrefreshPermissions] = useState(null);
 
-  const {match,history}=props
+  const AcceptPermission = useCallback(
+    id => {
+      setResourceId(id); // Set resource ID to trigger data fetching
+      dispatch(requestAcceptPermission(id, 1));
+      setrefreshPermissions({ resourceId: id }); // Ensure new object for deep comparison
+    },
+    [dispatch, setrefreshPermissions],
+  );
 
-  const intl=useIntl();  
- 
+  useEffect(() => {
+    if (resourceId) {
+      dispatch(requestPermissions(resourceId)); // Fetch permissions based on resource ID
+    }
+  }, [dispatch, resourceId]);
+
+  useEffect(() => {
+    if (refreshPermissions) {
+      dispatch(requestPermissions(refreshPermissions));
+      setrefreshPermissions(null);
+    }
+  }, [dispatch, refreshPermissions]);
+
+  const RejectPermission = useCallback(
+    id => {
+      setResourceId(id); // Set resource ID to trigger data fetching
+      dispatch(requestRejectPermission(id, 2));
+      setrefreshPermissions({ resourceId: id }); // Ensure new object for deep comparison
+    },
+    [dispatch, setrefreshPermissions],
+  );
+
   /*const [PatronReg,setPatronReg]=useState (true);
   const togglePatronReg = () => {setPatronReg(true); setLibraryReg(false);}
   const [LibraryReg,setLibraryReg]=useState (false);
@@ -38,8 +71,8 @@ function LandingPage(props) {
     
   }, [patrons_enabled])*/
 
-  return (                      
-        /*(props.auth.permissions.roles && props.auth.permissions.roles.includes("registered") && 
+  return (
+    /*(props.auth.permissions.roles && props.auth.permissions.roles.includes("registered") && 
           (!props.auth.permissions.resources || props.auth.permissions.resources.length==0) 
           && 
        <>       
@@ -79,45 +112,79 @@ function LandingPage(props) {
           <li>Role 3</li>
         </ul>
       </>)
-    */    
-   <>
-   <h1>User dashboard / Landing Page</h1>
+    */
+
+    <>
+      <h1>User dashboard / Landing Page</h1>
       <div className="container">
-        {(props.auth.permissions.roles.length==1 && props.auth.permissions.roles.includes("registered") )&& Object.keys(props.auth.permissions.resources).length==0 &&
-           <div>just registered</div>
-        }
-        {(props.auth.permissions.roles.length>=1 && props.auth.permissions.roles.includes("patron") ) && 
-        <div>Patron</div>
-        }
-        <br/>
-        {(props.auth.permissions.roles.length==0)&& 
-           <div>NO ROLES</div>
-        }
-        <br/>         
-        {(props.auth.permissions.roles.length>=1)&& 
-           <div>ONE/MANY ROLES (including "registered") </div>
-        }
-        <br/>
-        {props.auth.permissions.resources.libraries && props.auth.permissions.resources.libraries.length>=1 && 
-           <div>ONE/MANY LIBRARIES</div>
-        }       
-        {props.auth.permissions.resources.institutions && props.auth.permissions.resources.institutions.length>=1 && 
-           <div>ONE/MANY INSTITUTIONS</div>
-        }               
-        <hr/>
-        <div className='landingBoxes d-flex flex-row justify-content-start flex-wrap'>          
-          <LandingPagePatronBox history={history} title="Patron Box" auth={props.auth} match={props.match}/>
-          <LandingPageLibrariesBox history={history} title="Libraries Box" auth={props.auth} match={props.match}/>          
-          <LandingPageInstitutionsBox history={history} title="Institutions Box" auth={props.auth} match={props.match}/>
-          <LandingPageProjectsBox history={history} title="Projects Box" auth={props.auth} match={props.match}/>
-          <LandingPageConsortiaBox history={history} title="Consortia Box" auth={props.auth} match={props.match}/>
-          <LandingPageAdminBox history={history} title="Administration Box" auth={props.auth} match={props.match}/>                  
+        {props.auth.permissions.roles.length == 1 &&
+          props.auth.permissions.roles.includes('registered') &&
+          Object.keys(props.auth.permissions.resources).length == 0 && (
+            <div>just registered</div>
+          )}
+        {props.auth.permissions.roles.length >= 1 &&
+          props.auth.permissions.roles.includes('patron') && <div>Patron</div>}
+        <br />
+        {props.auth.permissions.roles.length == 0 && <div>NO ROLES</div>}
+        <br />
+        {props.auth.permissions.roles.length >= 1 && (
+          <div>ONE/MANY ROLES (including "registered") </div>
+        )}
+        <br />
+        {props.auth.permissions.resources.libraries &&
+          props.auth.permissions.resources.libraries.length >= 1 && (
+            <div>ONE/MANY LIBRARIES</div>
+          )}
+        {props.auth.permissions.resources.institutions &&
+          props.auth.permissions.resources.institutions.length >= 1 && (
+            <div>ONE/MANY INSTITUTIONS</div>
+          )}
+        <hr />
+        <div className="landingBoxes d-flex flex-row justify-content-start flex-wrap">
+          <LandingPagePatronBox
+            history={history}
+            title="Patron Box"
+            auth={props.auth}
+            match={props.match}
+          />
+          <LandingPageLibrariesBox
+            history={history}
+            title="Libraries Box"
+            auth={props.auth}
+            match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
+          />
+          <LandingPageInstitutionsBox
+            history={history}
+            title="Institutions Box"
+            auth={props.auth}
+            match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
+          />
+          <LandingPageProjectsBox
+            history={history}
+            title="Projects Box"
+            auth={props.auth}
+            match={props.match}
+          />
+          <LandingPageConsortiaBox
+            history={history}
+            title="Consortia Box"
+            auth={props.auth}
+            match={props.match}
+          />
+          <LandingPageAdminBox
+            history={history}
+            title="Administration Box"
+            auth={props.auth}
+            match={props.match}
+          />
         </div>
-      
-      </div>    
+      </div>
     </>
   );
 }
-
 
 export default LandingPage;

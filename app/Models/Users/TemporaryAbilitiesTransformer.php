@@ -26,6 +26,7 @@ class TemporaryAbilitiesTransformer extends BaseTransformer
                     'name'=>$entity->name
                 ],                
                 'permissions'=>explode(',',$element->abilities),
+                'tempresid'=>$element->id,
                 'status'=>$element->status,
                 'created_at'=>$element->created_at,
                 'updated_at'=>$element->updated_at,
