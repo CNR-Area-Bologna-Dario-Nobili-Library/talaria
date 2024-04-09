@@ -32,7 +32,7 @@ export function* requestAcceptRejectPermissionSaga(action) {
       yield call(() => toast.success('Item accepted successfully'));
     } else if (status === 2) {
       yield put(requestRejectPermissionSuccess(response.id));
-      yield call(() => toast.info('Item rejected successfully'));
+      yield call(() => toast.success('Item rejected successfully'));
     }
   } catch (e) {
     yield put(requestError(e.message));
