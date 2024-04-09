@@ -15,6 +15,7 @@ import librarySaga from './containers/Library/saga';
 import libraryregSaga from './containers/RegisterLibrary/saga'
 import OASearchReference from './containers/OASearchReference/saga'
 import DownloadFileSaga from './containers/FileDownload/saga'
+import permissionboxSaga from './containers/LandingPage/saga'
 
 import appSaga from './containers/App/saga';
 
@@ -62,6 +63,8 @@ export default function configureStore(initialState = {}, history) {
   sagaMiddleware.run(adminSaga);
   sagaMiddleware.run(librarySaga);
   sagaMiddleware.run(libraryregSaga);
+  sagaMiddleware.run(permissionboxSaga);
+  
   sagaMiddleware.run(DownloadFileSaga)
   sagaMiddleware.run(appSaga);
   store.runSaga = sagaMiddleware.run;

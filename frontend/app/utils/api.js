@@ -625,6 +625,13 @@ export const createPublicLibrary = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/public?include=granted_permissions,institution,country,departments`, options)
 };
 
+//Landing Panel / PermissionBox 
+export const acceptRejectPermissionRequest = (options) => {
+  const { status, id } = JSON.parse(options.body);
+  options = getOption(options);
+  return request(`${BASE_URL}/api/v1/auth/resources/${id}?status=${status}`, options);
+};
+
 //--------- ADMIN -------------//
 ///////   Users   ////////
 export const getUsersList = (options) => {

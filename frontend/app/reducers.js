@@ -18,7 +18,7 @@ import OASearchReferenceReducer from 'containers/OASearchReference/reducer'
 import libregReducer from 'containers/RegisterLibrary/reducer';
 import filedownloadreducer from 'containers/FileDownload/reducer'
 import fileuploadreducer from './containers/FileUpload/reducer';
-
+import permissionboxReducer from './containers/LandingPage/reducer'
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
  */
@@ -34,6 +34,7 @@ export default function createReducer(injectedReducers = {}) {
     admin: adminReducer,
     library: libraryReducer,
     libraryreg: libregReducer,
+    permissionbox: permissionboxReducer, //its not used now since we updating the current state
     filedownload: filedownloadreducer,
     fileupload: fileuploadreducer,
     app: appReducer,
