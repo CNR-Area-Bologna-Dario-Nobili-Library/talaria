@@ -31,7 +31,7 @@ function LibraryPendingOperatorsPage(props) {
 
     async function removePendingOperator(pendingid) {          
       
-      let msg=intl.formatMessage({id: "app.containers.LibraryOperatorsPage.askRemoveOperatorMessage"})
+      let msg=intl.formatMessage({id: "app.containers.LibraryPendingOperatorsPage.askRemoveOperatorMessage"})
       
       
       let conf = await confirm({

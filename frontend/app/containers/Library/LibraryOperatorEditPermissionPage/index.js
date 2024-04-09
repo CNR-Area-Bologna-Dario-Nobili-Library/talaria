@@ -9,26 +9,28 @@ import {useIntl} from 'react-intl';
 import {compose} from "redux";
 import messages from './messages'
 import { connect } from 'react-redux';
-import {requestGetLibraryOperator, requestUpdateLibraryOperatorPermissions} from '../actions';
+import {requestGetLibraryOperatorPermissions, requestGetLibraryOperator, requestUpdateLibraryOperatorPermissions} from '../actions';
 import Loader from 'components/Form/Loader';
 import SectionTitle from 'components/SectionTitle';
 import confirm from "reactstrap-confirm";
-import EditPermissionsForm from '../../../components/EditPermissionsForm';
+import LibraryEditPermissionsForm from '../../../components/Library/LibraryEditPermissionsForm';
 
 
 function LibraryOperatorEditPermissionPage(props) {
   console.log('LibraryOperatorEditPermissionPage', props)
-  const {isLoading, match, dispatch,library} = props;
+  const {isLoading, match, dispatch,library,history} = props;
 
   const intl = useIntl();
 
   const data=library.operatorPerm
+  const ope=library.operator
   
 
   
   useEffect(() => {            
-    if(!isLoading){        
-        dispatch(requestGetLibraryOperator(match.params.library_id,match.params.userid))                 
+    if(!isLoading){  
+        dispatch(requestGetLibraryOperator(match.params.library_id,match.params.userid))      
+        dispatch(requestGetLibraryOperatorPermissions(match.params.library_id,match.params.userid))                 
   }}, [match.params.library_id,match.params.userid])
 
   async function updatePerms (perms) {          
@@ -62,11 +64,10 @@ function LibraryOperatorEditPermissionPage(props) {
       <Loader show={isLoading}>
           {library && library.operatorPerm && 
           <div className="detail">
-              <SectionTitle       
-                  back={true}
+              <SectionTitle                         
                   title={messages.header}
               />                 
-              <EditPermissionsForm submitCallback={(p)=>updatePerms(p)} data={data}/>                            
+              <LibraryEditPermissionsForm history={history} submitCallback={(p)=>updatePerms(p)} data={data} operatorData={ope}/>                            
           </div>}
       </Loader>     
   );

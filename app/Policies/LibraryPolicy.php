@@ -64,6 +64,11 @@ class LibraryPolicy extends BasePolicy
         return false;
     }
 
+     //only library manager can see his operators'data
+     public function operator(User $user,Model $model){
+        return $this->canManage($user,$model);
+    }
+
     //only library manager can see his operators
     public function operators(User $user,Model $model){
         return $this->canManage($user,$model);

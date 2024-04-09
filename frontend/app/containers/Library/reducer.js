@@ -36,17 +36,19 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
   REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPERATORS,
-  REQUEST_GET_LIBRARY_OPERATOR,
+  REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,
   REQUEST_GET_LIBRARY_PENDING_OPERATORS,
   UPLOAD_REQUEST,
   UPLOAD_SUCCESS,
   UPLOAD_FAILURE,
   UPLOAD_PROGRESS,
-  REQUEST_GET_LIBRARY_OPERATORS_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATOR,
   REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATORS_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
   REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS,
   REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
-  //REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
+  REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
   REQUEST_REMOVE_LIBRARY_OPERATOR,
   REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
   REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS,
@@ -96,6 +98,7 @@ export const initialState = {
   libraryIdentifierTypesOptionList:[],
   error: null,
   user: {},
+  operator:{},
   operators:{},
   operatorPerm:[],
   pending_operators:{},
@@ -354,10 +357,16 @@ const libraryReducer = (state = initialState, action) =>
             draft.error = initialState.error;             
             break;
 
-            case REQUEST_GET_LIBRARY_OPERATOR:
+            case REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS:
               draft.loading = false;
               draft.error = initialState.error;             
-              break;  
+              break; 
+              
+            
+              case REQUEST_GET_LIBRARY_OPERATOR:
+                draft.loading = false;
+                draft.error = initialState.error;             
+                break;  
                     
 
         case REQUEST_GET_LIBRARY_OPERATORS_SUCCESS:
@@ -366,18 +375,28 @@ const libraryReducer = (state = initialState, action) =>
           draft.operators = action.result;
           break;
 
-          case REQUEST_GET_LIBRARY_OPERATOR_SUCCESS:
+          case REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS:
             draft.loading = false;         
             draft.error = initialState.error; 
             draft.operatorPerm = action.result;            
+            break;  
+
+
+          case REQUEST_GET_LIBRARY_OPERATOR_SUCCESS:
+            draft.loading = false;         
+            draft.error = initialState.error; 
+            draft.operator = action.result.data;            
             break;  
 
           case REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS:
             draft.error = initialState.error;               
             break;  
             
-            /*case REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS:           
-            break;    */
+          /*case REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS:           
+            draft.loading = false;          
+            draft.error = initialState.error; 
+            draft.operators = action.result;
+          break;  */  
             
           case REQUEST_REMOVE_LIBRARY_OPERATOR:
             draft.error = initialState.error;               

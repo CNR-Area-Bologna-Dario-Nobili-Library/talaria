@@ -16,7 +16,7 @@ import {useIntl} from 'react-intl';
 
 function LibraryOperatorsPage(props) {
   console.log('LibraryOperatorsPage', props)
-  const {isLoading, match, dispatch,library} = props;
+  const {isLoading, match, dispatch,library   } = props;
 
   const operators=library.operators
 

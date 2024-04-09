@@ -18,6 +18,7 @@ use App\Models\ArrayTransformer;
 use App\Models\Users\TemporaryAbility;
 use App\Models\Users\TemporaryAbilityTransformer;
 use App\Models\Users\User;
+use App\Models\Users\UserLightTransformer;
 use App\Models\Users\UserTransformer;
 use Illuminate\Support\Facades\Auth;
 use Whoops\Util\TemplateHelper;
@@ -131,6 +132,14 @@ class LibraryController extends ApiController
         }
         
         $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));        
+    }
+
+    public function operator(Request $request, $id,$userid) {
+        $lib=$this->model->findOrFail($id);
+        $user=User::findOrFail($userid);
+
+        $this->authorize($lib);         
+        return $this->response->item($user, new UserLightTransformer())->morph();     
     }
       
       public function operatorsAbilities(Request $request, $id,$userid) {

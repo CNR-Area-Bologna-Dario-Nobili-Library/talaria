@@ -56,14 +56,16 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    UPLOAD_PROGRESS,
    UPLOAD_FAILURE,
    UPLOAD_SUCCESS,
-   REQUEST_GET_LIBRARY_OPERATORS,
    REQUEST_GET_LIBRARY_OPERATOR,
-   REQUEST_GET_LIBRARY_OPERATORS_SUCCESS, 
    REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,
+   REQUEST_GET_LIBRARY_OPERATORS,
+   REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,
+   REQUEST_GET_LIBRARY_OPERATORS_SUCCESS, 
+   REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
    REQUEST_GET_LIBRARY_PENDING_OPERATORS,
    REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS,
    REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
-   //REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
+   REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
    REQUEST_REMOVE_LIBRARY_OPERATOR,
    REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
    REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
@@ -705,6 +707,21 @@ export function requestGetCountriesOptionList(request) {
       userid
     };
   }
+
+  export function requestGetLibraryOperatorSuccess(result) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,      
+      result
+    };
+  }
+
+  export function requestGetLibraryOperatorPermissions(library_id,userid) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,      
+      library_id,
+      userid
+    };
+  }
   
   export function requestGetLibraryPendingOperators(library_id) {
     return {
@@ -720,9 +737,9 @@ export function requestGetCountriesOptionList(request) {
     };
   }
 
-  export function requestGetLibraryOperatorSuccess(result) {
+  export function requestGetLibraryOperatorPermissionsSuccess(result) {
     return {
-      type: REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,
+      type: REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
       result
     };
   }
@@ -742,8 +759,8 @@ export function requestGetCountriesOptionList(request) {
       permissions,
       message
     };
-  }
-
+  }                    
+  
   /*export function requestUpdateLibraryOperatorPermissionsSuccess(result) {
     return {
       type: REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,

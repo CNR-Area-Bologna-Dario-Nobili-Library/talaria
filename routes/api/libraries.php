@@ -100,9 +100,10 @@ Route::group([
     Route::put('{id}', 'LibraryController@update')->where('id', '[0-9]+')->name('update');     
            
     Route::get('{id}/operators', 'LibraryController@operators')->where('id', '[0-9]+')->name('operators');
-    Route::get('{id}/operators/{userid}', 'LibraryController@operatorsAbilities')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsAbilities'); //get operator's library abilities
-    Route::put('{id}/operators/{userid}', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsUpdate'); //update operator's library abilities
-    Route::delete('{id}/operators/{userid}', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsDelete');   //delete operator's library abilities                 
+    Route::get('{id}/operators/{userid}', 'LibraryController@operator')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operator'); //get operator's data
+    Route::get('{id}/operators/{userid}/abilities', 'LibraryController@operatorsAbilities')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsAbilities'); //get operator's library abilities
+    Route::put('{id}/operators/{userid}/abilities', 'LibraryController@operatorsUpdate')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsUpdate'); //update operator's library abilities
+    Route::delete('{id}/operators/{userid}/abilities', 'LibraryController@operatorsDelete')->where('id', '[0-9]+')->where('userid', '[0-9]+')->name('operatorsDelete');   //delete operator's library abilities                 
     Route::get('{id}/pending_operators', 'LibraryController@pending_operators')->where('id', '[0-9]+')->name('pending_operators');      
     //TODO CHECK Route::get('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsShow')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsShow'); 
     Route::put('{id}/pending_operators/{pendingid}', 'LibraryController@pending_operatorsUpdate')->where('id', '[0-9]+')->where('pendingid', '[0-9]+')->name('pending_operatorsUpdate');

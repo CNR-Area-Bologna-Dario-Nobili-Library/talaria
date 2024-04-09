@@ -168,6 +168,10 @@ export default defineMessages({
         id: `${scope}.LibraryStatus`,
         defaultMessage: 'Status',
     },
+    Operators: {
+        id: `${scope}.Operators`,
+        defaultMessage: 'Operators',
+    },  
     PendingOperators: {
         id: `${scope}.PendingOperators`,
         defaultMessage: 'Pending operators',

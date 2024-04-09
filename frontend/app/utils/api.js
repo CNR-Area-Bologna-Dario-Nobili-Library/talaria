@@ -269,6 +269,7 @@ export const getLibraryOperators = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators`, options)
 };
 
+
 export const getLibraryOperator = (options) => {
   options = getOption(options);
   const library_id = options.library_id  
@@ -276,18 +277,25 @@ export const getLibraryOperator = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
 };
 
-export const updateLibraryOperator = (options) => {
+export const getLibraryOperatorAbilities = (options) => {
   options = getOption(options);
   const library_id = options.library_id  
-  const userid = options.userid      
-  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
+  const userid = options.userid  
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}/abilities`, options)
 };
 
-export const deleteLibraryOperator = (options) => {
+export const updateLibraryOperatorAbilities = (options) => {
   options = getOption(options);
   const library_id = options.library_id  
   const userid = options.userid      
-  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}`, options)
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}/abilities`, options)
+};
+
+export const deleteLibraryOperatorAbilities = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id  
+  const userid = options.userid      
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${userid}/abilities`, options)
 };
 
 export const getLibraryPendingOperators = (options) => {
