@@ -18,6 +18,14 @@ export const editurl=(reqPath,id,op) => {
 }
 
 
+
+export const manageoperatorsurl=(reqPath,id) => {
+    return generatePath(reqPath, {
+        id,        
+    });
+}
+
+
 const statusInfo = (lib) => {  
 
     let ret="";
@@ -46,7 +54,7 @@ const statusInfo = (lib) => {
         default: ret=lib.status_key
     }
 
-    return <span className='library_status'>{ret}</span>
+    return <div className='library_status'>{ret}</div>
 }
 
 export const canEnable = (lib) => {    
@@ -108,7 +116,7 @@ export const canRenew = (lib) => {
 
 
 export const LibraryOperations = (props) => {
-    const {data,changeStatusLibrary,deleteLibrary}=props;    
+    const {data,changeStatusLibrary,deleteLibrary,operatorsUrl}=props;    
 
     let intl=useIntl();
       
@@ -123,13 +131,15 @@ export const LibraryOperations = (props) => {
                 {canDisableSubscriptionExpired(data) && changeStatusLibrary && <a className="btn btn-icon btn-sm" onClick={()=>changeStatusLibrary(4)}  title={intl.formatMessage({id: "app.manager.libraries.icon.disableExpired"})}><i className="fa-solid fa-stopwatch"></i></a>}                        
                 
                 {canRenew(data) && changeStatusLibrary && <a className="btn btn-icon btn-sm" onClick={()=>changeStatusLibrary(2)}  title={intl.formatMessage({id: "app.manager.libraries.icon.renew"})}><i className="fa-solid fa-rotate-right"></i></a>}                                                                                                
+                <Link to={operatorsUrl} className="btn btn-info btn-sm"><i className='fa-solid fa-users'></i></Link>
+                <Link to={operatorsUrl+'/pending'} className="btn btn-warning btn-sm"><i className='fa-solid fa-hourglass'></i></Link>
         </div>
     )
 }
 
 
 const LibraryItem = (props) => {
-    const {editPath,data,toggleSelection,checked,removeTag,deleteLibrary,changeStatusLibrary} = props      
+    const {editPath,operatorsPath,data,toggleSelection,checked,removeTag,deleteLibrary,changeStatusLibrary} = props      
     const intl = useIntl();  
 
     const subscriptionurl=(reqPath,id) => {
@@ -141,23 +151,23 @@ const LibraryItem = (props) => {
 
     return (
         <Row className="library_item list-row">
-            <Col sm={5}>
+            <Col sm={6}>
                 <CustomCheckBox 
                     handleChange={toggleSelection}
                     checked={checked}
                 /> 
                <LibraryInformations data={data} detailUrl={editurl(editPath,data.id)}  showILLInfo={false} showPaymentInfo={true}/>
             </Col>
-            <Col sm={3}>                                                      
+            <Col sm={1}>                                                      
                 {/*<Link className="btn btn-icon btn-sm" to={subscriptionurl(editPath,data.id)}><i className="fa-solid fa-file-contract"></i></Link>*/} 
-                {formatDateTime(data.created_at)}                                
+                {formatDateTime(data.created_at)}
             </Col>
             <Col sm={1}>
                 {statusInfo(data)}
                 {data.institution && data.institution.data.status!=1 && <>&nbsp;<i className='fa-solid fa-triangle-exclamation text-danger'  title={intl.formatMessage({id: "app.manager.libraries.icon.institution_warning"})}></i></>}
             </Col>
-            <Col sm={3}>      
-            <LibraryOperations data={data} changeStatusLibrary={changeStatusLibrary} deleteLibrary={deleteLibrary}/>                
+            <Col sm={4}>      
+            <LibraryOperations data={data} changeStatusLibrary={changeStatusLibrary} deleteLibrary={deleteLibrary} operatorsUrl={manageoperatorsurl(operatorsPath,data.id)}/>                
             </Col>            
         </Row>
     )

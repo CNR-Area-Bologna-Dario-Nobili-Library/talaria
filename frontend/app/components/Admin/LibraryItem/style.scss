@@ -111,6 +111,11 @@
 
 .library_item {
     border-bottom: 1px solid $active;
+
+    & .library_status {
+        text-align: center;
+
+    }
 }
 
 .library_operations {

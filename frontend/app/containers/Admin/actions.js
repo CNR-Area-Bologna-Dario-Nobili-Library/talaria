@@ -42,7 +42,20 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_GET_INSTITUTION_TYPE,
    REQUEST_GET_INSTITUTION_TYPE_SUCCESS,
    UPDATE_INSTITUTION_TYPE,
-   REQUEST_DELETE_INSTITUTION_TYPE
+   REQUEST_DELETE_INSTITUTION_TYPE,
+   REQUEST_GET_LIBRARY_OPERATOR,
+   REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,
+   REQUEST_GET_LIBRARY_OPERATORS,
+   REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,
+   REQUEST_GET_LIBRARY_PENDING_OPERATORS,
+   REQUEST_GET_LIBRARY_OPERATORS_SUCCESS,
+   REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
+   REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS,
+   REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
+   REQUEST_REMOVE_LIBRARY_OPERATOR,
+   REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
+   REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+   REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS
  
 } from "./constants";
 
@@ -507,6 +520,109 @@ export function requestGetInstitutionTypesListSuccess(result) {
     result
   };
 }
+
+export function requestGetLibraryOperator(library_id,userid) {
+  return {
+    type: REQUEST_GET_LIBRARY_OPERATOR,      
+    library_id,
+    userid
+  };
+}
+
+export function requestGetLibraryOperatorSuccess(result) {
+  return {
+    type: REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,      
+    result
+  };
+}
+
+
+ export function requestGetLibraryOperators(library_id) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATORS,      
+      library_id
+    };
+  }
+
+  export function requestGetLibraryOperatorPermissions(library_id,userid) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,      
+      library_id,
+      userid
+    };
+  }
+  
+  export function requestGetLibraryPendingOperators(library_id) {
+    return {
+      type: REQUEST_GET_LIBRARY_PENDING_OPERATORS,   
+      library_id   
+    };
+  }
+
+  export function requestGetLibraryOperatorsSuccess(result) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATORS_SUCCESS,
+      result
+    };
+  }
+
+  export function requestGetLibraryOperatorPermissionsSuccess(result) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
+      result
+    };
+  }
+  
+  export function requestGetLibraryPendingOperatorsSuccess(result) {
+    return {
+      type: REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS,
+      result
+    };
+  }
+  
+  export function requestUpdateLibraryOperatorPermissions(library_id,userid,permissions,message) {
+    return {
+      type: REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
+      library_id,
+      userid,
+      permissions,
+      message
+    };
+  }
+
+  
+  export function requestRemoveLibraryOperator(library_id,userid,message) {
+    return {
+      type: REQUEST_REMOVE_LIBRARY_OPERATOR,
+      library_id,
+      userid,      
+      message
+    };
+  }
+
+  export function requestRemoveLibraryOperatorSuccess(result) {
+    return {
+      type: REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
+      result
+    };
+  }
+
+  export function requestRemoveLibraryPendingOperator(library_id,pendingid,message) {
+    return {
+      type: REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+      library_id,
+      pendingid,      
+      message
+    };
+  }
+
+  export function requestRemoveLibraryPendingOperatorSuccess(result) {
+    return {
+      type: REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS,
+      result
+    };
+  }
+  
 
 export function requestSuccess() {
   return {

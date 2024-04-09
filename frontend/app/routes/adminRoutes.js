@@ -11,6 +11,11 @@ import ProjectsListPage from 'containers/Admin/ProjectsListPage/Loadable';
 import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
 import SubRouteSwitch from 'components/SubRouteSwitch';
+import AdminLibraryOperatorsPage from 'containers/Admin/AdminLibraryOperatorsPage/Loadable';
+import AdminLibraryOperatorEditPermissionPage from 'containers/Admin/AdminLibraryOperatorEditPermissionPage/Loadable';
+import AdminLibraryPendingOperatorsPage from '../containers/Admin/AdminLibraryPendingOperatorsPage/Loadable';
+
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -27,11 +32,15 @@ const routes = [
   },*/  
   { path: '/libraries',  name: `Libraries`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],sidebar: true,
     children: [      
-      { path: '/', exact: true, icon: 'landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},
+      { path: '/', exact: true, icon: 'landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},      
       //{ path: '/new', icon: 'plus', name: `LibraryCreateNew`, component: LibraryPage,  url: '/library/new', sidebar: true,order:2},
-      //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},      
-      { path: '/:id?/:op?',  name: `Libraries`,component: LibraryPage, sidebar: false},      
+      //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},                  
+      {path: '/:library_id?/operators', icon: 'users-gear', exact: true, name: `Operators`, component: AdminLibraryOperatorsPage, permissions: ['super-admin','manager'],sidebar: false,level:1, order:3},      
+      { path: '/:library_id?/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: AdminLibraryOperatorEditPermissionPage, permissions: ['super-admin','manager'], sidebar: false},                  
+      {path: '/:library_id?/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, component: AdminLibraryPendingOperatorsPage, permissions: ['super-admin','manager'],sidebar: false,level:1, order:4},            
+      { path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
       { path: '/:page?', exact: true, name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar: false },
+
       //{ path: '/:id/subscriptions/:subscriptionid?/:op?', name: `SubscriptionUpdate`, component: Fake, sidebar: false},      
     ]
   },

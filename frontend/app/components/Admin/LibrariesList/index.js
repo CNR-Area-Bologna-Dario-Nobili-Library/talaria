@@ -16,7 +16,7 @@ import AdminLibrarySearchPanel from '../../../containers/Admin/AdminLibrarySearc
 
 const LibrariesList = (props) => {
     console.log('LibrariesList', props)
-    const { editPath,loading, data, pagination, searchOptions, deleteLibrary, changeStatusLibrary} = props
+    const { editPath,operatorsPath,loading, data, pagination, searchOptions, deleteLibrary, changeStatusLibrary} = props
     const {total_pages, current_page,total,count,per_page} = pagination
     const intl = useIntl();
     const [mounted, setMounted] = useState(false)    
@@ -144,6 +144,7 @@ const LibrariesList = (props) => {
                                     key={`lib-${lib.id}`}
                                     data={lib}                                    
                                     editPath={editPath}
+                                    operatorsPath={operatorsPath}
                                     toggleSelection={() => toggleLibrary(lib.id)}               
                                     checked={selectedLibraries.includes(lib.id)}
                                     deleteLibrary={()=>deleteLibrary(lib.id,multiFilter)}

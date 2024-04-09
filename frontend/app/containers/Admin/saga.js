@@ -32,6 +32,13 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER,
           REQUEST_GET_INSTITUTION_TYPE,
           UPDATE_INSTITUTION_TYPE,
           REQUEST_POST_INSTITUTION_TYPE,
+          REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,
+          REQUEST_GET_LIBRARY_PENDING_OPERATORS,
+          REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
+          REQUEST_REMOVE_LIBRARY_OPERATOR,
+          REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+          REQUEST_GET_LIBRARY_OPERATORS,          
+          REQUEST_GET_LIBRARY_OPERATOR,
 
 } from './constants';
 import {
@@ -58,7 +65,14 @@ import {
   requestGetLibraryListNearToSuccess,
   requestGetlibraryProjectsOptionListSuccess,
   requestGetlibraryIdentifiersOptionListSuccess,
-  requestGetInstitutionTypeSuccess,  
+  requestGetInstitutionTypeSuccess,
+  requestGetLibraryOperatorsSuccess,
+  requestGetLibraryOperatorPermissionsSuccess,
+  requestGetLibraryOperators,
+  requestRemoveLibraryOperatorSuccess,
+  requestRemoveLibraryPendingOperatorSuccess,
+  requestGetLibraryPendingOperatorsSuccess,    
+  requestGetLibraryOperatorSuccess
   
 } from './actions';
 import { toast } from "react-toastify";
@@ -71,7 +85,8 @@ import {getUsersList, updateUser, createUser, getUsersOptionsList,
         getCountriesOptionsList,
         getProject, getProjectsList, updateProject,getProjectsOptionList, getlibraryProjectsOptionList,
         createProject, getLibrariesSubjects,createPublicLibrary,
-        getLibrariesListNearTo, getlibraryidentifierTypesOptionList} from 'utils/api'
+        getLibrariesListNearTo, getlibraryidentifierTypesOptionList,
+        deleteLibraryOperatorAbilities, deleteLibraryPendingOperator, getLibraryOperatorAbilities, getLibraryOperators, getLibraryPendingOperators, updateLibraryOperatorAbilities,getLibraryOperator } from 'utils/api'
 
 import {admin_getLibrariesList,admin_deleteLibrary,admin_statusChangeLibrary,
   admin_getInstitutionsList,admin_getInstitution, admin_createInstitution,admin_updateInstitution,admin_deleteInstitution,admin_statusChangeInstitution,admin_getInstitutionsByTypeByCountryOptionList,
@@ -79,6 +94,7 @@ import {admin_getLibrariesList,admin_deleteLibrary,admin_statusChangeLibrary,
 
 import { getPlacesByText } from 'utils/apiExternal';   
 import { Alert } from 'reactstrap';
+
 
 export function* requestUserSaga(action) {
   const options = {
@@ -610,6 +626,125 @@ export function* requestLibraryListNearToSaga(action = {}) {
     yield put(requestError(e.message));
   }
 }
+
+export function* requestLibraryGetOperatorSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,    
+    userid:action.userid,  
+  }
+
+  try {
+    const request = yield call(getLibraryOperator, options);
+    yield put(requestGetLibraryOperatorSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestLibraryGetOperatorsSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,    
+  }
+
+  try {
+    const request = yield call(getLibraryOperators, options);
+    yield put(requestGetLibraryOperatorsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestLibraryGetOperatorPermissionsSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,    
+    userid:action.userid,  
+  }
+
+  try {
+    const request = yield call(getLibraryOperatorAbilities, options);
+    yield put(requestGetLibraryOperatorPermissionsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestUpdateLibraryOperatorPermissionsSaga(action) {
+  const options = {
+    method: 'put',
+    library_id:action.library_id,
+    userid: action.userid,
+    body: {           
+      permissions: action.permissions
+    }
+  }  
+
+  try {
+    const request = yield call(updateLibraryOperatorAbilities, options);    
+    yield put (requestGetLibraryOperators(action.library_id))    
+    yield put (push("/admin/libraries/"+action.library_id+"/operators"));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+export function* requestDeleteLibraryOperatorSaga(action) {
+  const options = {
+    method: 'delete',
+    library_id:action.library_id,
+    userid: action.userid,    
+  }  
+
+  try {
+    const request = yield call(deleteLibraryOperatorAbilities, options);    
+    //yield put (requestGetLibraryOperators(action.library_id))    
+    //yield put (push("/library/"+action.library_id+"/manage/operators"));
+    yield put (requestRemoveLibraryOperatorSuccess(request));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+export function* requestDeleteLibraryPendingOperatorSaga(action) {
+  const options = {
+    method: 'delete',
+    library_id:action.library_id,
+    pendingid: action.pendingid,    
+  }  
+
+  try {        
+    const request = yield call(deleteLibraryPendingOperator, options);    
+    yield put (requestRemoveLibraryPendingOperatorSuccess(request));
+    yield call(() => toast.success(action.message))
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+
+}
+
+
+
+
+export function* requestLibraryGetPendingOperatorsSaga(action) {
+  const options = {
+    method: 'get',
+    library_id:action.library_id,      
+  }
+
+  try {
+    const request = yield call(getLibraryPendingOperators, options);
+    yield put(requestGetLibraryPendingOperatorsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
  
 
 /**
@@ -663,4 +798,13 @@ export default function* adminSaga() {
   yield takeLatest(REQUEST_GET_INSTITUTION_TYPE, requestGetInstitutionTypeSaga);
   yield takeLatest(REQUEST_POST_INSTITUTION_TYPE, requestPostInstitutionTypeSaga);
   yield takeLatest(UPDATE_INSTITUTION_TYPE, requestUpdateInstitutionTypeSaga);
+
+  yield takeLatest(REQUEST_GET_LIBRARY_OPERATOR,requestLibraryGetOperatorSaga);
+  yield takeLatest(REQUEST_GET_LIBRARY_OPERATORS,requestLibraryGetOperatorsSaga);
+  yield takeLatest(REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,requestLibraryGetOperatorPermissionsSaga);
+  yield takeLatest(REQUEST_GET_LIBRARY_PENDING_OPERATORS,requestLibraryGetPendingOperatorsSaga);
+  yield takeLatest(REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,requestUpdateLibraryOperatorPermissionsSaga);
+  yield takeLatest(REQUEST_REMOVE_LIBRARY_OPERATOR,requestDeleteLibraryOperatorSaga);
+  yield takeLatest(REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,requestDeleteLibraryPendingOperatorSaga);
+
 }

@@ -43,7 +43,20 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_LIBRARY_LIST,
   REQUEST_GET_LIBRARY_LIST_SUCCESS,
   REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,
-  REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS
+  REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATORS,
+  REQUEST_GET_LIBRARY_OPERATORS_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATOR,
+  REQUEST_GET_LIBRARY_OPERATOR_SUCCESS,
+  REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS,
+  REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS,
+  REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
+  REQUEST_REMOVE_LIBRARY_OPERATOR,
+  REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
+  REQUEST_GET_LIBRARY_PENDING_OPERATORS,
+  REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS,
+  REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+  REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS
 } from "./constants";
 
 export const initialState = {
@@ -60,6 +73,11 @@ export const initialState = {
     data: [],
   },
   library: [],
+  operator:{},
+  operators:{},
+  operatorPerm:[],
+  pending_operators:{},
+  pending_operator:{},
   institutionTypes: {
     pagination: {},
     data: [],
@@ -348,6 +366,84 @@ const AdminReducer = (state = initialState, action) =>
             draft.libraryOptionList = action.result;
             draft.libraryOptionList.pagination = action.result.meta.pagination
             break;  
+
+            case REQUEST_GET_LIBRARY_OPERATORS:
+              draft.loading = true;
+              draft.error = initialState.error;             
+              break;
+
+              case REQUEST_GET_LIBRARY_OPERATORS_SUCCESS:
+                draft.loading = false;          
+                draft.error = initialState.error; 
+                draft.operators = action.result;
+                break;
+                
+                
+                case REQUEST_GET_LIBRARY_OPERATOR:
+                draft.loading = false;
+                draft.error = initialState.error;             
+                break;  
+
+                case REQUEST_GET_LIBRARY_OPERATOR_SUCCESS:
+            draft.loading = false;         
+            draft.error = initialState.error; 
+            draft.operator = action.result.data;            
+            break;  
+    
+
+            case REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS:
+              draft.loading = false;
+              draft.error = initialState.error;             
+              break;  
+                    
+
+        
+
+          case REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS_SUCCESS:
+            draft.loading = false;         
+            draft.error = initialState.error; 
+            draft.operatorPerm = action.result;            
+            break;  
+
+          case REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS:
+            draft.error = initialState.error;               
+            break;  
+                                    
+            case REQUEST_REMOVE_LIBRARY_OPERATOR:
+              draft.error = initialState.error;               
+              break;   
+                        
+            case REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS:
+              draft.loading = false;          
+              draft.error = initialState.error; 
+              draft.operators = action.result;
+              break;  
+
+              case REQUEST_GET_LIBRARY_PENDING_OPERATORS:
+          draft.error = initialState.error;               
+          break;        
+        
+        case REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS:
+            draft.error = initialState.error; 
+            draft.pending_operators = action.result.data;
+            break;  
+            
+        
+        
+        case REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR:
+          draft.error = initialState.error;               
+          break;   
+                    
+        case REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS:
+          draft.loading = false;          
+          draft.error = initialState.error; 
+          draft.pending_operators = action.result.data;
+          break;    
+
+
+
+
+
     }
   });
 
