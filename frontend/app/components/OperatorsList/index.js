@@ -11,6 +11,7 @@ import Loader from 'components/Form/Loader';
 import messages from './messages';
 import Operator from '../Operator';
 import { generatePath } from "react-router";
+import { filter } from 'lodash';
 
 export const editurl=(reqPath,userid) => {
     return generatePath(reqPath, {
@@ -19,26 +20,44 @@ export const editurl=(reqPath,userid) => {
 }
 
 const OperatorsList = (props) => {
-    const {loading,auth, searchBox=true,data,editOpPath, deleteOpCallback} = props
-
-    const filter=[];
-    const intl = useIntl()
-
-    
 
     console.log('OperatorsList', props)
-
+    
+    const {loading,auth, searchBox=true,data,editOpPath, deleteOpCallback} = props    
+    
+    const intl = useIntl()
     
 
     const [Filter, setFilter ] = useState(
         {
-            query: '',            
+            query: '',  
+            filterData:[]          
         }
     );
+
+    useEffect(() => {
+        if(data)
+        setFilter(state=>(
+            {         
+                query:'',
+                filterData:data
+            }))
+    }, [data])   
+
+    const OpMatch=(op, query) => {
+        let reg=new RegExp(query,"gi")
+                
+        return op.name.match(reg)!=null||
+        op.surname.match(reg)!=null||
+        op.full_name.match(reg)!=null||
+        op.email.match(reg)!=null
+    }
 
     const canEditOrDelete = (userid) => {
         return (userid!=auth.user.id || (auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager")))
     }
+
+   
 
 
 
@@ -51,13 +70,23 @@ const OperatorsList = (props) => {
             <Col md={6} sm={12}>
                 {searchBox && <InputSearch
                 submitCallBack={(query) => { 
-                    setFilter( state => ({
-                        query:query,                        
-                    }) )
+                    if(query!='')
+                        setFilter( state => ({                                                    
+                            filterData:state.filterData.filter(op=>{
+                                return OpMatch(op,query)
+                            }),
+                            query:query,                        
+                        }) )
+                    else setFilter(state=>({                        
+                        query:'',
+                        filterData:data,
+                    })
+                    )    
                 } 
                 }
                 query={Filter.query}
-                //searchOnChange={searchOptions.searchOnChange ? searchOptions.searchOnChange : false}
+                searchOnChange={false}
+                clearButton={true}
                 />}
             
                         </Col> 
@@ -66,8 +95,8 @@ const OperatorsList = (props) => {
             <Col>
                 <Loader show={loading}>
                     <div className="list-body">
-                        {data.length > 0 &&
-                            data.map(op => (
+                        {Filter.filterData && Filter.filterData.length > 0 &&
+                            Filter.filterData.map(op => (
                                 <Operator 
                                     key={`oper-${op.user_id}`}
                                     data={op}

@@ -25,14 +25,14 @@ const PendingOperator = (props) => {
     
     return (
     <div className="pendingoperator">                     
-        <span>{user_name} {user_surname} ({user_email}) </span>        
+        <span>{user_name} {user_surname} ({user_email}) </span>&nbsp;&nbsp;        
         <span>{data.abilities && data.abilities.split(',').map((p,i)=>(
                               <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
         ))}
-        </span>  
-        <span>{status}</span>        
-        <span>{formatDateTime(data.created_at)}</span>
-        <span>{formatDateTime(data.updated_at)}</span>
+        </span>&nbsp;&nbsp;
+        <span>{status}</span>&nbsp;&nbsp;        
+        <span>{formatDateTime(data.created_at)}</span>&nbsp;&nbsp;
+        <span>{formatDateTime(data.updated_at)}</span>&nbsp;&nbsp;
         <span>            
             {enableDelete && deleteOpCallback && <a className="btn btn-sm btn-danger" onClick={()=>deleteOpCallback()} key={'deletebutton'}>{intl.formatMessage({id: "app.global.delete"})}</a>}
         </span>

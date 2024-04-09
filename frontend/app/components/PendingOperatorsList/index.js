@@ -21,18 +21,38 @@ export const editurl=(reqPath,userid) => {
 const PendingOperatorsList = (props) => {
     const {loading,auth,searchBox=true,data, deleteOpCallback} = props
 
-    const filter=[];
     const intl = useIntl()
 
     console.log('PendingOperatorsList', props)
 
-    
 
     const [Filter, setFilter ] = useState(
         {
-            query: '',            
+            query: '',  
+            filterData:[]          
         }
     );
+
+    useEffect(() => {
+        if(data)
+        setFilter(state=>(
+            {
+                query:state.query,
+                filterData:data
+            }))
+    }, [data])
+
+    const OpMatch=(op, query) => {
+        let reg=new RegExp(query,"gi")
+
+        const user_name=op.user?op.user.data.name:op.user_name
+        const user_surname=op.user?op.user.data.surname:op.user_surname
+        const user_email=op.user?op.user.data.email:op.user_email    
+                
+        return user_name.match(reg)!=null||
+          user_surname.match(reg)!=null||        
+          user_email.match(reg)!=null
+    }
     
 
     const canEditOrDelete = (tempop) => {
@@ -49,15 +69,27 @@ const PendingOperatorsList = (props) => {
          <SectionTitle title={messages.header}/>
          <Row>
             <Col md={6} sm={12}>
-                {searchBox && <InputSearch
+            {searchBox && <InputSearch
                 submitCallBack={(query) => { 
-                    setFilter( state => ({
-                        query:query,                        
-                    }) )
+                    if(query!='')
+                        setFilter( state => ({                        
+                            ...state,
+                            filterData:state.filterData.filter(op=>{
+                                return OpMatch(op,query)
+                            }),
+                            query:query,                        
+                        }) )
+                    else setFilter(state=>({
+                        ...state,
+                        query:'',
+                        filterData:data,
+                    })
+                    )    
                 } 
                 }
                 query={Filter.query}
-                //searchOnChange={searchOptions.searchOnChange ? searchOptions.searchOnChange : false}
+                searchOnChange={false}
+                clearButton={true}
                 />}
             
                         </Col> 
@@ -66,8 +98,8 @@ const PendingOperatorsList = (props) => {
             <Col>
                 <Loader show={loading}>
                     <div className="list-body">
-                        {data.length > 0 &&
-                            data.map(op => (
+                        {Filter.filterData && Filter.filterData.length > 0 &&
+                            Filter.filterData.map(op => (
                                 <PendingOperator 
                                     key={`pendingoper-${op.id}`}
                                     data={op}   
