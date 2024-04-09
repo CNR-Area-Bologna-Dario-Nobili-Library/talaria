@@ -43,7 +43,7 @@ const routes = [
       { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'], sidebar: true, order:1},
       { path: '/edit', icon: 'edit', exact: true, name: `LibraryProfile`,  url:'/manage/edit', component: ManageLibraryPage, permissions: ['manage'], sidebar:true,order:2},      
       { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'], sidebar:false},                  
-      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage','borrow','lend','manage-users','deliver'],sidebar: true, order:3},      
+      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage'],sidebar: true, order:3},      
       //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
       { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: LibraryPendingOperatorsPage, permissions: ['manage'], sidebar: true, order:4, level:1},      
       { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: Fake, permissions: ['manage'], sidebar: true, order:5, level:1},      
