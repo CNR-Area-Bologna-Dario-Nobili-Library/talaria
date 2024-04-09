@@ -112,12 +112,9 @@ function LandingPage(props) {
           <li>Role 3</li>
         </ul>
       </>)
-    */
 
-    <>
-      <h1>User dashboard / Landing Page</h1>
-      <div className="container">
-        {props.auth.permissions.roles.length == 1 &&
+      OLD CODE TO CHECK PERMISSIONS/ROLES...
+      {props.auth.permissions.roles.length == 1 &&
           props.auth.permissions.roles.includes('registered') &&
           Object.keys(props.auth.permissions.resources).length == 0 && (
             <div>just registered</div>
@@ -139,17 +136,22 @@ function LandingPage(props) {
           props.auth.permissions.resources.institutions.length >= 1 && (
             <div>ONE/MANY INSTITUTIONS</div>
           )}
-        <hr />
+
+    */
+
+    <>
+      <h1>{intl.formatMessage({id: "app.containers.LandingPage.header"})}</h1>
+      <div className="container">        
         <div className="landingBoxes d-flex flex-row justify-content-start flex-wrap">
           <LandingPagePatronBox
             history={history}
-            title="Patron Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.PatronBox.title"})}
             auth={props.auth}
             match={props.match}
           />
           <LandingPageLibrariesBox
             history={history}
-            title="Libraries Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.LibrariesBox.title"})}
             auth={props.auth}
             match={props.match}
             onAccept={AcceptPermission}
@@ -157,7 +159,7 @@ function LandingPage(props) {
           />
           <LandingPageInstitutionsBox
             history={history}
-            title="Institutions Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.title"})}
             auth={props.auth}
             match={props.match}
             onAccept={AcceptPermission}
@@ -165,19 +167,19 @@ function LandingPage(props) {
           />
           <LandingPageProjectsBox
             history={history}
-            title="Projects Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.title"})}
             auth={props.auth}
             match={props.match}
           />
           <LandingPageConsortiaBox
             history={history}
-            title="Consortia Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.title"})}
             auth={props.auth}
             match={props.match}
           />
           <LandingPageAdminBox
             history={history}
-            title="Administration Box"
+            title={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.title"})}
             auth={props.auth}
             match={props.match}
           />
