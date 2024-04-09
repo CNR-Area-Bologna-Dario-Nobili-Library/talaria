@@ -6,7 +6,7 @@ import './style.scss'
 
 const InputSearch = (props) => {
     
-    const {submitCallBack, searchOnChange, className, placeholder, icon} = props 
+    const {submitCallBack, searchOnChange, className, placeholder, icon, clearButton=false} = props 
     const intl = useIntl()
     
     const [query, setQuery] = useState('')
@@ -24,6 +24,11 @@ const InputSearch = (props) => {
         submitCallBack(query)
         //setQuery('')
     }
+
+    const clearinput=() => {        
+        setQuery('')
+        submitCallBack('');
+    }
     
     return (
         <Form className={`form-search ${className ? className : ''}`} noValidate onSubmit={handleSubmit}>
@@ -40,6 +45,10 @@ const InputSearch = (props) => {
                     <Button type="submit" color="orange" className="searchBtn">
                         <i className={`${icon ? icon : 'fa-solid fa-magnifying-glass'}`}></i>
                     </Button>
+                    {clearButton && <Button type="button" onClick={()=>clearinput()} color="orange" className="searchBtn">
+                            <i className="fa-regular fa-circle-xmark"></i>
+                    </Button>}
+                    
                 </InputGroupAddon>}
             </InputGroup>
         </Form>
