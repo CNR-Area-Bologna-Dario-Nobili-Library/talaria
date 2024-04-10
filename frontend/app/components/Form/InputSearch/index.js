@@ -36,7 +36,8 @@ const InputSearch = (props) => {
                 <Input 
                     required 
                     placeholder={placeholder ? placeholder : intl.formatMessage({id: 'app.global.search'})}
-                    value={props.query ? props.query : query}
+                    //value={props.query ? props.query : query}
+                    value={query}
                     onChange={handleChange} 
                     type="text" 
                     name="inputQuery" 

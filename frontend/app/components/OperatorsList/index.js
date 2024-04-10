@@ -71,17 +71,16 @@ const OperatorsList = (props) => {
                 {searchBox && <InputSearch
                 submitCallBack={(query) => { 
                     if(query!='')
-                        setFilter( state => ({                                                    
-                            filterData:state.filterData.filter(op=>{
-                                return OpMatch(op,query)
-                            }),
+                        setFilter(state => ({                                                    
+                            filterData: data.filter(op => OpMatch(op, query)),
                             query:query,                        
                         }) )
-                    else setFilter(state=>({                        
-                        query:'',
-                        filterData:data,
-                    })
-                    )    
+                    else {
+                        setFilter(state => ({
+                            query: '',
+                            filterData: data, // Reset to original data when query is empty
+                        }));
+                    }
                 } 
                 }
                 query={Filter.query}
