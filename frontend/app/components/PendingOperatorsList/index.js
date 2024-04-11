@@ -37,7 +37,7 @@ const PendingOperatorsList = (props) => {
         if(data)
         setFilter(state=>(
             {
-                query:state.query,
+                query:'',
                 filterData:data
             }))
     }, [data])
@@ -72,24 +72,22 @@ const PendingOperatorsList = (props) => {
             {searchBox && <InputSearch
                 submitCallBack={(query) => { 
                     if(query!='')
-                        setFilter( state => ({                        
-                            ...state,
-                            filterData:state.filterData.filter(op=>{
+                        setFilter( state => ({                                                    
+                            filterData:data.filter(op=>{
                                 return OpMatch(op,query)
                             }),
                             query:query,                        
                         }) )
-                    else setFilter(state=>({
-                        ...state,
+                    else setFilter(state=>({                        
                         query:'',
-                        filterData:data,
+                        filterData:data, // Reset to original data when query is empty
                     })
                     )    
                 } 
                 }
                 query={Filter.query}
-                searchOnChange={false}
-                clearButton={true}
+                searchOnChange={true}
+                clearButton={false}
                 />}
             
                         </Col> 

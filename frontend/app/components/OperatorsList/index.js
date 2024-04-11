@@ -84,8 +84,8 @@ const OperatorsList = (props) => {
                 } 
                 }
                 query={Filter.query}
-                searchOnChange={false}
-                clearButton={true}
+                searchOnChange={true}
+                clearButton={false}
                 />}
             
                         </Col> 
