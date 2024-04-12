@@ -22,20 +22,46 @@ const PendingOperator = (props) => {
 
     console.log('PendingOperator', props)
 
+    const pendingStatusClass = status => {
+        switch (status) {
+          case 0:
+            return 'pending';
+            break;
+          // case 1: return 'success'; break;
+          case 2:
+            return 'disabled';
+            break;
+        }
+        return status;
+      };
+      
+
     
     return (
-    <div className="pendingoperator">                     
-        <span>{user_name} {user_surname} ({user_email}) </span>&nbsp;&nbsp;        
-        <span>{data.abilities && data.abilities.split(',').map((p,i)=>(
-                              <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
-        ))}
-        </span>&nbsp;&nbsp;
-        <span>{status}</span>&nbsp;&nbsp;        
-        <span>{formatDateTime(data.created_at)}</span>&nbsp;&nbsp;
-        <span>{formatDateTime(data.updated_at)}</span>&nbsp;&nbsp;
-        <span>            
-            {enableDelete && deleteOpCallback && <a className="btn btn-sm btn-danger" onClick={()=>deleteOpCallback()} key={'deletebutton'}>{intl.formatMessage({id: "app.global.delete"})}</a>}
-        </span>
+    <div className="container pendingoperator">                     
+        <div className='row'>
+            <div className='col col-md-3'>
+                {user_name} {user_surname} ({user_email})             
+            </div>
+            <div className='col col-md-2'>
+                {data.abilities && data.abilities.split(',').map((p,i)=>(
+                                    <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
+                ))}
+            </div>
+            <div className='col col-md-1'>
+                <div className={`status-point ${pendingStatusClass(status)}`}></div>
+            </div>
+            <div className='col col-md-2'>        
+                {formatDateTime(data.created_at)}
+            </div>
+            <div className='col col-md-2'>
+                {formatDateTime(data.updated_at)}
+            </div>
+            <div className='col col-md-2'>
+                {enableDelete && deleteOpCallback && <a className="btn btn-sm btn-danger" onClick={()=>deleteOpCallback()} key={'deletebutton'}>{intl.formatMessage({id: "app.global.delete"})}</a>}
+            </div>
+        </div>
+ 
     </div>
     )
 } 
