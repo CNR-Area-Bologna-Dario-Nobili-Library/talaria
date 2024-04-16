@@ -170,6 +170,8 @@ function LandingPage(props) {
             title={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.title"})}
             auth={props.auth}
             match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
           />
           <LandingPageConsortiaBox
             history={history}
