@@ -12,6 +12,7 @@ import LandingPageProjectsBox from '../../components/LandingPageProjectsBox';
 import LandingPageConsortiaBox from '../../components/LandingPageConsortiaBox';
 import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
 import LandingPagePatronBox from '../../components/LandingPagePatronBox';
+import LandingPageConsortiasBox from '../../components/LandingPageConsortiaBox';
 import { requestPermissions } from '../Auth/AuthProvider/actions';
 import { requestAcceptPermission, requestRejectPermission } from './actions';
 import request from '../../utils/request';
@@ -173,11 +174,13 @@ function LandingPage(props) {
             onAccept={AcceptPermission}
             onReject={RejectPermission}
           />
-          <LandingPageConsortiaBox
+          <LandingPageConsortiasBox
             history={history}
             title={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.title"})}
             auth={props.auth}
             match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
           />
           <LandingPageAdminBox
             history={history}
