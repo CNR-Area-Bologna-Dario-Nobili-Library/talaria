@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import {Button} from 'reactstrap'
+import {Button, Input} from 'reactstrap'
 import {useIntl} from 'react-intl';
 import messages from './messages';
 import './style.scss';
@@ -8,6 +8,8 @@ import './style.scss';
 
 const LibraryEditPermissionsForm = (props) => {
     const {data,submitCallback,operatorData,history}=props
+
+    console.log("LibraryEditPermissionsForm",props)
     
     const intl = useIntl()
 
@@ -23,7 +25,7 @@ const LibraryEditPermissionsForm = (props) => {
       const [mounted,setMounted]=useState(false);
 
       const [opPerms,setOpPerms]=useState({...initPerms})  
-    
+
       const resetPerms=() => {    
         setOpPerms({
           ...initPerms
@@ -34,7 +36,7 @@ const LibraryEditPermissionsForm = (props) => {
       useEffect( ()=> {   
         setMounted(true)   
         resetPerms();
-        data.forEach(perm=>{
+        data && data.forEach(perm=>{
             setOpPerms(opPerms => ({ 
                 ...opPerms,
                 [perm.name]: true,
@@ -49,20 +51,36 @@ const LibraryEditPermissionsForm = (props) => {
         });
       }
 
+      const submitForm=()=>{
+        let permString=''
+        Object.keys(opPerms).forEach(p=>{
+         if(opPerms[p])
+         {
+          if(permString!="") permString=permString.concat(',');
+          permString=permString.concat(p)
+         }
+        })             
+        submitCallback(permString)
+
+      }
+
     return (
          mounted && 
             <div className='editPermissionsForm'>                 
-              <h3>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h3>
-              <ul>
-              {opPerms && Object.keys(opPerms).map(op => (                          
-                  <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]}/> {op}</li>
-                )
-                )}                                          
-              </ul>
-              <Button color="success" onClick={() => submitCallback(opPerms)}>{intl.formatMessage({id: 'app.global.save'})}</Button>              
-              <Button color="secondary" onClick={() => history.goBack() }>{intl.formatMessage({id: 'app.global.cancel'})}</Button> 
-
-            </div>                          
+              <div className='card'>
+                <div className="card-body">                    
+                    {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
+                    <ul>
+                    {opPerms && Object.keys(opPerms).map(op => (                          
+                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]}/> {op}</li>
+                      )
+                      )}                                          
+                    </ul>
+                    <Button color="success" onClick={submitForm}>{intl.formatMessage({id: 'app.global.save'})}</Button>              
+                    {history && <Button color="secondary" onClick={() => history.goBack() }>{intl.formatMessage({id: 'app.global.cancel'})}</Button> }                                        
+                </div>
+              </div>                            
+          </div>                          
     )
 }
 

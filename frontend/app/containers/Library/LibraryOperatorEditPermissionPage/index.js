@@ -33,7 +33,7 @@ function LibraryOperatorEditPermissionPage(props) {
         dispatch(requestGetLibraryOperatorPermissions(match.params.library_id,match.params.userid))                 
   }}, [match.params.library_id,match.params.userid])
 
-  async function updatePerms (perms) {          
+  async function updatePerms (permString) {          
       
       let msg=intl.formatMessage({id: "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage"})
       
@@ -46,17 +46,7 @@ function LibraryOperatorEditPermissionPage(props) {
        }); 
      
       if(conf)
-      {
-        let permString=''
-        Object.keys(perms).forEach(p=>{
-         if(perms[p])
-         {
-          if(permString!="") permString=permString.concat(',');
-          permString=permString.concat(p)
-         }
-        })        
-        dispatch(requestUpdateLibraryOperatorPermissions(match.params.library_id,match.params.userid,permString,intl.formatMessage({id: "app.global.updatedMessage"})))
-      }    
+        dispatch(requestUpdateLibraryOperatorPermissions(match.params.library_id,match.params.userid,permString,intl.formatMessage({id: "app.global.updatedMessage"})))      
 }
   
 
@@ -67,7 +57,7 @@ function LibraryOperatorEditPermissionPage(props) {
               <SectionTitle                         
                   title={messages.header}
               />                 
-              <LibraryEditPermissionsForm history={history} submitCallback={(p)=>updatePerms(p)} data={data} operatorData={ope}/>                            
+              <LibraryEditPermissionsForm history={history} submitCallback={(p)=>updatePerms(p)} data={data} operatorData={ope}/> {/* data: permessi operatorData: user's data*/}                           
           </div>}
       </Loader>     
   );
