@@ -4,58 +4,175 @@ import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 import {formatDateTime} from '../../utils/dates';
-
 import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
 const LandingPageProjectsBox = (props) => {
-    const {auth,title,match,canCollapse,collapsed}=props
-        
+    const {auth,title,match,history,canCollapse,collapsed}=props
+
+    const statusClass = status => {
+        switch (status) {
+          case 0:
+            return 'pending';
+            break;
+          // case 1: return 'success'; break;
+          case 2:
+            return 'disabled';
+            break;
+        }
+        return status;
+      };
+    console.log('LandingPageProjectsBox', props);
+
+
     return (
-         
-            <LandingPageBox iconClass="fa-solid fa-diagram-project" title={title} canCollapse={canCollapse} collapsed={collapsed} >            
-             <p>bla bla bla</p>  
-            <>
-                    {auth.permissions.resources.projects && auth.permissions.resources.projects.length>=1 /* or pending requests */  &&                                        
-                     <div>
-                        <h3>Current permissions</h3>
-                        { auth.permissions.resources.projects.map((res,i)=> (
-                            <div className="permissionsBox" key={`row-${i}`}>                            
-                                <span>{res.resource.name}</span>
-                                <span>{res.permissions.map((p,i)=>(
-                                    <span className={"badge "+permissionBadgeClass(p)}>{p}</span>
-                                ))}</span> 
-                                <Link className="btn btn-sm btn-primary" to={'/project/'+res.resource.id} key={'prj'+res.resource.id}>GO!</Link> 
-                            </div>)
-                        )}
+        <LandingPageBox
+          iconClass="fa-solid fa-landmark"
+          title={title}
+          canCollapse={canCollapse}
+          collapsed={collapsed}
+        >
+          <>
+            {auth.permissions.resources.projects &&
+              auth.permissions.resources.projects.length >= 1 && (
+                <div className="container">
+                  <h3 className="text-center mb-4">Current Permissions</h3>
+                  <div className="div-responsive">
+                    <div className="div-table">
+                      <div className="div-table-row">
+                        <div className="div-table-header" style={{ width: '25%' }}>
+                          Institution
+                        </div>
+                        <div className="div-table-header" style={{ width: '42%' }}>
+                          Permissions
+                        </div>
+                        <div
+                          className="div-table-header"
+                          style={{ width: '33%', textAlign: 'center' }}
+                        >
+                          Actions
+                        </div>
                       </div>
-                    }
-                                       
-                    {auth.permissions.tempresources && auth.permissions.tempresources.projects && 
-                    <div>
-                        <h3>Pending/Rejected requests</h3>
-                        { auth.permissions.tempresources.projects.map((res,i)=> (
-                            <div className="permissionsBox" key={`pendrow-${i}`}>                            
-                                <span>{res.resource.name}</span>
-                                <span>{res.permissions.map((p,i)=>(
-                                <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
-                                ))}</span>                                                        
-                                <span>{res.status}</span>
-                                <span>{formatDateTime(res.created_at)}</span>
-                                <span>{formatDateTime(res.updated_at)}</span>
-                                {res.status==0 && <Link className="btn btn-sm btn-success" to="#">Accept</Link>}
-                                {res.status==0 && <Link className="btn btn-sm btn-danger" to="#">Reject</Link>}
-                            </div>)
-                        )}
-                    </div>                    
-                    }  
-                </>
+                      {auth.permissions.resources.projects.map((res, i) => (
+                        <div className="div-table-row" key={`row-${i}`}>
+                          <div className="div-table-cell">{res.resource.name}</div>
+                          <div className="div-table-cell">
+                            {res.permissions.map((p, index) => (
+                              <span
+                                key={`badge_perm_${index}`}
+                                className={`badge ${permissionBadgeClass(p)}`}
+                              >
+                                {p}
+                              </span>
+                            ))}
+                          </div>
+                          <div className="div-table-cell d-flex justify-content-center align-items-center">
+                            <div className="div-current-actions text-center">
+                              <Link
+                                className="btn btn-sm btn-primary mb-2"
+                                to={'/institution/' + res.resource.id}
+                              >
+                                Visit This Institution
+                              </Link>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            <br />
+            <br />
+            {auth.permissions.tempresources &&
+              auth.permissions.tempresources.projects &&
+              auth.permissions.tempresources.projects.filter(
+                res => res.status === 0 || res.status === 2,
+              ).length > 0 && (
+                <div className="container">
+                  <h3 className="text-center mb-4">Pending/Rejected Requests</h3>
+                  <div className="div-responsive">
+                    <div className="div-table">
+                      <div className="div-table-row">
+                        <div className="div-table-header" style={{ width: '25%' }}>
+                        Institution
+                        </div>
+                        <div className="div-table-header" style={{ width: '19%' }}>
+                          Permissions
+                        </div>
+                        <div className="div-table-header" style={{ width: '10%' }}>
+                          Status
+                        </div>
+                        <div className="div-table-header" style={{ width: '13%' }}>
+                          Created
+                        </div>
+                        <div className="div-table-header" style={{ width: '13%' }}>
+                          Updated
+                        </div>
+                        <div className="div-table-header" style={{ width: '20%' }}>
+                          Actions
+                        </div>
+                      </div>
+                      {auth.permissions.tempresources.projects
+                        .filter(res => res.status === 0 || res.status === 2) // Filter the projects with status 0 or status 2
+                        .map((res, i) => (
+                          <div className="div-table-row" key={`pendrow-${i}`}>
+                            <div className="div-table-cell">
+                              {res.resource.name}
+                            </div>
+                            <div className="div-table-cell">
+                              {res.permissions.map((p, index) => (
+                                <span
+                                  key={`badge_temp_perm_${index}`}
+                                  className={`badge ${permissionBadgeClass(p)}`}
+                                >
+                                  {p}
+                                </span>
+                              ))}
+                            </div>
+                            <div className="div-table-cell">
+                              <div
+                                className={`status-point ${statusClass(
+                                  res.status,
+                                )}`}
+                              />
+                            </div>
+                            <div className="div-table-cell">
+                              {formatDateTime(res.created_at)}
+                            </div>
+                            <div className="div-table-cell">
+                              {formatDateTime(res.updated_at)}
+                            </div>
+                            <div className="div-table-cell">
+                              {res.status === 2 ? (
+                                <div>No Actions, Request Rejected</div>
+                              ) : (
+                                <div className="div-actions">
+                                  <a
+                                    className="btn btn-success btn-sm"
+                                    href="#"
+                                    onClick={() => props.onAccept(res.id)}
+                                  >
+                                    Accept
+                                  </a>
+                                  <a
+                                    className="btn btn-danger btn-sm"
+                                    href="#"
+                                    onClick={() => props.onReject(res.id)}
+                                  >
+                                    Reject
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+          </>
+        </LandingPageBox>
+      );
+    };
 
-
-
-
-
-            </LandingPageBox>                
-    )
-}
-
-export default LandingPageProjectsBox;
+    export default LandingPageProjectsBox

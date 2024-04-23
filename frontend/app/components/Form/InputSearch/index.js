@@ -41,16 +41,16 @@ const InputSearch = (props) => {
                     onChange={handleChange} 
                     type="text" 
                     name="inputQuery" 
-                    id="inputQuery" />
-                    {(!searchOnChange || clearButton) && <InputGroupAddon addonType="append"> 
-                        {!searchOnChange &&
-                            <Button type="submit" color="orange" className="searchBtn">
-                                <i className={`${icon ? icon : 'fa-solid fa-magnifying-glass'}`}></i>
-                        </Button>}
-                        {clearButton && <Button type="button" onClick={()=>clearinput()} color="orange" className="searchBtn">
+                    id="inputQuery" 
+                    className={`${query.length > 0 ? 'has-value' : ''} searchInput`} 
+                    />
+                    {query.length > 0 && (
+                        <InputGroupAddon addonType="append" className="clearButton">
+                            <Button type="button" onClick={() => clearinput()} className="searchBtn">
                                 <i className="fa-regular fa-circle-xmark"></i>
-                        </Button>}                    
-                    </InputGroupAddon>}
+                            </Button>
+                        </InputGroupAddon>
+                    )}
             </InputGroup>
         </Form>
     )
