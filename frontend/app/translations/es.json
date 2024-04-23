@@ -227,6 +227,8 @@
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"¿Elevar a categoría FULL?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Actualizado",
 
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
+
   "app.containers.LibraryUsersListPage.header": "Mis usuarios",
   "app.containers.LibraryUsersListPage.user_referent": "Tutor/Supervisor",
   "app.containers.LibraryUsersListPage.user_mat": "Matrícula/número de carnet de la biblioteca",
@@ -292,6 +294,8 @@
   "app.components.Notification.mark_all_as_read": "Marcar todo como leído",
   "app.components.LendingsList.LendingSelected":"Seleccionado",
 
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
+  
   "app.containers.ReferencePage.header": "Añadir/Editar referencia",
   "app.containers.ReferencePage.headerNew": "Nueva referencia",
   "app.containers.ReferencePage.headerEdit": "Editar referencia",

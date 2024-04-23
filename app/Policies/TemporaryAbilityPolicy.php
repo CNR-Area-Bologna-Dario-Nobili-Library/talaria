@@ -19,7 +19,7 @@ class TemporaryAbilityPolicy extends BasePolicy
         //
     }
     
-    public function updateMyResourcesStatus(User $user, Model $model) {        
-        return ($model->user_id==$user->id || $model->email==$user->email); //can update status only on my own temporary perms 
+    public function updateMyResourcesStatus(User $user, Model $model) {          
+        return ($model->user_id==$user->id || $model->user_email==$user->email); //can update status only on my own temporary perms 
     }
 }

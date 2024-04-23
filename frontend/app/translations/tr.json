@@ -227,6 +227,8 @@
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Full profile yükselt?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Başarıyla yükseltildi",
 
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
+
   "app.containers.LibraryUsersListPage.header": "Kullanıcılarım",
   "app.containers.LibraryUsersListPage.user_referent": "Eğitmenler/Danışmanlar",
   "app.containers.LibraryUsersListPage.user_mat": "Yeterlilik/kütüphane kart numarası",
@@ -292,6 +294,8 @@
   "app.components.Notification.mark_all_as_read": "Hepsini okundu olarak işaretle",
   "app.components.LendingsList.LendingSelected":"Seçili",
 
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
+  
   "app.containers.ReferencePage.header": "Referans ekle/düzenle",
   "app.containers.ReferencePage.headerNew": "Yeni referans",
   "app.containers.ReferencePage.headerEdit": "Referans düzenle",

@@ -311,6 +311,12 @@ export const deleteLibraryPendingOperator = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/pending_operators/${pendingid}`, options)
 };
 
+export const inviteLibraryOperator = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id    
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/pending_operators`, options)
+};
+
 // Reference //
 export const getReferencesList = (options) => {
   const page = options.page;
@@ -661,7 +667,7 @@ export const updateUser = (options) => {
 export const getUsersOptionsList = (options) => {
   options = getOption(options);
   const query = options.query;
-  return request(`${BASE_URL}/api/v1/users/option-items?label=full_name&q=${query}`, options)
+  return request(`${BASE_URL}/api/v1/users/option-items?label=full_name,name,surname,email&q=${query}`, options)
 };
 
 /// Roles and Resources ///

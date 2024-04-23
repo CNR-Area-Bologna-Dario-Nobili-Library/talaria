@@ -52,7 +52,10 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_REMOVE_LIBRARY_OPERATOR,
   REQUEST_REMOVE_LIBRARY_OPERATOR_SUCCESS,
   REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS,
-  REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR
+  REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+  REQUEST_GET_USERS_OPTION_ITEMS,
+  REQUEST_GET_USERS_OPTION_ITEMS_SUCCESS,
+  REQUEST_INVITE_LIBRARY_OPERATOR
 } from "./constants";
 
 export const initialState = {
@@ -103,6 +106,7 @@ export const initialState = {
   operatorPerm:[],
   pending_operators:{},
   pending_operator:{},
+  searchUsersOptionList: [],
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -410,12 +414,25 @@ const libraryReducer = (state = initialState, action) =>
 
         case REQUEST_GET_LIBRARY_PENDING_OPERATORS:
           draft.error = initialState.error;               
-          break;        
+          break;     
+          
+        case REQUEST_INVITE_LIBRARY_OPERATOR:
+          draft.error = initialState.error;               
+          break;                      
         
         case REQUEST_GET_LIBRARY_PENDING_OPERATORS_SUCCESS:
             draft.error = initialState.error; 
             draft.pending_operators = action.result.data;
             break;  
+            
+        case REQUEST_GET_USERS_OPTION_ITEMS: 
+              draft.error = action.error;
+              break;
+        case REQUEST_GET_USERS_OPTION_ITEMS_SUCCESS: 
+              draft.loading = false;     
+              draft.error = initialState.error; 
+              draft.searchUsersOptionList=action.result    
+        break;
             
         
         

@@ -227,6 +227,8 @@
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Effettuare l'upgrade a Profilo Completo?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Upgrade effettuato con successo",
 
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "Richiesta inviata con successo",
+  
   "app.containers.LibraryUsersListPage.header": "I miei utenti",
   "app.containers.LibraryUsersListPage.user_referent": "Referente",
   "app.containers.LibraryUsersListPage.user_mat": "Matricola/Tessera",
@@ -291,6 +293,8 @@
   "app.components.Notification.header": "Notifiche",
   "app.components.Notification.mark_all_as_read": "Segna tutte come lette",
   "app.components.LendingsList.LendingSelected":"Selezionati",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Invitare l'operatore selezionato?",
 
   "app.containers.ReferencePage.header": "Inserisci/Modifica riferimento",
   "app.containers.ReferencePage.headerNew": "Nuovo Riferimento",

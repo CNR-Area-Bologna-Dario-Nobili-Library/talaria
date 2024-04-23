@@ -41,7 +41,9 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_GET_LIBRARY_OPERATOR_PERMISSIONS, 
       REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,
       REQUEST_REMOVE_LIBRARY_OPERATOR,
-      REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR
+      REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
+      REQUEST_GET_USERS_OPTION_ITEMS,    
+      REQUEST_INVITE_LIBRARY_OPERATOR
     } from './constants';
 import {
   requestError,
@@ -83,6 +85,8 @@ import {
   requestUpdateLibraryOperatorPermissionsSuccess,
   requestGetLibraryOperatorPermissionsSuccess,
   requestGetLibraryOperatorSuccess,
+  requestGetUsersOptionItemsSuccess,
+  requestGetLibraryPendingOperators,
 } from './actions';
 
 import { toast } from "react-toastify";
@@ -120,7 +124,9 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     updateLibraryOperatorAbilities,
     deleteLibraryOperatorAbilities,
     deleteLibraryPendingOperator,
-    getLibraryOperator
+    getLibraryOperator,
+    getUsersOptionsList,
+    inviteLibraryOperator
 } from '../../utils/api'    
 
 import {getOA,getPubmedReferenceByPMID,getFindISSN,getFindISBN, getFindISSN_ACNP} from '../../utils/apiExternal';
@@ -218,6 +224,20 @@ export function* requestDeleteUserSaga(action) {
     yield put(requestError(e.message));
   }
 } */
+
+export function* requestGetUsersOptionItemsSaga(action) {
+  const options = {
+    method: 'get',
+    query: action.query ? action.query : "",    
+  }
+  try {
+    const request = yield call(getUsersOptionsList, options);
+    yield put(requestGetUsersOptionItemsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
 
 
 export function* requestPostLibrarySaga(action) {
@@ -954,9 +974,6 @@ export function* requestDeleteLibraryPendingOperatorSaga(action) {
 
 }
 
-
-
-
 export function* requestLibraryGetPendingOperatorsSaga(action) {
   const options = {
     method: 'get',
@@ -966,6 +983,23 @@ export function* requestLibraryGetPendingOperatorsSaga(action) {
   try {
     const request = yield call(getLibraryPendingOperators, options);
     yield put(requestGetLibraryPendingOperatorsSuccess(request));
+  } catch(e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* requestInviteLibraryOperatorSaga(action) {
+  const options = {
+    method: 'post',
+    body: {...action.userdata},
+    library_id: action.library_id,    
+  };
+
+  try {
+    const request = yield call(inviteLibraryOperator, options);  
+    //yield(put(requestGetLibraryPendingOperators(action.library_id)))
+    yield put(push(`/library/${action.library_id}/manage/operators/pending`));
+    yield call(() => toast.success(action.message))
   } catch(e) {
     yield put(requestError(e.message));
   }
@@ -1022,11 +1056,12 @@ export function* requestFindISSNISBNsaga(action) {
  * Root saga manages watcher lifecycle
  */
 export default function* librarySaga() {
-  yield takeLatest(REQUEST_USERS_LIST, requestUsersListSaga);
+  yield takeLatest(REQUEST_USERS_LIST, requestUsersListSaga);  
   yield takeLatest(REQUEST_UPDATE_USER, requestUpdateUserSaga);
   yield takeLatest(REQUEST_DELETE_USER, requestDeleteUserSaga);
   // yield takeLatest(REQUEST_POST_USER, requestPostUserSaga);
   yield takeLatest(REQUEST_USER, requestUserSaga);
+  yield takeLatest(REQUEST_GET_USERS_OPTION_ITEMS, requestGetUsersOptionItemsSaga);
   yield takeEvery(REQUEST_GET_LIBRARY, requestGetLibrarySaga);
   yield takeLatest(REQUEST_GET_LIBRARIES_LIST, requestGetLibrariesListSaga);
   yield takeLatest(REQUEST_UPDATE_LIBRARY, requestUpdateLibrarySaga);
@@ -1080,6 +1115,7 @@ export default function* librarySaga() {
   yield takeLatest(REQUEST_UPDATE_LIBRARY_OPERATOR_PERMISSIONS,requestUpdateLibraryOperatorPermissionsSaga);
   yield takeLatest(REQUEST_REMOVE_LIBRARY_OPERATOR,requestDeleteLibraryOperatorSaga);
   yield takeLatest(REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,requestDeleteLibraryPendingOperatorSaga);
+  yield takeLatest(REQUEST_INVITE_LIBRARY_OPERATOR,requestInviteLibraryOperatorSaga )
 
 
   yield takeLatest(REQUEST_GET_ISSN_ISBN,requestFindISSNISBNsaga);

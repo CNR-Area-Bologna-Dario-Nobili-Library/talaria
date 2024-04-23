@@ -227,6 +227,8 @@
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Upgrade to FULL profile?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Upgraded successfully",
 
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
+
   "app.containers.LibraryUsersListPage.header": "My patrons",
   "app.containers.LibraryUsersListPage.user_referent": "Tutor/Supervisor",
   "app.containers.LibraryUsersListPage.user_mat": "Matriculation/library card number",
@@ -291,6 +293,8 @@
   "app.components.Notification.header": "Notifications",
   "app.components.Notification.mark_all_as_read": "Mark all as read",
   "app.components.LendingsList.LendingSelected":"Selected",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
 
   "app.containers.ReferencePage.header": "Add/Edit reference",
   "app.containers.ReferencePage.headerNew": "New reference",

@@ -87,7 +87,20 @@ class TemporaryAbility extends BaseModel
 
     public function scopeWaiting($query) {
         return $this->scopeByStatus($query,config("constants.temporary_abilities_status.waiting")); 
-    }    
+    }       
     
-    
+    public function setEntity($type, $entityID) {
+        $etype=null;
+        switch($type) {
+            case "library": $etype='App\\Models\\Libraries\\Library'; break;
+            case "institution": $etype='App\\Models\\Institutions\\Institution'; break;
+            case "project": $etype='App\\Models\\Projects\\Project'; break;
+            case "consortium": $etype='App\\Models\\Institutions\\Consortium'; break;
+        }
+
+        if($etype!=null) {
+            $this->entity_id=$entityID;
+            $this->entity_type=$etype;
+        }
+    }
 }

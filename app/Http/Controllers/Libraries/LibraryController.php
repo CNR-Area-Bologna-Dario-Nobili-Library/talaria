@@ -187,13 +187,14 @@ class LibraryController extends ApiController
         $this->authorize($lib);    
                 
         $tempPerm=new TemporaryAbility($request->all());
-
-        if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library                                                    
-        {
-            $tempPerm->save();        
-            //return $tempPerm;
-            return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
-        }
+        
+        //set entity_type+entity_id 
+        $tempPerm->setEntity("library",$id);
+        $tempPerm->save();    
+        
+        //TODO: SEND EMAIL to user
+        
+        return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
         
      }
 
