@@ -8,7 +8,6 @@ import './style.scss';
 
 const LibraryInviteOperatorForm = (props) => {
     const {submitCallback,userData,history}=props
-    
     console.log("LibraryInviteOperatorForm",props)
     
     const intl = useIntl()
@@ -35,8 +34,11 @@ const LibraryInviteOperatorForm = (props) => {
       }
 
       useEffect(() => {
-        setFormData({        
-          ...userData})
+        if (userData && Object.keys(userData).length > 0) {
+          setFormData({ ...userData });
+        } else {
+          setFormData({});
+        }
         }, [userData])
       
       
@@ -105,7 +107,7 @@ const LibraryInviteOperatorForm = (props) => {
                     autoComplete="name"
                     readOnly={userData && userData.name!=null}
                     name="name"
-                    value={formData.name}
+                    value={formData.name || ''}
                     onChange={(e) => handleFormChange(e, 'name')}
                     required
                   />
@@ -115,7 +117,7 @@ const LibraryInviteOperatorForm = (props) => {
                     autoComplete="surname"
                     readOnly={userData && userData.surname!=null}
                     name="surname"
-                    value={formData.surname}
+                    value={formData.surname || ''}
                     onChange={(e) => handleFormChange(e, 'surname')}
                     required
                   />                
@@ -125,7 +127,7 @@ const LibraryInviteOperatorForm = (props) => {
                     autoComplete="email"
                     readOnly={userData && userData.email!=null}
                     name="email"
-                    value={formData.email}
+                    value={formData.email || ''}
                     onChange={(e) => handleFormChange(e, 'email')}
                     required
                   />
