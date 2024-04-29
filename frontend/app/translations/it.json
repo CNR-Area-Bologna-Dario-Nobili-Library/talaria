@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Cancellazione avvenuta con successo",
   "app.global.confirm": "Conferma",
   "app.global.accept": "Accetta",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Nega",
   "app.global.daysago":"giorni fa",
   "app.global.alllibraries": "Tutte le biblioteche",
@@ -173,6 +174,8 @@
 
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"Modifica permessi",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Modificare i permessi?",
     

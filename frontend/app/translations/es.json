@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Borrado",
   "app.global.confirm": "Confirmar",
   "app.global.accept": "Aceptar",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Rechazar",
   "app.global.daysago":"hace días",
   "app.global.alllibraries": "Todas las bibliotecas",
@@ -173,6 +174,8 @@
   
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
   

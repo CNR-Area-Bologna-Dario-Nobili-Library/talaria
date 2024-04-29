@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Mesaj Silindi",
   "app.global.confirm": "Onayla",
   "app.global.accept": "Kabul et",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Reddet",
   "app.global.daysago":"gün önce",
   "app.global.alllibraries": "Tüm kütüphaneler",
@@ -173,6 +174,8 @@
   
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
 
