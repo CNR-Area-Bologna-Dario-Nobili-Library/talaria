@@ -46,6 +46,11 @@ const InputSearch = (props) => {
                     />
                     {query.length > 0 && (
                         <InputGroupAddon addonType="append" className="clearButton">
+                            {!searchOnChange &&
+                                <Button type="button" onClick={() => submitCallBack(query)} className="searchBtn">
+                                <i className="fa-regular fa-search"></i>
+                        </Button>
+                            }
                             <Button type="button" onClick={() => clearinput()} className="searchBtn">
                                 <i className="fa-regular fa-circle-xmark"></i>
                             </Button>
