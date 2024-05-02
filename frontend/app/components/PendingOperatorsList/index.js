@@ -60,16 +60,15 @@ const PendingOperatorsList = props => {
     );
   };
 
+  //only commmanager+library man can edit temp permission of any users (only other perm, not mine)
   const canEditOrDelete = tempop => {
     let userid = tempop.user ? tempop.user.data.id : tempop.user_id;
-    let useremail = tempop.user ? tempop.user.data.email : tempop.user_email;
-    return (
-      (userid != null && userid != auth.user.id) ||
-      auth.user.email != useremail ||
-      (auth.permissions.roles.includes('super-admin') ||
-        auth.permissions.roles.includes('manager'))
-    );
+    let useremail = tempop.user ? tempop.user.data.email : tempop.user_email;    
+    return ( ( ( (userid != null && userid != auth.user.id) || auth.user.email != useremail) && !auth.permissions.roles.includes("super-admin") ) || 
+    ( ( (userid != null && userid != auth.user.id) || auth.user.email != useremail) && auth.permissions.roles.includes("manager"))) 
   };
+
+  
 
   return (
     <div className="pendingoperatorsList card">
