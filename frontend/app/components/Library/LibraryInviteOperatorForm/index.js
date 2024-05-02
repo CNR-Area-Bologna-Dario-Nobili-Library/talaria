@@ -45,7 +45,7 @@ const LibraryInviteOperatorForm = (props) => {
       useEffect( ()=> {   
         setSaveDisabled(true); 
         Object.keys(opPerms).forEach(p => {
-          console.log("perm:",p+": "+opPerms[p])
+          //console.log("perm:",p+": "+opPerms[p])
           if(opPerms[p]) 
           {
             setSaveDisabled(false); 
@@ -67,7 +67,14 @@ const LibraryInviteOperatorForm = (props) => {
         setFormData({})      
       },[])
     
+      //if manager has been selected, reset all other permissions (because a manager can do any operations)
       const handleCheckbox = (op,val) => {
+        if(op=="manage") {
+          Object.keys(opPerms).forEach(p => {
+            if(p!="manage")
+              opPerms[p]=false;
+          })
+        }
         setOpPerms({ 
           ...opPerms, 
           [op]: val,
@@ -139,7 +146,7 @@ const LibraryInviteOperatorForm = (props) => {
                     <h5 className='card-title'>Permissions</h5>
                     <ul>
                     {opPerms && Object.keys(opPerms).map(op => (                          
-                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]}/> {op}</li>
+                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]} disabled={op!="manage" && opPerms["manage"]}/> {op}</li>
                       )
                       )}                                          
                     </ul>
