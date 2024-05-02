@@ -45,10 +45,17 @@ const LibraryEditPermissionsForm = (props) => {
       },[data])
     
       const handleCheckbox = (op,val) => {
-        setOpPerms({ 
-          ...opPerms, 
-          [op]: val,
-        });
+        if(op=="manage") {
+          Object.keys(opPerms).forEach(p => {
+            if(p!="manage")
+              opPerms[p]=false;
+          })
+        }           
+
+          setOpPerms({ 
+            ...opPerms, 
+            [op]: val,
+          });
       }
 
       const submitForm=()=>{
@@ -72,7 +79,7 @@ const LibraryEditPermissionsForm = (props) => {
                     {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
                     <ul>
                     {opPerms && Object.keys(opPerms).map(op => (                          
-                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]}/> {op}</li>
+                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]} disabled={op!="manage" && opPerms["manage"]}/> {op}</li>
                       )
                       )}                                          
                     </ul>
