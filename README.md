@@ -31,6 +31,14 @@ Then change `CLIENT_ID` and `CLIENT_SECRET` in your `.env` accordingly to ones g
 
 All scheduled/queued jobs are managed by `laravelqueue` and `laravelscheduler` containers
 
+## Configuration updates
+If you change something in the Laravel configuration or in `.env` you've to rebuild Laravel cache runing these commands from `talaria-laravel` container:
+```bash
+php artisan cache:clear
+php artisan optimize
+```
+
+
 ## Initial setup
 Run these commands from `talaria-laravel` container ONLY THE FIRST TIME you run the application
 ```bash
