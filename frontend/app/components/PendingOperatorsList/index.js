@@ -49,14 +49,14 @@ const PendingOperatorsList = props => {
   const OpMatch = (op, query) => {
     let reg = new RegExp(query, 'gi');
 
-    const user_name = op.user ? op.user.data.name : op.user_name;
-    const user_surname = op.user ? op.user.data.surname : op.user_surname;
-    const user_email = op.user ? op.user.data.email : op.user_email;
+    const user_name = op.user ? (op.user.data.name || "") : (op.user_name || "");
+    const user_surname = op.user ? (op.user.data.surname || "") : (op.user_surname || "");
+    const user_email = op.user ? (op.user.data.email || "") : (op.user_email || "");
 
     return (
-      user_name.match(reg) != null ||
-      user_surname.match(reg) != null ||
-      user_email.match(reg) != null
+      (user_name !== null && user_name.match(reg) !== null) ||
+      (user_surname !== null && user_surname.match(reg) !== null) ||
+      (user_email !== null && user_email.match(reg) !== null)
     );
   };
 
