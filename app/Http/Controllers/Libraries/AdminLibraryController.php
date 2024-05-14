@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminApiController;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
+use App\Models\Users\User;
 use Hamcrest\Type\IsInteger;
 
 class AdminLibraryController extends AdminApiController
@@ -117,5 +118,34 @@ class AdminLibraryController extends AdminApiController
  
          return parent::index($request);    
      }
+
+    //override     
+    public function delete(Request $request, $id)
+    {
+        $model = $this->talaria->delete($this->model, $request, $id, null,function ($lib) {
+                    
+            //remove also granted permissions
+            $users=$lib->operators();
+         
+            foreach ($users as $u) {
+                $user=User::findOrFail($u["user_id"]);
+                $abilities = $user->getAbilities()->filter(function ($abil) use($lib) {
+                    return ($abil->entity_id==$lib->id && $abil->entity_type=="App\Models\Libraries\Library");
+                });
+                
+                foreach($abilities as $uabi) {
+                    $user->disallow($uabi->name, $lib);    
+                
+                }                    
+            }                
+            return $lib;
+
+        });
+
+        if($this->broadcast && config('apitalaria.broadcast'))
+            broadcast(new ApiDeleteBroadcast($model->id, $model->getTable()));
+
+        return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
+    }
 
 }    
