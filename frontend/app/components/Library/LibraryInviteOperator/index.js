@@ -94,7 +94,7 @@ const LibraryInviteOperator = (props) => {
         <div className="row mt-2">
           <div className="col col-md-8">
             <h4>Invite user</h4>
-            <p>Search for it or fill the form below and invite!</p>
+            <p>Search in dropdown, or add manually if not found.</p>
             <Select id="searchuserSelect"
                       options={usersOptions}
                       onInputChange={onSearchInputChange}                               
