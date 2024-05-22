@@ -204,7 +204,7 @@ const MapSelector = (props) => {
                   options={placesOptions}
                   onInputChange={onSearchInputChange}                               
                   onChange={onSearchSelectChange}
-                  className="map-search mb-3"             
+                  className="map-search mb-3 customselect"             
                   value={selectedPlace}               
                   isClearable={true}                  
                   isSearchable={true}
