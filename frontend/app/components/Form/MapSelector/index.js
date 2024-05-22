@@ -63,7 +63,7 @@ const MapSelector = (props) => {
     
     const {field,label,handleChange,getMarkers,markers,onPlacesSearch,placesList,onMarkerClick,placesFreeSearchPlaceholder,markerPopupComponent,selectedMarker}=props;
     
-    let zoom=12;
+    let zoom=10;
     const intl = useIntl()
 
     const [gps,setGPS]=useState({});
@@ -188,6 +188,13 @@ const MapSelector = (props) => {
 
     },[placesList]);
 
+    useEffect(() => {
+      if (markers && markers.data && markers.data.length > 0) {
+        // Log or handle markers
+        console.log('Markers loaded:', markers.data);
+      }
+    }, [markers]);
+
     const myPosOptions = { color: '#880021', fillColor: '#DF6D43' }
     
     return (                               
@@ -206,28 +213,26 @@ const MapSelector = (props) => {
                   hideSelectedOptions={false}    
                   placeholder={placesFreeSearchPlaceholder}                                               
                 />}
-                  <MapContainer id="mappa" center={position} zoom={zoom} scrollWheelZoom={true}>                   
+                  <MapContainer id="mappa" center={position} zoom={zoom} scrollWheelZoom={true} whenCreated={setMapObj}>
                     <TileLayer
                       attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    /> 
-                     <CircleMarker center={position} pathOptions={myPosOptions} radius={8} stroke={true}>
+                    />
+                    <CircleMarker center={position} pathOptions={myPosOptions} radius={8} stroke={true}>
                       <Popup>
                         You're here!
                       </Popup>
-                    </CircleMarker>   
-                    {markers && Object.keys(markers.data).length>0 && markers.data.map((marker, index) => {
-                      return (
-                        marker.lat && marker.lon && 
-                        <Marker position={[marker.lat,marker.lon]} key={index}>
-                          <Popup>
-                            {markerPopupComponent(marker,chooseMarkerFromMap)}
-                          </Popup>
-                        </Marker>                          
-                      )
-                      })}  
-                       <MyMap setMapObj={setMapObj} getMarkersAtPos={getMarkers}/>                  
-                </MapContainer>
+                    </CircleMarker>
+                    {markers && markers.data && markers.data.length > 0 && markers.data.map((marker, index) => (
+                      marker.lat && marker.lon &&
+                      <Marker position={[marker.lat, marker.lon]} key={`marker-${index}`}>
+                        <Popup>
+                          {markerPopupComponent(marker, chooseMarkerFromMap)}
+                        </Popup>
+                      </Marker>
+                    ))}
+                    <MyMap setMapObj={setMapObj} getMarkersAtPos={getMarkers} />
+                  </MapContainer>
                 {selectedMarker && selectedMarker.name && <div className="alert alert-success">{label}: <b>{selectedMarker.name}</b></div>} 
                 </>    
                 
