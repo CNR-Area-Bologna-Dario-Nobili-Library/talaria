@@ -24,9 +24,12 @@ const LibraryEditPermissionsForm = (props) => {
     
       const [mounted,setMounted]=useState(false);
 
+      const [saveDisabled,setSaveDisabled]=useState(true)
+
       const [opPerms,setOpPerms]=useState({...initPerms})  
 
       const resetPerms=() => {    
+        setSaveDisabled(true);
         setOpPerms({
           ...initPerms
           }
@@ -43,6 +46,19 @@ const LibraryEditPermissionsForm = (props) => {
               }));         
         })            
       },[data])
+
+      useEffect( ()=> {   
+        let count=0;
+        opPerms && Object.keys(opPerms).forEach(p=>{
+            if(opPerms[p])
+              count++                          
+        })
+        if(count>0) setSaveDisabled(false);           
+        else setSaveDisabled(true);  
+      },[opPerms])
+
+
+                
     
       const handleCheckbox = (op,val) => {
         if(op=="manage") {
@@ -83,7 +99,7 @@ const LibraryEditPermissionsForm = (props) => {
                       )
                       )}                                          
                     </ul>
-                    <Button color="success" onClick={submitForm}>{intl.formatMessage({id: 'app.global.save'})}</Button>              
+                    <Button disabled={saveDisabled} color="success" onClick={submitForm}>{intl.formatMessage({id: 'app.global.save'})}</Button>              
                     {history && <Button color="secondary" onClick={() => history.goBack() }>{intl.formatMessage({id: 'app.global.cancel'})}</Button> }                                        
                 </div>
               </div>                            
