@@ -7,7 +7,7 @@ import confirm from "reactstrap-confirm";
 import LibraryInviteOperatorForm from '../LibraryInviteOperatorForm';
 
 const LibraryInviteOperator = (props) => {
-    const {usersData,searchUserCallback, inviteOpCallback} = props
+    const {usersData,searchUserCallback, inviteOpCallback,auth} = props
     console.log('InviteOperator', props)
              
     const intl = useIntl()
@@ -39,11 +39,13 @@ const LibraryInviteOperator = (props) => {
     const [usersOptions,setUsersOptions]=useState([]);    
     
 
-    useEffect(() => {      
-          setUsersOptions(usersData.map(u=>{              
-              let nameparts=[u.name,u.surname,u.full_name]
-              let name=nameparts.join(',')+" ("+u.email+")"
-              return {'label':name, 'value':u}
+    useEffect(() => {  
+          let filteredData=usersData.filter(p=>{return (p.email!=auth.user.email)}) //remove myself
+      
+          setUsersOptions(filteredData.map(u=>{                
+                let nameparts=[u.name,u.surname,u.full_name]
+                let name=nameparts.join(',')+" ("+u.email+")"
+                return {'label':name, 'value':u}              
             }
           ))          
     }, [usersData])
@@ -98,7 +100,7 @@ const LibraryInviteOperator = (props) => {
         </div>
         <div className="row mt-2">         
           <div className="col col-md-8">
-            <LibraryInviteOperatorForm submitCallback={(opdata)=>inviteUser(opdata)} userData={selectedUser}/>
+            <LibraryInviteOperatorForm auth={auth} submitCallback={(opdata)=>inviteUser(opdata)} userData={selectedUser}/>
           </div>
         </div>         
         

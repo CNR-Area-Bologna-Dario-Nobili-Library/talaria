@@ -299,6 +299,8 @@
 
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Invitare l'operatore selezionato?",
 
+  "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"Non è possibile invitare se stessi come operatori",
+
   "app.containers.ReferencePage.header": "Inserisci/Modifica riferimento",
   "app.containers.ReferencePage.headerNew": "Nuovo Riferimento",
   "app.containers.ReferencePage.headerEdit": "Modifica Riferimento",

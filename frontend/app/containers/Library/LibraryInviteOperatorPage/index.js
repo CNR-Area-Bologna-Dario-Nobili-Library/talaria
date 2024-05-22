@@ -17,8 +17,8 @@ import LibraryInviteOperator from '../../../components/Library/LibraryInviteOper
 
 function LibraryInviteOperatorPage(props) {
   console.log('LibraryInviteOperatorPage', props)
-  const {isLoading, match, dispatch,library   } = props;
-  
+  const {isLoading, match, dispatch,library,auth   } = props;
+    
   
   const intl = useIntl();
 
@@ -28,8 +28,9 @@ function LibraryInviteOperatorPage(props) {
   dispatch(requestInviteLibraryOperator(match.params.library_id,opdata,intl.formatMessage({id: "app.containers.LibraryInviteOperatorPage.inviteSentMessage"})))
  }
 
+ 
   return (            
-          <LibraryInviteOperator usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)}/>
+          <LibraryInviteOperator auth={auth} usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)}/>
 
   );
 }

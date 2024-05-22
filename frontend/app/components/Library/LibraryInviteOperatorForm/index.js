@@ -3,11 +3,12 @@ import {Button, Input} from 'reactstrap'
 import {useIntl} from 'react-intl';
 import messages from './messages';
 import './style.scss';
+import {toast} from 'react-toastify'
 
 
 
 const LibraryInviteOperatorForm = (props) => {
-    const {submitCallback,userData,history}=props
+    const {submitCallback,userData,history,auth}=props
     console.log("LibraryInviteOperatorForm",props)
     
     const intl = useIntl()
@@ -82,23 +83,27 @@ const LibraryInviteOperatorForm = (props) => {
       }
 
       const submitForm=()=>{
-        let permString=''
-        Object.keys(opPerms).forEach(p=>{
-         if(opPerms[p])
-         {
-          if(permString!="") permString=permString.concat(',');
-          permString=permString.concat(p)
-         }
-        })          
-        
-        submitCallback({
-          'user_name': formData.name,
-          'user_surname': formData.surname,
-          'user_id': formData.id,
-          'user_email': formData.email,
-          'abilities': permString
+        if (auth.user.email==formData.email) 
+          toast.error(intl.formatMessage({id:'app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage'}));
+        else {
+          let permString=''
+          Object.keys(opPerms).forEach(p=>{
+          if(opPerms[p])
+          {
+            if(permString!="") permString=permString.concat(',');
+            permString=permString.concat(p)
+          }
+          })          
+          
+          submitCallback({
+            'user_name': formData.name,
+            'user_surname': formData.surname,
+            'user_id': formData.id,
+            'user_email': formData.email,
+            'abilities': permString
+          }
+          )
         }
-        )
 
       }
 
