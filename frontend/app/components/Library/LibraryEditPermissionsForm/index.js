@@ -92,6 +92,7 @@ const LibraryEditPermissionsForm = (props) => {
             <div className='editPermissionsForm'>                 
               <div className='card'>
                 <div className="card-body">                    
+                    <p className='intro'>Lorem Ipsum mollit aliqua occaecat incididunt et ut laboris reprehenderit incididunt veniam cupidatat veniam pariatur exercitation.</p>
                     {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
                     <ul>
                     {opPerms && Object.keys(opPerms).map(op => (                          

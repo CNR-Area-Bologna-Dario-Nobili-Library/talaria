@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import {useIntl} from 'react-intl';
 import Select from 'react-select';
 import './style.scss';
@@ -11,6 +11,8 @@ const LibraryInviteOperator = (props) => {
     console.log('InviteOperator', props)
              
     const intl = useIntl()
+    const prevUsersDataRef = useRef(null);
+    const isFirstRenderRef = useRef(true); // Add a ref to track the first render
 
     async function  inviteUser (opdata) {
       
@@ -38,22 +40,33 @@ const LibraryInviteOperator = (props) => {
     const [selectedUser,setSelectedUser]=useState(null);
     const [usersOptions,setUsersOptions]=useState([]);    
     
+    useEffect(() => {
+      prevUsersDataRef.current = usersData;
+  
+      // Check if it's the first render
+      if (isFirstRenderRef.current) {
+        // Reset usersData and selectedUser on the first render
+        setUsersOptions([]);
+        setSelectedUser(null);
+        isFirstRenderRef.current = false; // Set the flag to false after the first render
+      } else {
+        // Update usersOptions on subsequent renders
+        let filteredData=usersData.filter(p=>{return (p.email!=auth.user.email)}) //remove myself
 
-    useEffect(() => {  
-          let filteredData=usersData.filter(p=>{return (p.email!=auth.user.email)}) //remove myself
-      
-          setUsersOptions(filteredData.map(u=>{                
-                let nameparts=[u.name,u.surname,u.full_name]
-                let name=nameparts.join(',')+" ("+u.email+")"
-                return {'label':name, 'value':u}              
-            }
-          ))          
-    }, [usersData])
+        setUsersOptions(
+          filteredData.map((u) => {
+            let nameparts = [u.name, u.surname, u.full_name];
+            let name = nameparts.join(',') + ' (' + u.email + ')';
+            return { label: name, value: u };
+          })
+        );
+      }
+    }, [usersData]);
 
   const resetSearchResults=()=>{
     setUsersOptions([])
-    setSelectedUser({})    
-  }  
+    setSelectedUser(null); // Set selected user to null instead of an empty object
+  }
 
   //triggered when type something in the textbox/clear the text manually
   const onSearchInputChange=(query,e)=> {    
@@ -83,7 +96,7 @@ const LibraryInviteOperator = (props) => {
         <div className="row mt-2">
           <div className="col col-md-8">
             <h4>Invite user</h4>
-            <p>Search for it or fill the form below and invite!</p>
+            <p>Search in dropdown, or add manually if not found.</p>
             <Select id="searchuserSelect"
                       options={usersOptions}
                       onInputChange={onSearchInputChange}                               
@@ -100,7 +113,7 @@ const LibraryInviteOperator = (props) => {
         </div>
         <div className="row mt-2">         
           <div className="col col-md-8">
-            <LibraryInviteOperatorForm auth={auth} submitCallback={(opdata)=>inviteUser(opdata)} userData={selectedUser}/>
+            <LibraryInviteOperatorForm auth={auth} submitCallback={(opdata)=>inviteUser(opdata)} userData={selectedUser || {}}/>
           </div>
         </div>         
         
