@@ -12,3 +12,4 @@
 .vscode/settings.json
 docker/shibboleth/etc/idem-test-metadata-sha256.*
 .env
+.DS_Store
