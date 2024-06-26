@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Cancellazione avvenuta con successo",
   "app.global.confirm": "Conferma",
   "app.global.accept": "Accetta",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Nega",
   "app.global.daysago":"giorni fa",
   "app.global.alllibraries": "Tutte le biblioteche",
@@ -173,6 +174,8 @@
 
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"Modifica permessi",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Modificare i permessi?",
     
@@ -227,6 +230,8 @@
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Effettuare l'upgrade a Profilo Completo?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Upgrade effettuato con successo",
 
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "Richiesta inviata con successo",
+  
   "app.containers.LibraryUsersListPage.header": "I miei utenti",
   "app.containers.LibraryUsersListPage.user_referent": "Referente",
   "app.containers.LibraryUsersListPage.user_mat": "Matricola/Tessera",
@@ -291,6 +296,10 @@
   "app.components.Notification.header": "Notifiche",
   "app.components.Notification.mark_all_as_read": "Segna tutte come lette",
   "app.components.LendingsList.LendingSelected":"Selezionati",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Invitare l'operatore selezionato?",
+
+  "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"Non è possibile invitare se stessi come operatori",
 
   "app.containers.ReferencePage.header": "Inserisci/Modifica riferimento",
   "app.containers.ReferencePage.headerNew": "Nuovo Riferimento",

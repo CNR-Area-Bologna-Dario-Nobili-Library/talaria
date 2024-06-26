@@ -21,15 +21,21 @@ const Operator = (props) => {
 
     
     return (
-    <div className="operator">                     
-        <span>{name} {surname} ({full_name}) {email} </span>        
-        <span>{data.permissions && data.permissions.map((p,i)=>(
+    <div className="container operator">                             
+        <div className='row'>
+            <div className='col col-md-4'>
+                {name} {surname} ({full_name}) {email}  
+            </div>
+            <div className='col col-md-5'>
+                {data.permissions && data.permissions.map((p,i)=>(
                               <span key={"badge_temp_perm_"+i} className={"badge "+permissionBadgeClass(p)}>{p}</span>
-                            ))}</span>  
-        <span>
-            {enableEdit && editPath && <Link className="btn btn-sm btn-info" to={editPath} key={'editbutton'}>{intl.formatMessage({id: "app.global.edit"})}</Link>}
-            {enableDelete && deleteOpCallback && <a className="btn btn-sm btn-danger" onClick={()=>deleteOpCallback()} key={'deletebutton'}>{intl.formatMessage({id: "app.global.delete"})}</a>}
-        </span>
+                ))}
+            </div>
+            <div className='col col-md-3'>
+                {enableEdit && editPath && <Link className="btn btn-sm btn-info" to={editPath} key={'editbutton'}>{intl.formatMessage({id: "app.global.edit"})}</Link>}
+                {enableDelete && deleteOpCallback && <a className="btn btn-sm btn-danger" onClick={()=>deleteOpCallback()} key={'deletebutton'}>{intl.formatMessage({id: "app.global.delete"})}</a>}
+            </div>
+        </div>
     </div>
     )
 } 

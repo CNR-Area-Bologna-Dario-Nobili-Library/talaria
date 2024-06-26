@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Deleted successfully",
   "app.global.confirm": "Confirm",
   "app.global.accept": "Accept",
+  "app.global.reject": "Reject",
   "app.global.deny": "Deny",
   "app.global.daysago":"days ago",
   "app.global.alllibraries": "All libraries",
@@ -173,6 +174,8 @@
   
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
 
@@ -226,6 +229,8 @@
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Upgrading to full profile you'll be able to receive ILL requests from other libraries.<br/><br/>If you want to upgrade click on button below and check your library's catalogs and identifiers settings (this information must be filled in order to fullfill DD requests)",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Upgrade to FULL profile?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Upgraded successfully",
+
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
 
   "app.containers.LibraryUsersListPage.header": "My patrons",
   "app.containers.LibraryUsersListPage.user_referent": "Tutor/Supervisor",
@@ -291,6 +296,10 @@
   "app.components.Notification.header": "Notifications",
   "app.components.Notification.mark_all_as_read": "Mark all as read",
   "app.components.LendingsList.LendingSelected":"Selected",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
+
+  "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"???You're not allowed to invite yourself as operator",
 
   "app.containers.ReferencePage.header": "Add/Edit reference",
   "app.containers.ReferencePage.headerNew": "New reference",

@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Mesaj Silindi",
   "app.global.confirm": "Onayla",
   "app.global.accept": "Kabul et",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Reddet",
   "app.global.daysago":"gün önce",
   "app.global.alllibraries": "Tüm kütüphaneler",
@@ -173,6 +174,8 @@
   
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
 
@@ -226,6 +229,8 @@
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Full profile geçerseniz diğer kütüphanelerden ILL talepleri alabileceksiniz. <br/><br/> Yükseltme için aşağıdaki düğmeye tıklayın ve kütüphanenizin katalog ve belirteç ayarlarını kontrol edin.  (DD taleplerini karşılamak için bu bilgiler gereklidir)",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"Full profile yükselt?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Başarıyla yükseltildi",
+
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
 
   "app.containers.LibraryUsersListPage.header": "Kullanıcılarım",
   "app.containers.LibraryUsersListPage.user_referent": "Eğitmenler/Danışmanlar",
@@ -291,6 +296,10 @@
   "app.components.Notification.header": "Bildirimler",
   "app.components.Notification.mark_all_as_read": "Hepsini okundu olarak işaretle",
   "app.components.LendingsList.LendingSelected":"Seçili",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
+  
+  "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"???You're not allowed to invite yourself as operator",
 
   "app.containers.ReferencePage.header": "Referans ekle/düzenle",
   "app.containers.ReferencePage.headerNew": "Yeni referans",

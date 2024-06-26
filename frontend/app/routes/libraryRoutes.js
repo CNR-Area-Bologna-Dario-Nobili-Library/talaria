@@ -11,6 +11,7 @@ import PickupsPage from '../containers/Library/PickupsPage/Loadable';
 import PickupPage from '../containers/Library/PickupPage/Loadable';
 import LendingPage from '../containers/Library/LendingPage';
 import LendingRequestPage from '../containers/Library/LendingRequestPage';
+import LibraryInviteOperatorPage from '../containers/Library/LibraryInviteOperatorPage/Loadable';
 import LibraryStatusPage from '../containers/Library/LibraryStatusPage/Loadable';
 import LibraryPendingOperatorsPage from '../containers/Library/LibraryPendingOperatorsPage/Loadable';
 import LibraryOperatorsPage from '../containers/Library/LibraryOperatorsPage/Loadable';
@@ -46,7 +47,7 @@ const routes = [
       { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage'],sidebar: true, order:3},      
       //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
       { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: LibraryPendingOperatorsPage, permissions: ['manage'], sidebar: true, order:4, level:1},      
-      { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: Fake, permissions: ['manage'], sidebar: true, order:5, level:1},      
+      { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: LibraryInviteOperatorPage, permissions: ['manage'], sidebar: true, order:5, level:1},      
       { path: '/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: LibraryOperatorEditPermissionPage, permissions: ['manage'], sidebar: false},
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/manage/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:6 },
       { path: '/pickup',  exact: true,icon: 'truck',name: `Pickup`, component: PickupsPage,url: '/manage/pickup', permissions: ['manage'], hide: hidePatronRoutes(),sidebar: true, order:8 },

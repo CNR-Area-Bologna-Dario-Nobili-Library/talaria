@@ -53,8 +53,9 @@ const OperatorsList = (props) => {
         op.email.match(reg)!=null
     }
 
+    //only commmanager+library man can edit permission of any users (only other perm, not mine)
     const canEditOrDelete = (userid) => {
-        return (userid!=auth.user.id || (auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager")))
+        return ((userid!=auth.user.id && (!auth.permissions.roles.includes("super-admin") ) || (userid!=auth.user.id && auth.permissions.roles.includes("manager"))))
     }
 
    
@@ -71,22 +72,21 @@ const OperatorsList = (props) => {
                 {searchBox && <InputSearch
                 submitCallBack={(query) => { 
                     if(query!='')
-                        setFilter( state => ({                                                    
-                            filterData:state.filterData.filter(op=>{
-                                return OpMatch(op,query)
-                            }),
+                        setFilter(state => ({                                                    
+                            filterData: data.filter(op => OpMatch(op, query)),
                             query:query,                        
                         }) )
-                    else setFilter(state=>({                        
-                        query:'',
-                        filterData:data,
-                    })
-                    )    
+                    else {
+                        setFilter(state => ({
+                            query: '',
+                            filterData: data, // Reset to original data when query is empty
+                        }));
+                    }
                 } 
                 }
                 query={Filter.query}
-                searchOnChange={false}
-                clearButton={true}
+                searchOnChange={true}
+                clearButton={false}
                 />}
             
                         </Col> 

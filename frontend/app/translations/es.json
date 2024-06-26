@@ -71,6 +71,7 @@
   "app.global.deletedMessage": "Borrado",
   "app.global.confirm": "Confirmar",
   "app.global.accept": "Aceptar",
+  "app.global.reject": "???Reject",
   "app.global.deny": "Rechazar",
   "app.global.daysago":"hace días",
   "app.global.alllibraries": "Todas las bibliotecas",
@@ -173,6 +174,8 @@
   
   "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
   "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
   
@@ -226,6 +229,8 @@
   "app.components.UpgradeLibraryProfile.upgradeProfileDescription":"Elevando a categoría FULL podrá recibir peticiones de otras bibliotecas.<br/><br/>Si quiere cambiar, haga click en el botón a continuación, y compruebe el catálogo de su biblioteca y la configuración de identificadores (esta información debe completarse para servir las peticiones)",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileConfirm":"¿Elevar a categoría FULL?",
   "app.containers.UpgradeLibraryProfilePage.upgradeProfileSuccessfully":"Actualizado",
+
+  "app.containers.LibraryInviteOperatorPage.inviteSentMessage": "???Request set successfully",
 
   "app.containers.LibraryUsersListPage.header": "Mis usuarios",
   "app.containers.LibraryUsersListPage.user_referent": "Tutor/Supervisor",
@@ -291,6 +296,10 @@
   "app.components.Notification.header": "Notificaciones",
   "app.components.Notification.mark_all_as_read": "Marcar todo como leído",
   "app.components.LendingsList.LendingSelected":"Seleccionado",
+
+  "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
+  
+  "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"???You're not allowed to invite yourself as operator",
 
   "app.containers.ReferencePage.header": "Añadir/Editar referencia",
   "app.containers.ReferencePage.headerNew": "Nueva referencia",

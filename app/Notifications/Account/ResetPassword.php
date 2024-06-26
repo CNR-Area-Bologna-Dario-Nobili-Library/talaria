@@ -56,7 +56,7 @@ class ResetPassword extends Notification
             return call_user_func(static::$toMailCallback, $notifiable, $this->token);
         }
 
-        $link = 'https://'.config('app.frontend_domain').'/forgot-password/'.$this->token;
+        $link = config('app.frontend_domain').'/forgot-password/'.$this->token;
 
         //NOTE: template is in resources/views/vendor/notifications  folder
         //language is taken from user's preferred language 

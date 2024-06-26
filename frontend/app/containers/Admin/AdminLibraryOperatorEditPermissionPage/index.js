@@ -47,15 +47,8 @@ function AdminLibraryOperatorEditPermissionPage(props) {
      
       if(conf)
       {
-        let permString=''
-        Object.keys(perms).forEach(p=>{
-         if(perms[p])
-         {
-          if(permString!="") permString=permString.concat(',');
-          permString=permString.concat(p)
-         }
-        })        
-        dispatch(requestUpdateLibraryOperatorPermissions(match.params.library_id,match.params.userid,permString,intl.formatMessage({id: "app.global.updatedMessage"})))
+           
+        dispatch(requestUpdateLibraryOperatorPermissions(match.params.library_id,match.params.userid,perms,intl.formatMessage({id: "app.global.updatedMessage"})))
       }    
 }
   

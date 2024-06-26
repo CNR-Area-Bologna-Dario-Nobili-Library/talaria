@@ -36,20 +36,26 @@ const InputSearch = (props) => {
                 <Input 
                     required 
                     placeholder={placeholder ? placeholder : intl.formatMessage({id: 'app.global.search'})}
-                    value={props.query ? props.query : query}
+                    //value={props.query ? props.query : query}
+                    value={query}
                     onChange={handleChange} 
                     type="text" 
                     name="inputQuery" 
-                    id="inputQuery" />
-                {!searchOnChange && <InputGroupAddon addonType="append">
-                    <Button type="submit" color="orange" className="searchBtn">
-                        <i className={`${icon ? icon : 'fa-solid fa-magnifying-glass'}`}></i>
-                    </Button>
-                    {clearButton && <Button type="button" onClick={()=>clearinput()} color="orange" className="searchBtn">
-                            <i className="fa-regular fa-circle-xmark"></i>
-                    </Button>}
-                    
-                </InputGroupAddon>}
+                    id="inputQuery" 
+                    className={`${query.length > 0 ? 'has-value' : ''} searchInput`} 
+                    />
+                    {query.length > 0 && (
+                        <InputGroupAddon addonType="append" className="clearButton">
+                            {!searchOnChange &&
+                                <Button type="button" onClick={() => submitCallBack(query)} className="searchBtn">
+                                <i className="fa-regular fa-search"></i>
+                        </Button>
+                            }
+                            <Button type="button" onClick={() => clearinput()} className="searchBtn">
+                                <i className="fa-regular fa-circle-xmark"></i>
+                            </Button>
+                        </InputGroupAddon>
+                    )}
             </InputGroup>
         </Form>
     )
