@@ -130,6 +130,39 @@
 			"name": "ADMIN",
 			"item": [
 				{
+					"name": "Stats",
+					"item": [
+						{
+							"name": "ELTest",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{bearer_manager}}"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/admin/stats/eltest",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"admin",
+										"stats",
+										"eltest"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Libraries",
 					"request": {
 						"method": "GET",

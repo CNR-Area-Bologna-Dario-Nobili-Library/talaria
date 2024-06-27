@@ -71,6 +71,16 @@ Route::group([
     
     }); 
 
+    Route::group([
+        'namespace' => 'Stats',
+        'prefix' => 'stats',        
+        'as' => 'api.v1.admin.stats.',
+    ], function () {    
+        
+           Route::get('/eltest', 'AdminStatsController@eltest')->name('eltest');    
+    
+    });
+
 });
 
     

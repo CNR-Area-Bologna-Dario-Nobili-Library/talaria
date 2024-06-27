@@ -261,6 +261,18 @@ export default defineMessages({
     InstitutionsSubscriptionsList: {
         id: `${scope}.InstitutionsSubscriptionsList`,
         defaultMessage: 'Institutions Subscriptions List',
+    },
+    Statistics: {
+        id: `${scope}.Statistics`,
+        defaultMessage: 'Statistics',
+    },
+    StatisticsLibraries: {
+        id: `${scope}.StatisticsLibraries`,
+        defaultMessage: 'Libraries statistics',
+    },
+    StatisticsInstitutions: {
+        id: `${scope}.StatisticsInstitutions`,
+        defaultMessage: 'Institutions statistics',
     }
 
 });
