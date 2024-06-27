@@ -13,6 +13,10 @@ To run the software you need docker is installed in your environment
 3. Upload your server (and api-server) SSL certificates into `docker/certs` folder and update `SSL_CERT_PATH,SSL_KEY_PATH,SSL_API_CERT_PATH,SSL_API_KEY_PATH` variables in `.env` file accordingly
 4. Run `docker-compose up -d` to start all needed containers
 
+## NOTE for Apple Silicon (M1/M2) users
+use `docker-compose -f docker-compose-appleM1.yml <up/down>` instead of `-f docker-compose.yml` that will use `Dockerfile-appleM1` (instead of `Dockerfile` file) for both frontend and backend containers and loads configuration ready for Apple Silicon M1 processor otherwise application will not run!
+
+
 # Configuration
 ## Frontend/ReactJS
 The frontend don't need any configuration; it's based on a nodejs container
