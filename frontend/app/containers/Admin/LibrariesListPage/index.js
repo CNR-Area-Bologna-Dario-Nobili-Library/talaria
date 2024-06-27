@@ -17,8 +17,8 @@ const LibrariesListPage = (props) => {
     const librariesList = admin.libraryOptionList.data
     const pagination = admin.libraryOptionList.pagination
 
-    const editPath="/admin/libraries/:id/:op?"    
-    const operatorsPath="/admin/libraries/:id/operators"    
+    const editPath="/library/:id/manage/:op?"    
+//    const operatorsPath="/library/:id/manage/operators"    
     
     useEffect(() => {
         if(!isLoading) {
@@ -60,7 +60,7 @@ const LibrariesListPage = (props) => {
                 history={history}                
                 match={match}   
                 editPath={editPath}             
-                operatorsPath={operatorsPath}   
+//                operatorsPath={operatorsPath}   
                 searchOptions={{
                     getSearchList: (page, pageSize, searchFilter ) => {                        
                         history.push(match.url)

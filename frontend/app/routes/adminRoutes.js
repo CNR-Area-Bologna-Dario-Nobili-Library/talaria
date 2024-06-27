@@ -1,7 +1,6 @@
 import UsersListPage from 'containers/Admin/UsersListPage/Loadable';
 import UserPage from 'containers/Admin/UserPage/Loadable';
 import Fake from 'components/Fake';
-import LibraryPage from 'containers/Admin/LibraryPage/Loadable';
 import LibrariesListPage from 'containers/Admin/LibrariesListPage/Loadable';
 import InstitutionsListPage from 'containers/Admin/InstitutionsListPage/Loadable';
 import InstitutionTypesListPage from 'containers/Admin/InstitutionTypesListPage/Loadable';
@@ -11,16 +10,35 @@ import ProjectsListPage from 'containers/Admin/ProjectsListPage/Loadable';
 import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
 import SubRouteSwitch from 'components/SubRouteSwitch';
-import AdminLibraryOperatorsPage from 'containers/Admin/AdminLibraryOperatorsPage/Loadable';
-import AdminLibraryOperatorEditPermissionPage from 'containers/Admin/AdminLibraryOperatorEditPermissionPage/Loadable';
-import AdminLibraryPendingOperatorsPage from '../containers/Admin/AdminLibraryPendingOperatorsPage/Loadable';
+
+/*import { matchPath } from "react-router-dom";
+
+// examples/notes about permissions in routes
+https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
+https://www.codedaily.io/tutorials/Use-matchPath-to-Match-Nested-Route-Paths-in-Parent-Routes-with-React-Router
+
+const matchLibraryIdfromPath = (pathname) => {
+  const matchProfile = matchPath(pathname, {
+    path: `/admin/libraries/:library_id`,
+  });
+  return (matchProfile && matchProfile.params) || {};
+};
 
 
+const getLibraryIdfromPath = (url) => {
+  let mathedLibParam=matchLibraryIdfromPath(url);
+  return mathedLibParam?mathedLibParam.library_id:''
+}
 
-// https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
+
+PROBLEMA: le route vengono generate nella BasePage prima ancora di selezionare qualcosa, quindi è normale che non abbia il parametro!!!
+
+NOTE: super-admin (role) is allowed by default for any routes
+*/
+
 const routes = [
   /*
-  BUGGY/NOT FULLY IMPLEMENTED
+  NOT FULLY IMPLEMENTED
   
   { path: '/users',  name: `UsersList`, component: SubRouteSwitch, header: true, roles: ['super-admin'],
     children: [
@@ -29,21 +47,25 @@ const routes = [
       { path: '/user/:id?', name: `UserUpdate`, component: UserPage, },
       { path: '/:page?', exact: true, name: `UsersList`, url: `/users/user`, component: UsersListPage, },
     ]
-  },*/  
+  },*/      
   { path: '/libraries',  name: `Libraries`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],sidebar: true,
     children: [      
       { path: '/', exact: true, icon: 'landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},      
       //{ path: '/new', icon: 'plus', name: `LibraryCreateNew`, component: LibraryPage,  url: '/library/new', sidebar: true,order:2},
       //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},                  
-      {path: '/:library_id?/operators', icon: 'users-gear', exact: true, name: `Operators`, component: AdminLibraryOperatorsPage, permissions: ['super-admin','manager'],sidebar: false,level:1, order:3},      
-      { path: '/:library_id?/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: AdminLibraryOperatorEditPermissionPage, permissions: ['super-admin','manager'], sidebar: false},                  
-      {path: '/:library_id?/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, component: AdminLibraryPendingOperatorsPage, permissions: ['super-admin','manager'],sidebar: false,level:1, order:4},            
-      { path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
+      
+      //{path: '/:id?',exact: true,icon: 'landmark',name: `Library`, header: false, component: LibraryPage,  sidebar: false,order:2,level:1},                   
+      
+      //{path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
+      
+     
+      /*
+      {path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
       { path: '/:page?', exact: true, name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar: false },
-
-      //{ path: '/:id/subscriptions/:subscriptionid?/:op?', name: `SubscriptionUpdate`, component: Fake, sidebar: false},      
+      */                        
     ]
-  },
+  },  
+//  { path: '/libraries',exact: true,  name: `Libraries`, component: LibrariesListPage, header: true, roles: ['super-admin','manager'],sidebar: true,},  
   { path: '/institutions',  name: `Institutions`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
     children: [
       { path: '/institution-types', exact: true, icon: 'list-ul',  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: true,order:3},      
@@ -57,15 +79,22 @@ const routes = [
       { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
     ]
   },
+  { path: '/stats',  name: `Statistics`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
+  children: [    
+    { path: '/', exact: true, icon: 'chart-bar', name: `Statistics`, url: `/stats`, component: Fake, sidebar:true, order:1},    
+    { path: '/libraries', exact: true, icon: 'chart-bar', name: `StatisticsLibraries`, url: `/stats/libraries`, component: Fake, sidebar:true, order:1,level:2},    
+    { path: '/institutions', exact: true, icon: 'chart-bar', name: `StatisticsInstitutions`, url: `/stats/institutions`, component: Fake, sidebar:true, order:1,level:2}, 
+  ]
+},
   /*
   NOT IMPLEMENTED
 
-  { path: '/consortiums',  name: `Consortiums`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
+  { path: '/consortiums',  name: `Consortiums`, component: SubRouteSwitch, header: true, roles: ['manager'],
     children: [
       { path: '/', exact: true, icon: 'fa-solid fa-building', name: `Consortiums`, url: `/consortiums`, component: Fake, sidebar:true},
       ]
   },
-  { path: '/projects',  name: `Projects`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
+  { path: '/projects',  name: `Projects`, component: SubRouteSwitch, header: true, roles: ['manager'],
     children: [
       { path: '/', exact: true, icon: 'fa-solid fa-diagram-project',name: `Projects`, url: `/projects`, component: ProjectsListPage,sidebar:true},
       { path: '/project/new', icon: 'plus', name: `ProjectNew`, component: ProjectPage,  url: `/projects/project/new`, sidebar: true},
@@ -73,7 +102,7 @@ const routes = [
       { path: '/:page?', exact: true, name: `Projects`, url: `/projects`, component: Fake ProjectsListPage},
     ]
   },  
-  { path: '/subscriptions',  name: `Subscriptions`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],sidebar: true,
+  { path: '/subscriptions',  name: `Subscriptions`, component: SubRouteSwitch, header: true, roles: ['manager'],sidebar: true,
     children: [      
       { path: '/', exact: true,icon: 'fa-solid fa-gear',name: `SubscriptionsSettings`, url:'/subscriptions/', component: Fake, sidebar: true, order:1},                 
       { path: '/libraries', exact: true,icon: 'fa-solid fa-file-contract',name: `LibrariesSubscriptionsList`, url:'/subscriptions/libraries', component: Fake, sidebar: true, order:2},                 

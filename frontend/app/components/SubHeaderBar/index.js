@@ -26,9 +26,13 @@ const SubHeaderBar = (props) => {
         } */
     },[])
 
+    let headerBkg=(props.auth.permissions && props.auth.permissions.roles && (props.auth.permissions.roles.includes("super-admin")||props.auth.permissions.roles.includes("manager") ))?'bg-red':'bg-dark-bk';  //red background for admin/manager
+
+    //NOTE: in case of admin/manager we don't have "resource" (in `LibraryPage`) so i created a "fake resource" props to use here and in order to display always SubHeaderBar
+    //otherwise it will be shown ONLY from librarian/institution's dashboard and not frm comm manager/admin
     return (
-        <div className="app-subheader bg-dark-bk">
-            {props.auth && props.auth.permissions && props.auth.permissions.resources && <ResourceHeaderBar auth={props.auth} match={props.match}/>}
+        <div className={`app-subheader ${headerBkg}`}>            
+            {props.resource && props.auth && props.auth.permissions && props.auth.permissions.resources && <ResourceHeaderBar resource={props.resource} auth={props.auth} match={props.match}/>}
             <div className="container">                
                 <Row className="subheader-menu pl-0">
                     { props.auth.permissions.resources && routes.map((route,i)=> (

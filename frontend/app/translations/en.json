@@ -170,15 +170,10 @@
   "app.containers.LibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.LibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
   "app.containers.LibraryOperatorEditPermissionPage.header":"???Edit permissions",
-  "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
+  "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?", 
+  "app.containers.LibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.LibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
   
-  "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"???Remove operator?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
-  "app.containers.AdminLibraryOperatorEditPermissionPage.header":"???Edit permissions",
-  "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"???Update permessions?",
-
   "app.containers.RegisterNewLibrary.header": "Register your library",
   "app.containers.RegisterNewLibrary.link": "Register your library",
   "app.containers.RegisterNewLibrary.step_1": "General information",

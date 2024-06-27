@@ -21,10 +21,18 @@ function LibraryPage(props) {
   console.log('LibraryPage', props)
   const {isLoading, match, dispatch,library} = props;
 
-  const resource = getAuthResource(props.auth, {
+  let resource = getAuthResource(props.auth, {
     type: 'libraries',
     id: match.params.library_id,
   })
+
+  if (!resource) //nel caso di admin/manager dove non ho i permessi della singola risorsa  
+  resource={
+    resource: {
+      'id':library.library.id,
+      'name':library.library.name  
+    }
+  }
 
   const [filteredRoutes,setFilteredRoutes]=useState(libroutes)
 
@@ -37,8 +45,7 @@ function LibraryPage(props) {
   }, [match.params.library_id])
 
 
-  useEffect(() => { 
-        
+  useEffect(() => {
     if(library && library.library.id>0) 
     {    
       let libraryRoutes=libroutes               
@@ -86,7 +93,7 @@ function LibraryPage(props) {
 
   return (
     <>
-      {mounted && <BasePage {...props} routes={filteredRoutes} messages={messages} resource={resource} />}
+      {mounted && <BasePage {...props} routes={filteredRoutes} messages={messages} resource={resource}/>}
     </>
   );
 }

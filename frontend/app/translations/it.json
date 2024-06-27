@@ -171,13 +171,8 @@
   "app.containers.LibraryPendingOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
   "app.containers.LibraryOperatorEditPermissionPage.header":"Modifica permessi",
   "app.containers.LibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Modificare i permessi?",
-
-  "app.containers.AdminLibraryOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askRemoveOperatorMessage":"Eliminare l'operatore?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
-  "app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
-  "app.containers.AdminLibraryOperatorEditPermissionPage.header":"Modifica permessi",
-  "app.containers.AdminLibraryOperatorEditPermissionPage.askUpdatePermissionMessage":"Modificare i permessi?",
+  "app.containers.LibraryPendingOperatorsPage.askAcceptOperatorMessage":"???Accept operator?",
+  "app.containers.LibraryPendingOperatorsPage.askRejectOperatorMessage":"???Reject operator?",
     
   "app.containers.RegisterNewLibrary.header": "Registra la tua biblioteca",
   "app.containers.RegisterNewLibrary.link": "Registra la tua biblioteca",

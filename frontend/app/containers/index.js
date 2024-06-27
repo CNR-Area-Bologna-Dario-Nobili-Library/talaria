@@ -24,7 +24,7 @@ import NotFoundPage from './NotFoundPage/Loadable';
 /*
 LIBRARY STUFFS
  */
-import LibraryPage from "./Admin/LibraryPage/Loadable"
+import LibraryPage from "./Library/LibraryPage/Loadable"
 import LibrarySearchPanel from "./Library/LibrarySearchPanel/Loadable"
 // import LibrarySettings from "./Library/LibrarySettings/Loadable"
 

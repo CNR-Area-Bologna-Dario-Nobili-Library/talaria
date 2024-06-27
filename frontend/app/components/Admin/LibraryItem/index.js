@@ -116,7 +116,7 @@ export const canRenew = (lib) => {
 
 
 export const LibraryOperations = (props) => {
-    const {data,changeStatusLibrary,deleteLibrary,operatorsUrl}=props;    
+    const {data,changeStatusLibrary,deleteLibrary}=props;    
 
     let intl=useIntl();
       
@@ -131,15 +131,13 @@ export const LibraryOperations = (props) => {
                 {canDisableSubscriptionExpired(data) && changeStatusLibrary && <a className="btn btn-icon btn-sm" onClick={()=>changeStatusLibrary(4)}  title={intl.formatMessage({id: "app.manager.libraries.icon.disableExpired"})}><i className="fa-solid fa-stopwatch"></i></a>}                        
                 
                 {canRenew(data) && changeStatusLibrary && <a className="btn btn-icon btn-sm" onClick={()=>changeStatusLibrary(2)}  title={intl.formatMessage({id: "app.manager.libraries.icon.renew"})}><i className="fa-solid fa-rotate-right"></i></a>}                                                                                                
-                <Link to={operatorsUrl} className="btn btn-info btn-sm"><i className='fa-solid fa-users'></i></Link>
-                <Link to={operatorsUrl+'/pending'} className="btn btn-warning btn-sm"><i className='fa-solid fa-hourglass'></i></Link>
         </div>
     )
 }
 
 
 const LibraryItem = (props) => {
-    const {editPath,operatorsPath,data,toggleSelection,checked,removeTag,deleteLibrary,changeStatusLibrary} = props      
+    const {editPath,data,toggleSelection,checked,removeTag,deleteLibrary,changeStatusLibrary} = props      
     const intl = useIntl();  
 
     const subscriptionurl=(reqPath,id) => {
@@ -167,7 +165,7 @@ const LibraryItem = (props) => {
                 {data.institution && data.institution.data.status!=1 && <>&nbsp;<i className='fa-solid fa-triangle-exclamation text-danger'  title={intl.formatMessage({id: "app.manager.libraries.icon.institution_warning"})}></i></>}
             </Col>
             <Col sm={4}>      
-            <LibraryOperations data={data} changeStatusLibrary={changeStatusLibrary} deleteLibrary={deleteLibrary} operatorsUrl={manageoperatorsurl(operatorsPath,data.id)}/>                
+            <LibraryOperations data={data} changeStatusLibrary={changeStatusLibrary} deleteLibrary={deleteLibrary}/>                
             </Col>            
         </Row>
     )

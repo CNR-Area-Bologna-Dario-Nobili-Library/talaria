@@ -60,7 +60,7 @@ function LibraryPendingOperatorsPage(props) {
   async function acceptPendingOperator(pendingid) {
     let msg = intl.formatMessage({
       id:
-        'app.containers.AdminLibraryPendingOperatorsPage.askAcceptOperatorMessage',
+        'app.containers.LibraryPendingOperatorsPage.askAcceptOperatorMessage',
     });
 
     let conf = await confirm({
@@ -79,7 +79,7 @@ function LibraryPendingOperatorsPage(props) {
   async function rejectPendingOperator(pendingid) {
     let msg = intl.formatMessage({
       id:
-        'app.containers.AdminLibraryPendingOperatorsPage.askRejectOperatorMessage',
+        'app.containers.LibraryPendingOperatorsPage.askRejectOperatorMessage',
     });
 
     let conf = await confirm({

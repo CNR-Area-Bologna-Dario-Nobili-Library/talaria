@@ -31,30 +31,30 @@ const hideUpgradeToFullProfile = () =>{
 
 const routes = [
   /*
-  TODO: la path è /users, ma si tratta a tutti gli effetti dei library-users, cioè del collegamento tra utente Patron e Biblioteca
+  NOTE: la path è /users, ma si tratta a tutti gli effetti dei library-users, cioè del collegamento tra utente Patron e Biblioteca
   la lista è GET /api/v1/libraries/{LIBRARY_ID!!}/library-users
   la create è POST /api/v1/libraries/{LIBRARY_ID!!}/library-users
   la show è GET /api/v1/libraries/{LIBRARY_ID!!}/library-users/{library_users_id}
   l'update è PUT /api/v1/libraries/{LIBRARY_ID!!}/library-users/{library_users_id}
    */
-
+  
+  //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
   {
-    path: '/manage', name: `MyLibrary`, header: true, component: SubRouteSwitch, permissions: ['manage','borrow','lend','manage-users','deliver'],resource: {type: 'libraries', key: 'library_id',},
+    path: '/manage', name: `MyLibrary`, header: true, component: SubRouteSwitch, permissions: ['manage','borrow','lend','manage-users','deliver'],roles:["super-admin","manager"],resource: {type: 'libraries', key: 'library_id',},
     children: [            
-      { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'], sidebar: true, order:1},
-      { path: '/edit', icon: 'edit', exact: true, name: `LibraryProfile`,  url:'/manage/edit', component: ManageLibraryPage, permissions: ['manage'], sidebar:true,order:2},      
-      { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'], sidebar:false},                  
-      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage'],sidebar: true, order:3},      
-      //NOTE: we manage "children routes" specifying "level" prop to add some margin-left using CSS rules (by default level:0 = no margin-left (root) )
-      { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: LibraryPendingOperatorsPage, permissions: ['manage'], sidebar: true, order:4, level:1},      
-      { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: LibraryInviteOperatorPage, permissions: ['manage'], sidebar: true, order:5, level:1},      
-      { path: '/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: LibraryOperatorEditPermissionPage, permissions: ['manage'], sidebar: false},
+      { path: '/', icon: 'info-circle', exact: true, name: `LibraryStatus`, url: '/manage', component: LibraryStatusPage, permissions: ['manage','borrow','lend','manage-users','deliver'],roles:["super-admin","manager"], sidebar: true, order:1},
+      { path: '/edit', icon: 'edit', exact: true, name: `LibraryProfile`,  url:'/manage/edit', component: ManageLibraryPage, permissions: ['manage'],roles:["super-admin","manager"], sidebar:true,order:2},      
+      { path: '/upgrade', icon: 'tools', exact: true, name: `LibraryUpgradeProfile`,  url:'/manage/upgrade', component: UpgradeLibraryProfilePage, hide: hideUpgradeToFullProfile(), permissions: ['manage'],roles:["super-admin","manager"], sidebar:false},                  
+      { path: '/operators', icon: 'users-gear', exact: true, name: `Operators`, component: LibraryOperatorsPage,url: '/manage/operators', permissions: ['manage'],roles:["super-admin","manager"],sidebar: true, order:3},            
+      { path: '/operators/pending', icon: 'hourglass', exact: true, name: `PendingOperators`, url: '/manage/operators/pending', component: LibraryPendingOperatorsPage, permissions: ['manage'],roles:["super-admin","manager"], sidebar: true, order:4, level:1},      
+      { path: '/operators/new', icon: 'user-plus', exact: true, name: `NewOperator`, url: '/manage/operators/new', component: LibraryInviteOperatorPage, permissions: ['manage'],roles:["manager"], sidebar: true, order:5, level:1},      
+      { path: '/operators/:userid?/edit', icon: 'edit', exact: true, name: `EditOperator`, component: LibraryOperatorEditPermissionPage, permissions: ['manage'],roles:["manager"], sidebar: false},
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/manage/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:6 },
       { path: '/pickup',  exact: true,icon: 'truck',name: `Pickup`, component: PickupsPage,url: '/manage/pickup', permissions: ['manage'], hide: hidePatronRoutes(),sidebar: true, order:8 },
-      { path: '/pickup/:id?/:op?', exact: true, name: `PickupUpdate`, component: PickupPage, permissions: ['manage'], sidebar: false},            
+      { path: '/pickup/:id?/:op?', exact: true, name: `PickupUpdate`, component: PickupPage, permissions: ['manage'], sidebar: false},                  
       /* NOT IMPLEMENTED
-      { path: '/subscriptions', icon: 'file-contract', exact: true, name: `Subscriptions`, component: Fake, url: '/manage/subscriptions',permissions: ['manage'], sidebar: true, order:2},      
-      { path: '/subscriptions/renew', icon: 'calendar', exact: true, name: `RenewSubscription`, component: Fake,permissions: ['manage']},            
+      { path: '/subscriptions', icon: 'file-contract', exact: true, name: `Subscriptions`, component: Fake, url: '/manage/subscriptions',permissions: ['manage'],roles:["super-admin","manager"], sidebar: true, order:2},      
+      { path: '/subscriptions/renew', icon: 'calendar', exact: true, name: `RenewSubscription`, component: Fake,permissions: ['manage']},roles:["super-admin","manager"],            
       { path: '/service', icon: 'cog',exact: true, name: `LibraryServices`, component: Fake,url: '/manage/service',permissions: ['manage'],sidebar: true, order:4  },      
       { path: '/linkingservices', icon: 'link', exact: true, name: `LibraryLinkingServices`, component: Fake,url: '/manage/linkingservices',permissions: ['manage'],sidebar: true, order:5  },      
        { path: '/departments', icon: 'building',  name: `LibraryDepartments`, component: Fake,url: '/manage/departments',permissions: ['manage','manage-users'], hide: hidePatronRoutes(),sidebar: true, order:7  },
@@ -74,7 +74,7 @@ const routes = [
      ]
   },
   {
-    path: '/lending', name: `Lending`, header: true, component: SubRouteSwitch, permissions: ['manage','lend'], resource: {type: 'libraries', key: 'library_id',},
+    path: '/lending', name: `Lending`, header: true, component: SubRouteSwitch, permissions: ['manage','lend'],resource: {type: 'libraries', key: 'library_id',},
     children: [
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/lending/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:4 },
       { path: '/', icon: "share", exact: true, name: `PendingRequests`, component: LendingPage,url: '/lending',sidebar: true, order:1}, 
@@ -102,10 +102,10 @@ const routes = [
   /*
   NOT IMPLEMENTED
   {
-    path: '/stats', name: `Stats`, component: Fake, header: true, permissions: ['manage','manage-users','borrow','lend'], resource: {type: 'libraries', key: 'library_id',},
+    path: '/stats', name: `Stats`, component: Fake, header: true, permissions: ['manage','manage-users','borrow','lend'], roles:["super-admin","manager"], resource: {type: 'libraries', key: 'library_id',},
   },
   {
-    path: '/licenses', name: `Licenses`, component: Fake, header: true, permissions: ['manage','manage-licenses'], resource: {type: 'libraries', key: 'library_id',},
+    path: '/licenses', name: `Licenses`, component: Fake, header: true, permissions: ['manage','manage-licenses'], roles:["super-admin","manager"], resource: {type: 'libraries', key: 'library_id',},
   } */
 ];
 

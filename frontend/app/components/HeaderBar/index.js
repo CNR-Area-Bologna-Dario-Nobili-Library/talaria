@@ -29,7 +29,7 @@ function HeaderBar(props) {
 
   // console.log('HeaderBar', props)
 
-  const { auth, isLogged, history, headermenu, routes, isMobile,match } = props
+  const { auth, isLogged, history, headermenu, routes, isMobile,match,resource } = props
 
   const currentRoute = routes && routes.filter(route => route.current).length > 0 ? routes.filter(route => route.current) : null;
 
@@ -193,7 +193,7 @@ function HeaderBar(props) {
           </div>
         </div>
       </header>      
-      { headermenu && <SubHeaderBar routes={routes} auth={auth} match={match}/> }
+      { headermenu && <SubHeaderBar routes={routes} auth={auth} match={match} resource={resource}/> }
     </>
   );
 }

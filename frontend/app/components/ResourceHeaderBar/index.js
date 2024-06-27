@@ -7,10 +7,12 @@ import {Row, Col} from 'reactstrap';
 import {NavLink} from 'react-router-dom';
 
 const ResourceHeaderBar = (props) => {
-    const {auth,match}=props;
+    const {auth,match,resource}=props;
 
+    //NOTE:ResouceHeaderBar is now shown also from comm manager/admin and not only from librarian  
     return (
-        auth && match && <div className="app-resourceheader">
+       /* auth && match && <div className="app-resourceheader">
+        /*
         { match.params.library_id && auth.permissions.resources.libraries &&      
        ( 
          auth.permissions.resources.libraries.find(el => el.resource.id==match.params.library_id).resource.name
@@ -23,7 +25,9 @@ const ResourceHeaderBar = (props) => {
        ( 
          auth.permissions.resources.projects.find(el => el.resource.id==match.params.project_id).resource.name
        )
-       }
+       }*/
+       <div className="app-resourceheader">
+        {resource.resource.name}
         </div>
     )
 }
