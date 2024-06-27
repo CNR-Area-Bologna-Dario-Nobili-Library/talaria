@@ -169,14 +169,25 @@ class User extends UserBase
         return $this->morphMany(DatabaseNotification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
 
-    /*TODO: save on DB the user preference about notification
-    * NOTE: When sending notifications via the mail channel, the notification system will automatically look for an email property on your notifiable entity
-     * otherwise you've to override the routeNotificationForMail($notification)     
+    /*
+    * NOTE: When sending notifications via the mail channel, the notification system will automatically look for an email property on your notifiable entity otherwise you've to override the routeNotificationForMail($notification)     
+    Actually only "database" notification were implemented
     */
     public function preferNotifiedBy() {
         //if(...) return ['mail','xxx','xxx'...]
         //else
+        //if(!mail_notification)
         return ['database']; 
+        //else
+        //return ['database','mail']; 
+    }
+
+
+    public function routeNotificationForMail($notification)
+    {
+        // Return email address field
+        // TODO: use service_email field and not primary email address
+        return $this->email;         
     }
 
     public function isPatronOf($libraryId) {

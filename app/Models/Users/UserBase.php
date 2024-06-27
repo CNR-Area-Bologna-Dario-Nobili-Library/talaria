@@ -26,6 +26,7 @@ class UserBase extends Authenticatable implements HasLocalePreference
         return self::where('id', $this->id)->update(['password'=> \Hash::make($password)]);
     }
 
+    //used by Notification to know language to translate notification text
     public function preferredLocale(): string
     {
         return $this->preflang?$this->preflang:app()->getLocale();        
