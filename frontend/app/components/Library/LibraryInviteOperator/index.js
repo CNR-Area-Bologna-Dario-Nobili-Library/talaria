@@ -1,124 +1,200 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {useIntl} from 'react-intl';
-import Select from 'react-select';
-import './style.scss';
-import confirm from "reactstrap-confirm";
+import React, { useEffect, useState } from 'react';
+import { useIntl } from 'react-intl';
+import Select, { components } from 'react-select';
+import './style.scss'; 
+import confirm from 'reactstrap-confirm';
 
 import LibraryInviteOperatorForm from '../LibraryInviteOperatorForm';
 
-const LibraryInviteOperator = (props) => {
-    const {usersData,searchUserCallback, inviteOpCallback,auth} = props
-    console.log('InviteOperator', props)
-             
-    const intl = useIntl()
-    const prevUsersDataRef = useRef(null);
-    const isFirstRenderRef = useRef(true); // Add a ref to track the first render
+const LibraryInviteOperator = props => {
+  const { usersData, searchUserCallback, inviteOpCallback, auth } = props;
+  const intl = useIntl();
 
-    async function  inviteUser (opdata) {
-      
-        let msg=intl.formatMessage({id: "app.components.LibraryInviteOperator.askInviteOperatorMessage"})
-        
-        
-        let conf = await confirm({
-            title: intl.formatMessage({id: 'app.global.confirm'}),
-             message: msg,
-             confirmText: intl.formatMessage({id: 'app.global.yes'}),
-             cancelText: intl.formatMessage({id: 'app.global.no'})
-         }); 
-       
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [usersOptions, setUsersOptions] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [showAddUserManuallyLink, setShowAddUserManuallyLink] = useState(false);
+  const [hasShownAddUserLinkBefore, setHasShownAddUserLinkBefore] = useState(
+    false,
+  );
+  const [name, setName] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isManualEntry, setIsManualEntry] = useState(false);
 
-        if(conf)
-        {
-          resetSearchResults()
-          inviteOpCallback(opdata)
-        }
-           
-                        
+  const formStyles = {
+    display: showForm ? 'block' : 'none',
+  };
 
-    }     
+  useEffect(() => {
+    if (usersData) {
+      const filteredData = usersData.filter(p => p.email !== auth.user.email);
 
-    const [selectedUser,setSelectedUser]=useState(null);
-    const [usersOptions,setUsersOptions]=useState([]);    
-    
-    useEffect(() => {
-      prevUsersDataRef.current = usersData;
-  
-      // Check if it's the first render
-      if (isFirstRenderRef.current) {
-        // Reset usersData and selectedUser on the first render
-        setUsersOptions([]);
-        setSelectedUser(null);
-        isFirstRenderRef.current = false; // Set the flag to false after the first render
-      } else {
-        // Update usersOptions on subsequent renders
-        let filteredData=usersData.filter(p=>{return (p.email!=auth.user.email)}) //remove myself
-
+      if (filteredData.length > 0) {
         setUsersOptions(
-          filteredData.map((u) => {
-            let nameparts = [u.name, u.surname, u.full_name];
-            let name = nameparts.join(',') + ' (' + u.email + ')';
-            return { label: name, value: u };
-          })
+          filteredData.map(u => ({
+            label: `${u.name} ${u.surname} (${u.email})`,
+            value: u,
+          })),
         );
+        setShowAddUserManuallyLink(false); // Hide link if there are users found
+      } else {
+        setUsersOptions([]);
+        if (!hasShownAddUserLinkBefore) {
+          setShowAddUserManuallyLink(false); // Hide link for the first time
+          setHasShownAddUserLinkBefore(true); 
+        } else {
+          setShowAddUserManuallyLink(true); 
+        }
       }
-    }, [usersData]);
+    }
+  }, [usersData, auth.user.email, hasShownAddUserLinkBefore]);
 
-  const resetSearchResults=()=>{
-    setUsersOptions([])
-    setSelectedUser(null); // Set selected user to null instead of an empty object
+  const resetSearchResults = () => {
+    setUsersOptions([]);
+    setSelectedUser(null);
+    setShowForm(false);
+    setShowAddUserManuallyLink(false);
+    setName('');
+    setFullName('');
+    setEmail('');
+    setIsManualEntry(false);
+  };
+
+  const onSearchInputChange = (query, e) => {
+    if (e.action === 'clear') {
+      resetSearchResults();
+    } else if (e.action === 'input-change') {
+      setShowForm(false);
+      setShowAddUserManuallyLink(false);
+      setName('');
+      setFullName('');
+      setEmail('');
+      setIsManualEntry(false);
+      if (query.length >= 3) {
+        searchUserCallback(query);
+      }
+    }
+  };
+
+  const onSearchSelectChange = (val, typeaction) => {
+    if (typeaction.action === 'clear') {
+      resetSearchResults();
+    } else if (typeaction.action === 'select-option') {
+      setSelectedUser(val.value);
+      setShowForm(true);
+      setShowAddUserManuallyLink(false);
+      setIsManualEntry(false);
+    }
+  };
+
+  const handleAddUserManuallyClick = () => {
+    resetSearchResults();
+    setShowForm(true);
+    setIsManualEntry(true);
+  };
+
+  async function inviteUser(opdata) {
+    let msg = intl.formatMessage({
+      id: 'app.components.LibraryInviteOperator.askInviteOperatorMessage',
+    });
+
+    let conf = await confirm({
+      title: intl.formatMessage({ id: 'app.global.confirm' }),
+      message: msg,
+      confirmText: intl.formatMessage({ id: 'app.global.yes' }),
+      cancelText: intl.formatMessage({ id: 'app.global.no' }),
+    });
+
+    if (conf) {
+      resetSearchResults();
+      inviteOpCallback(opdata);
+    }
   }
 
-  //triggered when type something in the textbox/clear the text manually
-  const onSearchInputChange=(query,e)=> {    
-    console.log("input-change",e)   
-    
-    if(e.action==='clear')
-      resetSearchResults()      
-    else         
-    if(e.action==='input-change' && query!="" && query.length>=3)
-      searchUserCallback(query)                  
-  }
-
-  //triggered when choosed an option from select  or clear (by "x" button)
-  const onSearchSelectChange = (val,typeaction) => {    
-    console.log("onSearchSelectChange",val,typeaction)
-    if(typeaction.action==='clear')
-      resetSearchResults()      
-    else
-     if(typeaction.action==='select-option')
-      setSelectedUser(val.value)    
-  }
-    
-    
-
+  // Custom MenuList component to include the Add User Manually link
+  const MenuList = props => {
     return (
-      <div className="container">
-        <div className="row mt-2">
-          <div className="col col-md-8">
-            <h4>Invite user</h4>
-            <p>Search in dropdown, or add manually if not found.</p>
-            <Select id="searchuserSelect"
-                      options={usersOptions}
-                      onInputChange={onSearchInputChange}                               
-                      onChange={onSearchSelectChange}                  
-                      className=""                                                                           
-                      isClearable={true}                  
-                      isSearchable={true}                  
-                      closeMenuOnSelect={true}   
-                      onSelectResetsInput={false}         
-                      hideSelectedOptions={false}    
-                      placeholder={"Search for a user filling his name/surname/email/"}                                               
-            />               
+      <components.MenuList {...props}>
+        {props.children}
+        {showAddUserManuallyLink && (
+          <div
+            className="add-user-link"
+            style={{ padding: '10px', cursor: 'pointer', textAlign: 'center' }}
+          >
+            No user found,&nbsp;
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                handleAddUserManuallyClick();
+              }}
+              style={{ color: 'blue', textDecoration: 'underline' }} 
+            >
+              Click here
+            </a>
+            &nbsp;to invite user manually
+          </div>
+        )}
+      </components.MenuList>
+    );
+  };
+
+  return (
+    <div className="container">
+      <div className="row mt-2">
+        <div className="col col-md-8">
+          <div className="invite-box">
+            <h2>Invite user</h2>
+            <p>Search for user by name, surname or email address.</p>
+            <p>
+              If a user is found then assign permissions and invite your
+              colleague!
+            </p>
+            <p>
+              If a user is not found fill the form with name, surname and email,
+              add permissions and invite!
+            </p>
+
+            <Select
+              id="searchuserSelect"
+              options={usersOptions}
+              onInputChange={onSearchInputChange}
+              onChange={onSearchSelectChange}
+              className=""
+              isClearable={true}
+              isSearchable={true}
+              closeMenuOnSelect={true}
+              onSelectResetsInput={false}
+              hideSelectedOptions={false}
+              placeholder={
+                'Search for a user filling his name, surname or email'
+              }
+              components={{ MenuList }}
+            />
           </div>
         </div>
-        <div className="row mt-2">         
-          <div className="col col-md-8">
-            <LibraryInviteOperatorForm auth={auth} submitCallback={(opdata)=>inviteUser(opdata)} userData={selectedUser || {}}/>
-          </div>
-        </div>         
-        
       </div>
-    )
-} 
 
-export default LibraryInviteOperator
+      <div className="row mt-2" style={formStyles}>
+        <div className="col col-md-8">
+          <LibraryInviteOperatorForm
+            auth={auth}
+            submitCallback={inviteUser}
+            userData={selectedUser}
+            name={name}
+            setName={setName}
+            fullName={fullName}
+            setFullName={setFullName}
+            email={email}
+            setEmail={setEmail}
+            isManualEntry={isManualEntry}
+          />
+        </div>
+      </div>
+    </div>
+    
+  );
+};
+
+export default LibraryInviteOperator;
