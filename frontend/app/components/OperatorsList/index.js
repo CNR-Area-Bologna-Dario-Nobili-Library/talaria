@@ -1,126 +1,142 @@
-import React, {useEffect, useState} from 'react'
-import {Row, Col, Button} from 'reactstrap'
-//import messages from './messages'
-//import globalMessages from 'utils/globalMessages'
-import { FormattedMessage } from 'react-intl';
-import {useIntl} from 'react-intl';
+import React, { useEffect, useState } from 'react';
+import { Row, Col } from 'reactstrap';
+import { useIntl } from 'react-intl';
 import './style.scss';
 import SectionTitle from 'components/SectionTitle';
 import InputSearch from 'components/Form/InputSearch';
 import Loader from 'components/Form/Loader';
 import messages from './messages';
 import Operator from '../Operator';
-import { generatePath } from "react-router";
-import { filter } from 'lodash';
+import { generatePath } from 'react-router';
 
-export const editurl=(reqPath,userid) => {
-    return generatePath(reqPath, {
-        userid,        
-    });
-}
+export const editurl = (reqPath, userid) => {
+  return generatePath(reqPath, {
+    userid,
+  });
+};
 
-const OperatorsList = (props) => {
+const OperatorsList = props => {
+  const {
+    loading,
+    auth,
+    searchBox = true,
+    data,
+    editOpPath,
+    deleteOpCallback,
+  } = props;
+  const intl = useIntl();
 
-    console.log('OperatorsList', props)
-    
-    const {loading,auth, searchBox=true,data,editOpPath, deleteOpCallback} = props    
-    
-    const intl = useIntl()
-    
+  const [Filter, setFilter] = useState({
+    query: '',
+    filterData: [],
+  });
 
-    const [Filter, setFilter ] = useState(
-        {
-            query: '',  
-            filterData:[]          
-        }
-    );
+  useEffect(() => {
+    if (data)
+      setFilter(state => ({
+        query: '',
+        filterData: data,
+      }));
+  }, [data]);
 
-    useEffect(() => {
-        if(data)
-        setFilter(state=>(
-            {         
-                query:'',
-                filterData:data
-            }))
-    }, [data])   
-
-    const OpMatch=(op, query) => {
-        let reg=new RegExp(query,"gi")
-                
-        return op.name.match(reg)!=null||
-        op.surname.match(reg)!=null||
-        op.full_name.match(reg)!=null||
-        op.email.match(reg)!=null
-    }
-
-    //only commmanager+library man can edit permission of any users (only other perm, not mine)
-    const canEditOrDelete = (userid) => {
-        return ((userid!=auth.user.id && (!auth.permissions.roles.includes("super-admin") ) || (userid!=auth.user.id && auth.permissions.roles.includes("manager"))))
-    }
-
-   
-
-
-
-
+  const OpMatch = (op, query) => {
+    let reg = new RegExp(query, 'gi');
 
     return (
-    <div className="operatorsList card">   
-         <SectionTitle title={messages.header}/>
-         <Row>
-            <Col md={6} sm={12}>
-                {searchBox && <InputSearch
-                submitCallBack={(query) => { 
-                    if(query!='')
-                        setFilter(state => ({                                                    
-                            filterData: data.filter(op => OpMatch(op, query)),
-                            query:query,                        
-                        }) )
-                    else {
-                        setFilter(state => ({
-                            query: '',
-                            filterData: data, // Reset to original data when query is empty
-                        }));
-                    }
-                } 
-                }
+      op.name.match(reg) != null ||
+      op.surname.match(reg) != null ||
+      op.full_name.match(reg) != null ||
+      op.email.match(reg) != null
+    );
+  };
+
+  const canEditOrDelete = userid => {
+    return (
+      (userid != auth.user.id &&
+        !auth.permissions.roles.includes('super-admin')) ||
+      (userid != auth.user.id && auth.permissions.roles.includes('manager'))
+    );
+  };
+
+  return (
+    <div className="operatorsList card">
+      <SectionTitle title={messages.header} />
+      <Row>
+        <Col md={6} sm={12}>
+          {searchBox && (
+            <div className="search-box">
+              <InputSearch
+                submitCallBack={query => {
+                  if (query != '')
+                    setFilter(state => ({
+                      filterData: data.filter(op => OpMatch(op, query)),
+                      query: query,
+                    }));
+                  else {
+                    setFilter(state => ({
+                      query: '',
+                      filterData: data, // Reset to original data when query is empty
+                    }));
+                  }
+                }}
                 query={Filter.query}
                 searchOnChange={true}
                 clearButton={false}
-                />}
-            
-                        </Col> 
-        </Row>
-        <Row>
-            <Col>
-                <Loader show={loading}>
-                    <div className="list-body">
-                        {Filter.filterData && Filter.filterData.length > 0 &&
-                            Filter.filterData.map(op => (
-                                <Operator 
-                                    key={`oper-${op.user_id}`}
-                                    data={op}
-                                    enableEdit={canEditOrDelete(op.user_id)}
-                                    enableDelete={canEditOrDelete(op.user_id)}
-                                    editPath={editurl(editOpPath,op.user_id)}   
-                                    deleteOpCallback={()=>deleteOpCallback(op.user_id)}                                    
-                                />                                                                                                
-                            ))
-                        ||
-                            <h5 className="text-center">
-                                {intl.formatMessage(messages.OperatorsNotFound)}
-                            </h5>
-                        }
+              />
+            </div>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Loader show={loading}>
+            <div className="list-body">
+              <div className="container" style={{ marginTop: '30px' }}>
+                <div className="div-table">
+                  <div className="div-table-row div-table-header">
+                    <div
+                      className="div-table-cell"
+                      style={{ width: '25%', fontWeight: 'bold' }}
+                    >
+                      Full Name
                     </div>
-                </Loader>
-            </Col>
-        </Row>
-
+                    <div
+                      className="div-table-cell"
+                      style={{ width: '55%', fontWeight: 'bold' }}
+                    >
+                      Roles
+                    </div>
+                    <div
+                      className="div-table-cell"
+                      style={{ width: '20%', fontWeight: 'bold' }}
+                    >
+                      Actions
+                    </div>
+                  </div>
+                  {Filter.filterData && Filter.filterData.length > 0 ? (
+                    Filter.filterData.map(op => (
+                      <Operator
+                        key={`oper-${op.user_id}`}
+                        data={op}
+                        enableEdit={canEditOrDelete(op.user_id)}
+                        enableDelete={canEditOrDelete(op.user_id)}
+                        editPath={editurl(editOpPath, op.user_id)}
+                        deleteOpCallback={() => deleteOpCallback(op.user_id)}
+                      />
+                    ))
+                  ) : (
+                    <h5 className="text-center">
+                      {intl.formatMessage(messages.OperatorsNotFound)}
+                    </h5>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Loader>
+        </Col>
+      </Row>
     </div>
+  );
+};
 
-
-
-    )
-} 
-
-export default OperatorsList
+export default OperatorsList;
