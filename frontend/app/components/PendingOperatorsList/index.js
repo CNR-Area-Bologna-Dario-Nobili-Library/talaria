@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Button } from 'reactstrap';
-//import messages from './messages'
-//import globalMessages from 'utils/globalMessages'
-import { FormattedMessage } from 'react-intl';
+import { Row, Col } from 'reactstrap';
 import { useIntl } from 'react-intl';
 import './style.scss';
 import SectionTitle from 'components/SectionTitle';
@@ -10,13 +7,6 @@ import InputSearch from 'components/Form/InputSearch';
 import Loader from 'components/Form/Loader';
 import messages from './messages';
 import PendingOperator from '../PendingOperator';
-import { generatePath } from 'react-router';
-
-export const editurl = (reqPath, userid) => {
-  return generatePath(reqPath, {
-    userid,
-  });
-};
 
 const PendingOperatorsList = props => {
   const {
@@ -30,8 +20,6 @@ const PendingOperatorsList = props => {
   } = props;
 
   const intl = useIntl();
-
-  console.log('PendingOperatorsList', props);
 
   const [Filter, setFilter] = useState({
     query: '',
@@ -68,8 +56,6 @@ const PendingOperatorsList = props => {
     ( ( (userid != null && userid != auth.user.id) || auth.user.email != useremail) && auth.permissions.roles.includes("manager"))) 
   };
 
-  
-
   return (
     <div className="pendingoperatorsList card">
       <SectionTitle title={messages.header} />
@@ -78,11 +64,9 @@ const PendingOperatorsList = props => {
           {searchBox && (
             <InputSearch
               submitCallBack={query => {
-                if (query != '')
+                if (query !== '')
                   setFilter(state => ({
-                    filterData: data.filter(op => {
-                      return OpMatch(op, query);
-                    }),
+                    filterData: data.filter(op => OpMatch(op, query)),
                     query: query,
                   }));
                 else
@@ -102,23 +86,47 @@ const PendingOperatorsList = props => {
         <Col>
           <Loader show={loading}>
             <div className="list-body">
-              {(Filter.filterData &&
-                Filter.filterData.length > 0 &&
-                Filter.filterData.map(op => (
-                  <PendingOperator
-                    key={`pendingoper-${op.id}`}
-                    data={op}
-                    enableDelete={canEditOrDelete(op)}
-                    deleteOpCallback={() => deleteOpCallback(op.id)}
-                    acceptOpCallback={() => acceptOpCallback(op.id)}
-                    rejectOpCallback={() => rejectOpCallback(op.id)}
-                    auth={auth}
-                  />
-                ))) || (
-                <h5 className="text-center">
-                  {intl.formatMessage(messages.PendingOperatorsNotFound)}
-                </h5>
-              )}
+              <div className="container" style={{ marginTop: '30px' }}>
+                <div className="div-table">
+                  <div className="div-table-row div-table-header">
+                    <div className="div-table-cell" style={{ width: '25%', fontWeight: 'bold' }}>
+                      User
+                    </div>
+                    <div className="div-table-cell" style={{ width: '19%', fontWeight: 'bold' }}>
+                      Permissions
+                    </div>
+                    <div className="div-table-cell" style={{ width: '10%', fontWeight: 'bold' }}>
+                      Status
+                    </div>
+                    <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
+                      Created
+                    </div>
+                    <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
+                      Updated
+                    </div>
+                    <div className="div-table-cell" style={{ width: '20%', fontWeight: 'bold' }}>
+                      Actions
+                    </div>
+                  </div>
+                  {(Filter.filterData &&
+                    Filter.filterData.length > 0 &&
+                    Filter.filterData.map(op => (
+                      <PendingOperator
+                        key={`pendingoper-${op.id}`}
+                        data={op}
+                        enableDelete={canEditOrDelete(op)}
+                        deleteOpCallback={() => deleteOpCallback(op.id)}
+                        acceptOpCallback={() => acceptOpCallback(op.id)}
+                        rejectOpCallback={() => rejectOpCallback(op.id)}
+                        auth={auth}
+                      />
+                    ))) || (
+                    <h5 className="text-center">
+                      {intl.formatMessage(messages.PendingOperatorsNotFound)}
+                    </h5>
+                  )}
+                </div>
+              </div>
             </div>
           </Loader>
         </Col>

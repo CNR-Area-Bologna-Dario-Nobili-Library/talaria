@@ -1,3 +1,5 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css');
+
 @media (max-width: 768px) {
     .table-responsive .table th:nth-child(3),
     .table-responsive .table td:nth-child(3),
@@ -28,11 +30,7 @@
     text-align: left;
   }
   
-  .div-table-header {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
+ 
   .div-responsive {
     overflow-x: auto;
   }
@@ -127,4 +125,48 @@
     border-top: 1px solid #ccc;
     margin: 10px 0;
   }
+
   
+  
+  .div-table-header {
+    display: table-header-group;
+    font-weight: bold;
+    background-color: #f5f5f5;
+  }
+  
+  .div-table-cell {
+    display: table-cell;
+    padding: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .div-table-cell.center-align {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .status-point {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  
+  .status-point.pending {
+    background-color: yellow;
+  }
+  
+  .status-point.disabled {
+    background-color: gray;
+  }
+
+  .action-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  
+  
+  
+ 
