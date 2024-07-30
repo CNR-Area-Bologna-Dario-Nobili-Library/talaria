@@ -4,14 +4,24 @@ export const fieldsGroups = {
         order: 0,
         label: 'general_info'
     },
-    /*granted_permissions: {
-        name: 'granted_permissions',
+    institution_info: {
+        name: 'institution_info',
         order: 1,
-        label: 'granted_permissions'
-    },*/
+        label: 'institution_info'
+    },
+    identifier_info: {
+        name: 'identifier_info',
+        order: 2,
+        label: 'identifier_info'
+    },
+    service_info: {
+        name: 'service_info',
+        order: 3,
+        label: 'service_info'
+    },
     administrative_info: {
         name: 'administrative_info',
-        order: 2,
+        order: 4,
         label: 'administrative_info'
     },
 };
@@ -33,27 +43,23 @@ export const fields = {
         group: "general_info",
         order: 2,
     },
-    /*granted_permissions: {
-        type: "granted_permissions",
-        name: "granted_permissions",
-        width: "col-sm-12",
-        options: "usersOptionList",
-        searchOptionList: true,
-        order: 1,
-        group: "granted_permissions",
-    },*/
-    institution_id: {
-        type: "custom-select",
-        required: true,
-        disabled: true,
-        name: "institution_id",
-        width: "col-sm-6",
-        group: "general_info",
-        options: "institution_id",
+    external: {
+        type: "checkbox",
+        name: "external",
+        width: "col-sm-6",      
+        group: "general_info",  
         order: 3,
-        // selectedOption: "institution_type_id"
+        disabled: true,
     },
-
+    profile_type: {
+        type: "custom-select",
+        name: "profile_type",
+        width: "col-sm-6",      
+        group: "general_info",  
+        options: "profile_type",
+        order:4,
+        disabled: true,
+    },
 
     subject_id: {
         type: "custom-select",
@@ -78,108 +84,282 @@ export const fields = {
         name: "address",
         label: 'app.global.address',
         placeholder: 'app.global.address',
-        width: "col-sm-6"
+        group: "general_info",
+        width: "col-sm-6",
+        order: 6,
     },
     town: {
         type: "text",
         name: "town",        
         label: 'app.global.town',
         placeholder: 'app.global.town',
-        width: "col-sm-6"
+        group: "general_info",
+        width: "col-sm-6",
+        order: 7
     },
     district: {
         type: "text",
         name: "district",        
         label: 'app.global.district',
         placeholder: 'app.global.district',
-        width: "col-sm-6"
+        group: "general_info",
+        width: "col-sm-6",
+        order: 8
     },
     postcode: {
         type: "number",
         name: "postcode",        
         label: 'app.global.postcode',
         placeholder: 'app.global.postcode',
-        width: "col-sm-6"
+        width: "col-sm-6",
+        order: 9
     },
     state: {
         type: "text",
         name: "state",        
         label: 'app.global.state',
         placeholder: 'app.global.state',
+        order:10,
         width: "col-sm-6"
     },    
+
+    lat: {
+        type: "text",
+        name: "lat",        
+        group: "general_info",
+        width: "col-sm-6",
+        order: 11,        
+    },    
+    lon: {
+        type: "text",
+        name: "lon",          
+        group: "general_info",      
+        width: "col-sm-6",
+        order: 12,
+    },
+    library_coordinates_Validity: {
+        type: "Label",
+        required: false,
+        nolabel: true,
+        name: "library_coordinates_Validity",
+        width: "col-sm-6",
+        group: "general_info",
+        order: 13,
+        hidden:false,
+        color:"#000000",
+        hasborder: true,
+        paddingtop: "2px",
+        paddingbottom: "2px",
+        paddingleft: "2px",
+        paddingright: "2px",
+    },    
+
+    institution_id: {
+        type: "custom-select",
+        required: true,
+        name: "institution_id",
+        width: "col-sm-6",
+        group: "institution_info",
+        options: "institution_id",
+        order: 1,
+        disabled: true,
+
+    },
+    institution_type_id: {
+        type: "custom-select",
+        required: false,
+        name: "institution_type_id",
+        width: "col-md-6",
+        group: "institution_info",
+        options: "institution_type_id",
+        order: 2,
+        disabled: true,
+        //selectedOption: "id"
+    },
+    institution_country_id: {
+        type: "custom-select",
+        required: false,
+        name: "institution_country_id",
+        width: "col-md-6",
+        group: "institution_info",
+        options: "institution_country_id",
+        order: 3,
+        disabled: true,
+        //selectedOption: "id"
+    },
+    
+    projects_label: {
+        type: "Label",
+        required: false,                
+        name: "projects_label",
+        nolabel:true,
+        width: "col-sm-12",
+        group: "institution_info",
+        order: 4,
+    },
+
+    project_id: {
+        nolabel: true,
+        type: "list-checkbox",
+        name: "project_id",
+        width: "col-sm-12",
+        group: "institution_info",
+        options: "project_id",
+        disabled: true,
+        order: 5,
+    },
+
+    
+    identifier_type_id: {
+        type: "custom-select",
+        //required: true,
+        name: "identifier_type_id",
+        width: "col-md-6",
+        group: "identifier_info",
+        options: "identifier_type_id",
+        order: 2,
+        disabled: true,
+    },
+ 
+    library_identifiers_txt: {
+        type: "text",
+        name: "library_identifiers_txt",
+        width: "col-md-4",
+        //required: true,
+        group: "identifier_info",
+        order: 3,
+        disabled: true,
+        
+    },
+
+    library_identifier_add: {
+        type: "AddButton",
+        label:"Add Code",
+        name: "library_identifier_add",
+        margintop:"13px",
+        width: "col-md-2",
+        group: "identifier_info",
+        disabled: true,
+        order: 4,
+    },
+
+    library_identifier_list: {
+        type: "list",
+        label:"Add",
+        name: "library_identifier_list",
+        hidden: false,
+        width: "col-md-12",
+        group: "identifier_info",
+        order: 5,
+        disabled: true,
+    },
+
+    identifiers_id: {
+        type: "text",
+        name: "identifiers_id",
+        width: "col-md-3",
+        group: "identifier_info",
+        hidden:true,
+        disabled: true,
+    },
     url: {
         type: "text",
         name: "url",
-        width: "col-sm-6"
+        width: "col-sm-6",
+        group: "service_info",
+        order: 1,
     },
     opac: {
         type: "text",
         name: "opac",
-        width: "col-sm-6"
+        width: "col-sm-6",
+        group: "service_info",
+        order: 2,
     },
     ill_email: {
         type: "email",
         name: "ill_email",
-        width: "col-sm-6"
+        width: "col-sm-6",
+        group: "service_info",
+        order: 4,
     },
     ill_phone: {
         type: "text",
         name: "ill_phone",
-        width: "col-sm-6"
+        width: "col-sm-6",
+        group: "service_info",
+        order: 5,
     },
     ill_supply_conditions: {
         type: "textarea",
         name: "ill_supply_conditions",
         width: "col-sm-6",
         disabled: true,
+        group: "service_info",
+        order: 6,
     },
     ill_imbalance: {
         type: "text",
         name: "ill_imbalance",
         disabled: true,
-        width: "col-sm-6"
+        width: "col-sm-6",
+        group: "service_info",
+        order: 7,
     },
     ill_cost: {
         type: "number",
         name: "ill_cost",
         width: "col-sm-6",
         disabled: true,
+        group: "service_info",
+        order: 8,
     },
     ill_user_cost: {
         type: "number",
         name: "ill_user_cost",
         width: "col-sm-6",
         disabled: true,
+        group: "service_info",
+        order: 9,
+    },    
+    ill_susp_date_start: {
+        type: "DatePicker",
+        name: "ill_susp_date_start",
+        width: "col-sm-6",
+        label: "Susp Date Start",
+        group: "service_info",
+        order: 10,
+    },
+    ill_susp_date_end: {
+        type: "DatePicker",
+        name: "ill_susp_date_end",
+        width: "col-sm-6",
+        label: "Susp Date End",
+        group: "service_info",
+        order: 11,
+    },
+    ill_susp_notification_days: {
+        type: "number",
+        name: "ill_susp_notification_days",
+        width: "col-sm-6",
+        group: "service_info",
+        order: 12,
     },
     ill_IFLA_voucher: {
         type: "checkbox",
         name: "ill_IFLA_voucher",
         width: "col-sm-6",             
         disabled: true,   
+        group: "service_info",
+        order: 13,
     },
     ill_cost_in_voucher: {
         type: "number",
         name: "ill_cost_in_voucher",
         width: "col-sm-6",              
         disabled: true,
-    },
-    ill_susp_date_start: {
-        type: "DatePicker",
-        name: "ill_susp_date_start",
-        width: "col-sm-6",
-        label: "Susp Date Start"
-    },
-    ill_susp_date_end: {
-        type: "DatePicker",
-        name: "ill_susp_date_end",
-        width: "col-sm-6",
-        label: "Susp Date End"
-    },
-    ill_susp_notification_days: {
-        type: "number",
-        name: "ill_susp_notification_days",
-        width: "col-sm-6"
+        group: "service_info",
+        order: 14,
     },    
     /*status: {
         type: "custom-select",
@@ -192,12 +372,7 @@ export const fields = {
             { value: 2, label: 'in rinnovo' },
         ]
     },*/
-    /*external: {
-        type: "checkbox",
-        name: "external",
-        width: "col-sm-6",
-    },
-    registration_date: {
+    /*registration_date: {
         type: "date",
         name: "registration_date",
         width: "col-sm-6"
@@ -207,56 +382,70 @@ export const fields = {
         type: "number",
         name: "vatnumber",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 1,
+        maxLength:50
     },
     fiscalcode: {
         type: "text",
         name: "fiscalcode",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 2,
+        maxLength:50
     },
     invoice_header: {
         type: "text",
         name: "invoice_header",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 3,
     },
     email_pec: {
         type: "email",
         name: "email_pec",
         width: "col-sm-6",
         group: "administrative_info",
+        order: 4,
 
     },
     ccu: {
         type: "text",
         name: "ccu",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 5,
+        maxLength:10,
     },
     administrative: {
         type: "text",
         name: "administrative",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 6,
     },
     administrative_email: {
         type: "email",
         name: "administrative_email",
         width: "col-sm-6",
         group: "administrative_info",
+        order: 7,
 
     },
     administrative_phone: {
         type: "number",
         name: "administrative_phone",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 8,
     },
     terzo_code: {
         type: "text",
         name: "terzo_code",
         width: "col-sm-6",
-        group: "administrative_info"
+        group: "administrative_info",
+        order: 9,
+        maxLength:20
     },
+  
 }
