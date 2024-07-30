@@ -262,50 +262,101 @@ class LibraryController extends ApiController
 
     public function update(Request $request, $id)
     {       
+        
+        //can update profile_type only if user is library's manager (policy will check user's role)
+
         if (!empty($this->validate))
             $this->validate($request, $this->validate);
 
-        //remove from fillable all fields regarding subscription (cost, imbalance, ...) 
-        if($request->filled('lat'))
-            unset ($request["lat"]);
-        if($request->filled('lon'))
-            unset ($request["lon"]);            
-
-        if($request->has('project_id'))
-            unset ($request["project_id"]);                
-
-        if($request->has('identifiers_id'))
-            unset ($request["identifiers_id"]);                            
-
-        //can update profile_type only if user is library's manager (policy will check user's role)
-        //if profile=2 and LIBRARY_DIFFERENT_PROFILES=true => OK else "change profile_type not allowed"   
-        if( ! ( $request->filled('profile_type') && $request->input('profile_type')==config("constants.library_profile_type.full")  && env('LIBRARY_DIFFERENT_PROFILES',true) ) )
-            unset ($request["profile_type"]);   
+        //TODO: remove from fillable all fields regarding subscription (cost, imbalance, ...) if user is not admin/commanager
+        // if (!subscription opened)
         
-        if($request->filled('ill_cost'))
-            unset ($request["ill_cost"]);
 
-        if($request->filled('ill_IFLA_voucher'))        
-            unset ($request["ill_IFLA_voucher"]);                
+        $u=Auth::user();       
         
-        if($request->filled('ill_cost_in_voucher'))
-            unset ($request["ill_cost_in_voucher"]);                            
+        //if user is not admin/comm manager CANNOT edit inst/project/identifier
+        //and cannot change all fields regarding subscription (cost, imbalance, ...) unless during subscription period
+        if (!is_null($u) && !($u->hasRole('super-admin')||$u->hasRole('manager'))) 
+        {
+            if($request->filled('lat'))
+                unset ($request["lat"]);
+            
+            if($request->filled('lon'))
+                unset ($request["lon"]);            
 
-        if($request->filled('ill_user_cost'))
-            unset ($request["ill_user_cost"]);            
+            if($request->has('project_id'))
+                unset ($request["project_id"]);                
 
-        if($request->filled('ill_imbalance'))
-            unset ($request["ill_imbalance"]);            
+            if($request->has('identifiers_id'))
+                unset ($request["identifiers_id"]);   
+            
+            if($request->filled('institution_id'))
+                unset ($request["institution_id"]);     
+            
+            
+           //if not during subscription, cannot change project/identifiers/institution/costs...
+            //if profile=2 and LIBRARY_DIFFERENT_PROFILES=true => OK else "change profile_type not allowed"   
+            if( ! ( $request->filled('profile_type') && $request->input('profile_type')==config("constants.library_profile_type.full")  && env('LIBRARY_DIFFERENT_PROFILES',true) ) )
+                unset ($request["profile_type"]);   
                         
-        if($request->filled('ill_supply_conditions'))
-            unset ($request["ill_supply_conditions"]);                        
+            if($request->filled('ill_cost'))
+                unset ($request["ill_cost"]);
 
-        if($request->filled('institution_id'))
-            unset ($request["institution_id"]);            
+            if($request->filled('ill_IFLA_voucher'))        
+                unset ($request["ill_IFLA_voucher"]);                
+            
+            if($request->filled('ill_cost_in_voucher'))
+                unset ($request["ill_cost_in_voucher"]);                            
+
+            if($request->filled('ill_user_cost'))
+                unset ($request["ill_user_cost"]);            
+
+            if($request->filled('ill_imbalance'))
+                unset ($request["ill_imbalance"]);            
+                            
+            if($request->filled('ill_supply_conditions'))
+                unset ($request["ill_supply_conditions"]);       
+        }  
+        
         
         $model = $this->talaria->update($this->model, $request, $id, function ($model, $request) {
             return $this->talaria->syncGrantedPermissions($model, $request);
         });
+
+
+        //if admin/comm manager or during subscriptions...
+        if($u->hasRole('super-admin')||$u->hasRole('manager')) /* || not admin/manager but during subscription */
+        {
+            //sync projects
+            if( ($request->has('project_id') && (!is_null($request->input('project_id')))) )
+                    $model->projects()->sync($request->input('project_id'));   
+
+            //sync identifiers
+            if($request->has('identifiers_id'))
+            {
+                $arr=[];            
+                foreach ($request->input('identifiers_id') as $identif)
+                {
+                    $arr[]=['identifier_id'=>$identif[0],'cod'=>$identif[1]];
+                }
+                $model->identifiers()->sync([]); //to check for other soltion, since the problem is when Sync($arr) execute, it saves duplicate data when different data passed by the array           
+                $model->identifiers()->sync($arr);            
+            }
+        }
+
+        //Convert coordinated to decimal if needed
+        $lon = $request->input('lon');
+        $lat = $request->input('lat');
+        if ($request->has('lon') && !is_numeric($lon))
+            $lon = Helper::convertCoordinateToDecimal($lon);
+
+        if ($request->has('lat') && !is_numeric($lat)) 
+            $lat = Helper::convertCoordinateToDecimal($lat);
+        $model->lon = $lon ?? $model->lon;
+        $model->lat = $lat ?? $model->lat;
+        
+        $model->save();
+
 
         if ($this->broadcast && config('apitalaria.broadcast'))
             broadcast(new ApiUpdateBroadcast($model, $model->getTable(), $request->input('include')));

@@ -43,6 +43,12 @@ createSelector(
   substate => (substate.librarySubjectOptionList)
 );
 
+const libraryProjectsOptionListSelector = () => 
+createSelector(
+  selectLibraryDomain,
+  substate => (substate.libraryProjectsOptionList)
+);
+
 
 const institutionsOptionListSelector = () => 
 createSelector(
@@ -50,6 +56,27 @@ createSelector(
   substate => (substate.institutionsOptionList)
 );
 
+const institutionTypesOptionListSelector = () => 
+createSelector(
+  selectLibraryDomain,
+  substate => (substate.institutionTypesOptionList)
+);
+
+const institutionsByTypeCountryOptionListSelector = () => 
+createSelector(
+  selectLibraryDomain,
+  substate => (substate.institutionsByTypeCountryOptionList)
+);
+
+const identifiersOptionListSelector = () => 
+  createSelector(
+    selectLibraryDomain,
+    substate => (substate.libraryIdentifierTypesOptionList)
+);  
+
+
+
+
 
 export default makeSelectLibrary;
-export {  isLibraryLoading,tagsOptionListSelector, fileUploadNameSelector,countriesOptionListSelector,librarySubjectOptionListSelector,institutionsOptionListSelector };
+export {  isLibraryLoading,tagsOptionListSelector, fileUploadNameSelector,countriesOptionListSelector,librarySubjectOptionListSelector,institutionsOptionListSelector,institutionTypesOptionListSelector,institutionsByTypeCountryOptionListSelector,libraryProjectsOptionListSelector,identifiersOptionListSelector };

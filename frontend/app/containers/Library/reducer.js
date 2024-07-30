@@ -55,7 +55,9 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
   REQUEST_GET_USERS_OPTION_ITEMS,
   REQUEST_GET_USERS_OPTION_ITEMS_SUCCESS,
-  REQUEST_INVITE_LIBRARY_OPERATOR
+  REQUEST_INVITE_LIBRARY_OPERATOR,
+  REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS
 } from "./constants";
 
 export const initialState = {
@@ -98,7 +100,9 @@ export const initialState = {
   countriesOptionList: [],
   institutionsOptionList: [],
   institutionTypesOptionList: [],
+  institutionsByTypeCountryOptionList: [],
   libraryIdentifierTypesOptionList:[],
+  libraryProjectsOptionList:[],
   error: null,
   user: {},
   operator:{},
@@ -200,6 +204,15 @@ const libraryReducer = (state = initialState, action) =>
           case REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS:
             draft.error = initialState.error;
             draft.institutionTypesOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );        
+            break;  
+
+          case REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST:
+            draft.error = action.error;
+            break;
+          case REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST_SUCCESS:
+            draft.error = initialState.error;
+            draft.institutionsByTypeCountryOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );        
+            //draft.institutionsByTypeCountryOptionList.push({"value":0,"label":"Institution not present"})
             break;  
 
 
@@ -355,6 +368,16 @@ const libraryReducer = (state = initialState, action) =>
           draft.error = initialState.error;
           draft.libraryIdentifierTypesOptionList = action.result.sort((a, b) => { return (a.id > b.id) ? 1 : -1 }).map(item => { return {value: item.id, label: item.name} } );
           break;  
+
+        case REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST:
+        draft.loading = true;
+        draft.error = action.error;
+        break;
+        case REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS:
+        draft.loading = false;
+        draft.error = initialState.error;
+        draft.libraryProjectsOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );
+        break;
 
           case REQUEST_GET_LIBRARY_OPERATORS:
             draft.loading = true;
