@@ -7,7 +7,7 @@ import './style.scss';
 
 
 const LibraryEditPermissionsForm = (props) => {
-    const {data,submitCallback,operatorData,history}=props
+    const {data,submitCallback,operatorData,history,filterPerm}=props
 
     console.log("LibraryEditPermissionsForm",props)
     
@@ -30,10 +30,7 @@ const LibraryEditPermissionsForm = (props) => {
 
       const resetPerms=() => {    
         setSaveDisabled(true);
-        setOpPerms({
-          ...initPerms
-          }
-        )
+        setOpPerms(filterPerm(initPerms))        
       }
 
       useEffect( ()=> {   

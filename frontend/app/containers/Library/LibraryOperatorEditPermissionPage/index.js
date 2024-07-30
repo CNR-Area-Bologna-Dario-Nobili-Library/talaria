@@ -48,6 +48,16 @@ function LibraryOperatorEditPermissionPage(props) {
       if(conf)
         dispatch(requestUpdateLibraryOperatorPermissions(match.params.library_id,match.params.userid,permString,intl.formatMessage({id: "app.global.updatedMessage"})))      
 }
+
+const filterLendPerm=(permsList) => {    
+  if(permsList && library.library.profile_type==1) //only borrow library
+  {
+    let entries = Object.entries(permsList);
+    let permsListentries=entries.filter(([key,value])=>key!='lend') //remove lend perm
+    permsList=Object.fromEntries(permsListentries);
+  }  
+  return permsList;
+ }
   
 
   return (              
@@ -57,7 +67,7 @@ function LibraryOperatorEditPermissionPage(props) {
               <SectionTitle                         
                   title={messages.header}
               />                 
-              <LibraryEditPermissionsForm history={history} submitCallback={(p)=>updatePerms(p)} data={data} operatorData={ope}/> {/* data: permessi operatorData: user's data*/}                           
+              <LibraryEditPermissionsForm filterPerm={(permList)=>filterLendPerm(permList)} history={history} submitCallback={(p)=>updatePerms(p)} data={data} operatorData={ope}/> {/* data: permessi operatorData: user's data*/}                           
           </div>}
       </Loader>     
   );

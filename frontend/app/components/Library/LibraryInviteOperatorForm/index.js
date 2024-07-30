@@ -6,7 +6,7 @@ import './style.scss';
 import {toast} from 'react-toastify'
 
 const LibraryInviteOperatorForm = props => {
-  const { submitCallback, userData, history,auth } = props;
+  const { submitCallback, userData, history,auth,filterPerm } = props;
   console.log('LibraryInviteOperatorForm', props);
 
   const intl = useIntl();
@@ -61,10 +61,7 @@ const LibraryInviteOperatorForm = props => {
       },[opPerms])
     
       const resetPerms=() => {    
-        setOpPerms({
-          ...initPerms
-          }
-        )
+        setOpPerms(filterPerm(initPerms))
       }
 
       useEffect( ()=> {   
