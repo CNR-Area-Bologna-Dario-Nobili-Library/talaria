@@ -247,6 +247,7 @@ const CustomForm = (props) => {
                                                                 field.type === 'list-checkbox' &&
                                                                     <ListCheckBox
                                                                         type="checkbox"
+                                                                        disabled={field.disabled ? field.disabled : false}
                                                                         data={props[field.name]}
                                                                         selectedData={props.requestData && props.requestData[field.name] && !formData[field.name] ? props.requestData[field.name] : formData[field.name] ? formData[field.name] : []}
                                                                         handleChange={(value) => handleChange(value, field.name, field.order)}
@@ -395,14 +396,7 @@ const CustomForm = (props) => {
                                                                                     <span>{item.name}</span>
                                                                                 </td>
                                                                                 <td>
-                                                                                    <a
-                                                                                    className="btn btn-icon btn-sm"
-                                                                                    onClick={() =>
-                                                                                    RemoveIdentifier(item.id)
-                                                                                    }
-                                                                                    >
-                                                                                    <i className="fa-solid fa-trash" />
-                                                                                    </a>
+                                                                                    <a className={`btn btn-icon btn-sm ${field.disabled ? 'disabled' : ""}`} onClick={() =>RemoveIdentifier(item.id)}><i className={`fa-solid fa-trash`} /></a>                                                                                    
                                                                                 </td>
                                                                             </tr>
                                                                             </>

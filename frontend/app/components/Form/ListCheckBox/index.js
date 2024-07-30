@@ -4,7 +4,7 @@ import { requestApplyLabelsToReferences } from '../../../utils/api'
 
 const ListCheckBox = (props) => {
     //console.log('ListCheckBox', props)
-    const {data, type, handleChange, selectedData} = props
+    const {data, type, handleChange, selectedData,disabled} = props
     
     const [formData, setFormData] = useState(selectedData)
 
@@ -26,12 +26,13 @@ const ListCheckBox = (props) => {
         <>
            <div className="d-flex flex-wrap">
                 {
-                    formData && data.map(item => 
+                    formData && data && data.map(item => 
                         type === 'checkbox' &&
                         <CustomInput
                             key={item.value}
                             className="col-sm-4"
                             id={item.value}
+                            disabled={disabled}
                             type={type}
                             name={item.label}
                             label={item.label}
