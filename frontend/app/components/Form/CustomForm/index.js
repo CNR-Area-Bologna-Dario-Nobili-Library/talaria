@@ -373,13 +373,13 @@ const CustomForm = (props) => {
                                                                                 <tr>
                                                                                     {/* <th scope="col">#</th> */}
                                                                                     <th scope="col" className="col-md-6">
-                                                                                    Type
+                                                                                    {intl.formatMessage({id:'app.libraries.identifier_type_id'})}
                                                                                     </th>
                                                                                     <th scope="col" className="col-md-4">
-                                                                                    Name
+                                                                                    {intl.formatMessage({id:'app.libraries.identifier_code'})}
                                                                                     </th>
                                                                                     <th scope="col" className="col-md-2">
-                                                                                    Actions
+                                                                                    {intl.formatMessage({id:'app.global.actions'})}
                                                                                     </th>
                                                                                 </tr>
                                                                             </thead>

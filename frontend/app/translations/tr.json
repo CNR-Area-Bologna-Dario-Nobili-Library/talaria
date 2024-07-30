@@ -92,6 +92,7 @@
   "app.global.country": "Ülke",
   "app.global.software_manual": "Manuel",
   "app.global.contacts":"Kişiler",
+  "app.global.actions": "???Actions",
     
   "app.containers.HomePage.header": "Kaynak Paylaşım topluluğunuzun KISALTMASI ve ADI",
   "app.containers.HomePage.subHeader":"Buraya kaynak paylaşım topluluğunuzun tanımını, misyonunu ve amaçlarını ekleyebilirsiniz.",

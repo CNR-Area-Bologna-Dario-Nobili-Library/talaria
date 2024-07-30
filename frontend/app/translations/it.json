@@ -92,6 +92,7 @@
   "app.global.country": "Nazione",
   "app.global.software_manual": "Manuale",
   "app.global.contacts":"Contatti",
+  "app.global.actions": "Azioni",
   
   "app.containers.HomePage.header": "Benvenuti in ACRONIMO e NOME per esteso della tua comunità di biblioteche",
   "app.containers.HomePage.subHeader":"Inserisci qui la descrizione, la missione e gli scopi della tua comunità di Resource Sharing.",
@@ -347,7 +348,7 @@
   "app.libraries.status.disabled_bad":"Disattivata per cattivo comportamento",
   "app.libraries.status.disabled_subscription_expired":"Disattivata per sottoscrizione scaduta",
   "app.libraries.status.disabled_didntpaid":"Disattivata per mancato pagamento",
-  "app.libraries.external": "External",
+  "app.libraries.external": "Esterna",
   "app.libraries.registration_date": "Data registrazione",
   "app.libraries.general_info": "Informazioni generali",
   "app.libraries.service_info": "Informazioni sul servizio",

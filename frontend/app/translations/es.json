@@ -92,6 +92,7 @@
   "app.global.country": "País",
   "app.global.software_manual": "Manual",
   "app.global.contacts":"Contactos",
+  "app.global.actions": "???Actions",  
   
   "app.containers.HomePage.header": "SIGLAS y NOMBRE extendido de su red de compartir recursos",
   "app.containers.HomePage.subHeader":"Inserte aquí la descripción, la misión y los propósitos de su red de compartir recursos.",
