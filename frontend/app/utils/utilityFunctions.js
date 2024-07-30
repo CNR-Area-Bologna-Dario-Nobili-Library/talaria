@@ -1,3 +1,5 @@
+import {useIntl} from 'react-intl';
+
 //return CSS class to use to render a "permission/ability"
 export const permissionBadgeClass = (p) => {
     let ty="badge-info";
@@ -17,4 +19,18 @@ export const permissionBadgeClass = (p) => {
     }
 
     return ty;
+}
+
+export const translatePerm = (permKey) => {
+
+  const intl = useIntl();
+
+  return intl.formatMessage({id: 'app.global.permissions.'+permKey});
+}
+
+export const translateRole = (roleKey) => {
+
+  const intl = useIntl();
+
+  return intl.formatMessage({id: 'app.global.roles.'+roleKey});
 }

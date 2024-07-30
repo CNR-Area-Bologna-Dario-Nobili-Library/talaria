@@ -90,22 +90,22 @@ const PendingOperatorsList = props => {
                 <div className="div-table">
                   <div className="div-table-row div-table-header">
                     <div className="div-table-cell" style={{ width: '25%', fontWeight: 'bold' }}>
-                      User
+                    {intl.formatMessage({id: 'app.global.name'})}
                     </div>
                     <div className="div-table-cell" style={{ width: '19%', fontWeight: 'bold' }}>
-                      Permissions
+                    {intl.formatMessage({id: 'app.global.permissions'})}
                     </div>
                     <div className="div-table-cell" style={{ width: '10%', fontWeight: 'bold' }}>
-                      Status
+                    {intl.formatMessage({id: 'app.global.status'})}
                     </div>
                     <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
-                      Created
+                    {intl.formatMessage({id: 'app.global.created_at'})}
                     </div>
                     <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
-                      Updated
+                    {intl.formatMessage({id: 'app.global.updated_at'})}
                     </div>
                     <div className="div-table-cell" style={{ width: '20%', fontWeight: 'bold' }}>
-                      Actions
+                    {intl.formatMessage({id: 'app.global.actions'})}
                     </div>
                   </div>
                   {(Filter.filterData &&
