@@ -75,4 +75,49 @@ export default defineMessages({
     id: `${scope}.placesFreeSearchPlaceholder`,
     defaultMessage: 'Enter City/State to search on',
   },
+
+  jointoLibIntroduction: {
+    id: `${scope}.jointoLibIntroduction`,
+    defaultMessage: 'Use this box to start managing your references and request them, to check and customize the libraries you have joined as a Patron or ask to join to a new library.',
+  },
+
+  buttonReferenceManager: {
+    id: `${scope}.buttonReferenceManager`,
+    defaultMessage: 'Goto Reference Manager',
+  },
+
+  manageYourLibraries: {
+    id: `${scope}.manageYourLibraries`,
+    defaultMessage: 'Manage your libraries',
+  },
+
+  joinNewLibrary: {
+    id: `${scope}.joinNewLibrary`,
+    defaultMessage: 'Join to a new library',
+  },
+
+  areYouPatron: {
+    id: `${scope}.areYouPatron`,
+    defaultMessage: 'Are you a Patron?',
+  },
+
+  searchLibrary: {
+    id: `${scope}.searchLibrary`,
+    defaultMessage: 'Search for a library name you want to join as a Patron.',
+  },
+  assignLibraryLabel: {
+    id: `${scope}.assignLibraryLabel`,
+    defaultMessage: 'Assign your preferred label to this library (max. 5 char)',
+  },
+
+  defineLibraryLabel: {
+    id: `${scope}.defineLibraryLabel`,
+    defaultMessage: 'it will make easier for you to manage and request from this library',
+  },
+
+  defineLibraryData: {
+    id: `${scope}.defineLibraryData`,
+    defaultMessage: 'Insert your data with respect to this library',
+  },
+
 });

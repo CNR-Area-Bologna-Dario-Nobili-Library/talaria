@@ -35,50 +35,15 @@ function JointoLibPage(props) {
   const { auth, dispatch, isLoading, patron, match } = props;
   const { params } = match;
   const isNew = !params || !params.id || params.id === 'new';
-  const departments = props.library.departmentOptionList || []; // Ensure departmentOptionList is not undefined
-  const titles = props.titles || []; // Ensure titles is not undefined
+  const departments = props.library.departmentOptionList || [];
+  const titles = props.titles || [];
   const libraries = props.libraries || [];
-  /*Paging*/
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); // default items per page::
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = currentPage * itemsPerPage;
-  /*Map Selection*/
-  const [selectedMarker, setSelectedMarker] = useState({});
-  const [showMapForm, setShowMapForm] = useState(false);
-  const Library_id_URL = match.params.library_id;
-  const [SelectedLibraryID, setSelectedLibraryID] = useState('');
-  const [selectedValueAll, setselectedValueAll] = useState(null);
-  const librariesList = patron.my_libraries.data;
-  const librariesToDisplay = librariesList.slice(startIndex, endIndex);
-  const [preferred, setPreferred] = useState(null);
-
-  // Function to handle changes in items per page
-  // const handleItemsPerPageChange = event => {
-  //   setItemsPerPage(Number(event.target.value));
-  //   setCurrentPage(currentPage); // Reset to first page when items per page changes
-  // };
-
-  // const handleGoToReferenceManager = () => {
-  //   history.push('/patron/references/new');
-  // };
-
-  // const handleGoToMyLibraries = () => {
-  //   history.push('/patron/my-libraries');
-  // };
-
-  // // Function to handle page change
-  // const handlePageChange = pageNumber => {
-  //   setCurrentPage(pageNumber);
-  // };
-
-  const handleShowMapForm = () => {
-    setShowMapForm(!showMapForm); // Toggle the value
-  };
+  const [showForm, setShowForm] = useState(false);
+  const [libraryId, setLibraryId] = useState(null); // New state for library ID
+  const [selectedValue, setSelectedValue] = useState(null); // New state for selected value
 
   useEffect(() => {
     dispatch(requestLibraryOptionList());
-    //dispatch(requestLibraryDepartmentsOptionList());
     dispatch(requestGetTitlesOptionList());
     dispatch(requestMyLibraries());
     if (params && params.library_id) {
@@ -88,13 +53,11 @@ function JointoLibPage(props) {
       }
     }
   }, [dispatch, params]);
-  //[dispatch, params, isNew]
 
-  // Define options for the React Select dropdown
   const options = libraries.map(library => ({
     value: library.value,
     label: library.label,
-    isDisabled: librariesToDisplay.some(
+    isDisabled: patron.my_libraries.data.some(
       item => item.library_id === library.value,
     ),
   }));
@@ -102,61 +65,23 @@ function JointoLibPage(props) {
   const selectedOptionIndex = options.findIndex(
     option => option.value === parseInt(params.library_id, 10),
   );
-  const selectedValue =
+  const selectedValueAll =
     selectedOptionIndex !== -1 ? options[selectedOptionIndex] : null;
 
-  const handleStateUpdate = LibraryID => {
-    setSelectedLibraryID(LibraryID);
-    dispatch(requestGetLibrary(LibraryID, 'departments'));
+  const handleLibraryChange = selectedOption => {
+    // New library change handler
+    setLibraryId(selectedOption ? selectedOption.value : null);
+    setSelectedValue(selectedOption);
   };
 
-  const handleLibraryChange = event => {
-    var libraryFromMap = options.findIndex(
-      option => option.value === parseInt(event, 10),
-    );
-    var value = libraryFromMap !== -1 ? options[libraryFromMap] : options[0];
-    setselectedValueAll(value);
-    handleStateUpdate(value.value);
-    setShowMapForm(false);
-  };
-
-  const handleEdit = (library_id, id) => {
-    history.push('/patron/my-libraries/' + library_id + '/edit/' + id);
-  };
-
-  const handleDelete = libraryToDelete => {
-    alert('Delete action' + JSON.stringify(libraryToDelete));
-    // Implement your delete logic here
-    // Remove the library from the state or send a delete request to the server
-    // Update the librariesList state accordingly
-    // Example: setLibrariesList(updatedLibrariesList);
-  };
-
-  const handleMarkerSelection = LibraryID => {
-    var selectedLibFromUrl = options.findIndex(
-      option => option.value === parseInt(LibraryID, 10),
-    );
-    var value =
-      selectedLibFromUrl !== -1 ? options[selectedLibFromUrl] : options[0];
-    setselectedValueAll(value);
-    handleStateUpdate(LibraryID);
-    setShowMapForm(false);
-  };
-
-  const handleChangeData = (field_name, value) => {
-    //Usato per aggiornare le tendine con dipartimenti/... un base alla biblio scelta
-    if (field_name === 'library_id' && value)
-      dispatch(requestGetLibrary(value, 'departments'));
-  };
+  const isSubmitDisabled = !libraryId; // New submit button state
 
   const handleSubmit = event => {
     event.preventDefault();
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries());
     if (isNew) {
-      // Check if params.library_id exists and is greater than 0
       if (params.library_id && parseInt(params.library_id, 10) > 0) {
-        // Dispatch requestAccessToLibrary with library_id
         dispatch(
           requestAccessToLibrary({
             ...data,
@@ -165,7 +90,6 @@ function JointoLibPage(props) {
           }),
         );
       } else {
-        // Dispatch requestAccessToLibrary without library_id
         dispatch(
           requestAccessToLibrary({
             ...data,
@@ -175,7 +99,6 @@ function JointoLibPage(props) {
         );
       }
     } else {
-      // Dispatch requestUpdateAccessToLibrary for updating existing access
       dispatch(
         requestUpdateAccessToLibrary({
           ...data,
@@ -186,198 +109,225 @@ function JointoLibPage(props) {
     }
   };
 
-  const handleMarkerClick = event => {
-    console.log('Marker clicked. State updated.');
-  };
-
   return (
     <>
-      {/* Render CustomForm based on the state */}
-      {showMapForm && (
-        <CustomForm
-          submitCallBack={formData =>
-            dispatch(
-              requestAccessToLibrary(
-                { ...formData, user_id },
-                intl.formatMessage(messages.libraryCreateMessage),
-              ),
-            )
-          }
-          submitText={intl.formatMessage(messages.librarySubmit)}
-          fields={fieldsIsNew}
-          selectedMarker={selectedMarker}
-          messages={messages}
-          backButton={false}
-          onChangeData={(field_name, value) =>
-            handleChangeData(field_name, value)
-          }
-          onPlacesSearch={search => dispatch(requestSearchPlacesByText(search))}
-          places={props.places}
-          placesFreeSearchPlaceholder={intl.formatMessage(
-            messages.placesFreeSearchPlaceholder,
-          )}
-          
-          getMarkers={pos => dispatch(requestGetLibraryListNearTo(pos))}
-          markers={props.libraryList}
-          onMarkerClick={handleMarkerClick}
-          markerPopupComponent={(marker, chooseMarkerFromMap) => (
-            <div className="libraryPopup">
-              <div className="card-body">
-                <h5 className="card-title">{marker.name}</h5>
-                <h6 className="card-subtitle mb-2 text-muted">
-                  {marker.address}
-                </h6>
-                <button onClick={() => handleMarkerSelection(marker.id)}>
-                  Select this Library
+      {patron.my_libraries.data.length > 0 && !showForm ? (
+        <div>
+          <div className="box p-3 mb-3 text-center">
+            <div className="d-flex justify-content-center align-items-center mt-5">
+              <div className="card text-center" style={{ width: '55rem' }}>
+                <div className="card-body">
+                  <p className="card-text lead">
+                    {intl.formatMessage(messages.jointoLibIntroduction)}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              className="btn btn-success mt-2"
+              onClick={() => history.push('/patron/references/new')}
+              style={{ width: '200px' }}
+            >
+              {intl.formatMessage(messages.buttonReferenceManager)}
+            </button>
+          </div>
+
+          <BelongingLibraries
+            librariesList={patron.my_libraries.data}
+            gridtitleiconLink="/patron/my-libraries"
+            history={history}
+            dispatch={dispatch}
+            showeditbutton={true}
+          />
+          <center>
+            <button
+              className="btn btn-secondary mt-3"
+              style={{ width: '200px' }}
+              onClick={() => history.push('/patron/my-libraries')}
+            >
+              {intl.formatMessage(messages.manageYourLibraries)}
+            </button>
+            <button
+              className="btn btn-primary mt-3 ml-5"
+              style={{ width: '200px' }}
+              //onClick={() => history.push('/patron/my-libraries/new')}
+              onClick={() => setShowForm(true)}
+            >
+              {intl.formatMessage(messages.joinNewLibrary)}
+            </button>
+          </center>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="container mt-3">
+          <div className="mb-4">
+            <h1>{intl.formatMessage(messages.areYouPatron)} </h1>
+            <p>
+              {/* Search for a library name you want to join as a Patron. Search by
+              library name or use the geolocalization button. */}
+              {intl.formatMessage(messages.searchLibrary)}
+            </p>
+          </div>
+          {/* Box 1: Library and Dropdown */}
+          <div className="card mb-4">
+            <div className="card-body">
+              <label htmlFor="library_id">Library</label>
+              <div className="d-flex align-items-center">
+                <div style={{ flex: 1 }}>
+                  <Select
+                    name="library_id"
+                    id="library_id"
+                    styles={{
+                      container: provided => ({ ...provided, width: '100%' }),
+                    }}
+                    options={options}
+                    onChange={handleLibraryChange}
+                    value={selectedValueAll || selectedValue}
+                    isSearchable
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {selectedValue && (
+            <>
+              {/* Box 2: Assign Your Preferred Label */}
+              <div className="card mb-4">
+                <div className="card-body">
+                  <h4>
+                    <strong>
+                      {intl.formatMessage(messages.assignLibraryLabel)}
+                    </strong>
+                  </h4>
+                  <label htmlFor="label">
+                    {intl.formatMessage(messages.defineLibraryLabel)}
+                  </label>
+                  <input
+                    type="text"
+                    id="label"
+                    name="label"
+                    className="form-control"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Box 3: Insert Your Data */}
+              <div className="card mb-4">
+                <div className="card-body">
+                  <h4>
+                    <strong>
+                      {intl.formatMessage(messages.defineLibraryData)}
+                    </strong>
+                  </h4>
+                  <div className="row mt-2">
+                    {auth.permissions.roles &&
+                      auth.permissions.roles.includes('patron') && (
+                        <div className="col-md-12">
+                          <div className="form-group">
+                            <label htmlFor="department_id">Department</label>
+                            <Select
+                              name="department_id"
+                              id="department_id"
+                              options={departments.map(dept => ({
+                                value: dept.value,
+                                label: dept.label,
+                              }))}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="titleId">Title</label>
+                        <Select
+                          name="title_id"
+                          id="title_id"
+                          options={titles.map(title => ({
+                            value: title.value,
+                            label: title.label,
+                          }))}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="userReferent">
+                          {intl.formatMessage(messages.user_referent)}
+                        </label>
+                        <input
+                          type="text"
+                          id="userReferent"
+                          name="user_referent"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="user_mat">
+                          {intl.formatMessage(messages.user_mat)}
+                        </label>
+                        <input
+                          type="text"
+                          id="user_mat"
+                          name="user_mat"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="user_service_phone">
+                          {intl.formatMessage(messages.user_service_phone)}
+                        </label>
+                        <input
+                          type="tel"
+                          id="user_service_phone"
+                          name="user_service_phone"
+                          className="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="user_service_email">
+                          {intl.formatMessage(messages.user_service_email)}
+                        </label>
+                        <input
+                          type="email"
+                          id="user_service_email"
+                          name="user_service_email"
+                          className="form-control"
+                          required
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Centered Submit Button */}
+              <div className="text-center mt-4">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={isSubmitDisabled}
+                >
+                  {isNew ? 'Join as a Patron' : 'Update'}
                 </button>
               </div>
-            </div>
+            </>
           )}
-        />
+        </form>
       )}
-
-      
-
-      <form onSubmit={handleSubmit} className="container mt-3">
-        <div className="row">
-          <div className="col-md-4">
-            {/* <div className="form-group"> */}
-            <label htmlFor="library_id">Library</label>
-            <div className="d-flex align-items-center">
-              <Select
-                name="library_id"
-                id="library_id"
-                styles={{
-                  container: provided => ({
-                    ...provided,
-                    width: '300px',
-                  }),
-                }}
-                options={options}
-                onChange={selectedOption => {
-                  handleLibraryChange(
-                    selectedOption ? selectedOption.value : '',
-                  );
-                }}
-                value={selectedValueAll || selectedValue}
-                isDisabled={Library_id_URL > 0}
-                isSearchable // Enables searching
-                required
-              />
-              <button
-                className="btn btn-success ml-2"
-                type="button"
-                onClick={handleShowMapForm}
-                disabled={Library_id_URL > 0}
-              >
-                <i className="fas fa-map-marker-alt" />{' '}
-              </button>
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="label">Label</label>
-              <input
-                type="text"
-                id="label"
-                name="label"
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-
-          {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
-            <div className="col-md-4">
-              <div className="form-group">
-                <label htmlFor="department_id">Department</label>
-                <Select
-                  name="department_id"
-                  id="department_id"
-                  options={departments.map((dept, index) => ({
-                    value: dept.value,
-                    label: dept.label,
-                  }))}
-                />
-              </div>
-            </div>
-          )}
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="titleId">Title</label>
-              <Select
-                name="title_id"
-                id="title_id"
-                options={titles.map((title, index) => ({
-                  value: title.value,
-                  label: title.label,
-                }))}
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="userReferent">User Referent</label>
-              <input
-                type="text"
-                id="userReferent"
-                name="user_referent"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_mat">User Matriculation</label>
-              <input
-                type="text"
-                id="user_mat"
-                name="user_mat"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_service_phone">Service Phone</label>
-              <input
-                type="tel"
-                id="user_service_phone"
-                name="user_service_phone"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_service_email">Service Email</label>
-              <input
-                type="email"
-                id="user_service_email"
-                name="user_service_email"
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {isNew ? 'Join to Library' : 'Update'}
-        </button>
-
-        <BelongingLibraries
-          librariesList={librariesList}
-          gridtitleiconLink="/patron/my-libraries"
-          history={history}
-          dispatch={dispatch}
-          showeditbutton={true}
-        />
-      </form>
     </>
   );
 }
@@ -386,11 +336,10 @@ const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
   places: placesSelector(),
   titles: titlesSelector(),
-  libraries: librariesSelector(), //Populate librairies in dropdown
+  libraries: librariesSelector(),
   patron: makeSelectPatron(),
   isLoading: isPatronLoading(),
-  libraryList: libraryListSelector() //populate libaries to map
-
+  libraryList: libraryListSelector(),
 });
 
 function mapDispatchToProps(dispatch) {
