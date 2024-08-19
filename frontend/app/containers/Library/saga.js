@@ -43,7 +43,9 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_REMOVE_LIBRARY_OPERATOR,
       REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,
       REQUEST_GET_USERS_OPTION_ITEMS,    
-      REQUEST_INVITE_LIBRARY_OPERATOR
+      REQUEST_INVITE_LIBRARY_OPERATOR,
+      REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,
+      REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST
     } from './constants';
 import {
   requestError,
@@ -74,6 +76,8 @@ import {
   requestGetCountriesOptionListSuccess,
   requestGetInstitutionsOptionListSuccess,
   requestGetInstitutionTypesOptionListSuccess,
+  requestGetInstitutionsByTypeByCountryOptionListSuccess,
+  requestGetlibraryProjectsOptionListSuccess,
   requestLibrarySubjectOptionListSuccess,
   requestLibraryIdentifierTypesOptionListSuccess,
   uploadSuccess,
@@ -118,6 +122,7 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     getLibrariesSubjects,        
     getInstitutionsOptionList,
     getInstitutionTypesOptionList,
+    getInstitutionsByTypeByCountryOptionList,
     getLibrariesIdentifierTypesOptionList,
     getLibraryOperators,getLibraryPendingOperators,
     getLibraryOperatorAbilities,
@@ -126,6 +131,7 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     deleteLibraryPendingOperator,
     getLibraryOperator,
     getUsersOptionsList,
+    getlibraryProjectsOptionList,
     inviteLibraryOperator
 } from '../../utils/api'    
 
@@ -309,6 +315,21 @@ export function* requestGetInstitutionTypesOptionListSaga(action) {
     yield put(requestError(e.message));
   }
 }
+
+export function* requestGetInstitutionsByTypeByCountryOptionListSaga(action) {
+  const options = {
+     method: 'get',
+     query: action.request ? action.request : "",
+     countryid: action.countryid,
+     institutiontypeid: action.institutiontypeid
+   }
+   try {
+     const request = yield call(getInstitutionsByTypeByCountryOptionList, options);
+     yield put(requestGetInstitutionsByTypeByCountryOptionListSuccess(request));
+   } catch(e) {
+     yield put(requestError(e.message));
+   }
+ }
 
 
 export function* requestGetLibrariesListSaga(action = {}) {
@@ -872,6 +893,23 @@ export function* requestGetCountriesOptionListSaga(action) {
 }
 
 
+
+export function*  requestGetlibraryProjectsOptionList(action) {
+  const options = {
+    method: 'get',
+    query: action.request ? action.request : ""
+  }
+  try {
+    const request = yield call(getlibraryProjectsOptionList, options);
+
+    yield put(requestGetlibraryProjectsOptionListSuccess(request));
+  } catch(e) {
+    
+    
+    yield put(requestError(e.message));
+  }
+}
+
 export function* requestLibraryGetOperatorsSaga(action) {
   const options = {
     method: 'get',
@@ -1106,6 +1144,10 @@ export default function* librarySaga() {
 
   yield takeLatest(REQUEST_GET_INSTITUTIONS_OPTIONLIST, requestGetInstitutionsOptionListSaga);
   yield takeLatest(REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST, requestGetInstitutionTypesOptionListSaga);
+
+  yield takeLatest(REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST, requestGetInstitutionsByTypeByCountryOptionListSaga);
+
+  yield takeLatest(REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST, requestGetlibraryProjectsOptionList)
 
 
   yield takeLatest(REQUEST_GET_LIBRARY_OPERATOR,requestLibraryGetOperatorSaga);

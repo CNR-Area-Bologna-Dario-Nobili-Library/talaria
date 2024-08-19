@@ -3,11 +3,12 @@ import {Button, Input} from 'reactstrap'
 import {useIntl} from 'react-intl';
 import messages from './messages';
 import './style.scss';
+import {translatePerm} from '../../../utils/utilityFunctions'
 
 
 
 const LibraryEditPermissionsForm = (props) => {
-    const {data,submitCallback,operatorData,history}=props
+    const {data,submitCallback,operatorData,history,filterPerm}=props
 
     console.log("LibraryEditPermissionsForm",props)
     
@@ -30,10 +31,7 @@ const LibraryEditPermissionsForm = (props) => {
 
       const resetPerms=() => {    
         setSaveDisabled(true);
-        setOpPerms({
-          ...initPerms
-          }
-        )
+        setOpPerms(filterPerm(initPerms))        
       }
 
       useEffect( ()=> {   
@@ -94,9 +92,10 @@ const LibraryEditPermissionsForm = (props) => {
                 <div className="card-body">                    
                     <p className='intro'>Lorem Ipsum mollit aliqua occaecat incididunt et ut laboris reprehenderit incididunt veniam cupidatat veniam pariatur exercitation.</p>
                     {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
+                    <h4>{intl.formatMessage({id: 'app.global.permissions'})}</h4>
                     <ul>
                     {opPerms && Object.keys(opPerms).map(op => (                          
-                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]} disabled={op!="manage" && opPerms["manage"]}/> {op}</li>
+                        <li key={op}><input type="checkbox" onChange={()=>handleCheckbox(op,!opPerms[op])} name={op} checked={opPerms[op]} disabled={op!="manage" && opPerms["manage"]}/> {translatePerm(op)}</li>
                       )
                       )}                                          
                     </ul>

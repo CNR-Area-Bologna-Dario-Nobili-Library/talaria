@@ -46,10 +46,12 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_GET_LIBRARY_DESK_SUCCESS,
    REQUEST_GET_COUNTRIES_OPTIONLIST, REQUEST_GET_COUNTRIES_OPTIONLIST_SUCCESS,
    REQUEST_LIBRARYSUBJECT_OPTIONLIST, REQUEST_LIBRARYSUBJECT_OPTIONLIST_SUCCESS,
+   REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS,
    REQUEST_GET_INSTITUTIONS_OPTIONLIST,   
    REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
    REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST,
    REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
+   REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST, REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST_SUCCESS,
    REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
    REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,  
    UPLOAD_REQUEST,
@@ -220,6 +222,22 @@ export function requestGetInstitutionTypesOptionList(request) {
 export function requestGetInstitutionTypesOptionListSuccess(result) {
   return {
     type: REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST_SUCCESS,
+    result
+  };
+}
+
+export function requestGetInstitutionsByTypeByCountryOptionList(request, countryid, institutiontypeid) {
+  return {
+    type: REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,
+    request,
+    countryid,
+    institutiontypeid
+  };
+}
+
+export function requestGetInstitutionsByTypeByCountryOptionListSuccess(result) {
+  return {
+    type: REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST_SUCCESS,
     result
   };
 }
@@ -682,6 +700,24 @@ export function requestGetCountriesOptionList(request) {
     };
   }
 
+  export function requestGetlibraryProjectsOptionList(request)
+{
+return {
+  type: REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,
+  request
+};
+}
+
+
+
+export function requestGetlibraryProjectsOptionListSuccess(result)
+{
+return {
+  type: REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS,
+  result
+};
+}
+
   export function requestLibraryIdentifierTypesOptionList(request) {
     return {
       type: REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST,
@@ -694,7 +730,7 @@ export function requestGetCountriesOptionList(request) {
       type: REQUEST_LIBRARYIDENTIFIER_TYPES_OPTIONLIST_SUCCESS,
       result
     };
-  }
+  } 
 
   export function requestGetLibraryOperators(library_id) {
     return {

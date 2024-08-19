@@ -7,7 +7,7 @@ import confirm from 'reactstrap-confirm';
 import LibraryInviteOperatorForm from '../LibraryInviteOperatorForm';
 
 const LibraryInviteOperator = props => {
-  const { usersData, searchUserCallback, inviteOpCallback, auth } = props;
+  const { usersData, searchUserCallback, inviteOpCallback, auth,filterPerm } = props;
   const intl = useIntl();
 
   const [selectedUser, setSelectedUser] = useState(null);
@@ -189,6 +189,7 @@ const LibraryInviteOperator = props => {
             email={email}
             setEmail={setEmail}
             isManualEntry={isManualEntry}
+            filterPerm={filterPerm}
           />
         </div>
       </div>

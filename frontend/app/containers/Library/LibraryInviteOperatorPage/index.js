@@ -28,11 +28,21 @@ function LibraryInviteOperatorPage(props) {
   dispatch(requestInviteLibraryOperator(match.params.library_id,opdata,intl.formatMessage({id: "app.containers.LibraryInviteOperatorPage.inviteSentMessage"})))
  }
 
+ const filterLendPerm=(permsList) => {    
+  if(permsList && library.library.profile_type==1) //only borrow library
+  {
+    let entries = Object.entries(permsList);
+    let permsListentries=entries.filter(([key,value])=>key!='lend') //remove lend perm
+    permsList=Object.fromEntries(permsListentries);
+  }  
+  return permsList;
+ }
+
  
   return (            
-          <LibraryInviteOperator auth={auth} usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)}/>
+          <LibraryInviteOperator filterPerm={(permList)=>filterLendPerm(permList)} auth={auth} usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)}/>
 
-  );
+  ); 
 }
 
 const mapStateToProps = createStructuredSelector({

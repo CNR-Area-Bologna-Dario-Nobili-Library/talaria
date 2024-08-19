@@ -20,20 +20,39 @@ export default defineMessages({
     id: `app.libraries.institution_id`,
     defaultMessage: "Institution ID",
   },
+  project_id: { 
+    id: 'app.libraries.institution_id',
+    defaultMessage: "Institution ID",
+  },
+
+  projects_label: {
+    id: 'app.libraries.projects_label',
+    defaultMessage: 'Project or Consortium',
+  },
+
+  identifiers_label: {
+    id: 'app.libraries.identifiers_label',
+    defaultMessage: 'Identifiers',
+  },
   subject_id: {
     id: `app.libraries.subject_id`,
     defaultMessage: 'Subject ID',
+  },
+
+  subject_name: {
+    id: 'app.libraries.subject_name',
+    defaultMessage: 'subject_name',
+  },
+
+  library_coordinates_Validity: {
+    id: 'app.libraries.library_coordinates_Validity',
+    defaultMessage: "The latitude or longitude can be accepted in either decimal format (e.g., +33.56, -33.56) or in degrees format (e.g., 40°20'38''N).",
   },
   country_id: {
     id: `app.global.country`,
     defaultMessage: 'Country ID',
   },
-
-  identifier_type_id: {
-    id: `app.libraries.identifier_type_id`,
-    defaultMessage: 'identifier_type_id',
-  },
-
+  
   opac: {
     id: `app.libraries.opac`,
     defaultMessage: 'Url opac',
@@ -74,14 +93,6 @@ export default defineMessages({
     id: `app.libraries.ill_user_cost`,
     defaultMessage: 'ill_user_cost',
   },
-  ill_IFLA_voucher: {
-    id: 'app.libraries.ill_IFLA_voucher',
-    defaultMessage: 'IFLA voucher accepted'
-  },
-  ill_cost_in_voucher: {
-    id: 'app.libraries.ill_cost_in_voucher',
-    defaultMessage: 'IFLA voucher value'
-  },
   status: {
     id: `app.libraries.status`,
     defaultMessage: 'status',
@@ -90,6 +101,12 @@ export default defineMessages({
     id: `app.libraries.external`,
     defaultMessage: 'external',
   },
+
+  profile_type: { 
+    id: 'app.libraries.profile_type',
+    defaultMessage: 'profile_type',
+  },
+
   registration_date: {
     id: `app.libraries.registration_date`,
     defaultMessage: 'Registration date',
@@ -105,6 +122,10 @@ export default defineMessages({
   invoice_header: {
     id: `app.global.invoice_header`,
     defaultMessage: 'invoice_header',
+  },
+  registration_date: {
+    id: 'app.libraries.registration_date',
+    defaultMessage: 'Registration date',
   },
   email_pec: {
     id: `app.global.email_pec`,
@@ -134,14 +155,37 @@ export default defineMessages({
     id: `app.libraries.general_info`,
     defaultMessage: 'General info',
   },
+  service_info: {
+    id: 'app.libraries.service_info',
+    defaultMessage: 'Service info',
+  },
   administrative_info: {
     id: `app.global.administrative_info`,
     defaultMessage: 'Administrative Info',
   },
-  granted_permissions: {
+  institution_info: {
+    id: 'app.libraries.institution_info',
+    defaultMessage: 'Institution and Projects',
+  },
+  identifier_info: {
+    id: 'app.libraries.identifiers_label',
+    defaultMessage: 'Identifiers',
+  },
+  identifier_type_id: {
+    id: 'app.libraries.identifier_type_id',
+    defaultMessage: 'Identifier Type',
+  },
+
+  library_identifiers_txt: {
+    id: 'app.libraries.identifier_code',
+    defaultMessage: 'Identifier Code',
+  },
+  
+  /*granted_permissions: {
     id: `app.libraries.granted_permissions`,
     defaultMessage: 'Users permissions',
-  },
+  },*/
+
   updateSubmitText: {
     id: `${scope}.updateSubmitText`,
     defaultMessage: 'Update Reference',
@@ -150,5 +194,36 @@ export default defineMessages({
     id: `${scope}.createSubmitText`,
     defaultMessage: 'Create Reference',
   },
+
+  institution_type_id: {
+    id: 'app.libraries.institution_type_id',
+    defaultMessage: 'Institution Type ID',
+  },
+
+  institution_country_id: {
+    id: 'app.libraries.institution_country_id',
+    defaultMessage: 'Institution Country ID',
+  },
+
+
+alt_name: {
+  id: 'app.libraries.alt_name',
+  defaultMessage: 'Alternative name',
+},
+
+suggested_institution_name: {
+  id: 'app.libraries.suggested_institution_name',
+  defaultMessage: 'Your institution Name',
+},
+
+  ill_IFLA_voucher: {
+    id: 'app.libraries.ill_IFLA_voucher',
+    defaultMessage: 'IFLA voucher accepted'
+  },
+  ill_cost_in_voucher: {
+    id: 'app.libraries.ill_cost_in_voucher',
+    defaultMessage: 'IFLA voucher value'
+  },
+  
 });
 

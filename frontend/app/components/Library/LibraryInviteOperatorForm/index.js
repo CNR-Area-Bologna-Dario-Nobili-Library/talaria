@@ -4,9 +4,10 @@ import { useIntl } from 'react-intl';
 import messages from './messages';
 import './style.scss';
 import {toast} from 'react-toastify'
+import {translatePerm} from '../../../utils/utilityFunctions'
 
 const LibraryInviteOperatorForm = props => {
-  const { submitCallback, userData, history,auth } = props;
+  const { submitCallback, userData, history,auth,filterPerm } = props;
   console.log('LibraryInviteOperatorForm', props);
 
   const intl = useIntl();
@@ -61,10 +62,7 @@ const LibraryInviteOperatorForm = props => {
       },[opPerms])
     
       const resetPerms=() => {    
-        setOpPerms({
-          ...initPerms
-          }
-        )
+        setOpPerms(filterPerm(initPerms))
       }
 
       useEffect( ()=> {   
@@ -123,7 +121,7 @@ const LibraryInviteOperatorForm = props => {
             {/* <h5 className='card-title'>User</h5> */}
             <FormGroup>
               <Label for="name">
-                Name <span className="text-danger">*</span>
+              {intl.formatMessage({id: 'app.global.name'})} <span className="text-danger">*</span>
               </Label>
               <Input
                 type="text"
@@ -139,7 +137,7 @@ const LibraryInviteOperatorForm = props => {
             </FormGroup>
             <FormGroup>
               <Label for="surname">
-                Surname <span className="text-danger">*</span>
+              {intl.formatMessage({id: 'app.global.surname'})} <span className="text-danger">*</span>
               </Label>
               <Input
                 type="text"
@@ -155,7 +153,7 @@ const LibraryInviteOperatorForm = props => {
             </FormGroup>
             <FormGroup>
               <Label for="email">
-                Email <span className="text-danger">*</span>
+              {intl.formatMessage({id: 'app.global.email'})} <span className="text-danger">*</span>
               </Label>
               <Input
                 type="email"
@@ -169,14 +167,14 @@ const LibraryInviteOperatorForm = props => {
                 invalid={!emailValid}
                 required
               />
-              {!emailValid && <FormFeedback>Email is not valid</FormFeedback>}
+              {!emailValid && <FormFeedback>{intl.formatMessage({id: 'app.global.invalid_email'})}</FormFeedback>}
             </FormGroup>
           </div>
         </div>
 
         <div className="card">
           <div className="card-body">
-            <h5 className="card-title">Permissions</h5>
+            <h5 className="card-title">{intl.formatMessage({id: 'app.global.permissions'})}</h5>
             <ul>
               {opPerms &&
                 Object.keys(opPerms).map(op => (
@@ -188,7 +186,7 @@ const LibraryInviteOperatorForm = props => {
                       checked={opPerms[op]}
                       disabled={op !== 'manage' && opPerms['manage']}
                     />{' '}
-                    {op}
+                    {translatePerm(op)}
                   </li>
                 ))}
             </ul>

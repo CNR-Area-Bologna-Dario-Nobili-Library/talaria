@@ -98,19 +98,19 @@ const OperatorsList = props => {
                       className="div-table-cell"
                       style={{ width: '25%', fontWeight: 'bold' }}
                     >
-                      Full Name
+                     {intl.formatMessage({id: 'app.global.name'})}
                     </div>
                     <div
                       className="div-table-cell"
                       style={{ width: '55%', fontWeight: 'bold' }}
                     >
-                      Roles
+                      {intl.formatMessage({id: 'app.global.permissions'})}
                     </div>
                     <div
                       className="div-table-cell"
                       style={{ width: '20%', fontWeight: 'bold' }}
                     >
-                      Actions
+                     {intl.formatMessage({id: 'app.global.actions'})}
                     </div>
                   </div>
                   {Filter.filterData && Filter.filterData.length > 0 ? (
