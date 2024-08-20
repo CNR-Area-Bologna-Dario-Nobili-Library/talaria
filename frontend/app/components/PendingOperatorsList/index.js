@@ -37,9 +37,11 @@ const PendingOperatorsList = props => {
   const OpMatch = (op, query) => {
     let reg = new RegExp(query, 'gi');
 
-    const user_name = op.user ? (op.user.data.name || "") : (op.user_name || "");
-    const user_surname = op.user ? (op.user.data.surname || "") : (op.user_surname || "");
-    const user_email = op.user ? (op.user.data.email || "") : (op.user_email || "");
+    const user_name = op.user ? op.user.data.name || '' : op.user_name || '';
+    const user_surname = op.user
+      ? op.user.data.surname || ''
+      : op.user_surname || '';
+    const user_email = op.user ? op.user.data.email || '' : op.user_email || '';
 
     return (
       (user_name !== null && user_name.match(reg) !== null) ||
@@ -51,9 +53,15 @@ const PendingOperatorsList = props => {
   //only commmanager+library man can edit temp permission of any users (only other perm, not mine)
   const canEditOrDelete = tempop => {
     let userid = tempop.user ? tempop.user.data.id : tempop.user_id;
-    let useremail = tempop.user ? tempop.user.data.email : tempop.user_email;    
-    return ( ( ( (userid != null && userid != auth.user.id) || auth.user.email != useremail) && !auth.permissions.roles.includes("super-admin") ) || 
-    ( ( (userid != null && userid != auth.user.id) || auth.user.email != useremail) && auth.permissions.roles.includes("manager"))) 
+    let useremail = tempop.user ? tempop.user.data.email : tempop.user_email;
+    return (
+      (((userid != null && userid != auth.user.id) ||
+        auth.user.email != useremail) &&
+        !auth.permissions.roles.includes('super-admin')) ||
+      (((userid != null && userid != auth.user.id) ||
+        auth.user.email != useremail) &&
+        auth.permissions.roles.includes('manager'))
+    );
   };
 
   return (
@@ -62,23 +70,25 @@ const PendingOperatorsList = props => {
       <Row>
         <Col md={6} sm={12}>
           {searchBox && (
-            <InputSearch
-              submitCallBack={query => {
-                if (query !== '')
-                  setFilter(state => ({
-                    filterData: data.filter(op => OpMatch(op, query)),
-                    query: query,
-                  }));
-                else
-                  setFilter(state => ({
-                    query: '',
-                    filterData: data, // Reset to original data when query is empty
-                  }));
-              }}
-              query={Filter.query}
-              searchOnChange={true}
-              clearButton={false}
-            />
+            <div className="search-box">
+              <InputSearch
+                submitCallBack={query => {
+                  if (query !== '')
+                    setFilter(state => ({
+                      filterData: data.filter(op => OpMatch(op, query)),
+                      query: query,
+                    }));
+                  else
+                    setFilter(state => ({
+                      query: '',
+                      filterData: data, // Reset to original data when query is empty
+                    }));
+                }}
+                query={Filter.query}
+                searchOnChange={true}
+                clearButton={false}
+              />
+            </div>
           )}
         </Col>
       </Row>
@@ -89,23 +99,23 @@ const PendingOperatorsList = props => {
               <div className="container" style={{ marginTop: '30px' }}>
                 <div className="div-table">
                   <div className="div-table-row div-table-header">
-                    <div className="div-table-cell" style={{ width: '25%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.name'})}
+                    <div className="div-table-cell name-cell">
+                      {intl.formatMessage({ id: 'app.global.name' })}
                     </div>
-                    <div className="div-table-cell" style={{ width: '19%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.permissions'})}
+                    <div className="div-table-cell permissions-cell">
+                      {intl.formatMessage({ id: 'app.global.permissions' })}
                     </div>
-                    <div className="div-table-cell" style={{ width: '10%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.status'})}
+                    <div className="div-table-cell status-cell">
+                      {intl.formatMessage({ id: 'app.global.status' })}
                     </div>
-                    <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.created_at'})}
+                    <div className="div-table-cell created-at-cell">
+                      {intl.formatMessage({ id: 'app.global.created_at' })}
                     </div>
-                    <div className="div-table-cell" style={{ width: '13%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.updated_at'})}
+                    <div className="div-table-cell updated-at-cell">
+                      {intl.formatMessage({ id: 'app.global.updated_at' })}
                     </div>
-                    <div className="div-table-cell" style={{ width: '20%', fontWeight: 'bold' }}>
-                    {intl.formatMessage({id: 'app.global.actions'})}
+                    <div className="div-table-cell actions-cell">
+                      {intl.formatMessage({ id: 'app.global.actions' })}
                     </div>
                   </div>
                   {(Filter.filterData &&
