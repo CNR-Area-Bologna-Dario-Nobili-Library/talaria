@@ -1,32 +1,165 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'reactstrap';
-import './style.scss';
+import { useIntl } from 'react-intl';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
+import messages from './messages';
+import L from 'leaflet';
+import './style.scss';
+import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates';
-import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
-const LandingPageLibrariesBox = (props) => {
-  const {auth,title,match,history,canCollapse,collapsed}=props
+const LandingPageLibrariesBox = props => {
+  const { auth, title, libraryList, history, canCollapse, collapsed } = props;
+  const [libraryId, setLibraryId] = useState(null);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedLibrary, setSelectedLibrary] = useState(null);
+  const [showRegisterOption, setShowRegisterOption] = useState(false);
+  const [showLibrarianPrompt, setShowLibrarianPrompt] = useState(false);
+  const [showMap, setShowMap] = useState(false); // Hide the map by default
+  const [mapCenter, setMapCenter] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationError, setLocationError] = useState(null);
+  const mapRef = useRef(null);
+  const intl = useIntl();
+  const libraries = libraryList || [];
 
   const fromOpenURLorPubmed =
     history &&
     history.location &&
     history.location.search.includes('byopenurl');
 
-  console.log('LandingPageLibrariesBox', props);
+  // Calculate the distance between two coordinates (in km)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const toRad = value => (value * Math.PI) / 180;
+    const R = 6371; // Radius of Earth in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+          console.log('User location:', { latitude, longitude });
+          setUserLocation([latitude, longitude]);
+          setMapCenter([latitude, longitude]); // Center the map on user's location
+        },
+        error => {
+          console.error('Geolocation error:', error);
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setLocationError('User denied the request for Geolocation.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setLocationError('Location information is unavailable.');
+              break;
+            case error.TIMEOUT:
+              setLocationError('The request to get user location timed out.');
+              break;
+            case error.UNKNOWN_ERROR:
+              setLocationError('An unknown error occurred.');
+              break;
+            default:
+              setLocationError(
+                'An error occurred while retrieving your location.',
+              );
+          }
+        },
+        { timeout: 10000 }, // Timeout after 10 seconds
+      );
+    } else {
+      setLocationError('Geolocation is not supported by your browser.');
+    }
+  }, []);
+
+  const handleLibraryChange = selectedOption => {
+    setLocationError(null)
+    if (selectedOption) {
+      const selectedLibraryInfo = libraries.find(
+        library => library.value === selectedOption.value,
+      );
+      setLibraryId(selectedOption.value);
+      setSelectedValue(selectedOption);
+      setSelectedLibrary(selectedLibraryInfo);
+
+      if (selectedLibraryInfo) {
+        const newCenter = [
+          parseFloat(selectedLibraryInfo.lat),
+          parseFloat(selectedLibraryInfo.lon),
+        ];
+        setMapCenter(newCenter);
+        setShowMap(true); // Show the map when a library is selected
+
+        // If the map is already created, animate the center change
+        if (mapRef.current) {
+          mapRef.current.setView(newCenter, 12, {
+            animate: true,
+            duration: 1.5,
+          });
+        }
+      }
+
+      setShowRegisterOption(false);
+      setShowLibrarianPrompt(false);
+    } else {
+      setLibraryId(null);
+      setSelectedValue(null);
+      setSelectedLibrary(null);
+      setShowRegisterOption(false);
+    }
+  };
+
+  const handleReset = () => {
+    setLibraryId(null);
+    setSelectedValue(null);
+    setSelectedLibrary(null);
+    setShowRegisterOption(true);
+    setShowLibrarianPrompt(true);
+    setShowMap(false); // Hide the map on reset
+  };
+
+  // Toggle map display
+  const toggleMap = () => {
+    setShowMap(!showMap);
+  };
+
+  // Custom filter function to only start searching after 3 characters
+  const filterLibraries = (option, inputValue) => {
+    if (inputValue.length < 3) return false; // Only search when 3 or more characters are typed
+    return option.label.toLowerCase().includes(inputValue.toLowerCase());
+  };
+
+  const MapLibraries = Array.isArray(libraries)
+    ? libraries.map(library => ({
+        id: library.value,
+        name: library.label,
+        latitude: parseFloat(library.lat), // Ensure lat/lon are numbers
+        longitude: parseFloat(library.lon),
+      }))
+    : [];
 
   const statusClass = status => {
     switch (status) {
       case 0:
         return 'pending';
-        break;
-      // case 1: return 'success'; break;
       case 2:
         return 'disabled';
-        break;
+      default:
+        return status;
     }
-    return status;
   };
 
   return (
@@ -37,6 +170,7 @@ const LandingPageLibrariesBox = (props) => {
       collapsed={collapsed}
     >
       <>
+        {/* Display the two tables first */}
         {auth.permissions.resources.libraries &&
           auth.permissions.resources.libraries.length >= 1 && (
             <div className="container">
@@ -75,14 +209,13 @@ const LandingPageLibrariesBox = (props) => {
                           <Link
                             className="btn btn-sm btn-primary mb-2"
                             to={'/library/' + res.resource.id}
-                            key={'lib'+res.resource.id}
+                            key={'lib' + res.resource.id}
                           >
                             Visit This Library
                           </Link>
                           {(res.permissions.includes('borrow') ||
                             res.permissions.includes('manage')) && (
                             <>
-                            
                               {fromOpenURLorPubmed && (
                                 <Link
                                   className="btn btn-sm btn-success mb-2"
@@ -122,6 +255,7 @@ const LandingPageLibrariesBox = (props) => {
               </div>
             </div>
           )}
+
         <br />
         <br />
         {auth.permissions.tempresources &&
@@ -212,18 +346,180 @@ const LandingPageLibrariesBox = (props) => {
             </div>
           )}
 
-        <div className="container text-center mt-5">
-          <p>
-            Are you a librarian and want to register a new library into the
-            system?
-          </p>
-          <a className="btn btn-primary" href="/register-library/">
-            Register Your Library
-          </a>
+        {/* Add the hr separator */}
+        <hr className="my-5" />
+
+        {/* Are you a Librarian? section */}
+        <div className="card mb-4">
+          <div className="card-body">
+            <div className="container text-center mt-5">
+              <h1 className="card-body-header">
+                {intl.formatMessage(messages.AreYouLibrarian)}
+              </h1>
+              <p className="card-body-subheader">
+                {intl.formatMessage(messages.RegisterLibraryCommunity)}
+              </p>
+            </div>
+
+            <div className="d-flex justify-content-between align-items-center">
+              <div style={{ flex: 1, marginRight: '20px' }}>
+                <Select
+                  name="library_id"
+                  id="library_id"
+                  aria-label="Library selection dropdown"
+                  classNamePrefix="select-container"
+                  options={libraries}
+                  onChange={handleLibraryChange}
+                  filterOption={filterLibraries} // Apply custom filter logic
+                  value={selectedValue}
+                  placeholder="Select a library…"
+                  isSearchable
+                  required
+                />
+              </div>
+
+              {/* Map Toggle Icon */}
+              <div style={{ cursor: 'pointer', fontSize: '24px' }}>
+                <i
+                  className="fa fa-map-marker-alt"
+                  onClick={toggleMap}
+                  aria-label="Toggle map"
+                />
+              </div>
+            </div>
+
+            {/* Conditionally render the map */}
+            {showMap && (
+              <div style={{ marginTop: '20px' }}>
+                <MapContainer
+                  center={mapCenter}
+                  zoom={12}
+                  style={{ height: '400px', width: '100%' }}
+                  whenCreated={mapInstance => {
+                    mapRef.current = mapInstance;
+                    // Immediately set the view on first load if a library is selected
+                    if (selectedLibrary) {
+                      mapInstance.setView(
+                        [
+                          parseFloat(selectedLibrary.lat),
+                          parseFloat(selectedLibrary.lon),
+                        ],
+                        12,
+                        { animate: true, duration: 1.5 },
+                      );
+                    }
+                  }}
+                >
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                  {MapLibraries.map(library => (
+                    <Marker
+                      key={library.id}
+                      position={[library.latitude, library.longitude]}
+                      eventHandlers={{
+                        click: () => {
+                          handleLibraryChange({
+                            value: library.id,
+                            label: library.name,
+                          });
+                          setShowMap(false); // Hide the map after selection
+                        },
+                      }}
+                    >
+                      <Popup>
+                        {library.name} <br /> Latitude: {library.latitude},
+                        Longitude: {library.longitude}
+                      </Popup>
+                    </Marker>
+                  ))}
+                </MapContainer>
+              </div>
+            )}
+
+            {locationError && (
+              <div className="alert alert-danger mt-3">{locationError}</div>
+            )}
+
+            {/* Conditionally render the information, message, and Reset button */}
+            {selectedLibrary && (
+              <div
+                className="text-center mt-3"
+                style={{ transition: 'all 0.3s ease-in-out' }}
+              >
+                <div className="alert alert-info alert-info-custom">
+                  {intl.formatMessage(messages.ContactLibraryManager)}
+                </div>
+                <div className="div-responsive">
+                  <div className="div-table">
+                    <div className="div-table-row">
+                      <div
+                        className="div-table-header"
+                        style={{ width: '25%' }}
+                      >
+                        {intl.formatMessage({ id: 'app.global.library' })}
+                      </div>
+                      <div className="div-table-cell">
+                        {selectedLibrary.label}
+                      </div>
+                    </div>
+                    <div className="div-table-row">
+                      <div
+                        className="div-table-header"
+                        style={{ width: '25%' }}
+                      >
+                        {intl.formatMessage({
+                          id: 'app.global.library.address',
+                        })}
+                      </div>
+                      <div className="div-table-cell">
+                        {selectedLibrary.address || 'N/A'}
+                      </div>
+                    </div>
+                    <div className="div-table-row">
+                      <div
+                        className="div-table-header"
+                        style={{ width: '25%' }}
+                      >
+                        Contact
+                      </div>
+                      <div className="div-table-cell">
+                        {selectedLibrary.email || 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Button
+                  color="primary"
+                  className="reset-button"
+                  onClick={handleReset}
+                  aria-label="Reset the selected library"
+                >
+                  {intl.formatMessage({
+                    id: 'app.global.library.resetbutton',
+                  })}
+                </Button>
+              </div>
+            )}
+
+            <hr className="hr-custom" />
+            <div className="text-center text-center-custom">
+              <p>
+                <strong>
+                  {intl.formatMessage(messages.LibNotFoundRegMessage)}
+                </strong>
+              </p>
+              <Link
+                className="btn btn-primary register-library-button"
+                to={'/register-library'}
+                aria-label="Register a new library"
+              >
+                {intl.formatMessage(messages.RegisterNewLibrary)}
+              </Link>
+            </div>
+          </div>
         </div>
       </>
     </LandingPageBox>
   );
 };
-    
+
 export default LandingPageLibrariesBox;

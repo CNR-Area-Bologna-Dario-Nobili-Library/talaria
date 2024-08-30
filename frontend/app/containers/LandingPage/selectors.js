@@ -1,23 +1,31 @@
 import { createSelector } from 'reselect';
-import { initialState } from 'containers/LandingPage/reducer';
+import { initialState } from './reducer';
 
 /**
  * Landing Page Selectors
  */
 
-const permissionBox = state => state.permissionBox || initialState;
+const permissionbox = state => state.permissionbox || initialState;
 
-const acceptPermissionLoadingSelector = () =>
+const acceptPermissionLoadingSelector = createSelector(
+  permissionbox,
+  state => state.acceptPermissionLoading,
+);
+
+const rejectPermissionLoadingSelector = createSelector(
+  permissionbox,
+  state => state.rejectPermissionLoading,
+);
+
+export const makeSelectLibraryList = () =>
   createSelector(
-    permissionBox,
-    (state) => state.acceptPermissionLoading
+    permissionbox,
+    state => state.libraryList || []
   );
 
-const rejectPermissionLoadingSelector = () =>
-  createSelector(
-    permissionBox,
-    (state) => state.rejectPermissionLoading
-  );
 
-export {  acceptPermissionLoadingSelector,
-  rejectPermissionLoadingSelector, };
+
+export {
+  acceptPermissionLoadingSelector,
+  rejectPermissionLoadingSelector,
+};

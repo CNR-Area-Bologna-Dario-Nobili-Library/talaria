@@ -15,11 +15,20 @@ import {
   REQUEST_REJECT_PERMISSION,
   REQUEST_REJECT_PERMISSION_SUCCESS,
   REQUEST_REJECT_PERMISSION_FAIL,
+  REQUEST_GET_LIBRARY_OPTIONLIST,
+  REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
 } from './constants';
 
 export const initialState = {
   loading: false,
   error: null,
+
+  libraryList: {
+    loading: false,
+    data: [],
+    pagination: {},
+  },
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -46,13 +55,29 @@ const permissionboxReducer = (state = initialState, action) =>
         draft.loading = true;
         draft.error = initialState.error;
         break;
-      case REQUEST_REJECT_PERMISSION_SUCCESS: 
+      case REQUEST_REJECT_PERMISSION_SUCCESS:
         draft.loading = false;
         draft.error = initialState.error;
         break;
-      case REQUEST_REJECT_PERMISSION_FAIL: 
-      draft.loading = false;
-      draft.error = initialState.error;
+      case REQUEST_REJECT_PERMISSION_FAIL:
+        draft.loading = false;
+        draft.error = initialState.error;
+        break;
+
+      case REQUEST_GET_LIBRARY_OPTIONLIST:
+        draft.loading = true;
+        draft.error = initialState.error;
+        break;
+      case REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS:
+        draft.loading = false;
+        draft.error = initialState.error;
+        draft.libraryList = action.result.map(item => {
+          return { value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email };
+        });
+        break;
+      case REQUEST_GET_LIBRARY_OPTIONLIST_FAIL:
+        draft.loading = false;
+        draft.error = action.error;
         break;
 
       case REQUEST_SUCCESS:

@@ -532,4 +532,18 @@ class LibraryController extends ApiController
 
         return parent::index($request);    
     }
+
+    public function optionList(Request $request)
+    {
+        // Get the libraries with any filters that might be passed in the request
+        $libraries = $this->model->select('id', 'name', 'lat', 'lon','address','ill_email')
+                                ->when($request->has('query'), function($query) use ($request) {
+                                    // Apply any necessary filtering based on request parameters
+                                    $query->where('name', 'like', '%' . $request->input('query') . '%');
+                                })
+                                ->get();
+
+        // Return the libraries in the format that matches the reducer
+        return response()->json($libraries);
+    }
 }

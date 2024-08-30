@@ -49,6 +49,9 @@
   "app.global.delete": "Elimina",  
   "app.global.save": "Salva",
   "app.global.library": "Biblioteca",
+  "app.global.library.Address": "???Address",
+  "app.global.library.contact": "???Contact",
+  "app.global.library.resetbutton": "???Reset",
   "app.global.pickup": "Punto di consegna",
   "app.global.department": "Dipartimento/Istituto",
   "app.global.patron": "Utente",
@@ -106,7 +109,9 @@
   "app.global.roles.patron": "Utente della biblioteca",
   "app.global.roles.manager": "Manager",
   "app.global.roles.admin": "Super admin",
-
+  "app.global.library.status":"Status",
+  "app.global.library.created":"???Created",
+  "app.global.library.updated":"???Updated",
   
   "app.containers.HomePage.header": "Benvenuti in ACRONIMO e NOME per esteso della tua comunità di biblioteche",
   "app.containers.HomePage.subHeader":"Inserisci qui la descrizione, la missione e gli scopi della tua comunità di Resource Sharing.",

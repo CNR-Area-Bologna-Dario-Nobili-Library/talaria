@@ -21,7 +21,7 @@ const LandingPagePatronBox = props => {
       canCollapse={canCollapse}
       collapsed={collapsed}
     >
-      <p>bla bla bla</p>      
+      {/* <p>bla bla bla</p>       */}
       {match &&
         match.path === '/user/join2lib/:library_id?' &&
         match.params.library_id &&
@@ -36,7 +36,10 @@ const LandingPagePatronBox = props => {
         <div className="row">
           <div className="col-md-6">          
             {fromOpenURLorPubmed && <Link className="btn btn-sm btn-success btn-block" to={'/patron/references/new'+(history.location.search?history.location.search:'')}>Import from openurl/pmid</Link>
-            ||<Link className="btn btn-sm btn-success btn-block" to={'/patron/references/new'}>Go to reference manager</Link>}                            
+            // ||
+            // <Link className="btn btn-sm btn-success btn-block" to={'/patron/references/new'}>Go to reference manager</Link>
+            
+            }                            
           </div>                  
         </div>
       }

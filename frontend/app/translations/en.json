@@ -49,6 +49,9 @@
   "app.global.edit": "Edit",
   "app.global.save": "Save",
   "app.global.library": "Library",
+  "app.global.library.address": "Address",
+  "app.global.library.contact": "Contact",
+  "app.global.library.resetbutton": "Reset",
   "app.global.pickup": "Pickup point",
   "app.global.department": "Department/Institute",
   "app.global.patron": "User",
@@ -106,7 +109,11 @@
   "app.global.roles.patron": "Library user",
   "app.global.roles.manager": "Manager",
   "app.global.roles.admin": "Super admin",
-  
+  "app.global.library.status":"Status",
+  "app.global.library.created":"Created",
+  "app.global.library.updated":"Updated",
+
+
   "app.containers.HomePage.header": "ACRONYM and extended NAME of your Resource Sharing community",
   "app.containers.HomePage.subHeader":"Insert here description, mission and purposes of your Resource Sharing community.",
   
