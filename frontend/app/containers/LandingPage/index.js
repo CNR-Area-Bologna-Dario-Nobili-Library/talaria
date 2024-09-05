@@ -14,6 +14,12 @@ import { makeSelectLibraryList } from './selectors';
 
 import LandingPagePatronBox from '../../components/LandingPagePatronBox';
 import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
+import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox'
+import LandingPageConsortiasBox from '../../components/LandingPageConsortiaBox'
+import LandingPageProjectsBox from '../../components/LandingPageProjectsBox'
+import LandingPageAdminBox from '../../components/LandingPageAdminBox'
+
+
 
 function LandingPage(props) {
   const { auth, dispatch, libraryList, match } = props;
@@ -109,7 +115,36 @@ function LandingPage(props) {
             onAccept={AcceptPermission}
             onReject={RejectPermission}
           />
-          {/* Other components */}
+          <LandingPageInstitutionsBox
+            history={history}
+            title={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.title"})}
+            auth={props.auth}
+            match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
+          />
+          <LandingPageProjectsBox
+            history={history}
+            title={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.title"})}
+            auth={props.auth}
+            match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
+          />
+          <LandingPageConsortiasBox
+            history={history}
+            title={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.title"})}
+            auth={props.auth}
+            match={props.match}
+            onAccept={AcceptPermission}
+            onReject={RejectPermission}
+          />
+          <LandingPageAdminBox
+            history={history}
+            title={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.title"})}
+            auth={props.auth}
+            match={props.match}
+          />
         </div>
       </div>
     </>
