@@ -99,6 +99,9 @@ const routes = [
       { path: '', exact: true, name: `LibraryUsers`,  url:'/patrons', component: UsersListPage, sidebar: true, order:1},
     ]
   },
+  {
+    path: '/stats', name: `Stats`, component: Fake, header: true, permissions: ['manage','manage-users','borrow','lend'], roles:["super-admin","manager"], resource: {type: 'libraries', key: 'library_id',},
+  },
   /*
   NOT IMPLEMENTED
   {
