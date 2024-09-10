@@ -67,7 +67,8 @@ const LandingPageLibrariesBox = props => {
               setLocationError('Location information is unavailable.');
               break;
             case error.TIMEOUT:
-              setLocationError('The request to get user location timed out.');
+              showMap &&
+                setLocationError('The request to get user location timed out.');
               break;
             case error.UNKNOWN_ERROR:
               setLocationError('An unknown error occurred.');
@@ -86,41 +87,62 @@ const LandingPageLibrariesBox = props => {
   }, []);
 
   const handleLibraryChange = selectedOption => {
-    setLocationError(null)
+    setLocationError(null); // Reset any previous error message
+
     if (selectedOption) {
       const selectedLibraryInfo = libraries.find(
         library => library.value === selectedOption.value,
       );
+      
       setLibraryId(selectedOption.value);
       setSelectedValue(selectedOption);
       setSelectedLibrary(selectedLibraryInfo);
 
       if (selectedLibraryInfo) {
-        const newCenter = [
-          parseFloat(selectedLibraryInfo.lat),
-          parseFloat(selectedLibraryInfo.lon),
-        ];
-        setMapCenter(newCenter);
-        setShowMap(true); // Show the map when a library is selected
+        // Ensure that lat and lon exist and are valid numbers
+        const lat = selectedLibraryInfo.lat ? parseFloat(selectedLibraryInfo.lat) : NaN;
+        const lon = selectedLibraryInfo.lon ? parseFloat(selectedLibraryInfo.lon) : NaN;
 
-        // If the map is already created, animate the center change
-        if (mapRef.current) {
-          mapRef.current.setView(newCenter, 12, {
-            animate: true,
-            duration: 1.5,
-          });
+        // Check if both lat and lon are valid numbers (not NaN) and within valid geographical range
+        if (!isNaN(lat) && !isNaN(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+          const newCenter = [lat, lon];
+          setMapCenter(newCenter);
+          setShowMap(true); // Show the map when valid coordinates are available
+
+          // If the map is already created, animate the center change
+          if (mapRef.current) {
+            mapRef.current.setView(newCenter, 12, {
+              animate: true,
+              duration: 1.5,
+            });
+          }
+
+          setLocationError(null); // Clear any error message
+        } else {
+          // If lat/lon are missing, invalid, or out of range, hide the map and show an error message
+          setShowMap(false); // Hide the map
+          setLocationError("Invalid or unavailable longitude and latitude for the selected library."); // Display error message
         }
+      } else {
+        // Handle case where no valid library information is found
+        setShowMap(false); // Hide the map
+        setLocationError("Library information not found.");
       }
 
       setShowRegisterOption(false);
       setShowLibrarianPrompt(false);
+
     } else {
+      // Reset values if no library is selected
       setLibraryId(null);
       setSelectedValue(null);
       setSelectedLibrary(null);
+      setShowMap(false); // Hide the map
+      setLocationError(null); // Clear any error message
       setShowRegisterOption(false);
     }
   };
+
 
   const handleReset = () => {
     setLibraryId(null);
@@ -142,14 +164,23 @@ const LandingPageLibrariesBox = props => {
     return option.label.toLowerCase().includes(inputValue.toLowerCase());
   };
 
-  const MapLibraries = Array.isArray(libraries)
-    ? libraries.map(library => ({
-        id: library.value,
-        name: library.label,
-        latitude: parseFloat(library.lat), // Ensure lat/lon are numbers
-        longitude: parseFloat(library.lon),
-      }))
-    : [];
+  const validLibraries = Array.isArray(libraries)
+ ? libraries.filter(
+     library =>
+       !isNaN(parseFloat(library.lat)) && // Ensure latitude is a valid number
+       !isNaN(parseFloat(library.lon)) && // Ensure longitude is a valid number
+       parseFloat(library.lat) >= -90 && // Latitude within range
+       parseFloat(library.lat) <= 90 && // Latitude within range
+       parseFloat(library.lon) >= -180 && // Longitude within range
+       parseFloat(library.lon) <= 180 // Longitude within range
+   ).map(library => ({
+     id: library.value,
+     name: library.label,
+     latitude: parseFloat(library.lat), // Parse valid latitude
+     longitude: parseFloat(library.lon), // Parse valid longitude
+   }))
+ : [];
+
 
   const statusClass = status => {
     switch (status) {
@@ -411,7 +442,7 @@ const LandingPageLibrariesBox = props => {
                   }}
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                  {MapLibraries.map(library => (
+                  {validLibraries.map(library => (
                     <Marker
                       key={library.id}
                       position={[library.latitude, library.longitude]}
