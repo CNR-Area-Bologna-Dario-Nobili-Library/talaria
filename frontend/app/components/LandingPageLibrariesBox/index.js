@@ -210,16 +210,16 @@ const LandingPageLibrariesBox = props => {
                 <div className="div-table">
                   <div className="div-table-row">
                     <div className="div-table-header" style={{ width: '25%' }}>
-                      Library
+                    {intl.formatMessage({id: 'app.global.library',})}
                     </div>
                     <div className="div-table-header" style={{ width: '42%' }}>
-                      Permissions
+                    {intl.formatMessage({id: 'app.global.permissions',})}
                     </div>
                     <div
                       className="div-table-header"
                       style={{ width: '33%', textAlign: 'center' }}
                     >
-                      Actions
+                     {intl.formatMessage({id: 'app.global.actions',})}
                     </div>
                   </div>
                   {auth.permissions.resources.libraries.map((res, i) => (
@@ -300,22 +300,23 @@ const LandingPageLibrariesBox = props => {
                 <div className="div-table">
                   <div className="div-table-row">
                     <div className="div-table-header" style={{ width: '25%' }}>
-                      Library
+                    {intl.formatMessage({id: 'app.global.library',})}
                     </div>
                     <div className="div-table-header" style={{ width: '19%' }}>
-                      Permissions
+                    {intl.formatMessage({id: 'app.global.permissions',})}
                     </div>
                     <div className="div-table-header" style={{ width: '10%' }}>
-                      Status
+                    {intl.formatMessage({id: 'app.global.status',})}
                     </div>
                     <div className="div-table-header" style={{ width: '13%' }}>
-                      Created
+                    {intl.formatMessage({id: 'app.global.created_at',})}
                     </div>
                     <div className="div-table-header" style={{ width: '13%' }}>
-                      Updated
+                    {intl.formatMessage({id: 'app.global.updated_at',})}
                     </div>
                     <div className="div-table-header" style={{ width: '20%' }}>
-                      Actions
+                      {intl.formatMessage({id: 'app.global.actions',})}
+
                     </div>
                   </div>
                   {auth.permissions.tempresources.libraries
@@ -358,14 +359,14 @@ const LandingPageLibrariesBox = props => {
                                 href="#"
                                 onClick={() => props.onAccept(res.id)}
                               >
-                                Accept
+                                 {intl.formatMessage({id: 'app.global.accept',})}
                               </a>
                               <a
                                 className="btn btn-danger btn-sm"
                                 href="#"
                                 onClick={() => props.onReject(res.id)}
                               >
-                                Reject
+                                 {intl.formatMessage({id: 'app.global.reject',})}
                               </a>
                             </div>
                           )}
@@ -457,8 +458,8 @@ const LandingPageLibrariesBox = props => {
                       }}
                     >
                       <Popup>
-                        {library.name} <br /> Latitude: {library.latitude},
-                        Longitude: {library.longitude}
+                        {library.name} <br /> {intl.formatMessage({id: 'app.global.lat',})}: {library.latitude},
+                        {intl.formatMessage({id: 'app.global.lon',})}: {library.longitude}
                       </Popup>
                     </Marker>
                   ))}
@@ -498,7 +499,7 @@ const LandingPageLibrariesBox = props => {
                         style={{ width: '25%' }}
                       >
                         {intl.formatMessage({
-                          id: 'app.global.library.address',
+                          id: 'app.global.address',
                         })}
                       </div>
                       <div className="div-table-cell">
@@ -510,7 +511,9 @@ const LandingPageLibrariesBox = props => {
                         className="div-table-header"
                         style={{ width: '25%' }}
                       >
-                        Contact
+                        {intl.formatMessage({
+                          id: 'app.libraries.ill_email',
+                        })}
                       </div>
                       <div className="div-table-cell">
                         {selectedLibrary.email || 'N/A'}
@@ -525,7 +528,7 @@ const LandingPageLibrariesBox = props => {
                   aria-label="Reset the selected library"
                 >
                   {intl.formatMessage({
-                    id: 'app.global.library.resetbutton',
+                    id: 'app.global.reset',
                   })}
                 </Button>
               </div>
