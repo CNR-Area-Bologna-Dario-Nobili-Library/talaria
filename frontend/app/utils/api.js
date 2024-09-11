@@ -174,7 +174,7 @@ export const getMyActiveLibrariesOptionList = (options) => {
 export const getLibraryOptionList = (options) => {
   options = getOption(options);
   const query = options.query ? options.query : "";
-  return request(`${BASE_URL}/api/v1/libraries/option-items?label=name&q=${query}`, options)
+  return request(`${BASE_URL}/api/v1/libraries/option-items?label=name,lon,lat,ill_email&q=${query}`, options)
 };
 
 export const getLabelsOptionList = (options) => {
