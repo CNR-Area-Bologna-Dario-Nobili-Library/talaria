@@ -414,8 +414,9 @@ const LandingPageLibrariesBox = props => {
               <div style={{ cursor: 'pointer', fontSize: '24px' }}>
                 <i
                   className="fa fa-map-marker-alt"
-                  onClick={toggleMap}
+                  onClick={!locationError ? toggleMap : null} // Disable onClick when there's an error
                   aria-label="Toggle map"
+                  style={{ pointerEvents: locationError ? 'none' : 'auto', color: locationError ? 'gray' : 'black' }} // Visual indication
                 />
               </div>
             </div>
