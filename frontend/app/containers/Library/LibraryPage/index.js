@@ -15,11 +15,11 @@ import { connect } from 'react-redux';
 import {BasePage} from "components";
 import libroutes from "routes/libraryRoutes";
 import {requestGetLibrary} from '../actions'
-import {getAuthResource} from "utils/permissions";
+import {getAuthResource,checkRole} from "utils/permissions";
 
 function LibraryPage(props) {
   console.log('LibraryPage', props)
-  const {isLoading, match, dispatch,library} = props;
+  const {isLoading, match, dispatch,library,auth} = props;
 
   let resource = getAuthResource(props.auth, {
     type: 'libraries',
@@ -50,9 +50,6 @@ function LibraryPage(props) {
     {    
       let libraryRoutes=libroutes               
       
-      console.log("libraryRoutes PRIMA",libraryRoutes)          
-      console.log("libraryRoutes CHECK",library.library.status )          
-
         //filter library dashboard menu/route based on profile type (1=borrow, 2=borrow+lending)  
         if(library.library.profile_type==1) //only borrowing 
         {
@@ -63,8 +60,9 @@ function LibraryPage(props) {
         }     
 
         //filter library dashboard menu/route based on status + block route
-        //BUG: Questo filtro non funziona xke' arriva qui che library è null!!!
-        if(library.library.status!=1 && library.library.status!=2) //enabled or renewing
+        //NOT for admin/comm manager, they must see everything
+        if((!checkRole(auth, "manager") && !checkRole(auth, "super-admin")) 
+        &&(library.library.status!=1 && library.library.status!=2)) //enabled or renewing
         {
           //remove all but not MyLibrary menu-item        
           libraryRoutes=libraryRoutes.filter( (route)=> {        
