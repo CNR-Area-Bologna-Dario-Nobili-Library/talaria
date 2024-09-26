@@ -98,16 +98,17 @@ class LibraryTransformer extends BaseTransformer
 
     public function transform(Model $model)
     {
-        $faker=\Faker\Factory::create('it_IT');
+        //$faker=\Faker\Factory::create('it_IT');
 
         $to_merge = [];
         
-        
+       /*
         $to_merge = [
             //just to test localization (because now we haven't such data stored)
-            'lat'=> !$model->lat?$faker->latitude(35,45):$model->lat, 
-            'lon'=> !$model->lon?$faker->longitude(10,15):$model->lon,           
+            //'lat'=> !$model->lat?$faker->latitude(35,45):$model->lat, 
+            //'lon'=> !$model->lon?$faker->longitude(10,15):$model->lon,                                  
         ];
+        */
         return $this->applyTransform($model, $to_merge);
     }
 
