@@ -1,43 +1,48 @@
-version: '3.4'
+version: "3.4"
 
 services:
-
   traefik:
     image: traefik:v1.7.18
+    command: --insecureskipverify=true --entryPoints='Name:http Address::80'
     ports:
-    - "${WEBSERVER_EXTERNAL_PORT}:80"
-    - "${WEBSERVER_HTTPS_EXTERNAL_PORT}:443"
+      - "${WEBSERVER_EXTERNAL_PORT}:80"
+      # - "${WEBSERVER_HTTPS_EXTERNAL_PORT}:443"
     volumes:
-    - "${SSL_CERT_PATH}:/etc/ssl/traefik/localhost.crt"
-    - "${SSL_KEY_PATH}:/etc/ssl/traefik/localhost.key"
-    - "${SSL_API_CERT_PATH}:/etc/ssl/traefik/localhost-api.crt"
-    - "${SSL_API_KEY_PATH}:/etc/ssl/traefik/localhost-api.key"
-    - /var/run/docker.sock:/var/run/docker.sock:ro
-    - ./docker/traefik:/etc/traefik
-    restart: always
+      # - "${SSL_CERT_PATH}:/etc/ssl/traefik/localhost.crt"
+      # - "${SSL_KEY_PATH}:/etc/ssl/traefik/localhost.key"
+      # - "${SSL_API_CERT_PATH}:/etc/ssl/traefik/localhost-api.crt"
+      # - "${SSL_API_KEY_PATH}:/etc/ssl/traefik/localhost-api.key"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/traefik:/etc/traefik
+    # restart: unless-stopped
+
     depends_on:
-    - nginx
-    - phpmyadmin
+      - nginx
+      - phpmyadmin
+
+    networks:
+      default:
+        ipv4_address: 172.18.0.12
 
   nginx:
     image: nginx:alpine
-#    ports:
-#    - "${WEBSERVER_EXTERNAL_PORT}:80"
-#    - "8001:80"
+    #    ports:
+    #    - "${WEBSERVER_EXTERNAL_PORT}:80"
+    #    - "8001:80"
     expose:
       - 80
     volumes:
-    - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-    - ./:/application
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./:/application
     depends_on:
-    - laravel
-    restart: always
+      - laravel
+    # restart: unless-stopped
     labels:
-    - "traefik.port=80"
-    - "traefik.enable=true"
-    - "traefik.backend=nginx"
-    - "traefik.frontend.rule=Host:${API_DOMAIN}"
-    - "traefik.docker.network=proxy"
+      - "traefik.port=80"
+      - "traefik.enable=true"
+      - "traefik.backend=nginx"
+      - "traefik.frontend.rule=Host:${API_DOMAIN}"
+      - "traefik.docker.network=proxy"
 
   laravel:
     build:
@@ -53,85 +58,85 @@ services:
       - ./:/application
       - ./docker/backend/php:/usr/local/etc/php
     user: "${UID}"
-    restart: always
+    # restart: unless-stopped
 
-  laravelqueue:    
-    image: backend   
+  laravelqueue:
+    image: backend
     depends_on:
       - laravel
     volumes:
-      - ./:/application  
-    ## for the queue worker, we use the same image, but run 
+      - ./:/application
+    ## for the queue worker, we use the same image, but run
     ## artisan queue:work
     entrypoint: php /application/artisan queue:work --verbose --tries=3 --timeout=60
 
   laravelscheduler:
-    image: backend 
+    image: backend
     depends_on:
       - laravel
     volumes:
-      - ./:/application   
+      - ./:/application
     ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
     entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose & sleep 300; done"
-  
 
   mysql:
     image: mysql:5.7
-#    ports:
-#    - "${DB_EXTERNAL_PORT}:3306"
+    #    ports:
+    #    - "${DB_EXTERNAL_PORT}:3306"
     expose:
-     - "${DB_EXTERNAL_PORT}"
+      - "${DB_EXTERNAL_PORT}"
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      # - MYSQL_USER=${DB_USERNAME}
+      # - MYSQL_PASSWORD=${DB_PASSWORD}
+      # - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
     volumes:
       - ./docker/data/db-data:/var/lib/mysql
-    restart: always
+    # restart: unless-stopped
 
   dbbackup:
     image: fradelg/mysql-cron-backup
-    restart: always
+    # restart: unless-stopped
     depends_on:
       - mysql
     volumes:
-      - ${DB_BACKUP_FOLDER}:/backup  
-   
-    environment:    
-    - MYSQL_DB=${DB_DATABASE}
-    - MYSQL_USER=${DB_USERNAME}
-    - MYSQL_PASS=${DB_PASSWORD}
-    - MYSQL_PORT=${DB_PORT}
-    - MYSQL_HOST=${DB_HOST}     
-    - CRON_TIME=0 23 * * *
-    - MAX_BACKUPS=5
-    - TIMEOUT=10s
-    # - INIT_BACKUP=1              
+      - ./${DB_BACKUP_FOLDER}:/backup
+
+    environment:
+      - MYSQL_DB=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASS=${DB_PASSWORD}
+      - MYSQL_PORT=${DB_PORT}
+      - MYSQL_HOST=${DB_HOST}
+      - CRON_TIME=0 23 * * *
+      - MAX_BACKUPS=5
+      - TIMEOUT=10s
+    # - INIT_BACKUP=1
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
-    - mysql
+      - mysql
     environment:
-    - MYSQL_USER=${DB_USERNAME}
-    - MYSQL_PASSWORD=${DB_PASSWORD}
-    - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-    - PMA_USER=root
-    - PMA_PASSWORD=${DB_PASSWORD}
-    - PMA_HOST=${DB_HOST}
-    - PMA_ABSOLUTE_URI=https://${API_DOMAIN}/phpmyadmin/
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - PMA_USER=root
+      - PMA_PASSWORD=${DB_PASSWORD}
+      - PMA_HOST=${DB_HOST}
+      - PMA_ABSOLUTE_URI=http://${API_DOMAIN}/phpmyadmin/
     #ports:
     #- "${PMA_PORT}:80"
     expose:
-    - 80
-    restart: always
+      - 80
+    # restart: unless-stopped
     labels:
-    - "traefik.port=80"
-    - "traefik.enable=true"
-    - "traefik.backend=phpmyadmin"
-    - "traefik.frontend.rule=Host:${API_DOMAIN};PathPrefixStrip:/phpmyadmin/"
-    - "traefik.frontend.auth.basic.users=${PMA_AUTH}"
+      - "traefik.port=80"
+      - "traefik.enable=true"
+      - "traefik.backend=phpmyadmin"
+      - "traefik.frontend.rule=Host:${API_DOMAIN};PathPrefixStrip:/phpmyadmin/"
+      # - "traefik.frontend.auth.basic.users=${PMA_AUTH}"
 
   horizon:
     build:
@@ -142,35 +147,78 @@ services:
     image: backend
     command: php artisan horizon
     depends_on:
-    - mysql
-    - redis
+      - mysql
+      - redis
     volumes:
-    - ./:/application
-    restart: always
+      - ./:/application
+    # restart: unless-stopped
 
   redis:
     image: redis:alpine
     ports:
-    - "6379:6379"
-    restart: always
-
+      - "6379:6379"
+    # restart: unless-stopped
 
   frontend:
-     build: ./frontend
-     volumes:
-       - ./frontend:/usr/src/app
-       - ./.env:/usr/src/.env     
-     command: bash -c "npm install; npm run start:production"            
-     #command: npm start
-     expose:
-     - 3000
-     restart: always
-     labels:
-     - "traefik.port=3000"
-     - "traefik.enable=true"
-     - "traefik.frontend.rule=Host:${FRONTEND_DOMAIN};PathPrefix:/"
-     - "traefik.docker.network=proxy"
+    build: ./frontend
+    volumes:
+      - ./frontend:/usr/src/app
+      - ./.env:/usr/src/.env
+    # command: bash -c "npm install; npm run start:production"
+    command: npm start
+    expose:
+      - 3000
+    # restart: unless-stopped
+    labels:
+      - "traefik.port=3000"
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:${FRONTEND_DOMAIN};PathPrefix:/"
+      - "traefik.docker.network=proxy"
+    networks:
+      default:
+        ipv4_address: 172.18.0.5
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      default:
+        ipv4_address: 172.18.0.20
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    networks:
+      default:
+        ipv4_address: 172.18.0.21
+
+volumes:
+  esdata2:
+    driver: local
+####################################################
 #   shibboleth:
 # #    image: unicon/shibboleth-sp
 #     build: ./docker/shibboleth
@@ -203,7 +251,7 @@ services:
 
 #   #SPID
 #   authproxy:
-# #    restart: always
+# #    # restart: unless-stopped
 #     #image: spid-auth-proxy
 #     #build: ./docker/spid
 #       #context: .
@@ -277,8 +325,9 @@ services:
 #volumes:
 #  db-data:
 
-#networks:
-#  default:
-#    ipam:
-#      config:
-#        - subnet: 172.17.0.0/16
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
