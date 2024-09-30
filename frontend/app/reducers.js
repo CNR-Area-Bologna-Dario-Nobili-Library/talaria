@@ -19,6 +19,8 @@ import libregReducer from 'containers/RegisterLibrary/reducer';
 import filedownloadreducer from 'containers/FileDownload/reducer'
 import fileuploadreducer from './containers/FileUpload/reducer';
 import permissionboxReducer from './containers/LandingPage/reducer'
+
+import statsReducer from './containers/Stats/reducer';
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
  */
@@ -38,6 +40,7 @@ export default function createReducer(injectedReducers = {}) {
     filedownload: filedownloadreducer,
     fileupload: fileuploadreducer,
     app: appReducer,
+    stats: statsReducer,
     ...injectedReducers,
   });
 
