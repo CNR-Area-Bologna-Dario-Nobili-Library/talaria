@@ -8,8 +8,6 @@ use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -39,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
             Illuminate\Notifications\Channels\DatabaseChannel::class,
             DatabaseChannel::class
         );
+
+        $this->app->register(ElasticsearchServiceProvider::class);
     }
 
     /**
