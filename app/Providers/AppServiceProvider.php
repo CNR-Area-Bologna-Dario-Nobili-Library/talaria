@@ -37,8 +37,6 @@ class AppServiceProvider extends ServiceProvider
             Illuminate\Notifications\Channels\DatabaseChannel::class,
             DatabaseChannel::class
         );
-
-        $this->app->register(ElasticsearchServiceProvider::class);
     }
 
     /**
