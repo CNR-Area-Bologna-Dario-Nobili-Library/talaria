@@ -4,7 +4,6 @@ import {BASE_URL,getOption} from './api';
 
 const BASE_ADMIN_URL=BASE_URL+"/api/v1/admin";
 
-
 // Libraries //
 export const admin_getLibrariesList = (options) => {
   const page = options.page?options.page:1;
@@ -131,7 +130,35 @@ export const admin_deleteInstitutionType = (options) => {
   return request(`${BASE_ADMIN_URL}/institutions/institution-types/${institution_type_id}`, options)
 };
 
+// Stats //
+export const admin_getAvgWorkingTime = (options) => {
+  options = getOption(options);
+  console.log("admin_getAvgWorkingTime", options);
+  const year = options.year  
+  // return request(`${BASE_ADMIN_URL}/stats/avg-working-time`, options)
+  return request(`${BASE_ADMIN_URL}/stats/avg-working-time/${year ? `?year=${year}` : ''}`, options)
+}
 
+export const admin_getBorrowingRequests = (options) => {
+  options = getOption(options);
+  // console.log("admin_getBorrowingRequests", options);
 
-  
+  const year = options.year;
+  const borrowing_library_id = options.borrowing_library_id;
+  const material_type = options.material_type;
+  const borrowing_status = options.borrowing_status;
+  const fulfill_type = options.fulfill_type;
+  const notfulfill_type = options.notfulfill_type;
 
+  const queryParams = new URLSearchParams();
+
+  if (year) { queryParams.append('year', year); }
+  if (borrowing_library_id) { queryParams.append('borrowing_library_id', borrowing_library_id); }
+  if (material_type) { queryParams.append('material_type', material_type); }
+  if (borrowing_status) { queryParams.append('borrowing_status', borrowing_status); }
+  if (fulfill_type && borrowing_status === 2) { queryParams.append('fulfill_type', fulfill_type); }
+  if (notfulfill_type && borrowing_status === 3) { queryParams.append('notfulfill_type', notfulfill_type); }
+
+  // console.log("admin_getBorrowingRequests", queryParams.toString());
+  return request(`${BASE_ADMIN_URL}/stats/borrowing-requests-stats/?${queryParams.toString()}`, options)
+}
