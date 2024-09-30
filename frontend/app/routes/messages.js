@@ -273,6 +273,14 @@ export default defineMessages({
     StatisticsInstitutions: {
         id: `${scope}.StatisticsInstitutions`,
         defaultMessage: 'Institutions statistics',
-    }
+    },
+    StatisticsAVGWorkingTime: {
+        id: `${scope}.StatisticsAVGWorkingTime`,
+        defaultMessage: 'Average working time',
+    },
+    StatisticsBorrowingRequests: {
+        id: `${scope}.StatisticsGetBorrowingRequests`,
+        defaultMessage: 'Borrowing requests',
+    },
 
 });
