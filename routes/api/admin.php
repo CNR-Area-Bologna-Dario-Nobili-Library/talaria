@@ -76,11 +76,13 @@ Route::group([
         'prefix' => 'stats',        
         'as' => 'api.v1.admin.stats.',
     ], function () {    
-        
-           Route::get('/eltest', 'AdminStatsController@eltest')->name('eltest');    
-    
+        //    Route::get('/eltest', 'AdminStatsController@eltest')->name('eltest');
+        //    Route::get('/eltest2', 'AdminStatsController@eltest2')->name('eltest2');
+        Route::get('/avg-working-time', 'AdminStatsController@getAvgWorkingTime')->name('getAvgWorkingTime');
+        Route::get('/borrowing-requests-stats', 'AdminStatsController@getBorrowingStats')->name('getBorrowingStats');
+        Route::get('/requests-countries-leaderboard', 'AdminStatsController@getRequestsCountriesLeaderboard')->name('getRequestsCountriesLeaderboard');
+        Route::get('/requests-countries-library', 'AdminStatsController@getRequestsCountriesFromLibrary')->name('getRequestsCountriesFromLibrary');
+        Route::get('/requests-countries', 'AdminStatsController@getRequestsCountriesFromCountry')->name('getRequestsCountriesFromCountry');
     });
 
 });
-
-    
