@@ -16,4 +16,6 @@ return [
     'password_reset_email_link_no_further_action'=>'Se non sei stato tu a richiedere il reset della password, non devi fare niente.',
     'link_trouble'=>"Se hai difficoltà a cliccare il bottone \":actionText\", copia e incolla la URL indicata qui di seguito nel tuo browser:\n [:actionURL](:actionURL)'",
     'regards'=>'Saluti',
+    'email_already_exists' =>'???This email is already registered in our system'
+
 ];

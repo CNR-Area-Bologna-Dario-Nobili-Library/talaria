@@ -17,6 +17,15 @@ trait UserControllerTrait
         if( !empty($this->validate) )
             $this->validate($request, $this->validate);
 
+         /* Check if email already exists */
+            $existingUser = $this->model->where('email', $request->input('email'))->first();
+            if ($existingUser) {
+                $errorMessage = trans('email.email_already_exists');
+                return $this->response->errorBadRequest($errorMessage); 
+            }
+        /* End */
+        
+
         $model = $this->talaria->store($this->model, $request, function($model, $request)
         {
             //Create relation with Roles
