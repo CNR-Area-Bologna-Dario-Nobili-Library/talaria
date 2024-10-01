@@ -26,15 +26,15 @@ const routes = [
   { path: '/requests', name: `Requests`, component: SubRouteSwitch, header: true, roles: ['patron'], 
     children: [
       { path: '/archive', icon: "hdd", exact:true, name: `ArchivedRequests`, component: RequestsListPage,url: `/requests/archive`, sidebar: true, order: 2},
-      { path: '/', icon: "share", exact: true, name: `PendingRequests`, component: RequestsListPage,url: `/requests`, sidebar: true, order: 1,permissions: ['patron']},
+      { path: '/', icon: "share", exact: true, name: `PendingRequests`, component: RequestsListPage,url: `/requests`, sidebar: true, order: 1},
       /*{ path: '/:id?/:edit?', exact: true, name: `RequestDetail`, component: RequestsPage},*/
     ]
   },
-  { path: '/my-libraries', name: `MyLibraries`, component: SubRouteSwitch, header: true, roles: ['patron'],
+  { path: '/my-libraries', name: `MyLibraries`, component: SubRouteSwitch, header: true, 
     children: [
       { path: '/new/:library_id?', icon: "plus", name: `MyLibraryNew`,  component: MyLibraryPage, url:'/my-libraries/new/:library_id?', sidebar: true, order: 1},      
-      { path: '/:page?', exact: true,icon: "landmark", name: `MyLibraries`, url: `/my-libraries`, component: MyLibrariesListPage, sidebar: true,order: 2},
-      { path: '/:library_id?/edit/:id?',exact: true,name: `Library`, url:'/my-libraries/:library_id?/edit/:id?',component: MyLibraryPage},
+      { path: '/:page?', exact: true,icon: "landmark", name: `MyLibraries`, url: `/my-libraries`, component: MyLibrariesListPage, sidebar: true,order: 2, roles: ['patron'], },
+      { path: '/:library_id?/edit/:id?',exact: true,name: `Library`, url:'/my-libraries/:library_id?/edit/:id?',component: MyLibraryPage,roles: ['patron'], },
       
     ]
   },
