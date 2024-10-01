@@ -26,13 +26,7 @@ function LibraryPage(props) {
     id: match.params.library_id,
   })
 
-  if (!resource) //nel caso di admin/manager dove non ho i permessi della singola risorsa  
-  resource={
-    resource: {
-      'id':library.library.id,
-      'name':library.library.name  
-    }
-  }
+
 
   const [filteredRoutes,setFilteredRoutes]=useState(libroutes)
 
@@ -48,6 +42,15 @@ function LibraryPage(props) {
   useEffect(() => {
     if(library && library.library.id>0) 
     {    
+
+      if (!resource) //nel caso di admin/manager dove non ho i permessi della singola risorsa  
+      resource={
+        resource: {
+          'id':library.library.id,
+          'name':library.library.name  
+        }
+      }
+
       let libraryRoutes=libroutes               
       
         //filter library dashboard menu/route based on profile type (1=borrow, 2=borrow+lending)  
