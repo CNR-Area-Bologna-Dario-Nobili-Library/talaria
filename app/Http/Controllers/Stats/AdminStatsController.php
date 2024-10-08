@@ -105,7 +105,7 @@ class AdminStatsController extends AdminApiController
 
         // Elasticsearch main query
         $query = [
-            'index' => 'docdel_test',
+            'index' => 'docdel_requests',
             'body'  => [
                 'size' => 0, // Aggregations only, no search hits needed
                 'query' => [
@@ -256,7 +256,7 @@ class AdminStatsController extends AdminApiController
         $library_id = $validated['library_id'] ?? null;
 
         $params = [
-            'index' => 'docdel_test',
+            'index' => 'docdel_requests',
             'body'  => [
                 'size' => 0,
                 'query' => [
@@ -358,7 +358,7 @@ class AdminStatsController extends AdminApiController
         $statusMap = $this->getStatusMap($mode[0]);
 
         $params = [
-            'index' => 'docdel_test',
+            'index' => 'docdel_requests',
             'size' => 0,
             'body'  => [
                 'query' => [
@@ -420,7 +420,7 @@ class AdminStatsController extends AdminApiController
         // Log::info("mode: {$mode[0]}, statusMap: " . print_r($statusMap, true));
 
         $params = [
-            'index' => 'docdel_test',
+            'index' => 'docdel_requests',
             'size' => 0,
             'body'  => [
                 'query' => [
@@ -483,7 +483,7 @@ class AdminStatsController extends AdminApiController
         $statusMap = $this->getStatusMap($mode[0]);
 
         $params = [
-            'index' => 'docdel_test',
+            'index' => 'docdel_requests',
             'size' => 0,
             'body' => [
                 'query' => [
