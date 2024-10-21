@@ -3,13 +3,15 @@ import React from 'react';
 import Profile from 'containers/User/ProfilePage/Loadable';
 import ChangePassword from 'containers/User/ChangePassword/Loadable';
 import LandingPage from '../containers/LandingPage/Loadable';
+import MyLibraryPage from '../containers/Patron/MyLibraryPage/Loadable';
+
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/user-profile', name: 'Edit Profile', component: Profile },
   { path: '/change-password', name: 'Change Password', component: ChangePassword },
   { path: "/dashboard",name:'Dashboard', component: LandingPage},
-  { path: "/join2lib/:library_id?",name:'Join2lib', component: LandingPage},
+  { path: "/join2lib/:library_id?",name:'Join2lib', component: MyLibraryPage},
   { path: "/work4lib/:library_id?",name:'Join2lib', component: LandingPage}  
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },

@@ -1,173 +1,328 @@
-/*
- * My Library Page
- *
- * 
- *
- */
-
-import React, {useEffect,useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
- import {useIntl} from 'react-intl';
-import {fields, fieldsIsNew} from './fields';
+import { useIntl } from 'react-intl';
+import { debounce } from 'lodash';
 import messages from './messages';
 import makeSelectLibrary from 'containers/Library/selectors';
-import SectionTitle from 'components/SectionTitle';
-import { CustomForm } from 'components';
-import {requestUser,requestGetLibrary} from 'containers/Library/actions';
-import {requestAccessToLibrary,requestUpdateAccessToLibrary,requestSearchPlacesByText,requestGetLibraryListNearTo,requestGetTitlesOptionList} from '../actions';
-import { placesSelector,libraryListSelector,titlesSelector } from '../selectors';
-
-import {NavLink} from 'react-router-dom';
-
-//TODO: 
-
-//1. find a way to pass library_id for "new registration"
-//in order to let user to subscribe directly to that library already setted
-//(display library name, not map) => OK /my-libraries/new/:library_id
-
-//2. find a way to allow search library by name (calling getLibraryOptionList)
-//and store the selected library in the library_id field
+import {
+  requestAccessToLibrary,
+  requestUpdateAccessToLibrary,
+  requestGetTitlesOptionList,
+  requestMyLibraries,
+  requestLibraryOptionList,
+} from '../actions';
+import {
+  placesSelector,
+  librariesSelector,
+  titlesSelector,
+  libraryListSelector,
+} from '../selectors';
+import makeSelectPatron, { isPatronLoading } from '../selectors';
+import MyLibraryForm from 'components/Patron/MyLibraryForm';
+import history from 'utils/history';
 
 function MyLibraryPage(props) {
-  console.log('MyLibraryPage', props)
   const intl = useIntl();
-  const {dispatch, match} = props
-  const {params} = match
-  const isNew = !params || !params.id || params.id === 'new'  
-  const library = props.library.library
-  const patron = props.library.user;
-  const user_id = props.auth.user.id;
-  const departmentOptionList = props.library.departmentOptionList   
-  //const libraryOptionList = props.libraryOptionList && props.libraryOptionList.map(lib =>  {return {value: lib.id, label: lib.name}})  
+  const { auth, dispatch, patron, match } = props;
+  const { params } = match;
+  const isNew = !params || !params.id || params.id === 'new';
+  const departments = props.library.departmentOptionList || [];
+  const titles = props.titles || [];
+  const libraries = props.libraries || [];
 
-  const handleChangeData = (field_name, value) => {
-    
-    //Usato per aggiornare le tendine con dipartimenti/... un base alla biblio scelta
-    if(field_name==="library_id" && value)
-      dispatch(requestGetLibrary(value,('departments')))
-    
-    //NOTA: le tendine dipartimenti e titles dovrebbero essere REQUIRED solo se sono piene
-    //Stiamo valutando come implementarlo xke' al momento anche se si modifica il fields.x.required
-    //al volo, non viene renderizzato nuovamente il componente, inoltre
-    //le tendine sono generate usando un plugin quindi non è immediato modificarne il required
-    //tramite DOM JS vanilla  
-    /*if(isNew)
-    {
-      //Faccio comparire le tendine di selezione Department_id e Title_id
-      fieldsIsNew.department_id.hidden=false;
+  const [formData, setFormData] = useState({
+    label: '',
+    department_id: '',
+    title_id: '',
+    user_referent: '',
+    user_mat: '',
+    user_service_phone: '',
+    user_service_email: '',
+  });
+  const [libraryId, setLibraryId] = useState(null);
+  const [selectedValue, setSelectedValue] = useState(null);
+  const [searchInput, setSearchInput] = useState('');
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isFormInitialized, setIsFormInitialized] = useState(false); // Prevent re-initializing form data
+  const [showForm, setShowForm] = useState(true); // Flag to control form display
+  const [countdown, setCountdown] = useState(10); // Countdown state
 
-      //if (library.departments.length>0)
-      //fieldsIsNew.department_id.required=true;
+  const handleInputChange = e => {
+    const { name, value } = e.target;
+    setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
+  };
 
-      fieldsIsNew.title_id.hidden=false;
-      //if (library.titles.length>0)
-      //fieldsIsNew.title_id.required=true;    
-    
-    }*/
-  }
+  const handleSelectChange = (name, selectedOption) => {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: selectedOption ? selectedOption.value : '',
+    }));
+  };
 
-  const [selectedMarker,setSelectedMarker]=useState({});
+  const handleSearchInputChange = debounce(input => {
+    setSearchInput(input);
+  }, 300);
+
+  // Identify the library to edit, if in edit mode
+  const libraryToEdit = patron.my_libraries.data.find(
+    lib =>
+      lib.id === parseInt(params.id, 10) &&
+      lib.library_id === parseInt(params.library_id, 10),
+  );
 
   useEffect(() => {
-
+    dispatch(requestLibraryOptionList());
     dispatch(requestGetTitlesOptionList());
+    dispatch(requestMyLibraries());
+  }, [dispatch]);
 
-    if(params && params.library_id)
-    {
-      console.log("GET LIB:",params.library_id)
-      dispatch(requestGetLibrary(params.library_id,('departments')))      
-    }
-    if(!isNew && params && params.library_id) {
-      dispatch(requestUser(params.library_id, params.id))
-      //dispatch(requestGetLibrary(params.library_id,('departments,titles')))      
-    }
-  }, [])
-
+  // Check if the library from the URL (jointolib/50) exists in patron.my_libraries
   useEffect(() => {
-      let obj={
-        'id': library.id,
-        'name': library.name,
-        'address': library.address,
-        'lat': library.lat,
-        'lon': library.lon,
+    if (
+      isNew &&
+      params.library_id &&
+      libraries.length > 0 &&
+      patron.my_libraries.data.length > 0
+    ) {
+      const selectedLibrary = libraries.find(
+        lib => lib.value === parseInt(params.library_id, 10),
+      );
+
+      if (selectedLibrary) {
+        const alreadyInMyLibraries = patron.my_libraries.data.some(
+          library => library.library_id === parseInt(params.library_id, 10),
+        );
+
+        if (alreadyInMyLibraries) {
+          setErrorMessage(
+            `You are already registered for the library: ${
+              selectedLibrary.label
+            }.`,
+          );
+          // Hide the form
+          setShowForm(false);
+
+          // Use useEffect to manage the countdown logic
+          const countdownInterval = setInterval(() => {
+            setCountdown(prevCount => prevCount - 1);
+          }, 1000);
+
+          // Clear the interval after countdown is done
+          const redirectTimeout = setTimeout(() => {
+            clearInterval(countdownInterval);
+            history.push('/patron/my-libraries'); // Redirect when countdown reaches 0
+          }, countdown * 1000);
+
+          return () => {
+            clearInterval(countdownInterval);
+            clearTimeout(redirectTimeout);
+          };
+        }
       }
-      setSelectedMarker(obj)
-  }, [library])
+    }
+  }, [
+    isNew,
+    params.library_id,
+    libraries,
+    patron.my_libraries.data,
+    countdown,
+  ]);
 
   useEffect(() => {
-    //disabilito la possibilità di modificare il preferred 
-    //Object.keys(patron).length > 0 ? fields.preferred.disabled = true : null
-  }, [patron])
+    if (!isFormInitialized) {
+      // Edit mode: pre-populate all fields including dropdown (LibraryDown should be disabled)
+      if (!isNew && libraryToEdit) {
+        setFormData({
+          label: libraryToEdit.label || '',
+          department_id: libraryToEdit.department_id || '',
+          title_id: libraryToEdit.title_id || '',
+          user_referent: libraryToEdit.user_referent || '',
+          user_mat: libraryToEdit.user_mat || '',
+          user_service_phone: libraryToEdit.user_service_phone || '',
+          user_service_email: libraryToEdit.user_service_email || '',
+        });
 
-  
-  /*useEffect(() => {
-    //console.log("DIP",document.getElementsByName('department_id'));
-    //getElById([name=department_id).required=true
-  }, [library])*/
+        setSelectedValue({
+          value: libraryToEdit.library_id,
+          label: libraryToEdit.name || '',
+        });
+        setLibraryId(libraryToEdit.library_id);
+
+        setIsFormInitialized(true); 
+      }
+
+      // If in "new" mode (when inviting to a library), pre-select only the library and allow dropdown usage
+      if (isNew && params.library_id && libraries.length > 0) {
+        const selectedLibraryOption = libraries.find(
+          lib => lib.value === parseInt(params.library_id, 10),
+        );
+
+        // Check if the selected library is already in patron.my_libraries to Redirect
+        const alreadyInMyLibraries = patron.my_libraries.data.some(
+          library => library.library_id === parseInt(params.library_id, 10),
+        );
+
+        if (selectedLibraryOption && !alreadyInMyLibraries) {
+          setSelectedValue({
+            value: selectedLibraryOption.value,
+            label: selectedLibraryOption.label,
+          });
+          setLibraryId(selectedLibraryOption.value);
+          setFilteredOptions([
+            {
+              value: selectedLibraryOption.value,
+              label: selectedLibraryOption.label,
+            },
+          ]);
+        } else {
+          setSelectedValue(null);
+          setLibraryId(null);
+          setErrorMessage('You are already registered for this library.');
+        }
+
+        setFormData({
+          label: '',
+          department_id: '',
+          title_id: '',
+          user_referent: '',
+          user_mat: '',
+          user_service_phone: '',
+          user_service_email: '',
+        });
+
+        setIsFormInitialized(true);
+      }
+    }
+  }, [
+    isNew,
+    libraryToEdit,
+    params.library_id,
+    isFormInitialized,
+    libraries,
+    patron.my_libraries,
+  ]);
+
+  // Update filtered library options based on search input when user types 3 characters or more
+  useEffect(() => {
+    if (searchInput.length >= 3) {
+      // Filter the libraries based on the search input
+      const options = libraries
+        .filter(library =>
+          library.label.toLowerCase().includes(searchInput.toLowerCase()),
+        )
+        .map(library => ({
+          value: library.value,
+          label: library.label,
+          isDisabled: patron.my_libraries.data.some(
+            item => item.library_id === library.value, // Disable if library_id matches
+          ),
+        }));
+      setFilteredOptions(options);
+    } else if (!params.library_id) {
+      // If no params.library_id is provided and search input is less than 3 characters, clear the dropdown
+      setFilteredOptions([]);
+    }
+  }, [searchInput, libraries, patron.my_libraries.data]);
+
+  const handleLibraryChange = selectedOption => {
+    setLibraryId(selectedOption ? selectedOption.value : null);
+    setSelectedValue(selectedOption);
+  };
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    setErrorMessage('');
+
+    if (isSubmitting) return;
+
+    if (
+      !formData.user_service_email ||
+      formData.user_service_email.trim() === ''
+    ) {
+      setErrorMessage('Email address cannot be empty');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (isNew) {
+        if (libraryId && parseInt(libraryId, 10) > 0) {
+          await dispatch(
+            requestAccessToLibrary({
+              ...formData,
+              user_id: auth.user.id,
+              library_id: libraryId,
+            }),
+          );
+        } else {
+          await dispatch(
+            requestAccessToLibrary({
+              ...formData,
+              user_id: auth.user.id,
+              url: params,
+            }),
+          );
+        }
+        history.push('/patron/my-libraries');
+      } else {
+        await dispatch(
+          requestUpdateAccessToLibrary({
+            ...formData,
+            library_id: params.library_id || libraryId,
+            id: params.id,
+          }),
+        );
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        setErrorMessage('Too many requests. Please try again later.');
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.errors
+      ) {
+        setErrorMessage(
+          error.response.data.errors.user_service_email[0] || 'Error occurred',
+        );
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
-      {//exclude home page case
-      params && params.id=="new" && <SectionTitle 
-                        back={isNew?false:true}
-                        title={isNew?messages.headerNew:messages.header}
-      />} 
-      {!isNew &&
-          <CustomForm 
-            submitCallBack={(formData) => dispatch(requestUpdateAccessToLibrary({
-                ...formData, 
-                library_id: params.library_id, 
-                id: params.id,
-                message: `${intl.formatMessage(messages.libraryUpdateMessage)}` })                
-                ) } 
-            requestData={{ 
-              name: library.name, 
-              label: patron.label,
-              department_id: patron.department_id,
-              title_id: patron.title_id, 
-              user_referent: patron.user_referent,
-              user_mat:patron.user_mat,
-              user_service_phone:patron.user_service_phone,
-              user_service_email:patron.user_service_email
-            }}
-            department_id={departmentOptionList} 
-            title_id={props.titles} 
-            fields={fields}            
-            messages={messages}
-            backButton={false}
-          /> 
-      }{isNew && 
-          <CustomForm 
-            submitCallBack={(formData) => dispatch(requestAccessToLibrary(              
-            {...formData, user_id},intl.formatMessage(messages.libraryCreateMessage)))} 
-            submitText={intl.formatMessage(messages.librarySubmit)}
-            fields={fieldsIsNew}
-            selectedMarker={selectedMarker}  
-            department_id={departmentOptionList} 
-            title_id={props.titles}             
-            messages={messages}
-            backButton={false}
-            onChangeData={(field_name, value) => handleChangeData(field_name, value)}
-            onPlacesSearch={(search)=>dispatch(requestSearchPlacesByText(search))}
-            places={props.places}
-            placesFreeSearchPlaceholder={intl.formatMessage(messages.placesFreeSearchPlaceholder)}
-            getMarkers={(pos)=>dispatch(requestGetLibraryListNearTo(pos))}
-            markers={props.libraryList}
-            onMarkerClick={console.log("onMarkerClick")}
-            markerPopupComponent={(marker,chooseMarkerFromMap)=>
-              <div className="libraryPopup">
-                <div className="card-body">
-                  <h5 className="card-title">{marker.name}</h5>
-                  <h6 className="card-subtitle mb-2 text-muted">{marker.address}</h6>
-                  <NavLink className="btn btn-info" to={"/public/library/"+marker.id}>Library detail</NavLink>
-                  <NavLink className="btn btn-primary" to="#" onClick={()=>chooseMarkerFromMap(marker)}>Subscribe to this library</NavLink>
-                </div>
-              </div>  
-            }
-          /> 
-      }
+      {errorMessage && (
+        <div className="alert alert-danger">
+          {errorMessage}
+          <br />
+          <br />
+          Redirecting To your belonging libraries in <b>{countdown} Seconds</b>... 
+        </div>
+      )}
+      {showForm && (
+        <MyLibraryForm
+          isNew={isNew}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleSelectChange={handleSelectChange}
+          handleSubmit={handleSubmit}
+          isSubmitting={isSubmitting}
+          departments={departments}
+          titles={titles}
+          selectedValue={selectedValue}
+          handleLibraryChange={handleLibraryChange}
+          handleSearchInputChange={handleSearchInputChange}
+          filteredOptions={filteredOptions}
+          errorMessage={errorMessage}
+          intl={intl}
+          messages={messages}
+        />
+      )}
     </>
   );
 }
@@ -176,7 +331,10 @@ const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
   places: placesSelector(),
   titles: titlesSelector(),
-  libraryList: libraryListSelector()
+  libraries: librariesSelector(),
+  patron: makeSelectPatron(),
+  isLoading: isPatronLoading(),
+  libraryList: libraryListSelector(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -185,9 +343,7 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const withConnect = connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
-);
-
-export default compose(withConnect)((MyLibraryPage));
+)(MyLibraryPage);

@@ -28,6 +28,10 @@ export default defineMessages({
     id: 'app.global.library',
     defaultMessage: 'Library',
   },
+  library_details: {
+    id: 'app.global.library_details',
+    defaultMessage: 'Library Details',
+  },
   label: {
     id: 'app.global.label',
     defaultMessage: 'Label',
