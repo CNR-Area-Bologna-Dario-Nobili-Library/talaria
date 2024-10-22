@@ -65,8 +65,6 @@ function HomePage(props) {
         <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/openurl?sid=Entrez:PubMed&id=pmid:29120751"}>TEST PUBMED</a><br/>
         <br/><br/>
         <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/user/join2lib/3"}>TEST Join2lib</a><br/>
-        <br/><br/>
-        <a className="btn btn-secondary" href={"https://"+process.env.FRONTEND_DOMAIN+"/user/work4lib/3"}>TEST Work4lib</a><br/>
       </>
       }
       <br/>
