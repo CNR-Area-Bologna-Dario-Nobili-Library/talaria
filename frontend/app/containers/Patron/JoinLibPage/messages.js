@@ -120,9 +120,4 @@ export default defineMessages({
     defaultMessage: 'Insert your data with respect to this library',
   },
 
-  noassociatedlibraries: {
-    id: `${scope}.noassociatedlibraries`,
-    defaultMessage: 'No associated libraries!',
-  }
-
 });
