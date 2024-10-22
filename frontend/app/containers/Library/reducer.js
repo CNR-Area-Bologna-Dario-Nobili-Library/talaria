@@ -57,7 +57,10 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_USERS_OPTION_ITEMS_SUCCESS,
   REQUEST_INVITE_LIBRARY_OPERATOR,
   REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST_SUCCESS,
-  REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS
+  REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_OPTIONLIST,
+  REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
 } from "./constants";
 
 export const initialState = {
@@ -91,11 +94,17 @@ export const initialState = {
     loading:false,
     data: [],    
   },
+  
+  //NOTE: WRONG NAME! this is a libray list (paginated), not an option-item list (dropdown) as name suggested!!!
   libraryOptionList: {
     loading: false,
     data:[],
     pagination: {}
   },
+
+  //This is an option-item list used for library selection dropdown!
+  libraryOptionItemList: [],
+
   librarySubjectOptionList: [],
   countriesOptionList: [],
   institutionsOptionList: [],
@@ -468,6 +477,22 @@ const libraryReducer = (state = initialState, action) =>
           draft.error = initialState.error; 
           draft.pending_operators = action.result.data;
           break;    
+
+          case REQUEST_GET_LIBRARY_OPTIONLIST:
+            draft.loading = true;
+            draft.error = initialState.error;
+            break;
+          case REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS:
+            draft.loading = false;
+            draft.error = initialState.error;
+            draft.libraryOptionItemList = action.result.map(item => {
+              return { value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email };
+            });
+            break;
+          case REQUEST_GET_LIBRARY_OPTIONLIST_FAIL:
+            draft.loading = false;
+            draft.error = action.error;
+            break;
 
 
           

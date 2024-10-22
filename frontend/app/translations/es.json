@@ -110,10 +110,18 @@
   "app.global.library.status":"???Status",
   "app.global.library.created":"???Created",
   "app.global.library.updated":"???Updated",
+  "app.global.go":"???Go",
+  "app.global.gps.denied":"???User denied the request for GPS position",
+  "app.global.gps.unavailable":"???GPS position information is unavailable",
+  "app.global.gps.timeout":"???The request to get GPS position timed out",
+  "app.global.gps.error":"???An error occurred while retrieving GPS position",
+  "app.global.gps.notsupported":"???GPS position is not supported by your browser",
   
   "app.containers.HomePage.header": "SIGLAS y NOMBRE extendido de su red de compartir recursos",
   "app.containers.HomePage.subHeader":"Inserte aquí la descripción, la misión y los propósitos de su red de compartir recursos.",
   
+  "app.containers.LandingPage.welcome":"???Welcome",
+  "app.containers.LandingPage.welcome_message":"???This is your landing page where you can find the latest patron updates, manage your libraries, and add new libraries to your collection. Stay updated and manage your library resources efficiently.",
   "app.containers.LandingPage.intro":"Puede insertar aquí una descripción, misión y propósito de su red de compartir recursos. Puede describir cómo darse de alta en la red, y cómo los usuario pueden registrarse en las bibliotecas.",
   "app.containers.LandingPage.intro_library":"Si es BIBLIOTECARIO/A y desea agregar su biblioteca a la comunidad [SIGLAS], vaya a la pestaña correspondiente. Proporcione información sobre su Institución, el nombre de su biblioteca, ubicación, los datos de contacto del servicio ILL y el ámbito temático.",
   "app.containers.LandingPage.intro_patron":"Si es USUARIO/A y quiere registrarse en la biblioteca perteneciente a la red [ACRONYM], vaya a la pestaña correspondiente. Seleccione por favor la biblioteca a la que desea inscribirse y proporcione información sobre sus propios datos de contacto, cargo y Departamento. ",
@@ -124,6 +132,8 @@
   "app.containers.LandingPage.ConsortiaBox.title":"???Consortia Box",
   "app.containers.LandingPage.ProjectsBox.title":"???Projects Box",
   "app.containers.LandingPage.AdminBox.title":"???Admin Box",
+  "app.containers.LandingPage.acceptedMessage":"???Permission accepted successfully",
+  "app.containers.LandingPage.rejectedMessage":"???Permission rejected successfully",
 
   "app.containers.UserPage.header": "CONTENEDOR de página de usuario",
   "app.containers.ChangePassword.updateMessage": "Contraseña modificada",
@@ -232,6 +242,8 @@
   "app.containers.LibraryUserPage.user_mat": "Matrícula/número de carnet de biblioteca",
   "app.containers.LibraryUserPage.user_service_phone": "Teléfono",
   "app.containers.LibraryUserPage.user_service_email": "Correo electrónico",
+  "app.containers.FindLibraryPage.header": "???Registra una nuova biblioteca",
+  "app.containers.FindLibraryPage.intro": "???Prima di registrare la nuova biblioteca, verifica che non sia già presente nel sistema utilizzando il box di ricerca sottostante; se non è presente sarà possibile registrarla.",
 
   "app.components.LibraryStatus.upgradeProfileButton":"Actualizar a perfil FULL!",
   "app.components.LibraryStatus.profileData": "Perfil de la biblioteca",
@@ -313,6 +325,18 @@
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
   
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"???You're not allowed to invite yourself as operator",
+
+  "app.components.LandingPageLibrariesBox.importFromOpenurlButton":"???Importa da OpenURL/Pubmed",
+  "app.components.LandingPageLibrariesBox.newRequestButton":"???Nuova richiesta",
+  "app.components.LandingPageLibrariesBox.currentPermissionsList":"???Current permissions",
+  "app.components.LandingPageLibrariesBox.pendingPermissionsList":"???Pending permissions",  
+  "app.components.LandingPageLibrariesBox.areYouLibrarian":"???Are you a Librarian?",
+  "app.components.LandingPageLibrariesBox.findLibraryCommunity":"???Check if your library was already registered",
+  
+  "app.components.FindLibrary.askLibraryManagerToBeInvited":"???You may contact the library manager to be invited as a library operator.",
+  "app.components.FindLibrary.noGPScoordinates":"???Invalid or unavailable GPS coordinates for the selected library.",
+  "app.components.FindLibrary.noinfo":"???Library information not available",
+
 
   "app.containers.ReferencePage.header": "Añadir/Editar referencia",
   "app.containers.ReferencePage.headerNew": "Nueva referencia",

@@ -110,11 +110,18 @@
   "app.global.library.status":"Status",
   "app.global.library.created":"Created",
   "app.global.library.updated":"Updated",
-
+  "app.global.go":"Go",
+  "app.global.gps.denied":"???User denied the request for GPS position",
+  "app.global.gps.unavailable":"???GPS position information is unavailable",
+  "app.global.gps.timeout":"???The request to get GPS position timed out",
+  "app.global.gps.error":"???An error occurred while retrieving GPS position",
+  "app.global.gps.notsupported":"???GPS position is not supported by your browser",
 
   "app.containers.HomePage.header": "ACRONYM and extended NAME of your Resource Sharing community",
   "app.containers.HomePage.subHeader":"Insert here description, mission and purposes of your Resource Sharing community.",
   
+  "app.containers.LandingPage.welcome":"Welcome",
+  "app.containers.LandingPage.welcome_message":"This is your landing page where you can find the latest patron updates, manage your libraries, and add new libraries to your collection. Stay updated and manage your library resources efficiently.",
   "app.containers.LandingPage.intro":"You may insert here description, mission and purposes of your Resource Sharing community. You may describe how libraries may join this community and how patrons may sign up at the libraries.",
   "app.containers.LandingPage.intro_library":"If you are a LIBRARIAN and you want to add your library to  the [ACRONYM] community, please  refer to the appropriate tab. Please provide us information about your library name, location, ILL service contacts, your library institution and disciplinary field.",
   "app.containers.LandingPage.intro_patron":"If you are a PATRON and you want to sign up at a library belonging to the [ACRONYM] community, please refer to the appropriate tab. Please select the library you want to enroll in and provide us information about your contacts, status and department. ",
@@ -125,6 +132,9 @@
   "app.containers.LandingPage.ConsortiaBox.title":"???Consortia Box",
   "app.containers.LandingPage.ProjectsBox.title":"???Projects Box",
   "app.containers.LandingPage.AdminBox.title":"???Admin Box",
+  "app.containers.LandingPage.acceptedMessage":"???Permission accepted successfully",
+  "app.containers.LandingPage.rejectedMessage":"???Permission rejected successfully",
+
 
   "app.containers.UserPage.header": "UserPage CONTAINER",
   "app.containers.ChangePassword.updateMessage": "Password modified",
@@ -233,6 +243,8 @@
   "app.containers.LibraryUserPage.user_mat": "Matriculation/library card number",
   "app.containers.LibraryUserPage.user_service_phone": "Phone",
   "app.containers.LibraryUserPage.user_service_email": "Email",
+  "app.containers.FindLibraryPage.header": "???Registra una nuova biblioteca",
+  "app.containers.FindLibraryPage.intro": "???Prima di registrare la nuova biblioteca, verifica che non sia già presente nel sistema utilizzando il box di ricerca sottostante; se non è presente sarà possibile registrarla.",
 
   "app.components.LibraryStatus.upgradeProfileButton":"Upgrade to FULL profile!",
   "app.components.LibraryStatus.profileData": "Library Profile",
@@ -314,6 +326,18 @@
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
 
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage":"???You're not allowed to invite yourself as operator",
+
+  "app.components.LandingPageLibrariesBox.importFromOpenurlButton":"???Importa da OpenURL/Pubmed",
+  "app.components.LandingPageLibrariesBox.newRequestButton":"???Nuova richiesta",
+  "app.components.LandingPageLibrariesBox.currentPermissionsList":"???Current permissions",
+  "app.components.LandingPageLibrariesBox.pendingPermissionsList":"???Pending permissions",  
+  "app.components.LandingPageLibrariesBox.areYouLibrarian":"???Are you a Librarian?",
+  "app.components.LandingPageLibrariesBox.findLibraryCommunity":"???Check if your library was already registered",
+  
+  "app.components.FindLibrary.askLibraryManagerToBeInvited":"???You may contact the library manager to be invited as a library operator.",
+  "app.components.FindLibrary.noGPScoordinates":"???Invalid or unavailable GPS coordinates for the selected library.",
+  "app.components.FindLibrary.noinfo":"???Library information not available",
+
 
   "app.containers.ReferencePage.header": "Add/Edit reference",
   "app.containers.ReferencePage.headerNew": "New reference",

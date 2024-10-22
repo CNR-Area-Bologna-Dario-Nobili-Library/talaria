@@ -74,6 +74,12 @@ const identifiersOptionListSelector = () =>
     substate => (substate.libraryIdentifierTypesOptionList)
 );  
 
+export const makeSelectLibraryList = () =>
+  createSelector(
+    selectLibraryDomain,
+    substate => (substate.libraryOptionItemList)
+  );
+
 
 
 

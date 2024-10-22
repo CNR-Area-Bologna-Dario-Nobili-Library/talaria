@@ -2,15 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { requestPermissions } from '../Auth/AuthProvider/actions';
 
-import {
-  requestLibraryOptionList,
+import {  
   requestAcceptPermission,
   requestRejectPermission,
 } from './actions';
-import { makeSelectLibraryList } from './selectors';
+
 
 import LandingPagePatronBox from '../../components/LandingPagePatronBox';
 import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
@@ -22,23 +20,27 @@ import LandingPageAdminBox from '../../components/LandingPageAdminBox'
 
 
 function LandingPage(props) {
-  const { auth, dispatch, libraryList, match } = props;
+  const { auth, dispatch,  history, match } = props;
   const intl = useIntl();
+  const [mounted,setMounted]=useState(false);
   const [resourceId, setResourceId] = useState(null);
   const [refreshPermissions, setrefreshPermissions] = useState(null);
 
-  useEffect(() => {
-    dispatch(requestLibraryOptionList());
-  }, [dispatch]);
+
 
   const AcceptPermission = useCallback(
     id => {
       setResourceId(id);
-      dispatch(requestAcceptPermission(id, 1));
+      dispatch(requestAcceptPermission(id, 1,intl.formatMessage({id:"app.containers.LandingPage.acceptedMessage"})));
       setrefreshPermissions({ resourceId: id });
     },
     [dispatch],
   );
+
+  useEffect(() => {
+   setMounted(true)
+  }, []);
+
 
   useEffect(() => {
     if (resourceId) {
@@ -56,39 +58,25 @@ function LandingPage(props) {
   const RejectPermission = useCallback(
     id => {
       setResourceId(id);
-      dispatch(requestRejectPermission(id, 2));
+      dispatch(requestRejectPermission(id, 2,intl.formatMessage({id:"app.containers.LandingPage.rejectedMessage"})));
       setrefreshPermissions({ resourceId: id });
     },
     [dispatch],
   );
 
-  useEffect(() => {
-    console.log("Component received libraryList:", libraryList);
-    if (libraryList && libraryList.length > 0) {
-      console.log("libraryList has items:", libraryList);
-    } else {
-      console.log("libraryList is empty or undefined");
-    }
-  }, [libraryList]);
-
-  useEffect(() => {
-    console.log("Component received libraryList:", libraryList); // This should log the expected array.
-  }, [libraryList]);
   
   
   return (
-    <>
+    mounted &&
+      <>    
       <div className="d-flex justify-content-center align-items-center mt-5">
         <div className="card text-center" style={{ width: '55rem' }}>
           <div className="card-body">
             <h2 className="text-primary">
-              Welcome, <b>{auth.user.name}</b>
+            {intl.formatMessage({id: 'app.containers.LandingPage.welcome'})} <b>{auth.user.name}</b>
             </h2>
             <p className="card-text lead">
-              This is your landing page where you can find the latest patron
-              updates, manage your libraries, and add new libraries to your
-              collection. Stay updated and manage your library resources
-              efficiently.
+            {intl.formatMessage({id: 'app.containers.LandingPage.welcome_message'})}
             </p>
           </div>
         </div>
@@ -110,8 +98,7 @@ function LandingPage(props) {
               id: 'app.containers.LandingPage.LibrariesBox.title',
             })}
             auth={auth}
-            match={match}
-            libraryList={libraryList}
+            match={match}           
             onAccept={AcceptPermission}
             onReject={RejectPermission}
           />
@@ -151,18 +138,13 @@ function LandingPage(props) {
   );
 }
 
-const mapStateToProps = createStructuredSelector({
-  libraryList: makeSelectLibraryList() // Correctly mapped to the component's props
-});
-
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
   };
 }
 
-const withConnect = connect(
-  mapStateToProps,
+const withConnect = connect(  
   mapDispatchToProps,
 );
 

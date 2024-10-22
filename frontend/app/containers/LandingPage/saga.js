@@ -8,13 +8,12 @@ import {
   requestSuccess,
   requestRejectPermissionSuccess,
   requestAcceptPermissionSuccess,
-  requestLibraryOptionListSuccess
 } from './actions';
 
-import { acceptRejectPermissionRequest,  getLibraryOptionList } from 'utils/api';
+import { acceptRejectPermissionRequest } from 'utils/api';
 
 export function* requestAcceptRejectPermissionSaga(action) {
-  const { id, status } = action;
+  const { id, status,acceptedMessage,rejectedMessage } = action;
   const options = {
     method: 'PUT',
     body: JSON.stringify({
@@ -30,43 +29,12 @@ export function* requestAcceptRejectPermissionSaga(action) {
     const response = yield call(acceptRejectPermissionRequest, options);
     if (status === 1) {
       yield put(requestAcceptPermissionSuccess(response));
-      yield call(() => toast.success('Item accepted successfully'));
+      yield call(() => toast.success(acceptedMessage));
     } else if (status === 2) {
       yield put(requestRejectPermissionSuccess(response));
-      yield call(() => toast.success('Item rejected successfully'));
+      yield call(() => toast.success(rejectedMessage));
     }
   } catch (e) {
-    yield put(requestError(e.message));
-  }
-}
-
-// export function* requestLibraryOptionListSaga(action = {}) {
-//   const options = {
-//     method: 'get',
-//     query: action.query ?  action.query : ""
-//   }
-//   try {
-//     const request = yield call(getLibraryOptionList, options);
-//     yield put(requestLibraryOptionListSuccess(request));
-
-
-//   } catch(e) {
-//     alert(e.message)
-//     yield put(requestError(e.message));
-//   }
-// }
-
-
-export function* requestLibraryOptionListSaga(action) {
-  const options = {
-    method: 'get',
-    query: action.query ?  action.query : ""
-  }
-  try {
-    const response = yield call(getLibraryOptionList, options);
-    yield put(requestLibraryOptionListSuccess(response));
-  } catch(e) {
-    alert(e.message)
     yield put(requestError(e.message));
   }
 }
@@ -78,6 +46,5 @@ export function* requestLibraryOptionListSaga(action) {
 export default function* permissionboxSaga() {
   yield takeEvery(REQUEST_ACCEPT_PERMISSION, requestAcceptRejectPermissionSaga);
   yield takeEvery(REQUEST_REJECT_PERMISSION, requestAcceptRejectPermissionSaga);
-  yield takeEvery(REQUEST_GET_LIBRARY_OPTIONLIST, requestLibraryOptionListSaga);
 
 }

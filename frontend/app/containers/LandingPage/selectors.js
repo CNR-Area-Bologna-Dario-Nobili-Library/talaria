@@ -17,14 +17,6 @@ const rejectPermissionLoadingSelector = createSelector(
   state => state.rejectPermissionLoading,
 );
 
-export const makeSelectLibraryList = () =>
-  createSelector(
-    permissionbox,
-    state => state.libraryList || []
-  );
-
-
-
 export {
   acceptPermissionLoadingSelector,
   rejectPermissionLoadingSelector,

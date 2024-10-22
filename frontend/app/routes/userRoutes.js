@@ -10,7 +10,10 @@ const routes = [
   { path: '/change-password', name: 'Change Password', component: ChangePassword },
   { path: "/dashboard",name:'Dashboard', component: LandingPage},
   { path: "/join2lib/:library_id?",name:'Join2lib', component: LandingPage},
-  { path: "/work4lib/:library_id?",name:'Join2lib', component: LandingPage}  
+  
+  //probabilmente non serve perchè di fatto quando l'op viene invitato gli basta andare alla dashboard x accettare/riufiutare
+  { path: "/work4lib/:library_id?",name:'Work4lib', component: LandingPage}  
+  
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },

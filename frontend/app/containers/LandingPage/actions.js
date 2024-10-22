@@ -6,10 +6,7 @@ import {
   REQUEST_ACCEPT_PERMISSION_FAIL,
   REQUEST_REJECT_PERMISSION,
   REQUEST_REJECT_PERMISSION_SUCCESS,
-  REQUEST_REJECT_PERMISSION_FAIL,
-  REQUEST_GET_LIBRARY_OPTIONLIST,
-  REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
-  REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
+  REQUEST_REJECT_PERMISSION_FAIL,  
   REQUEST_ERROR,
   REQUEST_SUCCESS,
   STOP_LOADING,
@@ -21,10 +18,11 @@ export function defaultAction() {
   };
 }
 
-export const requestAcceptPermission = (id, status) => ({
+export const requestAcceptPermission = (id, status,acceptedMessage) => ({
   type: REQUEST_ACCEPT_PERMISSION,
   id,
   status,
+  acceptedMessage,
 });
 
 export const requestAcceptPermissionSuccess = result => ({
@@ -36,10 +34,11 @@ export const requestAcceptPermissionFail = error => ({
   type: REQUEST_ACCEPT_PERMISSION_FAIL,
 });
 
-export const requestRejectPermission = (id, status) => ({
+export const requestRejectPermission = (id, status,rejectedMessage) => ({
   type: REQUEST_REJECT_PERMISSION,
   id,
   status,
+  rejectedMessage
 });
 
 export const requestRejectPermissionSuccess = ressourceid => ({
@@ -50,27 +49,6 @@ export const requestRejectPermissionSuccess = ressourceid => ({
 export const requestRejectPermissionFail = error => ({
   type: REQUEST_REJECT_PERMISSION_FAIL,
 });
-
-export function requestLibraryOptionList(query) {
-  return {
-    type: REQUEST_GET_LIBRARY_OPTIONLIST,
-    query,
-  };
-}
-
-export function requestLibraryOptionListSuccess(result) {
-  return {
-    type: REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
-    result,
-  };
-}
-
-export function requestLibraryOptionListFail(query) {
-  return {
-    type: REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
-    query,
-  };
-}
 
 
 

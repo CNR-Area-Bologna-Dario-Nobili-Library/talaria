@@ -45,7 +45,8 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_GET_USERS_OPTION_ITEMS,    
       REQUEST_INVITE_LIBRARY_OPERATOR,
       REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,
-      REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST
+      REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,
+      REQUEST_GET_LIBRARY_OPTIONLIST
     } from './constants';
 import {
   requestError,
@@ -91,6 +92,7 @@ import {
   requestGetLibraryOperatorSuccess,
   requestGetUsersOptionItemsSuccess,
   requestGetLibraryPendingOperators,
+  requestLibraryOptionListSuccess,
 } from './actions';
 
 import { toast } from "react-toastify";
@@ -132,7 +134,8 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     getLibraryOperator,
     getUsersOptionsList,
     getlibraryProjectsOptionList,
-    inviteLibraryOperator
+    inviteLibraryOperator,
+    getLibraryOptionList,
 } from '../../utils/api'    
 
 import {getOA,getPubmedReferenceByPMID,getFindISSN,getFindISBN, getFindISSN_ACNP} from '../../utils/apiExternal';
@@ -1043,6 +1046,21 @@ export function* requestInviteLibraryOperatorSaga(action) {
   }
 }
 
+export function* requestLibraryOptionListSaga(action) {
+  const options = {
+    method: 'get',
+    query: action.query ?  action.query : ""
+  }
+  try {
+    const response = yield call(getLibraryOptionList, options);
+    yield put(requestLibraryOptionListSuccess(response));
+  } catch(e) {
+    alert(e.message)
+    yield put(requestError(e.message));
+  }
+}
+
+
 
 export function* requestFindISSNISBNsaga(action) {
   
@@ -1158,6 +1176,8 @@ export default function* librarySaga() {
   yield takeLatest(REQUEST_REMOVE_LIBRARY_OPERATOR,requestDeleteLibraryOperatorSaga);
   yield takeLatest(REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR,requestDeleteLibraryPendingOperatorSaga);
   yield takeLatest(REQUEST_INVITE_LIBRARY_OPERATOR,requestInviteLibraryOperatorSaga )
+
+  yield takeEvery(REQUEST_GET_LIBRARY_OPTIONLIST, requestLibraryOptionListSaga);
 
 
   yield takeLatest(REQUEST_GET_ISSN_ISBN,requestFindISSNISBNsaga);
