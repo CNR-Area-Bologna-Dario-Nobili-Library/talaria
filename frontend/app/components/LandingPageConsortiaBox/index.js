@@ -152,14 +152,14 @@ const LandingPageConsortiasBox = (props) => {
                                     href="#"
                                     onClick={() => props.onAccept(res.id)}
                                   >
-                                    Accept
+                                   <i class="fa-solid fa-check" title={intl.formatMessage({id: 'app.global.accept'})}></i>
                                   </a>
                                   <a
                                     className="btn btn-danger btn-sm"
                                     href="#"
                                     onClick={() => props.onReject(res.id)}
                                   >
-                                    Reject
+                                    <i class="fa-solid fa-times" title={intl.formatMessage({id: 'app.global.reject'})}></i>
                                   </a>
                                 </div>
                               )}
