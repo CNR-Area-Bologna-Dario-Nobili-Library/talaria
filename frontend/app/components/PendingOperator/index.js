@@ -1,6 +1,5 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import './style.scss';
 import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates.js';
 
@@ -81,18 +80,15 @@ const PendingOperator = props => {
           </div>
         )}
         {enableDelete && deleteOpCallback && (
-          <div
-            className="delete-button"
-            style={{ textAlign: 'center', width: '100%' }}
-          >
-            <a
-              className="btn btn-sm btn-secondary text-black"
+       
+            <button
+              className="btn btn-sm btn-danger"
               onClick={() => deleteOpCallback()}
               key={'deletebutton'}
             >
               <i class="fa-solid fa-trash"></i>
-            </a>
-          </div>
+            </button>
+       
         )}
       </div>
     </div>
