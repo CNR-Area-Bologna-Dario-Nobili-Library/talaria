@@ -3,6 +3,7 @@ import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
 import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
 import messages from './messages';
 import makeSelectLibrary from 'containers/Library/selectors';
 import {
@@ -22,7 +23,7 @@ import makeSelectPatron, { isPatronLoading } from '../selectors';
 import MyLibraryForm from 'components/Patron/MyLibraryForm';
 import history from 'utils/history';
 
-function MyLibraryPage(props) {
+const MyLibraryPage = props => {
   const intl = useIntl();
   const { auth, dispatch, patron, match } = props;
   const { params } = match;
@@ -31,6 +32,7 @@ function MyLibraryPage(props) {
   const titles = props.titles || [];
   const libraries = props.libraries || [];
 
+  console.log('Libraries Data:', libraries);
   const [formData, setFormData] = useState({
     label: '',
     department_id: '',
@@ -62,16 +64,19 @@ function MyLibraryPage(props) {
     }));
   };
 
+  // Debounced handler for search input changes
   const handleSearchInputChange = debounce(input => {
     setSearchInput(input);
   }, 300);
 
   // Identify the library to edit, if in edit mode
-  const libraryToEdit = patron.my_libraries.data.find(
-    lib =>
-      lib.id === parseInt(params.id, 10) &&
-      lib.library_id === parseInt(params.library_id, 10),
-  );
+  const libraryToEdit = isNew
+    ? null
+    : patron.my_libraries.data.find(
+        lib =>
+          lib.id === parseInt(params.id, 10) &&
+          lib.library_id === parseInt(params.library_id, 10),
+      );
 
   useEffect(() => {
     dispatch(requestLibraryOptionList());
@@ -79,7 +84,7 @@ function MyLibraryPage(props) {
     dispatch(requestMyLibraries());
   }, [dispatch]);
 
-  // Check if the library from the URL (jointolib/50) exists in patron.my_libraries
+  // Handle cases where the user is already registered for a library
   useEffect(() => {
     if (
       isNew &&
@@ -175,6 +180,10 @@ function MyLibraryPage(props) {
             {
               value: selectedLibraryOption.value,
               label: selectedLibraryOption.label,
+              email: selectedLibraryOption.email || selectedLibraryOption.illEmail,
+              address: selectedLibraryOption.address || selectedLibraryOption.location,
+              lon: selectedLibraryOption.lon || selectedLibraryOption.longitude,
+              lat: selectedLibraryOption.lat || selectedLibraryOption.latitude,
             },
           ]);
         } else {
@@ -216,8 +225,12 @@ function MyLibraryPage(props) {
         .map(library => ({
           value: library.value,
           label: library.label,
+          email: library.email || library.illEmail,
+          address: library.address || library.location,
+          lat: library.lat || library.latitude,
+          lon: library.lon || library.longitude,
           isDisabled: patron.my_libraries.data.some(
-            item => item.library_id === library.value, // Disable if library_id matches
+            item => item.library_id === library.value,
           ),
         }));
       setFilteredOptions(options);
@@ -225,7 +238,7 @@ function MyLibraryPage(props) {
       // If no params.library_id is provided and search input is less than 3 characters, clear the dropdown
       setFilteredOptions([]);
     }
-  }, [searchInput, libraries, patron.my_libraries.data]);
+  }, [searchInput, libraries, patron.my_libraries.data, params.library_id]);
 
   const handleLibraryChange = selectedOption => {
     setLibraryId(selectedOption ? selectedOption.value : null);
@@ -276,6 +289,7 @@ function MyLibraryPage(props) {
             id: params.id,
           }),
         );
+        history.push('/patron/my-libraries');
       }
     } catch (error) {
       if (error.response && error.response.status === 429) {
@@ -288,6 +302,8 @@ function MyLibraryPage(props) {
         setErrorMessage(
           error.response.data.errors.user_service_email[0] || 'Error occurred',
         );
+      } else {
+        setErrorMessage('An unexpected error occurred.');
       }
     } finally {
       setIsSubmitting(false);
@@ -299,9 +315,14 @@ function MyLibraryPage(props) {
       {errorMessage && (
         <div className="alert alert-danger">
           {errorMessage}
-          <br />
-          <br />
-          Redirecting To your belonging libraries in <b>{countdown} Seconds</b>... 
+          {countdown > 0 && !showForm && (
+            <>
+              <br />
+              <br />
+              Redirecting To your belonging libraries in{' '}
+              <b>{countdown} Seconds</b>...
+            </>
+          )}
         </div>
       )}
       {showForm && (
@@ -325,7 +346,17 @@ function MyLibraryPage(props) {
       )}
     </>
   );
-}
+};
+
+MyLibraryPage.propTypes = {
+  auth: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired,
+  patron: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
+  library: PropTypes.object.isRequired,
+  titles: PropTypes.array.isRequired,
+  libraries: PropTypes.array.isRequired,
+};
 
 const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
