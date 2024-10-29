@@ -90,13 +90,21 @@ export const FindLibrary = (props) => {
     setShowRegisterOption(false)    
   }, []);
 
+  const resetSearchResults = () => {
+    setLibraryId(null);
+    setSelectedValue(null);
+    setSelectedLibrary(null);
+    setShowMap(false); // Hide the map
+    setLocationError(null); // Clear any error message      
+  };
 
-  /*const handleRegisterNewLibraryClick = () => {
-    resetSearchResults();
-    setShowForm(true);
-    setIsManualEntry(true);    
-  };*/
-
+  const onSearchInputChange = (query, e) => {
+    if (e.action === 'clear') {
+      resetSearchResults();
+    } else if (e.action === 'input-change') {
+      handleLibraryChange()
+    }
+  };
 
     const handleLibraryChange = selectedOption => {
         setLocationError(null); // Reset any previous error message
@@ -156,7 +164,7 @@ export const FindLibrary = (props) => {
           
         }
       };
-    
+      
     
       /*const handleReset = () => {
         setLibraryId(null);
@@ -231,7 +239,8 @@ const MenuList = props => {
                   aria-label={intl.formatMessage({ id: 'app.global.search' })}
                   classNamePrefix="select-container"
                   options={libraries}
-                  onChange={handleLibraryChange}             
+                  onChange={handleLibraryChange}           
+                  onInputChange={onSearchInputChange}  
                   filterOption={filterLibraries} // Apply custom filter logic
                   value={selectedValue}
                   placeholder={intl.formatMessage({ id: 'app.global.search' })}                
