@@ -166,19 +166,12 @@ export const FindLibrary = (props) => {
       };
       
     
-      /*const handleReset = () => {
-        setLibraryId(null);
-        setSelectedValue(null);
-        setSelectedLibrary(null);
-        setShowRegisterOption(true);
-        setShowLibrarianPrompt(true);
-        setShowMap(false); // Hide the map on reset
-      };*/
+    
     
       // Toggle map display
-      const toggleMap = () => {
+      /*const toggleMap = () => {
         setShowMap(!showMap);
-      };
+      };*/
     
       // Custom filter function to only start searching after 3 characters
       const filterLibraries = (option, inputValue) => {
@@ -364,17 +357,7 @@ const MenuList = props => {
                 <div className="alert alert-warning mt-2">
                   {intl.formatMessage({id:'app.components.FindLibrary.askLibraryManagerToBeInvited'})}
                 </div>
-            </div>
-            {/*<Button
-                color="primary"
-                className="reset-button"
-                onClick={handleReset}
-                aria-label="Reset the selected library"
-            >
-                {intl.formatMessage({
-                id: 'app.global.reset',
-                })}
-            </Button>*/}
+            </div>           
             </div>
         )}
 
