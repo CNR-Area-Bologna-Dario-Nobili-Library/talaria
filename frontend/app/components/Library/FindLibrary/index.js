@@ -90,13 +90,21 @@ export const FindLibrary = (props) => {
     setShowRegisterOption(false)    
   }, []);
 
+  const resetSearchResults = () => {
+    setLibraryId(null);
+    setSelectedValue(null);
+    setSelectedLibrary(null);
+    setShowMap(false); // Hide the map
+    setLocationError(null); // Clear any error message      
+  };
 
-  /*const handleRegisterNewLibraryClick = () => {
-    resetSearchResults();
-    setShowForm(true);
-    setIsManualEntry(true);    
-  };*/
-
+  const onSearchInputChange = (query, e) => {
+    if (e.action === 'clear') {
+      resetSearchResults();
+    } else if (e.action === 'input-change') {
+      handleLibraryChange()
+    }
+  };
 
     const handleLibraryChange = selectedOption => {
         setLocationError(null); // Reset any previous error message
@@ -156,21 +164,14 @@ export const FindLibrary = (props) => {
           
         }
       };
+      
     
     
-      /*const handleReset = () => {
-        setLibraryId(null);
-        setSelectedValue(null);
-        setSelectedLibrary(null);
-        setShowRegisterOption(true);
-        setShowLibrarianPrompt(true);
-        setShowMap(false); // Hide the map on reset
-      };*/
     
       // Toggle map display
-      const toggleMap = () => {
+      /*const toggleMap = () => {
         setShowMap(!showMap);
-      };
+      };*/
     
       // Custom filter function to only start searching after 3 characters
       const filterLibraries = (option, inputValue) => {
@@ -231,7 +232,8 @@ const MenuList = props => {
                   aria-label={intl.formatMessage({ id: 'app.global.search' })}
                   classNamePrefix="select-container"
                   options={libraries}
-                  onChange={handleLibraryChange}             
+                  onChange={handleLibraryChange}           
+                  onInputChange={onSearchInputChange}  
                   filterOption={filterLibraries} // Apply custom filter logic
                   value={selectedValue}
                   placeholder={intl.formatMessage({ id: 'app.global.search' })}                
@@ -355,17 +357,7 @@ const MenuList = props => {
                 <div className="alert alert-warning mt-2">
                   {intl.formatMessage({id:'app.components.FindLibrary.askLibraryManagerToBeInvited'})}
                 </div>
-            </div>
-            {/*<Button
-                color="primary"
-                className="reset-button"
-                onClick={handleReset}
-                aria-label="Reset the selected library"
-            >
-                {intl.formatMessage({
-                id: 'app.global.reset',
-                })}
-            </Button>*/}
+            </div>           
             </div>
         )}
 
