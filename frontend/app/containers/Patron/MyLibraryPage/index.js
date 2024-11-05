@@ -269,6 +269,7 @@ const MyLibraryPage = props => {
               ...formData,
               user_id: auth.user.id,
               library_id: libraryId,
+              message:intl.formatMessage(messages.libraryCreateMessage)
             }),
           );
         } else {
@@ -277,6 +278,7 @@ const MyLibraryPage = props => {
               ...formData,
               user_id: auth.user.id,
               url: params,
+              message:intl.formatMessage(messages.libraryCreateMessage)
             }),
           );
         }
@@ -287,6 +289,7 @@ const MyLibraryPage = props => {
             ...formData,
             library_id: params.library_id || libraryId,
             id: params.id,
+            message:intl.formatMessage(messages.libraryUpdateMessage)
           }),
         );
         history.push('/patron/my-libraries');
