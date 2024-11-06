@@ -333,6 +333,8 @@
   "app.components.LandingPageLibrariesBox.areYouLibrarian":"???Are you a Librarian?",
   "app.components.LandingPageLibrariesBox.findLibraryCommunity":"???Check if your library was already registered",
   
+  "app.components.LandingPagePatronBox.importFromOpenurlButton":"???Importa da OpenURL/Pubmed",
+  
   "app.components.FindLibrary.askLibraryManagerToBeInvited":"???You may contact the library manager to be invited as a library operator.",
   "app.components.FindLibrary.noGPScoordinates":"???Invalid or unavailable GPS coordinates for the selected library.",
   "app.components.FindLibrary.noinfo":"???Library information not available",

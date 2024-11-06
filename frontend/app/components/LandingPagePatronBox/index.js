@@ -10,6 +10,8 @@ import BelongingLibraries from '../../containers/Patron/BelongingLibraries/';
 const LandingPagePatronBox = props => {
   const { auth, title, match, history, canCollapse, collapsed, patron } = props;
 
+  const intl = useIntl();
+
   const fromOpenURLorPubmed =
     history &&
     history.location &&
@@ -26,9 +28,10 @@ const LandingPagePatronBox = props => {
       title={title}
       canCollapse={canCollapse}
       collapsed={collapsed}
-    >
-      {/* <p>bla bla bla</p>       */}
-      {match &&
+    >      
+      {/* check LIBRARY ID PASSED BY URL
+
+      match &&
         match.path === '/user/join2lib/:library_id?' &&
         match.params.library_id &&
         match.params.library_id > 0 && (
@@ -36,6 +39,7 @@ const LandingPagePatronBox = props => {
             <b>PRE SELECTED Library ID passed: {match.params.library_id}</b>
           </>
         )}
+      */}    
       <JointoLibPage {...props} /> 
       {/* Include JointoLibPage here */}
       {/* <div className="box p-3 mb-3 text-center">
@@ -88,7 +92,7 @@ const LandingPagePatronBox = props => {
                   (history.location.search ? history.location.search : '')
                 }
               >
-                Import from openurl/pmid
+                {intl.formatMessage({id:'app.components.LandingPagePatronBox.importFromOpenurlButton'})}
               </Link>
             )
             // ||
