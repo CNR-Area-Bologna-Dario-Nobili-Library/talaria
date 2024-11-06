@@ -93,21 +93,21 @@ const OperatorsList = props => {
             <div className="list-body">
               <div className="container" style={{ marginTop: '30px' }}>
                 <div className="div-table">
-                  <div className="div-table-row div-table-header">
+                  <div className="div-table-row">
                     <div
-                      className="div-table-cell"
+                      className="div-table-header"
                       style={{ width: '25%', fontWeight: 'bold' }}
                     >
                      {intl.formatMessage({id: 'app.global.name'})}
                     </div>
                     <div
-                      className="div-table-cell"
+                      className="div-table-header"
                       style={{ width: '55%', fontWeight: 'bold' }}
                     >
                       {intl.formatMessage({id: 'app.global.permissions'})}
                     </div>
                     <div
-                      className="div-table-cell"
+                      className="div-table-header"
                       style={{ width: '20%', fontWeight: 'bold' }}
                     >
                      {intl.formatMessage({id: 'app.global.actions'})}

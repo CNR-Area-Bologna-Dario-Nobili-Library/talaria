@@ -98,23 +98,23 @@ const PendingOperatorsList = props => {
             <div className="list-body">
               <div className="container" style={{ marginTop: '30px' }}>
                 <div className="div-table">
-                  <div className="div-table-row div-table-header">
-                    <div className="div-table-cell name-cell">
+                  <div className="div-table-row">
+                    <div className="div-table-header name-cell">
                       {intl.formatMessage({ id: 'app.global.name' })}
                     </div>
-                    <div className="div-table-cell permissions-cell">
+                    <div className="div-table-header permissions-cell">
                       {intl.formatMessage({ id: 'app.global.permissions' })}
                     </div>
-                    <div className="div-table-cell status-cell">
+                    <div className="div-table-header status-cell">
                       {intl.formatMessage({ id: 'app.global.status' })}
                     </div>
-                    <div className="div-table-cell created-at-cell">
+                    <div className="div-table-header created-at-cell">
                       {intl.formatMessage({ id: 'app.global.created_at' })}
                     </div>
-                    <div className="div-table-cell updated-at-cell">
+                    <div className="div-table-header updated-at-cell">
                       {intl.formatMessage({ id: 'app.global.updated_at' })}
                     </div>
-                    <div className="div-table-cell actions-cell">
+                    <div className="div-table-header actions-cell">
                       {intl.formatMessage({ id: 'app.global.actions' })}
                     </div>
                   </div>

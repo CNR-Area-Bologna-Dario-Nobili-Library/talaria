@@ -65,7 +65,7 @@ const PendingOperator = props => {
                 onClick={() => acceptOpCallback()}
                 key={'acceptbutton'}
               >
-                <i class="fa-solid fa-check fa-lg" aria-hidden="true"/>{' '}
+                <i className="fa-solid fa-check fa-lg" aria-hidden="true"/>{' '}
               </a>
             )}
             {rejectOpCallback && (
@@ -74,7 +74,7 @@ const PendingOperator = props => {
                 onClick={() => rejectOpCallback()}
                 key={'rejectbutton'}
               >
-                <i class="fa-solid fa-times fa-lg" aria-hidden="true"/>{' '}
+                <i className="fa-solid fa-times fa-lg" aria-hidden="true"/>{' '}
               </a>
             )}
           </div>
@@ -86,7 +86,7 @@ const PendingOperator = props => {
               onClick={() => deleteOpCallback()}
               key={'deletebutton'}
             >
-              <i class="fa-solid fa-trash"></i>
+              <i className="fa-solid fa-trash"></i>
             </button>
        
         )}

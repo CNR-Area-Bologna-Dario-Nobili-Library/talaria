@@ -29,12 +29,12 @@ const Operator = (props) => {
       <div className="div-table-cell" style={{ width: '20%' }}>
         {enableEdit && editPath && (
           <Link className="btn btn-sm btn-info me-2" to={editPath} key={'editbutton'}>
-            <i class="fa-solid fa-pencil"></i>
+            <i className="fa-solid fa-pencil"></i>
           </Link>
         )}
         {enableDelete && deleteOpCallback && (
           <button className="btn btn-sm btn-danger" onClick={deleteOpCallback} key={'deletebutton'}>
-            <i class="fa-solid fa-trash"></i>
+            <i className="fa-solid fa-trash"></i>
           </button>
         )}
       </div>

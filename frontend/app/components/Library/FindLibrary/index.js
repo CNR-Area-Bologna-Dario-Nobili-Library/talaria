@@ -364,7 +364,7 @@ const MenuList = props => {
         {/*!selectedLibrary && 
         <>
           <hr className="hr-custom" />
-          <div className="text-center text-center-custom">
+          <div className="text-center">
               <p>
               <strong>
                   {intl.formatMessage(messages.LibNotFoundRegMessage)}

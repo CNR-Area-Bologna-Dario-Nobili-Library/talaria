@@ -66,7 +66,7 @@ const LandingPageProjectsBox = (props) => {
                             ))}
                           </div>
                           <div className="div-table-cell d-flex justify-content-center align-items-center">
-                            <div className="div-current-actions text-center">
+                            <div className="div-actions text-center">
                               <Link
                                 className="btn btn-sm btn-primary mb-2"
                                 to={'/institution/' + res.resource.id}
@@ -152,14 +152,14 @@ const LandingPageProjectsBox = (props) => {
                                     href="#"
                                     onClick={() => props.onAccept(res.id)}
                                   >
-                                    <i class="fa-solid fa-check" title={intl.formatMessage({id: 'app.global.accept'})}></i>
+                                    <i className="fa-solid fa-check" title={intl.formatMessage({id: 'app.global.accept'})}></i>
                                   </a>
                                   <a
                                     className="btn btn-danger btn-sm"
                                     href="#"
                                     onClick={() => props.onReject(res.id)}
                                   >
-                                      <i class="fa-solid fa-times" title={intl.formatMessage({id: 'app.global.reject'})}></i>
+                                      <i className="fa-solid fa-times" title={intl.formatMessage({id: 'app.global.reject'})}></i>
                                   </a>
                                 </div>
                               )}
