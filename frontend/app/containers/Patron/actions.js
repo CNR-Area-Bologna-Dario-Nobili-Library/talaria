@@ -221,12 +221,11 @@ export function requestUpdateAccessToLibrary(request) {
 }
 
 
-export function requestAccessToLibrary(request,message) {
-  
+export function requestAccessToLibrary(request) {
   return {
     type: REQUEST_ACCESS_TO_LIBRARIES,
     request,
-    message
+    message: request.message
   };
 }
 
