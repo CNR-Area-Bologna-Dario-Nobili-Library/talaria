@@ -49,9 +49,6 @@
     "not dead",
     "not op_mini all"
   ],
-  "browser": {
-    "fs": false
-  },
   "lint-staged": {
     "*.js": [
       "npm run lint:eslint:fix",
@@ -71,7 +68,7 @@
     "@coreui/coreui": "^2.1.16",
     "@coreui/icons": "^0.4.1",
     "@coreui/react": "^2.5.8",
-    "@fortawesome/fontawesome-free": "^6.4.2",
+    "@fortawesome/fontawesome-free": "^6.6.0",
     "@react-leaflet/core": "1.0.2",
     "bootstrap": "^4.6.0",
     "chalk": "^2.4.2",
@@ -150,6 +147,7 @@
     "coveralls": "3.0.3",
     "css-loader": "2.1.1",
     "eslint": "5.16.0",
+    "dotenv": "^8.6.0",
     "eslint-config-airbnb": "17.1.0",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-config-prettier": "4.1.0",
