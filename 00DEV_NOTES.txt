@@ -10,7 +10,7 @@ https://laravel.com/docs/6.x/notifications
 - for each notification we can decide how send it specifing this in the "via" method ("mail"|"database") otherwise it will use the default BaseNotification's via() method
 that define that is looks at the user's preferNotifiedBy method!
 - every notification should implement "toXXX" method for every kind of send! (toMail,toMarkDawn)
-  - implement toArray method to store on DB
+- implement toArray method to store on DB
 - all notification inherit from BaseNotification  
 - can be implemented for any model
 
@@ -43,7 +43,6 @@ MAIL:
 OPERATOR's email
 - invitation=> notify to user by email => se siamo in grado di mandare mail diversa x invito operatore nuovo o esistente => mandiamo link a /signup o /index o /user/dashboar altrimenti mandiamo sempre link a index
 tanto da li vede gli inviti
-
 - operator accepted/rejected => notification to all library's operators? or send mail just to library's email address ?
 
 ---------------------------------------------
