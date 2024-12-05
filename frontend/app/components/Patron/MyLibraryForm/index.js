@@ -125,7 +125,7 @@ const MyLibraryForm = props => {
         <Marker position={[latitude, longitude]} icon={customIcon}>
           <Popup>
             {libraryLabel} <br />
-            Latitude: {latitude}, Longitude: {longitude}
+            {intl.formatMessage({id:'app.global.lat'})}: {latitude}, {intl.formatMessage({id:'app.global.lon'})}: {longitude}
           </Popup>
         </Marker>
       </MapContainer>
@@ -138,11 +138,11 @@ const MyLibraryForm = props => {
 
       <form onSubmit={handleSubmit} className="container mt-3">
         <div className="mb-4">
-          <h1>{isNew ? 'Join Library' : 'Edit Library'}</h1>
+          <h1>{isNew ?  intl.formatMessage(messages.joinLibrary): intl.formatMessage(messages.editData)}</h1>
           <p>
-            Fill in the details below to {isNew ? 'join' : 'edit'} the library.
+            {isNew && intl.formatMessage(messages.searchLibrary)}          
+            {!isNew && intl.formatMessage(messages.editDataIntro)}            
           </p>
-          {!isNew && <span className="badge bg-secondary">Edit Mode</span>}
         </div>
 
         <div className="card mb-4">
@@ -163,7 +163,8 @@ const MyLibraryForm = props => {
                   onInputChange={handleSearchInputChange}
                   value={selectedValue}
                   isSearchable
-                  placeholder="Search and select a library"
+                  placeholder={intl.formatMessage({id: 'app.global.search'})}
+                  noOptionsMessage={()=>intl.formatMessage({ id: 'app.global.noresult' })} 
                   required
                   isDisabled={!isNew}
                 />
@@ -178,18 +179,20 @@ const MyLibraryForm = props => {
             <div className="card-body">
               <table className="table">
                 <tbody>
-                  <tr>
+                  {formState.selectedLibrary.address && <tr>
                     <th className="text-end" style={{ width: '30%' }}>
-                      Address:
+                    {intl.formatMessage({id: 'app.global.address'})}
                     </th>
-                    <td>{formState.selectedLibrary.address || 'N/A'}</td>
-                  </tr>
-                  <tr>
+                    <td>{formState.selectedLibrary.address}
+                    {formState.selectedLibrary.town && ", "+formState.selectedLibrary.town}
+                    </td>
+                  </tr>}
+                  {formState.selectedLibrary.email && <tr>
                     <th className="text-end" style={{ width: '30%' }}>
-                      Email ILL Service:
+                    {intl.formatMessage({id: 'app.libraries.ill_email'})}
                     </th>
-                    <td>{formState.selectedLibrary.email || 'N/A'}</td>
-                  </tr>
+                    <td>{formState.selectedLibrary.email}</td>
+                  </tr>}        
                 </tbody>
               </table>
 
@@ -216,7 +219,7 @@ const MyLibraryForm = props => {
                   </div>
                 ) : (
                   <div className="alert alert-danger mt-4" role="alert">
-                    Unable to display map: Invalid or missing coordinates.
+                    {intl.formatMessage({id: 'app.global.gps.unavailable'})}
                   </div>
                 );
               })()}
@@ -230,7 +233,8 @@ const MyLibraryForm = props => {
         >
           <div className="card mb-4">
             <div className="card-body">
-              <h4>{intl.formatMessage(messages.library_details)}</h4>
+              <h4>{intl.formatMessage(messages.details)}</h4>
+              <p>{isNew && intl.formatMessage(messages.dataIntro)}</p>  
 
               <div className="form-group mb-3">
                 <label htmlFor="label">
@@ -353,7 +357,7 @@ const MyLibraryForm = props => {
             className="btn btn-primary"
             disabled={isSubmitting || (!formState.isLibrarySelected && isNew)}
           >
-            {isNew ? 'Join as a Patron' : 'Update'}
+            {isNew ?  intl.formatMessage(messages.joinAsPatron): intl.formatMessage(messages.update)}
           </button>
         </div>
       </form>

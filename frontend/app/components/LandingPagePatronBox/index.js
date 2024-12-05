@@ -8,7 +8,7 @@ import { useIntl } from 'react-intl';
 import BelongingLibraries from '../../containers/Patron/BelongingLibraries/';
 
 const LandingPagePatronBox = props => {
-  const { auth, title, match, history, canCollapse, collapsed, patron } = props;
+  const { auth, title, intro,match, history, canCollapse, collapsed, patron } = props;
 
   const intl = useIntl();
 
@@ -26,6 +26,7 @@ const LandingPagePatronBox = props => {
     <LandingPageBox
       iconClass="fa-solid fa-user"
       title={title}
+      intro={intro}
       canCollapse={canCollapse}
       collapsed={collapsed}
     >      

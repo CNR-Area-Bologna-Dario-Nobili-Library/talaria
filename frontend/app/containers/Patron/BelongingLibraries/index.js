@@ -11,6 +11,7 @@ const BelongingLibraries = ({
   history,
   dispatch,
   showeditbutton,
+  showpreferredbutton,
 }) => {
   const preferredStarClass = pref => {
     switch (pref) {
@@ -68,44 +69,36 @@ const BelongingLibraries = ({
           ) : null}
         </h3>
         <br />
-        <div className="row mb-3">
-          <div className="col-md-1">
+        <div className="row mb-3 justify-content-between">
+          {showpreferredbutton && <div className="col-md-1">
             <div className="font-weight-bold" />
-          </div>
-          <div className="col-md-4">
-            <div className="font-weight-bold">{intl.formatMessage(messages.library)}
-            </div>
+          </div>}
+          <div className="col-md-2 d-flex align-items-center">    
+            <div className="font-weight-bold">{intl.formatMessage(messages.status)}</div>
           </div>
           <div className="col-md-2">
             <div className="font-weight-bold">{intl.formatMessage(messages.date)}</div>
-          </div>
-          <div className="col-md-2 d-flex align-items-center justify-content-center">
-            {' '}
-            <div className="font-weight-bold">{intl.formatMessage(messages.status)}</div>
-          </div>
-          <div className="col-md-3">
-            <div className="font-weight-bold">{intl.formatMessage(messages.details)}</div>
-          </div>
-          {/* {(showEditButton || showDeleteButton) && (
-            <div className="col-md-2">
-              <div className="font-weight-bold">Actions</div>
+          </div>          
+          <div className="col-md-7">
+            <div className="font-weight-bold">{intl.formatMessage(messages.library)}
             </div>
-          )} */}
+          </div>          
+          {/*<div className="col-md-3">
+            <div className="font-weight-bold">{intl.formatMessage(messages.details)}</div>
+          </div>*/}
         </div>
         {librariesList.map((library, index) => (
-          <div className="row mb-3 row-separator" key={index}>
-            <div className="col-md-1">
-              <div>
-                {' '}
-                <Button
+          <div className="row mb-3 justify-content-between" key={index}>
+            {showpreferredbutton && library.status === 1 && <div className="col-md-1">
+              <>
+                <a
                   onClick={() =>
                     onSetIsPreferred(
                       library.id,
                       library.library_id,
                       library.preferred === 1 ? 0 : 1,
                     )
-                  }
-                  color="default"
+                  }           
                 >
                   {
                     <i
@@ -114,27 +107,21 @@ const BelongingLibraries = ({
                       )}`}
                     />
                   }
-                </Button>
-              </div>
-            </div>
-
-            <div className="col-md-4">
-              <div>{library.name}</div>
-              <div>{library.label}</div>
-            </div>
-
-            <div className="col-md-2">
-              <div>{new Date(library.created_at).toLocaleDateString()}</div>{' '}
-            </div>
-            <div className="col-md-2">
-              <div>
+                </a>
+              </>
+            </div>}
+            <div className="col-md-1">
                 <div
                   className={`status-point ${statusClass(library.status)}`}
-                />
-              </div>
+                />              
             </div>
-
             <div className="col-md-3">
+              <div>{new Date(library.created_at).toLocaleDateString()}</div>
+            </div>   
+            <div className="col-md-7">
+              <div>{library.name} <span>{library.label?"("+library.label+")":''}</span></div>
+            </div>                   
+            {/*<div className="col-md-3">
               <div>
                 {library.department_name && (
                   <>
@@ -167,7 +154,7 @@ const BelongingLibraries = ({
                   </>
                 )}
               </div>
-            </div>
+            </div>*/}
             {/* <div className="col-md-2">
               <div className="btn-group">
                 {showEditButton && (
@@ -190,10 +177,9 @@ const BelongingLibraries = ({
                   </a>
                 )}
               </div>
-            </div> */}
-          </div>
-        ))}
-        <hr />
+            </div> */}            
+          </div>                    
+        ))}        
         {/* <div className="row mt-3 align-items-center">
             
             <div className="col-md-4">

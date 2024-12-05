@@ -3,11 +3,14 @@ import {Button} from 'reactstrap'
 import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import {formatDateTime} from '../../utils/dates';
 import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
 const LandingPageProjectsBox = (props) => {
-    const {auth,title,match,history,canCollapse,collapsed}=props
+    const {auth,title,intro,match,history,canCollapse,collapsed}=props
+
+    let intl=useIntl();
 
     const statusClass = status => {
         switch (status) {
@@ -28,6 +31,7 @@ const LandingPageProjectsBox = (props) => {
         <LandingPageBox
           iconClass="fa-solid fa-landmark"
           title={title}
+          intro={intro}
           canCollapse={canCollapse}
           collapsed={collapsed}
         >

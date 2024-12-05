@@ -4,6 +4,7 @@ import Select, { components } from 'react-select';
 import {useIntl} from 'react-intl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import './style.scss';
 
@@ -209,11 +210,14 @@ const MenuList = props => {
           className="register-library-link"
           style={{ padding: '10px', cursor: 'pointer', textAlign: 'center' }}
         >
-          Did you search your library? If not listed, &nbsp;
-          <a href="/register-library" style={{ color: 'blue', textDecoration: 'underline' }}>
-            click here
-          </a>
-          &nbsp;to register it!
+          {intl.formatMessage({id:'app.components.FindLibrary.clickHereToRegister'})}<br/>
+          <Link
+              className="btn btn-primary register-library-button"
+              to={'/register-library'}
+              aria-label={intl.formatMessage({id:'app.components.FindLibrary.registerButton'})}
+              >
+               {intl.formatMessage({id:'app.components.FindLibrary.registerButton'})}
+              </Link>       
         </div>
       )}
     </components.MenuList>
@@ -238,6 +242,7 @@ const MenuList = props => {
                   value={selectedValue}
                   placeholder={intl.formatMessage({ id: 'app.global.search' })}                
                   isSearchable={true}
+                  noOptionsMessage={()=>intl.formatMessage({ id: 'app.global.noresult' })} 
                   required={true}           
                   closeMenuOnSelect={true}
                   onSelectResetsInput={false}
@@ -338,6 +343,7 @@ const MenuList = props => {
                     </div>
                     <div className="div-table-cell">
                     {selectedLibrary.address || 'N/A'}
+                    {selectedLibrary.town && ", "+selectedLibrary.town}
                     </div>
                 </div>
                 <div className="div-table-row">
@@ -353,6 +359,9 @@ const MenuList = props => {
                     {selectedLibrary.email || 'N/A'}
                     </div>
                 </div>
+                {/* 
+                ADD: Library name, Address, City, Nation, Email ILL service, Institution name
+                */}
                 </div>
                 <div className="alert alert-warning mt-2">
                   {intl.formatMessage({id:'app.components.FindLibrary.askLibraryManagerToBeInvited'})}

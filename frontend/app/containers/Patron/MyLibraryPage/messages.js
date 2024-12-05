@@ -8,18 +8,31 @@ import { defineMessages } from 'react-intl';
 export const scope = 'app.containers.MyLibrariesPage';
 
 export default defineMessages({
-  header: {
-    id: `${scope}.header`,
-    defaultMessage: 'My Library',
+  joinLibrary: {
+    id: `${scope}.joinLibrary`,
+    defaultMessage: 'Join library',
   },
-  headerNew: {
-    id: `${scope}.headerNew`,
-    defaultMessage: 'New Library',
+  joinAsPatron: {
+    id: `${scope}.joinAsPatron`,
+    defaultMessage: 'Join as patron',
   },
-  title: {
-    id: `${scope}.title`,
-    defaultMessage: 'Add a new library',
+  editData: {
+    id: `${scope}.editData`,
+    defaultMessage: 'Edit data',
   },
+  searchLibrary: {
+    id: `${scope}.searchLibrary`,
+    defaultMessage: 'Search library intro text',
+  },
+  editDataIntro: {
+    id: `${scope}.editDataIntro`,
+    defaultMessage: 'Edit data intro text....',
+  },
+  dataIntro: {
+    id: `${scope}.dataIntro`,
+    defaultMessage: 'Data intro text....',
+  },
+
   library_id: {
     id: `${scope}.library_id`,
     defaultMessage: 'Select library',
@@ -28,13 +41,13 @@ export default defineMessages({
     id: 'app.global.library',
     defaultMessage: 'Library',
   },
-  library_details: {
-    id: 'app.global.library_details',
-    defaultMessage: 'Library Details',
+  details: {
+    id: `${scope}.details`,
+    defaultMessage: 'My data',
   },
   label: {
-    id: 'app.global.label',
-    defaultMessage: 'Label',
+    id:`${scope}.libraryLabel`,
+    defaultMessage: 'Assign your preferred label to this library (max 5 characters)',
   },
   department_id: {
     id: `${scope}.department_id`,
@@ -67,6 +80,10 @@ export default defineMessages({
   status: {
     id: 'app.global.status',
     defaultMessage: 'Status',
+  },
+  update: {
+    id: 'app.global.update',
+    defineMessages: 'Update'
   },
   libraryUpdateMessage: {
     id: `${scope}.updateMessage`,

@@ -486,7 +486,7 @@ const libraryReducer = (state = initialState, action) =>
             draft.loading = false;
             draft.error = initialState.error;
             draft.libraryOptionItemList = action.result.map(item => {
-              return { value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email };
+              return { value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email, town:item.town };
             });
             break;
           case REQUEST_GET_LIBRARY_OPTIONLIST_FAIL:

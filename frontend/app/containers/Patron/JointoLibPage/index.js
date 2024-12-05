@@ -44,7 +44,6 @@ function JointoLibPage(props) {
           </button>
         </div>
       )}
-
       {patron.my_libraries.data.length > 0 ? (
         <div>
           <BelongingLibraries
@@ -52,7 +51,8 @@ function JointoLibPage(props) {
             gridtitleiconLink="/patron/my-libraries"
             history={history}
             dispatch={dispatch}
-            showeditbutton={true}
+            showeditbutton={false}
+            showpreferredbutton={false}
           />
         </div>
       ) : (
@@ -71,7 +71,7 @@ function JointoLibPage(props) {
       <div className="text-center mt-3">
       {auth.permissions.roles.includes('patron') && (
         <button
-          className="btn btn-secondary btn-lg"
+          className="btn btn-primary btn-lg"
           onClick={() => history.push('/patron/my-libraries')}
         >
           {intl.formatMessage(messages.manageYourLibraries)}

@@ -86,17 +86,15 @@ function LandingPage(props) {
         <div className="landingBoxes d-flex flex-row justify-content-start flex-wrap">
           <LandingPagePatronBox
             history={history}
-            title={intl.formatMessage({
-              id: 'app.containers.LandingPage.PatronBox.title',
-            })}
+            intro={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.intro',})}             
+            title={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.title',})}
             auth={auth}
             match={match}
           />
           <LandingPageLibrariesBox
-            history={history}
-            title={intl.formatMessage({
-              id: 'app.containers.LandingPage.LibrariesBox.title',
-            })}
+            history={history}            
+            intro={intl.formatMessage({id: 'app.containers.LandingPage.LibrariesBox.intro',})}
+            title={intl.formatMessage({id: 'app.containers.LandingPage.LibrariesBox.title',})}            
             auth={auth}
             match={match}           
             onAccept={AcceptPermission}
@@ -104,6 +102,7 @@ function LandingPage(props) {
           />
           <LandingPageInstitutionsBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -112,6 +111,7 @@ function LandingPage(props) {
           />
           <LandingPageProjectsBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -120,6 +120,7 @@ function LandingPage(props) {
           />
           <LandingPageConsortiasBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -128,6 +129,7 @@ function LandingPage(props) {
           />
           <LandingPageAdminBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.title"})}
             auth={props.auth}
             match={props.match}
