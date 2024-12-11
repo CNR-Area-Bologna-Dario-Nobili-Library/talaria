@@ -22,10 +22,15 @@ const ReferenceFormContent = (props) => {
             applyLabels, labelsOptionList, applyGroups, groupsOptionList,
             removeLabel, removeGroup, deleteReference/*,findOA,OALink*/} = props;
     const [formData, setFormData] = useState(() => {        
-        if(reference && Object.keys(reference.length > 0)) return {...reference}    
         
-        //in any case force to return default
-        return {material_type: 1, pubyear: "", authors: "", volume: "", pages: ""}         
+            //it will set material_type from imported data or null by default
+            if(reference && Object.keys(reference.length > 0)) 
+                return {
+                ...reference,
+                material_type:reference.material_type && reference.material_type>0?reference.material_type:null, 
+            }            
+            //in any case force to return default
+            return {material_type: null, pubyear: "", authors: "", volume: "", pages: ""}         
         
     })
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
@@ -107,27 +112,24 @@ const ReferenceFormContent = (props) => {
                         label={intl.formatMessage({id: "app.references.book"})} 
                         checked={formData.material_type === 2 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(2, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.thesis"})} 
                         checked={formData.material_type === 3 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(3, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.cartography"})} 
                         checked={formData.material_type === 4 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(4, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.manuscript"})} 
                         checked={formData.material_type === 5 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(5, 'material_type') : null}
-                        
                     />
-                   {/* a che serve? <input className="form-control" type="radio" name="radio" hidden required /> */}
+                    {/* questo input hidden serve per gestire l'obbligatorietà dei radiobutton*/}
+                    <input className="form-control" type="radio" name="radio" hidden required /> 
                     <ErrorBox 
                         className="invalid-feedback" 
                         error={  intl.formatMessage({ id: 'app.global.invalid_field' })}
