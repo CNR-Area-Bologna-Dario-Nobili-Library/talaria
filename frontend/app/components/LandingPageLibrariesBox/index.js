@@ -8,7 +8,7 @@ import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates';
 
 const LandingPageLibrariesBox = props => {
-  const { auth, title, history, canCollapse, collapsed } = props;
+  const { auth, title, intro,history, canCollapse, collapsed } = props;
     
   const intl = useIntl();
   
@@ -34,6 +34,7 @@ const LandingPageLibrariesBox = props => {
     <LandingPageBox
       iconClass="fa-solid fa-landmark"
       title={title}
+      intro={intro}
       canCollapse={canCollapse}
       collapsed={collapsed}
     >
@@ -41,9 +42,8 @@ const LandingPageLibrariesBox = props => {
         {/* Display the two tables first */}
         {auth.permissions.resources.libraries &&
           auth.permissions.resources.libraries.length >= 1 && (
-            <div className="container">
-              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.currentPermissionsList'})}</h3>
-              <div className="div-responsive">
+            <div className="container mb-5">
+              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.currentPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
                     <div className="div-table-header" style={{ width: '25%' }}>
@@ -120,20 +120,16 @@ const LandingPageLibrariesBox = props => {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+              </div>            
           )}
 
-        <br />
-        <br />
         {auth.permissions.tempresources &&
           auth.permissions.tempresources.libraries &&
           auth.permissions.tempresources.libraries.filter(
             res => res.status === 0 || res.status === 2,
           ).length > 0 && (
-            <div className="container">
-              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.pendingPermissionsList'})}</h3>
-              <div className="div-responsive">
+            <div className="container mb-5">
+              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.pendingPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
                     <div className="div-table-header" style={{ width: '25%' }}>
@@ -209,37 +205,25 @@ const LandingPageLibrariesBox = props => {
                       </div>
                     ))}
                 </div>
-              </div>
-            </div>
+              </div>            
           )}
-
-        {/* Add the hr separator */}
-        <hr className="my-5" />
-
-        {/* Are you a Librarian? section */}
-        <div className="card mb-4">
-          <div className="card-body">
-            <div className="container text-center mt-5">
-              <h1 className="card-body-header">
-                {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.areYouLibrarian'})}
-              </h1>
-              <p>{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.findLibraryCommunity'})}</p>
-              <div className="card-body-subheader">                                
-                <div className="text-center">                  
-                  <Link
-                    className="btn btn-primary find-library-button"
-                    to={'/find-library'}
-                    aria-label={intl.formatMessage({id:"app.global.search"})}
-                  >
-                    {intl.formatMessage({id:"app.global.search"})}
-                  </Link>
-                </div>
-
-              </div>
-            </div>            
+        
+        {/* Want register new library? */}
+        <div className='container mb-5'>
+          <h3 className="text-center mb-4">
+                {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.findLibraryCommunity'})}
+          </h3>              
+          <div className="text-center">                  
+              <Link
+                      className="btn btn-primary"
+                      to={'/find-library'}
+                      aria-label={intl.formatMessage({id:"app.components.FindLibrary.registerButton"})}
+                    >
+                      {intl.formatMessage({id:"app.components.FindLibrary.registerButton"})}
+              </Link>
           </div>
         </div>
-      </>
+      </>      
     </LandingPageBox>
   );
 };

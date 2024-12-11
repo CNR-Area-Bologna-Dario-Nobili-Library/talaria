@@ -6,14 +6,13 @@ import { Link } from 'react-router-dom';
 import {useIntl} from 'react-intl'
 
 const LandingPageAdminBox = (props) => {
-    const {auth,title, match,canCollapse,collapsed}=props
+    const {auth,title, intro,match,canCollapse,collapsed}=props
     
     const intl=useIntl();  
    
     return (            
         (auth.permissions.roles && ( auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager") || auth.permissions.roles.includes("accountant")) ) &&                     
-            <LandingPageBox iconClass="fa-solid fa-gear" title={title} canCollapse={canCollapse} collapsed={collapsed} >                
-                <p>bla bla bla ....</p>    
+            <LandingPageBox iconClass="fa-solid fa-gear" title={title} intro={intro} canCollapse={canCollapse} collapsed={collapsed} >                               
                 {auth.permissions.roles.includes("super-admin") && 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-gear`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AdminDashboard'})}

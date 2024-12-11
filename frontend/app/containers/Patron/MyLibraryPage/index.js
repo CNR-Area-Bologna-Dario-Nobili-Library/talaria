@@ -225,6 +225,7 @@ const MyLibraryPage = props => {
         .map(library => ({
           value: library.value,
           label: library.label,
+          town: library.town,
           email: library.email || library.illEmail,
           address: library.address || library.location,
           lat: library.lat || library.latitude,

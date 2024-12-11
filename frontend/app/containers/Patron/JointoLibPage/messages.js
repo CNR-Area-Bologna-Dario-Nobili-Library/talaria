@@ -93,7 +93,7 @@ export default defineMessages({
 
   joinNewLibrary: {
     id: `${scope}.joinNewLibrary`,
-    defaultMessage: 'Join to a new library',
+    defaultMessage: 'Join a library',
   },
 
   areYouPatron: {

@@ -191,7 +191,7 @@ const PatronReducer = (state = initialState, action) =>
       case REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS:
         draft.loading = false;
         draft.error = initialState.error;
-        draft.libraryOptionList = action.result.map(item => { return {value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email } } );
+        draft.libraryOptionList = action.result.map(item => { return {value: item.id, label: item.name, lon: item.lon, lat: item.lat, address:item.address, email:item.ill_email, town:item.town } } );
         break;
       case REQUEST_GET_LABELS_OPTIONLIST_SUCCESS:
         draft.loading = false;
