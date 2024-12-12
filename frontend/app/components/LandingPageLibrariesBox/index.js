@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
+import { permissionBadgeClass,libraryStatusIcon } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates';
 
 const LandingPageLibrariesBox = props => {
@@ -17,7 +17,8 @@ const LandingPageLibrariesBox = props => {
     history.location &&
     history.location.search.includes('byopenurl');
 
-  
+   
+
   
   const statusClass = status => {
     switch (status) {
@@ -46,12 +47,15 @@ const LandingPageLibrariesBox = props => {
               <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.currentPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
-                    <div className="div-table-header" style={{ width: '25%' }}>
+                    <div className="div-table-header" style={{ width: '33%' }}>
                     {intl.formatMessage({id: 'app.global.library',})}
                     </div>
-                    <div className="div-table-header" style={{ width: '42%' }}>
-                    {intl.formatMessage({id: 'app.global.permissions',})}
+                    <div className="div-table-header" style={{ width: '8%' }}>
+                    {intl.formatMessage({id: 'app.global.status',})}
                     </div>
+                    <div className="div-table-header" style={{ width: '25%' }}>
+                    {intl.formatMessage({id: 'app.global.permissions',})}
+                    </div>                    
                     <div
                       className="div-table-header"
                       style={{ width: '33%', textAlign: 'center' }}
@@ -61,8 +65,11 @@ const LandingPageLibrariesBox = props => {
                   </div>
                   {auth.permissions.resources.libraries.map((res, i) => (
                     <div className="div-table-row" key={`row-${i}`}>
-                      <div className="div-table-cell" style={{ width: '25%' }}>{res.resource.name}</div>
-                      <div className="div-table-cell" style={{ width: '42%' }}>
+                      <div className="div-table-cell" style={{ width: '33%' }}>{res.resource.name}</div>
+                      <div className="div-table-header" style={{ width: '8%' }}>
+                      {libraryStatusIcon(res.resource.status)}
+                      </div>
+                      <div className="div-table-cell" style={{ width: '25%' }}>
                         {res.permissions.map((p, index) => (
                           <span
                             key={`badge_perm_${index}`}
@@ -71,7 +78,7 @@ const LandingPageLibrariesBox = props => {
                             {p}
                           </span>
                         ))}
-                      </div>
+                      </div>                      
                       <div className="div-table-cell justify-content-center align-items-center" style={{ width: '33%', textAlign: 'center' }}>
                         <div className="div-actions text-center">
                           <Link
@@ -81,8 +88,8 @@ const LandingPageLibrariesBox = props => {
                           >
                             {intl.formatMessage({id:'app.global.go'})}
                           </Link>
-                          {(res.permissions.includes('borrow') ||
-                            res.permissions.includes('manage')) && (
+                          {((res.permissions.includes('borrow') ||
+                            res.permissions.includes('manage')) && res.resource.status==1  ) && (
                             <>
                               {fromOpenURLorPubmed && (
                                 <Link
@@ -112,7 +119,7 @@ const LandingPageLibrariesBox = props => {
                                 >
                                   {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.newRequestButton'})}
                                 </Link>
-                              )}
+                              )}                              
                             </>
                           )}
                         </div>
