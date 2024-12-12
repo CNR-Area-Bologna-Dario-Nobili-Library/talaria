@@ -8,6 +8,7 @@ import CustomCheckBox from 'components/Form/CustomCheckBox';
 import './style.scss';
 import { Link } from 'react-router-dom';
 import LibraryInformations from '../../Library/LibraryInformations';
+import {libraryStatusIcon}  from '../../../utils/utilityFunctions';
 
 
 export const editurl=(reqPath,id,op) => {
@@ -23,38 +24,6 @@ export const manageoperatorsurl=(reqPath,id) => {
     return generatePath(reqPath, {
         id,        
     });
-}
-
-
-const statusInfo = (lib) => {  
-
-    let ret="";
-
-    let intl=useIntl();
-
-    switch (lib.status) {
-        case -1: ret=<i className='fa-solid fa-circle-plus' title={intl.formatMessage({id: "app.manager.libraries.icon.new"})}></i>
-                 break;
-        case 0: ret=<i className='fa-solid fa-ban' title={intl.formatMessage({id: "app.manager.libraries.icon.disabled"})}></i>
-                break;         
-        case 1: ret=<i className='fa-solid fa-circle-check' title={intl.formatMessage({id: "app.manager.libraries.icon.enabled"})}></i>
-                break;                 
-        case 2: ret=<i className='fa-solid fa-rotate-right' title={intl.formatMessage({id: "app.manager.libraries.icon.renewing"})}></i>
-        break;                 
-
-        case 3: ret=<i className='fa-solid fa-poo' title={intl.formatMessage({id: "app.manager.libraries.icon.disabledBad"})}></i>
-        break;                  
-
-        case 4: ret=<i className='fa-solid fa-stopwatch' title={intl.formatMessage({id: "app.manager.libraries.icon.disabledExpired"})}></i>
-        break;                 
-
-        case 5: ret=<i className='fa-solid fa-coins' title={intl.formatMessage({id: "app.manager.libraries.icon.disabledNotPay"})}></i>
-        break;                 
-
-        default: ret=lib.status_key
-    }
-
-    return <div className='library_status'>{ret}</div>
 }
 
 export const canEnable = (lib) => {    
@@ -161,7 +130,8 @@ const LibraryItem = (props) => {
                 {formatDateTime(data.created_at)}
             </Col>
             <Col sm={1}>
-                {statusInfo(data)}
+                <div className='library_status'>{libraryStatusIcon(data.status)}</div> 
+                
                 {data.institution && data.institution.data.status!=1 && <>&nbsp;<i className='fa-solid fa-triangle-exclamation text-danger'  title={intl.formatMessage({id: "app.manager.libraries.icon.institution_warning"})}></i></>}
             </Col>
             <Col sm={4}>      
