@@ -12,7 +12,7 @@ const LandingPageAdminBox = (props) => {
    
     return (            
         (auth.permissions.roles && ( auth.permissions.roles.includes("super-admin") || auth.permissions.roles.includes("manager") || auth.permissions.roles.includes("accountant")) ) &&                     
-            <LandingPageBox iconClass="fa-solid fa-gear" title={title} intro={intro} canCollapse={canCollapse} collapsed={collapsed} >                               
+            <LandingPageBox iconClass="fa-solid fa-gear" headerClass="bg-red" title={title} intro={intro} canCollapse={canCollapse} collapsed={collapsed} >                               
                 {auth.permissions.roles.includes("super-admin") && 
                 <Link className="btn btn-primary" to="/admin" >
                     <i className={`fa-solid fa-gear`}></i> {intl.formatMessage({id:'app.components.HeaderBar.AdminDashboard'})}

@@ -100,6 +100,8 @@ function LandingPage(props) {
             onAccept={AcceptPermission}
             onReject={RejectPermission}
           />
+          { // HIDDEN because now Institution/project/consortia management is not implemented*/
+            /*
           <LandingPageInstitutionsBox
             history={history}
             intro={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.intro"})}
@@ -126,7 +128,7 @@ function LandingPage(props) {
             match={props.match}
             onAccept={AcceptPermission}
             onReject={RejectPermission}
-          />
+          />*/}
           <LandingPageAdminBox
             history={history}
             intro={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.intro"})}

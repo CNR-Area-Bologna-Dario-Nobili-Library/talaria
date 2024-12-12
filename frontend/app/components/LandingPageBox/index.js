@@ -3,13 +3,13 @@ import {Card,CardBody, CardHeader, CardText, CardTitle} from 'reactstrap'
 import './style.scss'
 
 const LandingPageBox = (props) => {
-    const {customClass,canCollapse=true,collapsed=false, intro, title, iconClass=""} = props
+    const {customClass,canCollapse=true,collapsed=false, intro, title, iconClass="", headerClass="", bodyClass=""} = props
 
     const [openBox,setOpenBox]=useState(canCollapse?!collapsed:true)  
     
     return (
-        <Card className="landingPageBox">
-            <CardHeader className="landingBoxTitle">                                
+        <Card className={`landingPageBox ${bodyClass}`}>
+            <CardHeader className={`landingBoxTitle ${headerClass}`}>                                
                 {canCollapse && <a className="toggle-box-link" onClick={()=>setOpenBox(!openBox)}>
                     <i className={`fas ${openBox?'fa-toggle-on':'fa-toggle-off'}`}></i> 
                 </a>}
