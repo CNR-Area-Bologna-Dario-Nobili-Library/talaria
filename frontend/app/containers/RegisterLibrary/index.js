@@ -470,6 +470,10 @@ const RegisterLibrary = props => {
       fields.showfullProfile.label = intl.formatMessage(
         wizardMessages.switchToFullProfile,
       );
+      setData(prevData => {
+        const { opac, order_opac, ...rest } = prevData;
+        return rest; // This delete opac and opac_order from the data
+      });
     } else {
       //fields.subject_id.required = true;
       fields.opac.required = true;
