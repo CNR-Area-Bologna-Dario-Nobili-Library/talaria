@@ -27,6 +27,7 @@ const Operator = (props) => {
           ))}
       </div>
       <div className="div-table-cell" style={{ width: '20%' }}>
+        <div className="div-actions">
         {enableEdit && editPath && (
           <Link className="btn btn-sm btn-info me-2" to={editPath} key={'editbutton'}>
             <i className="fa-solid fa-pencil"></i>
@@ -36,7 +37,8 @@ const Operator = (props) => {
           <button className="btn btn-sm btn-danger" onClick={deleteOpCallback} key={'deletebutton'}>
             <i className="fa-solid fa-trash"></i>
           </button>
-        )}
+        )}        
+        </div>
       </div>
     </div>
   );
