@@ -47,11 +47,8 @@ const LandingPageLibrariesBox = props => {
               <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.currentPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
-                    <div className="div-table-header" style={{ width: '33%' }}>
+                    <div className="div-table-header" style={{ width: '41%' }}>
                     {intl.formatMessage({id: 'app.global.library',})}
-                    </div>
-                    <div className="div-table-header" style={{ width: '8%' }}>
-                    {intl.formatMessage({id: 'app.global.status',})}
                     </div>
                     <div className="div-table-header" style={{ width: '25%' }}>
                     {intl.formatMessage({id: 'app.global.permissions',})}
@@ -65,10 +62,7 @@ const LandingPageLibrariesBox = props => {
                   </div>
                   {auth.permissions.resources.libraries.map((res, i) => (
                     <div className="div-table-row" key={`row-${i}`}>
-                      <div className="div-table-cell" style={{ width: '33%' }}>{res.resource.name}</div>
-                      <div className="div-table-header" style={{ width: '8%' }}>
-                      {libraryStatusIcon(res.resource.status)}
-                      </div>
+                      <div className="div-table-cell" style={{ width: '33%' }}>{libraryStatusIcon(res.resource.status)} {res.resource.name}</div>
                       <div className="div-table-cell" style={{ width: '25%' }}>
                         {res.permissions.map((p, index) => (
                           <span
