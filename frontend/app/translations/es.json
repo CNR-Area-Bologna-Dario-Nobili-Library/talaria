@@ -738,6 +738,7 @@
   
   "app.components.SignupForm.header": "Registrarse",
   "app.components.SignupForm.subtitle": "Crear su perfil",
+  "app.components.SignupForm.forgotPassword": "Ha olvidado su password?",
 
   "app.components.CustomForm.select": "Selecionar",
 

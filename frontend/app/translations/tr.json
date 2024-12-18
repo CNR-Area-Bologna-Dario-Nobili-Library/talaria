@@ -738,6 +738,7 @@
 
   "app.components.SignupForm.header": "Üye ol",
   "app.components.SignupForm.subtitle": "Profil oluştur",
+  "app.components.SignupForm.forgotPassword": "Şifrenizi mi unuttunuz?",
 
   "app.components.CustomForm.select": "Seç",
 
