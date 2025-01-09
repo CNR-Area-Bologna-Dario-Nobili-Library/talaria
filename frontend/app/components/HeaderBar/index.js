@@ -31,6 +31,9 @@ function HeaderBar(props) {
 
   const { auth, isLogged, history, headermenu, routes, isMobile,match,resource } = props
 
+  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+
+
   const currentRoute = routes && routes.filter(route => route.current).length > 0 ? routes.filter(route => route.current) : null;
 
   /* const linkTo = (path) => {
@@ -135,7 +138,7 @@ function HeaderBar(props) {
                         </div>
                       )}                     
                       {
-                        checkRole(auth, "patron") && (
+                        patrons_enabled && checkRole(auth, "patron") && (
                         <div className="resources-menu">
                           <Row className="head item">
                               <i className={`fa-solid fa-book-open-reader`}></i>
@@ -143,7 +146,7 @@ function HeaderBar(props) {
                           </Row>
                           <Row className="item">
                               <NavLink to={`/patron/references`} activeClassName="current">
-                                Patron main page 
+                              <FormattedMessage {...messages.patronDashboard} />
                               </NavLink>    
                           </Row>
                         </div>)

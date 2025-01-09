@@ -26,6 +26,8 @@ function LandingPage(props) {
   const [resourceId, setResourceId] = useState(null);
   const [refreshPermissions, setrefreshPermissions] = useState(null);
 
+  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+
 
 
   const AcceptPermission = useCallback(
@@ -84,13 +86,13 @@ function LandingPage(props) {
 
       <div className="container">
         <div className="landingBoxes d-flex flex-row justify-content-start flex-wrap">
-          <LandingPagePatronBox
+          {patrons_enabled && <LandingPagePatronBox
             history={history}
             intro={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.intro',})}             
             title={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.title',})}
             auth={auth}
             match={match}
-          />
+          />}
           <LandingPageLibrariesBox
             history={history}            
             intro={intl.formatMessage({id: 'app.containers.LandingPage.LibrariesBox.intro',})}

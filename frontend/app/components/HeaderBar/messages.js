@@ -65,6 +65,11 @@ export default defineMessages({
     id: `${scope}.patron`,
     defaultMessage: 'Patron',
   },
+  patronDashboard: {
+    id: `${scope}.PatronDashboard`,
+    defaultMessage: 'My reference manager',
+  },
+
   Logout: {
     id: `${scope}.Logout`,
     defaultMessage: 'Logout',
