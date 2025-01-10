@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => '???These credentials do not match our records.',
-    'throttle' => '???Too many login attempts. Please try again in :seconds seconds.',
-    'unauthorized'=> '???You\'r not allowed to access this resource',    
+    'failed' => 'Bu bilgiler kayıtlarımızdakilerle eşleşmiyor.',
+    'throttle' => 'Çok fazla giriş denemesi yapıldı. Lütfen :seconds sonra tekrar deneyin.',
+    'unauthorized'=> 'Bu kaynağa erişim izniniz yok.',     
 ];

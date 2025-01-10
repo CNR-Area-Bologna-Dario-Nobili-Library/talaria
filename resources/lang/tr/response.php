@@ -13,16 +13,16 @@ return [
     |
     */
 
-    'create_relation_failed' => '???Create relationship failed',
-    'update_relation_failed'=>'???Update relationship failed',
-    'create_failed'=>'???Create resource failed',
-    'update_failed'=>'???Update resource failed',
-    'delete_failed'=>'???Delete resource failed',
-    'destroy_failed'=>'???Destroy resource failed',
-    'restore_failed'=>'???Restore resource failed',
-    'attach_failed'=>'???Attach resource failed',
-    'detach_failed'=>'???Detach resource failed',
-    'update_meta_failed'=>'???Update metadata failed',
+    'create_relation_failed' => 'İlişki yaratma başarısız',
+    'update_relation_failed'=>'İlişki güncelleme başarısız',
+    'create_failed'=>'Kaynak yaratma başarısız',
+    'update_failed'=>'Kaynak yenileme başarısız',
+    'delete_failed'=>'Kaynak silme başarısız',
+    'destroy_failed'=>'Kaynak silme başarısız',
+    'restore_failed'=>'Kaynak onarım başarısız',
+    'attach_failed'=>'Kaynak ekleme başarısız',
+    'detach_failed'=>'Kaynak sökme başarısız',
+    'update_meta_failed'=>'Metadata güncelleme başarısız',
     
 
 ];

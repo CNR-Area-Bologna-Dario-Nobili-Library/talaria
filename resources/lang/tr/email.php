@@ -8,14 +8,14 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'password_reset_email_greeting'=>'???Hello',
-    'password_reset_email_subject'=>'???Password reset',
-    'password_reset_email_body'=>'???You are receiving this email because we received a password reset request for your account.',
-    'password_reset_email_link'=>'???Click here to reset your password',
-    'password_reset_email_link_expire_warning'=>'???This password reset link will expire in :count minutes.',
-    'password_reset_email_link_no_further_action'=>'???If you did not request a password reset, no further action is required.',
-    'link_trouble'=>"???If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser: \n[:actionURL](:actionURL)'",
-    'regards'=>'???Regards',
-    'email_already_exists' =>'???This email is already registered in our system. If you want instead to recover your password, please use the link below.'
+    'password_reset_email_greeting'=>'Merhaba',
+    'password_reset_email_subject'=>'Şifre yenileme',
+    'password_reset_email_body'=>'Bu emaili aldınız çünkü hesabınız için bir şifre yenileme talebi aldık',
+    'password_reset_email_link'=>'Şifrenizi yenilemek için buraya tıklayın',
+    'password_reset_email_link_expire_warning'=>'Bu şifre yenileme linki :count sonra geçersiz olacak',
+    'password_reset_email_link_no_further_action'=>'Eğer bir şifre yenileme talebinde bulunmadıysanız herhangi bir şey yapmanıza gerek yoktur.',
+    'link_trouble'=>"Eğer \":actionText\" butonuna taıklamakta güçlük yaşıyorsanız, aşağıdaki URL'yi kopyalayıp internet tarayıcınıza yapıştırınız.\n[:actionURL](:actionURL)",
+    'regards'=>'Saygılarımızla',
+    'email_already_exists' =>'Bu email zaten sistemimizde kayıtlı. Eğer şifrenizi tekrar elde etmek istiyorsanız, aşağıdaki linki kullanın.'
 
 ];

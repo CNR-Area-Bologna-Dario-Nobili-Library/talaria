@@ -9,13 +9,13 @@ return [
     |
     */
     'password_reset_email_greeting'=>'Hola',
-    'password_reset_email_subject'=>'???Password reset',
-    'password_reset_email_body'=>'???You are receiving this email because we received a password reset request for your account.',
-    'password_reset_email_link'=>'???Click here to reset your password',
-    'password_reset_email_link_expire_warning'=>'???This password reset link will expire in :count minutes.',
-    'password_reset_email_link_no_further_action'=>'???If you did not request a password reset, no further action is required.',
-    'link_trouble'=>"???If you’re having trouble clicking the \":actionText\" button, copy and paste the URL below into your web browser: \n[:actionURL](:actionURL)'",
-    'regards'=>'???Regards',
-    'email_already_exists' =>'???This email is already registered in our system. If you want instead to recover your password, please use the link below.'
+    'password_reset_email_subject'=>'Restablecer contraseña',
+    'password_reset_email_body'=>'Recibes este correo electrónico por tu solicitud de restablecimiento de contraseña.',
+    'password_reset_email_link'=>'Clica aquí para restablecer tu contraseña',
+    'password_reset_email_link_expire_warning'=>'Este enlace caducará en :count minutos.',
+    'password_reset_email_link_no_further_action'=>'Si no solicitaste un restablecimiento de contraseña, no se requiere ninguna otra acción.',
+    'link_trouble'=>"Si tienes problemas al clicar el botón \":actionText\", copia y pega la siguiente URL en tu navegador web: \n[:actionURL](:actionURL)",
+    'regards'=>'Saludos',
+    'email_already_exists' =>'Este correo electrónico ya está registrado en nuestro sistema. Si deseas recuperar tu contraseña, utiliza el siguiente enlace.'
 
 ];

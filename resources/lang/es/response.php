@@ -13,16 +13,16 @@ return [
     |
     */
 
-    'create_relation_failed' => '???Create relationship failed',
-    'update_relation_failed'=>'???Update relationship failed',
-    'create_failed'=>'???Create resource failed',
-    'update_failed'=>'???Update resource failed',
-    'delete_failed'=>'???Delete resource failed',
-    'destroy_failed'=>'???Destroy resource failed',
-    'restore_failed'=>'???Restore resource failed',
-    'attach_failed'=>'???Attach resource failed',
-    'detach_failed'=>'???Detach resource failed',
-    'update_meta_failed'=>'???Update metadata failed',
+    'create_relation_failed' => 'Error al crear la relación',
+    'update_relation_failed'=>'Error al actualizar la relación',
+    'create_failed'=>'Error al crear el recurso',
+    'update_failed'=>'Error al actualizar el recurso',
+    'delete_failed'=>'Error al eliminar el recurso',
+    'destroy_failed'=>'Error al destruir el recurso',
+    'restore_failed'=>'Error al restaurar el recurso',
+    'attach_failed'=>'Error al adjuntar el recurso',
+    'detach_failed'=>'Error al separar el recurso',
+    'update_meta_failed'=>'Error al actualizar los metadatos',
     
 
 ];
