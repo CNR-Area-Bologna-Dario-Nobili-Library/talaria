@@ -123,9 +123,6 @@
   
   "app.containers.LandingPage.welcome":"Welcome",
   "app.containers.LandingPage.welcome_message":"This is your user dashboard where you can manage your roles and libraries. Since a user may have multiple roles at the same time in multiple libraries, use the proper box below to start working. If you want to check or modify your user preferences, such as your contact email and other preferences, go to the User Profile menu.",
-  "app.containers.LandingPage.intro":"You may insert here description, mission and purposes of your Resource Sharing community. You may describe how libraries may join this community and how patrons may sign up at the libraries.",
-  "app.containers.LandingPage.intro_library":"If you are a LIBRARIAN and you want to add your library to  the [ACRONYM] community, please  refer to the appropriate tab. Please provide us information about your library name, location, ILL service contacts, your library institution and disciplinary field.",
-  "app.containers.LandingPage.intro_patron":"If you are a PATRON and you want to sign up at a library belonging to the [ACRONYM] community, please refer to the appropriate tab. Please select the library you want to enroll in and provide us information about your contacts, status and department. ",
   "app.containers.LandingPage.header": "Dashboard",
   "app.containers.LandingPage.PatronBox.title":"Patron Box",
   "app.containers.LandingPage.PatronBox.intro":"Use this box to ask to join a library as a patron, to check and modify the libraries you have joined, to start managing your references and request them.",

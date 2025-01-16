@@ -123,9 +123,6 @@
   
   "app.containers.LandingPage.welcome":"Bienvenida",
   "app.containers.LandingPage.welcome_message":"Este es el panel de control de usuario donde puede administrar las bibliotecas y los roles. Dado que un usuario puede tener varios roles al mismo tiempo, en varias bibliotecas, use el cuadro correspondiente a continuación para comenzar a trabajar. Si desea verificar o modificar sus preferencias de usuario o su correo electrónico, vaya al menú Perfil de usuario.",
-  "app.containers.LandingPage.intro":"Puede incluir aquí la descripción, misión y propósito de su red bibliotecaria. Puede describir cómo darse de alta en la red, y cómo los usuario pueden registrarse en las bibliotecas.",
-  "app.containers.LandingPage.intro_library":"Si es BIBLIOTECARIO/A y desea agregar su biblioteca a la comunidad [SIGLAS], vaya a la pestaña correspondiente. Proporcione información sobre su institución, el nombre de su biblioteca, ubicación, los datos de contacto del servicio ILL y el ámbito temático.",
-  "app.containers.LandingPage.intro_patron":"Si es USUARIO/A y quiere registrarse en la biblioteca perteneciente a la red [ACRONYM], vaya a la pestaña correspondiente. Seleccione por favor la biblioteca en la que desea inscribirse y proporcione información sobre sus propios datos de contacto, cargo y Departamento. ",
   "app.containers.LandingPage.header": "Panel de control",
   "app.containers.LandingPage.PatronBox.title":"Cuadro de Usuario",
   "app.containers.LandingPage.PatronBox.intro":"Usa este cuadro para solicitar unirte a una biblioteca como usuario, consultar y modificar las bibliotecas a las que te has unido, comenzar a gestionar tus referencias y solicitarlas.",

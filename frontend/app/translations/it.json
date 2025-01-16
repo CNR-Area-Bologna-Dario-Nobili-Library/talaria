@@ -123,9 +123,6 @@
   
   "app.containers.LandingPage.welcome":"Ti diamo il benvenuto",
   "app.containers.LandingPage.welcome_message":"Questa è la tua dashboard in cui puoi gestire i tuoi ruoli e le tue biblioteche. Poiché un utente può avere più ruoli contemporaneamente in più biblioteche, utilizza il pannello pertinente per iniziare a lavorare. Per controllare o modificare le tue preferenze, come l’indirizzo e-mail a cui desideri essere contattato e altro, usa il menu Profilo utente.",
-  "app.containers.LandingPage.intro":"Puoi inserire qui la descrizione, la mission, gli obiettivi  della tua comunità di biblioteche. Puoi descrivere come le biblioteche possono partecipare a questa comunità e come gli utenti possono registrarsi presso le biblioteche.",
-  "app.containers.LandingPage.intro_library":"Se sei un BIBLIOTECARIO e desideri iscrivere la tua biblioteca alla comunità  [ACRONIMO], fai riferimento alla scheda appropriata.  Ti preghiamo di fornirci i dati della tua biblioteca: nome, indirizzo, contatti del servizio ILL, istituzione di appartenenza e ambito disciplinare della biblioteca. ",
-  "app.containers.LandingPage.intro_patron":"Se sei un UTENTE e desideri iscriverti ad una biblioteca appartenente alla comunità [ACRONIMO], fai riferimento alla scheda appropriata.  Seleziona la biblioteca alla quale vuoi iscriverti e inserisci i tuoi contatti, la tua qualifica e l’istituto o il dipartimento a cui appartieni. ",
   "app.containers.LandingPage.header": "Dashboard",
   "app.containers.LandingPage.PatronBox.title":"Pannello utente",
   "app.containers.LandingPage.PatronBox.intro":"Usa questo pannello per iscriverti come utente ad una biblioteca, per vedere e modificare le biblioteche a cui sei iscritta/o, per iniziare a gestire la tua bibliografia e richiedere documenti.",

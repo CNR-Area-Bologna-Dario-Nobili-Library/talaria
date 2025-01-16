@@ -123,9 +123,6 @@
   
   "app.containers.LandingPage.welcome":"Hoşgeldiniz",
   "app.containers.LandingPage.welcome_message":"Burası rolleriniz ve kütüphanelerinizi düzenleyebileceğiniz kullanıcı tablonuz. Bir kullanıcının birkaç kütüphanede aynı anda birkaç rolü olabileceği için altta doğru kutuyu kullanarak çalışmaya başlayın. Erişim emailiniz ve diğer ayarlarınız gibi kullanıcı ayarlarınızı kontrol etmek veya değiştirmek isterseniz kullanıcı Profili menüsüne gidin.",
-  "app.containers.LandingPage.intro":"Buraya kaynak paylaşım topluluğunuzun tanımını, misyonunu ve amaçlarını ekleyebilirsiniz. Kütüphanelerin bu toğluluğa nasıl katılacağını ve kullanıcıların kütüphanelere nasıl kaydolacağını anlatabilirsiniz. You may describe how libraries may join this community and how patrons may sign up at the libraries.",
-  "app.containers.LandingPage.intro_library":" Eğer bir kütüphaneciyseniz ve kütüphanenizi [KISALTMA] topluluğuna eklemek istiyorsanız, lütfen gerekli sekmeye gidin. Lütfen bizimle kütüphanenizin ismini, yerini, ILL hizmeti kontaklarını, kütüphane kurum ve disiplin alanınızla ilgili bilgi paylaşın.",
-  "app.containers.LandingPage.intro_patron":"Eğer bir KULLANICI iseniz, ve [KISALTMA] topluluğuna ait bir kütüphaneden faydalanmak istiyorsanız, lütfen gerekli sekmeye gidin. Lütfen kaydolmak istediğiniz kütüphaneyi seçin ve bize kontaklarınız, durum ve fakülteniz ile ilgili bilgi veriniz. ",
   "app.containers.LandingPage.header": "Sağlayan kullanıcı tablosu",
   "app.containers.LandingPage.PatronBox.title":"Talep eden kullanıcı kutusu",
   "app.containers.LandingPage.PatronBox.intro":"Bu kutuyu kullanarak bir kütüphaneye talep eden kullanıcı olarak katılın, katıldığınız kütüphaneleri kontrol edin ve düzenleyin, referanslarınızı düzenlemeye başlayın ve talep edin.",
