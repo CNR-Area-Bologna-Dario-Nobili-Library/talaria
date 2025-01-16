@@ -167,10 +167,8 @@ services:
      volumes:
        - ./frontend:/usr/src/app
        - ./.env:/usr/src/.env     
-     #command: bash -c "npm install"; npm run start:production"            
-     #use this the 1st time running frontend
-     #command: npm install
-     command: npm start
+     command: bash -c "npm install; npm run start:production"            
+     #command: npm start
      expose:
      - 3000
      restart: always
