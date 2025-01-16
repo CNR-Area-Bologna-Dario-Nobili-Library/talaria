@@ -7,7 +7,7 @@ services:
     image: traefik:v1.7.18
     ports:
     - "${WEBSERVER_EXTERNAL_PORT}:80"
-    - 443:443
+    - "${WEBSERVER_HTTPS_EXTERNAL_PORT}:443"
     volumes:
     - "${SSL_CERT_PATH}:/etc/ssl/traefik/localhost.crt"
     - "${SSL_KEY_PATH}:/etc/ssl/traefik/localhost.key"
@@ -57,24 +57,24 @@ services:
     user: "${UID}"
     restart: always
 
-  # laravelqueue:    
-  #   image: backend   
-  #   depends_on:
-  #     - laravel
-  #   volumes:
-  #     - ./:/application  
-  #   ## for the queue worker, we use the same image, but run 
-  #   ## artisan queue:work
-  #   entrypoint: php /application/artisan queue:work --verbose --tries=3 --timeout=60
+  laravelqueue:    
+    image: backend   
+    depends_on:
+      - laravel
+    volumes:
+      - ./:/application  
+    ## for the queue worker, we use the same image, but run 
+    ## artisan queue:work
+    entrypoint: php /application/artisan queue:work --verbose --tries=3 --timeout=60
 
-  # laravelscheduler:
-  #   image: backend 
-  #   depends_on:
-  #     - laravel
-  #   volumes:
-  #     - ./:/application   
-  #   ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
-  #   entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose & sleep 300; done"
+  laravelscheduler:
+    image: backend 
+    depends_on:
+      - laravel
+    volumes:
+      - ./:/application   
+    ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
+    entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose & sleep 300; done"
   
 
   mysql:
@@ -93,25 +93,24 @@ services:
       - ./docker/data/db-data:/var/lib/mysql
     restart: always
 
-  # dbbackup:
-  #   platform: linux/amd64
-  #   image: fradelg/mysql-cron-backup
-  #   restart: always
-  #   depends_on:
-  #     - mysql
-  #   volumes:
-  #     - ${DB_BACKUP_FOLDER}:/backup  
-   
-  #   environment:    
-  #   - MYSQL_DB=${DB_DATABASE}
-  #   - MYSQL_USER=${DB_USERNAME}
-  #   - MYSQL_PASS=${DB_PASSWORD}
-  #   - MYSQL_PORT=${DB_PORT}
-  #   - MYSQL_HOST=${DB_HOST}     
-  #   - CRON_TIME=0 23 * * *
-  #   - MAX_BACKUPS=5
-  #   - TIMEOUT=10s
-  #   # - INIT_BACKUP=1              
+  dbbackup:
+    platform: linux/amd64
+    image: fradelg/mysql-cron-backup
+    restart: always
+    depends_on:
+      - mysql
+    volumes:
+      - ${DB_BACKUP_FOLDER}:/backup  
+    environment:    
+    - MYSQL_DB=${DB_DATABASE}
+    - MYSQL_USER=${DB_USERNAME}
+    - MYSQL_PASS=${DB_PASSWORD}
+    - MYSQL_PORT=${DB_PORT}
+    - MYSQL_HOST=${DB_HOST}     
+    - CRON_TIME=0 23 * * *
+    - MAX_BACKUPS=5
+    - TIMEOUT=10s
+    # - INIT_BACKUP=1              
 
   phpmyadmin:
     platform: linux/amd64
