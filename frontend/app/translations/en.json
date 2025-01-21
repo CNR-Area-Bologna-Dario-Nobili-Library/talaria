@@ -89,7 +89,7 @@
   "app.global.terzo_code": "Other administrative ID code",  
   "app.global.administrative_info": "Administrative information",
   "app.global.currency_id": "Currency",
-  "app.global.lat":"Latitute",
+  "app.global.lat":"Latitude",
   "app.global.lon":"Longitude",
   "app.global.country": "Country",
   "app.global.software_manual": "Manual",
