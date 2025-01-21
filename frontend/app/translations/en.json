@@ -404,7 +404,7 @@
   "app.libraries.ill_susp_date_end": "Suspension end date (YYYY-MM-DD)",
   "app.libraries.ill_susp_notification_days": "Notify from (days)",
   "app.libraries.status": "Status",
-  "app.libraries.status.new":"New",
+  "app.libraries.status.new":"New - Waiting to be activated",
   "app.libraries.status.disabled":"Disabled",
   "app.libraries.status.enabled":"Active",
   "app.libraries.status.renewing":"Renewing subscription",

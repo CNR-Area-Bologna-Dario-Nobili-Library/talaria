@@ -404,7 +404,7 @@
   "app.libraries.ill_susp_date_end": "Askıya alınmanın son günü (YYYY-MM-dd)",
   "app.libraries.ill_susp_notification_days": "Gün kaldığında haberdar et (days)",
   "app.libraries.status": "Durumu",
-  "app.libraries.status.new":"Yeni",
+  "app.libraries.status.new":"Yeni - Aktive edilmeyi bekliyor",
   "app.libraries.status.disabled":"Deaktif",
   "app.libraries.status.enabled":"Aktif",
   "app.libraries.status.renewing":"Abonelik yenileme",

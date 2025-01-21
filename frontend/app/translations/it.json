@@ -404,7 +404,7 @@
   "app.libraries.ill_susp_date_end": "Fine sospensione (YYYY-MM-DD)",
   "app.libraries.ill_susp_notification_days": "Giorni di preavviso",
   "app.libraries.status": "Stato",
-  "app.libraries.status.new":"Nuova",
+  "app.libraries.status.new":"Nuova - In attesa di attivazione",
   "app.libraries.status.disabled":"Disattivata",
   "app.libraries.status.enabled":"Attiva",
   "app.libraries.status.renewing":"In rinnovo sottoscrizione",
