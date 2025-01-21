@@ -89,8 +89,7 @@ const LibraryEditPermissionsForm = (props) => {
          mounted && 
             <div className='editPermissionsForm'>                 
               <div className='card'>
-                <div className="card-body">                    
-                    <p className='intro'>Lorem Ipsum mollit aliqua occaecat incididunt et ut laboris reprehenderit incididunt veniam cupidatat veniam pariatur exercitation.</p>
+                <div className="card-body">              
                     {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
                     <h4>{intl.formatMessage({id: 'app.global.permissions'})}</h4>
                     <ul>
