@@ -68,7 +68,7 @@ const LibraryInformations =(props) => {
     let intl=useIntl();
 
     return (
-
+ 
 
         <div className={`libraryInformations ${customClass?customClass:''}`}>
             <div className='library_name'>
@@ -76,9 +76,9 @@ const LibraryInformations =(props) => {
                 <i className={`active fas ${showLibraryExtraInfo?'fa-caret-square-up':'fa-caret-square-down'}`}></i> 
             </a> 
             {detailUrl && <Link to={detailUrl} className="active" title={intl.formatMessage({id: "app.manager.libraries.icon.details"})}>
-                <span>{data.id} - {data.name}</span>
+                <span>{data.id} - {data.name} {data.alt_name && data.alt_name!="" && <span className='alternative_name'><i className='fa-solid fa-tag'></i>{data.alt_name}</span>}</span>
             </Link>||
-                <span>{data.id} - {data.name}</span>
+                <span>{data.id} - {data.name} {data.alt_name && data.alt_name!="" && <span className='alternative_name'><i className='fa-solid fa-tag'></i>{data.alt_name}</span>}</span>
             }
 
             </div>
