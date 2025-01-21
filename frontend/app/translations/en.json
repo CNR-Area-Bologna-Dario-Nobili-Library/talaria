@@ -150,7 +150,7 @@
   "app.containers.NotFoundPage.header": "Page not found",
   "app.containers.NotFoundPage.intro": "We're sorry but we can't find the page you're looking for",
   "app.containers.NotAuthorizedPage.header": "Access forbidden",
-  "app.containers.NotAuthorizedPage.intro": "We' sorry but you can't access the page you'r looking for",  
+  "app.containers.NotAuthorizedPage.intro": "We're sorry but you can't access the page you're looking for",  
 
   "app.containers.UserProfile.header": "User profile",
   "app.containers.UserProfile.subtitle": "Update your profile",
