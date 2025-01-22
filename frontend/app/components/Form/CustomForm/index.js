@@ -110,11 +110,17 @@ const CustomForm = (props) => {
 
     /* HANDLE CHANGE Generic */
     const handleChange = (value, field_name, order) =>{
-
-        setFormData({ ...formData, [field_name]: value, 'order':order});
-        setIsSubmitDisabled(false)
+        let updatedValue = value;
+        // Handling the privacy_policy_accepted field
+        if (field_name === 'privacy_policy_accepted' && (value === undefined || value === true)) {
+            const now = new Date();
+            updatedValue = now.toISOString().slice(0, 19).replace('T', ' '); // Format current datetime
+        }
+        // Update form data with the updated value
+        setFormData({ ...formData, [field_name]: updatedValue, order });
+        setIsSubmitDisabled(false);
         // props per il wizard form registra biblioteca pubblica
-        props.onChangeData && props.onChangeData(field_name, value, order) 
+        props.onChangeData && props.onChangeData(field_name, updatedValue, order) 
         props.getValidation &&  props.getValidation(document.querySelector('form').checkValidity()) 
     }
 
