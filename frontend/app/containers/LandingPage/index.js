@@ -133,7 +133,7 @@ function LandingPage(props) {
           />*/}
           <LandingPageAdminBox
             history={history}
-            intro={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.intro"})}
+            /*intro={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.intro"})}*/
             title={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.title"})}
             auth={props.auth}
             match={props.match}
