@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\Requests\DocdelRequest;
 use App\Notifications\BorrowingDocdelRequestNotification;
 use App\Models\Requests\BorrowingDocdelRequest;
+use App\Models\Users\User;
 
 class BorrowingRequestUpdateNotify implements ShouldQueue
 {
@@ -45,7 +46,11 @@ class BorrowingRequestUpdateNotify implements ShouldQueue
                 
                     
                 foreach ($oper as $op)    
-                    $op->notify($n);
+                {                    
+                    $u=User::findOrFail($op["user_id"]);
+                    $u->notify($n); 
+                }
+
             }
             
         }
