@@ -52,16 +52,16 @@ export const fields = {
         disabled: false,
         order: 2,
     },
-    library_coordinates_txt_long: {
+    library_coordinates_txt_lat: {
         type: "text",
-        name: "lon",
+        name: "lat",
         width: "col-md-3",
         group: "step_1",
         order: 3,
     },
-    library_coordinates_txt_lat: {
+    library_coordinates_txt_long: {
         type: "text",
-        name: "lat",
+        name: "lon",
         width: "col-md-3",
         group: "step_1",
         order: 4,
