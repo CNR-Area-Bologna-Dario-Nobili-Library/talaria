@@ -31,14 +31,16 @@ const appLocales = [
 ];
 
 //const DEFAULT_LOCALE = 'it';
-var userLang = navigator.language || navigator.userLanguage; 
+var userLang = navigator.language || navigator.userLanguage;  //Browser default language
 if (userLang.includes('-')) //en-US, it-IT, ar
 {
   userLang = userLang.substring(0, 2).toLowerCase();
-  if (!appLocales.includes(userLang))
-    userLang = 'en'
 }
+if (!appLocales.includes(userLang))  //if not supported -> fallback to english
+    userLang = 'en'
 
+
+//get user's preferred lang (stored on localStorage or get default lang from browser if supported or back to EN))
 const DEFAULT_LOCALE = localStorage.getItem("lang") ? localStorage.getItem("lang") : userLang;
 
 

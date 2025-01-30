@@ -1,0 +1,26 @@
+@import '../../scss/vendors/variables';
+
+.app-header .langDropdown {
+    margin-left:10px;
+    width:50px;
+   
+
+    & .dropdown-toggle, .dropdown-item {
+    text-decoration: none;
+    }
+
+
+    & .langDropdownMenu{
+        max-width:100px;
+        min-width:100px;  
+        top:0px !important;
+
+    }
+
+    & .flagIcon
+    {
+        border-radius: 50%;
+        width:1.5em;
+        margin:3px;
+    }
+}

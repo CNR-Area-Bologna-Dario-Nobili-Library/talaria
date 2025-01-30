@@ -24,25 +24,7 @@ function Footer(props) {
   return (
     <footer className="app-footer">
       <div className="container">
-        <div className="top">
-          <div className="lang-change">
-            <NavLink to="#" onClick={(e)=>changeLang('it')}>
-              Italiano
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('en')}>
-              English (UK)
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('es')}>
-              Español
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('tr')}>
-              Türkçe
-            </NavLink>
-            {/*<NavLink to="#" onClick={(e)=>changeLang('fr')}>
-              Français (France)
-            </NavLink>
-            */}
-          </div>
+        <div className="top">  
           <div className="footer-menu">          
             <>
               <a href="https://l.cnr.it/talaria-software-manual" target="_blank">

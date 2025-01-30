@@ -13,6 +13,7 @@ import messages from './messages';
 import { Link, NavLink } from 'react-router-dom';
 import { DropdownItem, DropdownMenu, DropdownToggle, Nav, UncontrolledDropdown, Badge, NavItem } from 'reactstrap';
 import SubHeaderBar from 'components/SubHeaderBar'
+import LanguageSelectionDropDown from 'components/LanguageSelectionDropDown'
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from 'images/logo.png'
 import logomini from 'images/logo-mini.png'
@@ -192,6 +193,7 @@ function HeaderBar(props) {
               </UncontrolledDropdown>
             </Nav>
             {isLogged && <Notification /> }
+            {<LanguageSelectionDropDown changeLang={props.changeLang} /> }
           </div>
           </div>
         </div>
