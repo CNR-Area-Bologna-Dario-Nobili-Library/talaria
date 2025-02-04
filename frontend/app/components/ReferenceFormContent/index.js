@@ -149,7 +149,7 @@ const ReferenceFormContent = (props) => {
                     {(formData.material_type === 1 || formData.material_type === 2 || formData.material_type === 3 || formData.material_type === 5) && 
                     <FormGroup>
                         <Input 
-                            label={formData.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : formData.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): intl.formatMessage({id: "app.references.chapter"})}
+                            label={formData.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : formData.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): formData.material_type === 5 ? intl.formatMessage({id: "app.references.shelfmark"}):intl.formatMessage({id: "app.references.chapter"})}
                             handleChange={(value) => handleChange(value, 'part_title')}
                             input={formData.part_title ? formData.part_title : ""}
                             required={formData.material_type === 1?true:false}
@@ -226,7 +226,7 @@ const ReferenceFormContent = (props) => {
                     {(formData.material_type === 1 || formData.material_type === 2 || formData.material_type === 3 || formData.material_type === 4 || formData.material_type === 5) && 
                         <FormGroup className="col-md-3 col-lg-2">
                             <Input 
-                                label={intl.formatMessage({id: "app.references.pubyear"})}
+                                label={formData.material_type === 5?intl.formatMessage({id: "app.references.dating"}):intl.formatMessage({id: "app.references.pubyear"})}
                                 type="number"
                                 handleChange={(value) => handleChange(value, 'pubyear')}
                                 input={formData.pubyear ? formData.pubyear : ""}
@@ -361,7 +361,7 @@ const ReferenceFormContent = (props) => {
                     />
                     
                 </Card>
-                <h3>{formData.material_type === 3?intl.formatMessage({id: "app.references.indications"}):formData.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):intl.formatMessage({id: "app.references.note"})}</h3>
+                <h3>{formData.material_type === 3?intl.formatMessage({id: "app.references.indications"}):formData.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):formData.material_type === 5?intl.formatMessage({id: "app.references.mannote"}):intl.formatMessage({id: "app.references.note"})}</h3>
                 <Card>
                     <Input 
                         handleChange={(value) => handleChange(value, 'note')}
