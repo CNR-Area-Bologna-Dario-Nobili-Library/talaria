@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom';
 import {UncontrolledTooltip} from 'reactstrap';
 import {daysFromToday,formatDateTime} from '../../../utils/dates';
 import {isURL,deliveryMethod,lendingUnfilledReason} from '../BorrowingItem';
+import LibraryTooltipContent from '../LibraryTooltipContent';
 
 const requesturl=(reqPath,id,op) => {
     return generatePath(reqPath, {
@@ -205,7 +206,11 @@ const LendingItem = (props) => {
             <>
                {data.borrowinglibrary && 
                 <span>
-                    <i className="fa-solid fa-landmark"></i> {data.borrowinglibrary.data.name}
+                    <i className="fa-solid fa-landmark"></i> 
+                    <span id={`tooltip-${data.id}-${data.borrowinglibrary.data.id}`} className="active">{data.borrowinglibrary.data.name}</span> 
+                    <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-${data.id}-${data.borrowinglibrary.data.id}`}>
+                        <LibraryTooltipContent data={data.borrowinglibrary.data}/>                    
+                    </UncontrolledTooltip> 
                     
                 </span>                
                }                        

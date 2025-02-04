@@ -12,6 +12,7 @@ import {UncontrolledTooltip} from 'reactstrap';
 import {daysFromToday,formatDateTime} from '../../../utils/dates';
 import {documentAccess as patronRequestDocumentAccess}  from '../../Patron/PatronRequest';
 import FileDownload from '../../../containers/FileDownload';
+import LibraryTooltipContent from '../LibraryTooltipContent';
 
 
 export const requesturl=(reqPath,id,op) => {
@@ -480,7 +481,11 @@ const BorrowingItem = (props) => {
             <>
                {data.lendingLibrary && data.lendingLibrary.data.id>0  && 
                 <span>
-                    <i className="fa-solid fa-landmark"></i> {data.lendingLibrary.data.name}
+                    <i className="fa-solid fa-landmark"></i> 
+                    <span id={`tooltip-${data.id}-${data.lendingLibrary.data.id}`} className="active">{data.lendingLibrary.data.name}</span> 
+                    <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-${data.id}-${data.lendingLibrary.data.id}`}>
+                        <LibraryTooltipContent data={data.lendingLibrary.data}/>                    
+                    </UncontrolledTooltip>                                        
                 </span>                
                }
                {!data.lendingLibrary && data.all_lender==1 &&

@@ -42,7 +42,7 @@ class LendingDocdelRequestTransformer extends BaseTransformer
     public function includeBorrowingLibrary(Model $model)
     {
         if($model->borrowinglibrary)
-            return $this->item($model->borrowinglibrary, new BaseLightTransformer()); 
+            return $this->item($model->borrowinglibrary, new LibraryTransformer()); 
              //new BaseLightTransformer());
     }
 

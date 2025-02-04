@@ -484,8 +484,17 @@ ul.list-inline {
     }
 }
 
+.tooltip {
+    background-color: white;    
+    border-radius: 5%;
+    
+}
+
 .tooltip-inner {
     font-size: 0.875rem;
+    background-color: white;
+    color: $dark-text;
+    margin: 3px;
 }
 
 .custom-control-input:checked ~ .custom-control-label::before {
