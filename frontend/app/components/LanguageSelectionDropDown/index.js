@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 import { Link, NavLink } from 'react-router-dom';
-import { DropdownItem, DropdownMenu, DropdownToggle,Form, Dropdown } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle,Form, Dropdown, Nav, NavItem } from 'reactstrap';
 import './style.scss';
 import {useIntl} from 'react-intl';
 import flagIT from '../../images/lang/it.svg';
@@ -66,17 +66,18 @@ function LanguageSelectionDropDown(props) {
   }
   
   return (
-
-  <div>
-     <Dropdown className="langDropdown" isOpen={dropdownOpen} toggle={()=>toggle()}>
-      <DropdownToggle caret nav>{toggleContents}</DropdownToggle>
-      <DropdownMenu right className='langDropdownMenu'>
-        {languages.map(({ code, title, flag }) => (
-          <DropdownItem className="btn btn-link" key={code} onClick={(ev)=>changeLanguage(code)}>{getFlagByCode(code)} {title}</DropdownItem>
-        ))}
-      </DropdownMenu>
-    </Dropdown>     
-  </div>
+    <Nav className="langdropdown" navbar>
+      <NavItem>
+        <Dropdown className="langDropdown" isOpen={dropdownOpen} toggle={()=>toggle()}>
+          <DropdownToggle caret nav>{toggleContents}</DropdownToggle>
+          <DropdownMenu right className='langDropdownMenu'>
+            {languages.map(({ code, title, flag }) => (
+              <DropdownItem className="btn btn-link" key={code} onClick={(ev)=>changeLanguage(code)}>{getFlagByCode(code)} {title}</DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
+    </NavItem>     
+  </Nav>
  )
   
 }

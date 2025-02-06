@@ -54,7 +54,7 @@ function HeaderBar(props) {
     <>
       <header className="app-header navbar bg-grey-white px-4">
       <div className="container">
-        <div className="header-container row">
+        <div className="header-container d-flex flex-row">
           <div className="header-left-col">            
             { isLogged && headermenu && isMobile &&
               currentRoute && currentRoute[0].children.length > 0 &&
@@ -83,13 +83,13 @@ function HeaderBar(props) {
                   { isLogged && (
                       <>
                         <Link className="nav-link" to="/user/dashboard">
-                        <i className="fa-solid fa-2x fa-user d-table-cell"></i>                        
+                        <i className="fa-solid fa-user d-table-cell"></i>                        
                         <span className="user-name d-none d-md-table-cell align-middle px-3">                          
                           {subStringer(auth.user.name, 10)}                          
                         </span>                        
                         </Link>
                         <DropdownToggle nav>
-                          <i className="fa-solid fa-2x fa-sort-down d-table-cell align-middle"></i>
+                          <i className="fa-solid fa-sort-down d-table-cell align-middle"></i>
                         </DropdownToggle>
                       </>
                     )

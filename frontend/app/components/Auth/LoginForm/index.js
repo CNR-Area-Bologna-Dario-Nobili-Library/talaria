@@ -83,7 +83,7 @@ import './style.scss'
   return (
         <div className="login-form">
           <Row className="justify-content-center">            
-            <Col md="6" sm="8">
+            <Col md="8" sm="8" xs="12">
               <CardGroup>
                 <Card>
                   <CardBody>
@@ -134,9 +134,9 @@ import './style.scss'
                           </Button>
                         </Col>
                         <Col xs="12" md="6">
-                          <NavLink className="btn-cta register-button" to={signupLink()}>
+                          <Button color="cta" className="m-auto register-button" href={signupLink()}>
                               <FormattedMessage {...messages.signUpButton} />                            
-                          </NavLink>
+                          </Button>
                         </Col>
 
                         <Col xs="12" className="text-center pt-3">
