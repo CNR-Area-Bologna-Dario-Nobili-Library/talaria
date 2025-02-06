@@ -2,10 +2,13 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import { generatePath } from "react-router";
 import ApplyTag from '../../ApplyTag';
+import { useIntl } from 'react-intl';
+
 
 const ReferenceIcons = (props) => {
     const {data,customClass,deleteReference,icons, labelsOptionList, groupsOptionList , applyGroups, applyLabels, selectedReferences,findAndUpdateOA} = props
     
+    const intl=useIntl();
 
     const referenceUrl='/patron/references/:id?/:op?';
     
@@ -56,8 +59,8 @@ const ReferenceIcons = (props) => {
                     <i className="fa-solid fa-share"></i>                    
                  </Link>
                 }
-                {visibleIcon('oa') && data.oa_link && <a href={data.oa_link} target="_blank" className='btn btn-icon'><i className="icon-oa"></i></a>} 
-                {visibleIcon('oa') && !data.oa_link && <a target="_blank" className='btn btn-icon' onClick={(ev) => findAndUpdateOA(ev,data.id) }><i className="fa-solid fa-magnifying-glass"></i>OA</a>}
+                {visibleIcon('oa') && data.oa_link && <a href={data.oa_link} target="_blank" className='btn btn-icon'><i className="icon-oa"></i></a>}
+                {visibleIcon('oa') && !data.oa_link && <a target="_blank" className='btn btn-icon' onClick={(ev) => findAndUpdateOA(ev,data.id) } title={intl.formatMessage({id: "app.requests.icon.referenceCheckOA"})}><i className="fa-solid fa-magnifying-glass-plus"></i></a>}
                 {visibleIcon('print') && <a className="btn btn-icon" onClick={() => console.log("print") }>
                     <i className="fa-solid fa-print"></i>
                 </a>}
