@@ -111,6 +111,11 @@ const CustomForm = (props) => {
     /* HANDLE CHANGE Generic */
     const handleChange = (value, field_name, order) =>{
         let updatedValue = value;
+
+        // Ensure empty input is stored correctly
+        if (typeof value === "string" && value.trim() === "") {
+            updatedValue = ""; // Explicitly store empty string
+        }
         // Handling the privacy_policy_accepted field
         if (field_name === 'privacy_policy_accepted' && (value === undefined || value === true)) {
             const now = new Date();
@@ -474,7 +479,9 @@ const CustomForm = (props) => {
                                                                         <InputField 
                                                                             field={field}                                                                            
                                                                             label={messages[field.name] ? messages[field.name] : ""}
-                                                                            data={!formData[field.name] && props.requestData && props.requestData[field.name] ? props.requestData[field.name] : formData[field.name]}
+                                                                            // /data={!formData[field.name] && props.requestData && props.requestData[field.name] ? props.requestData[field.name] : formData[field.name]}
+                                                                            data={formData[field.name] !== undefined ? formData[field.name] : (props.requestData && props.requestData[field.name] ? props.requestData[field.name] : "")}
+
                                                                             //handleChange={(value) => handleChange(value, field.name, field.order)}
                                                                             handleChange={(value) => handleChange(value, field.name, field.order)}
                                                                         />  
