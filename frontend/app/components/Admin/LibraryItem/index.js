@@ -118,23 +118,23 @@ const LibraryItem = (props) => {
 
     return (
         <Row className="library_item list-row">
-            <Col sm={6}>
+            <Col xs={12} md={5}>
                 <CustomCheckBox 
                     handleChange={toggleSelection}
                     checked={checked}
                 /> 
                <LibraryInformations data={data} detailUrl={editurl(editPath,data.id)}  showILLInfo={false} showPaymentInfo={true}/>
             </Col>
-            <Col sm={1}>                                                      
-                {/*<Link className="btn btn-icon btn-sm" to={subscriptionurl(editPath,data.id)}><i className="fa-solid fa-file-contract"></i></Link>*/} 
-                {formatDateTime(data.created_at)}
-            </Col>
-            <Col sm={1}>
+            <Col xs={1} md={1}>
                 <div className='library_status'>{libraryStatusIcon(data.status)}</div> 
                 
                 {data.institution && data.institution.data.status!=1 && <>&nbsp;<i className='fa-solid fa-triangle-exclamation text-danger'  title={intl.formatMessage({id: "app.manager.libraries.icon.institution_warning"})}></i></>}
             </Col>
-            <Col sm={4}>      
+            <Col xs={5} md={2}>                                                      
+                {/*<Link className="btn btn-icon btn-sm" to={subscriptionurl(editPath,data.id)}><i className="fa-solid fa-file-contract"></i></Link>*/} 
+                {formatDateTime(data.created_at)}
+            </Col>            
+            <Col xs={12} md={4}>      
             <LibraryOperations data={data} changeStatusLibrary={changeStatusLibrary} deleteLibrary={deleteLibrary}/>                
             </Col>            
         </Row>

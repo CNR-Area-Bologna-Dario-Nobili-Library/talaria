@@ -113,13 +113,16 @@
     border-bottom: 1px solid $active;
 
     & .library_status {
-        text-align: center;
+        /*text-align: center;*/
 
     }
 }
 
 .library_operations {
-    text-align: right;
+
+    @include media-breakpoint-up(md) {
+        text-align: right;
+    }
 
     & a {
         margin-right: 5px;
