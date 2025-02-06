@@ -1,0 +1,15 @@
+@import '../../../scss/variables';
+
+.LibraryTooltipContent {
+    width: 100%;        
+    background-color:  white;
+    
+    /*.alternative_name {
+        font-style: italic;
+    }*/
+    
+    & .tooltip-header {        
+        margin-bottom: 20px;
+        padding: 0;
+    }
+}

@@ -59,7 +59,7 @@ return (
                         {(reference.material_type === 1 || reference.material_type === 2 || reference.material_type === 3 || reference.material_type === 5) && 
                         <Row>
                         <Col sm={12}>
-                                <p className="text-brown">{reference.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : reference.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): intl.formatMessage({id: "app.references.chapter"})}</p>
+                                <p className="text-brown">{reference.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : reference.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): reference.material_type === 5 ? intl.formatMessage({id: "app.references.shelfmark"}):intl.formatMessage({id: "app.references.chapter"})}</p>
                                 <p>{reference.part_title}</p>
                         </Col>
                         </Row>}
@@ -114,7 +114,7 @@ return (
                     <Card>
                         <Row>
                         <Col sm={2}>
-                                <p className="text-brown">{intl.formatMessage({id: "app.references.pubyear"})}</p>
+                                <p className="text-brown">{reference.material_type === 5?intl.formatMessage({id: "app.references.dating"}):intl.formatMessage({id: "app.references.pubyear"})}</p>
                                 <p>{reference.pubyear}</p>
                         </Col>                    
                         {(reference.material_type === 1 || reference.material_type === 2) && 
@@ -198,7 +198,7 @@ return (
                     </Col>
                     </Row>
                 </Card>
-                <h3>{reference.material_type === 3?intl.formatMessage({id: "app.references.indications"}):reference.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):intl.formatMessage({id: "app.references.note"})}</h3>
+                <h3>{reference.material_type === 3?intl.formatMessage({id: "app.references.indications"}):reference.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):reference.material_type === 5?intl.formatMessage({id: "app.references.mannote"}):intl.formatMessage({id: "app.references.note"})}</h3>
                 <Card>                   
                     <Row>                    
                     <Col sm={12}>
