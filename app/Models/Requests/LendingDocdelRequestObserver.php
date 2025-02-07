@@ -1,4 +1,6 @@
-<?php namespace App\Models\Requests;
+<?php
+
+namespace App\Models\Requests;
 
 use App\Models\BaseObserver;
 use \Auth;
@@ -11,56 +13,31 @@ class LendingDocdelRequestObserver extends BaseObserver
 
     protected $rules = [
         'lending_library_id' => 'nullable|integer|exists:libraries,id',
-        'reference_id' => 'required|integer|exists:references,id',              
+        'reference_id' => 'required|integer|exists:references,id',
     ];
-
-    protected function createLibraryObject($library)
-    {
-        return [
-            'id' => $library->id,
-            'name' => $library->name,
-            'country' => $library->country->only([
-                'id', 'name', 'code'
-            ]),
-            'subject' => $library->subject->only([
-                'id', 'name'
-            ]),
-            'institution' => [
-                'id' => $library->institution->id,
-                'name' => $library->institution->name,
-                'institution_type' => $library->institution->institution_type->only([
-                    'id', 'name'
-                ]),
-                'country' => $library->institution->country->only([
-                    'id', 'name', 'code'
-                ])
-            ]
-        ];
-    }
 
     public function creating($model)
     {
-        if(auth() && auth()->user()) {
+        if (auth() && auth()->user()) {
             $userid = auth()->user()->id;
-            $model->lending_operator_id=$userid;
+            $model->lending_operator_id = $userid;
         }
 
         return parent::creating($model);
     }
 
-    
+
     public function saving($model)
-    {                
-        if(auth() && auth()->user()) {
+    {
+        if (auth() && auth()->user()) {
             $userid = auth()->user()->id;
-            $model->lending_operator_id=$userid;
-        }             
-        
-        if($model->isDirty('lending_archived'))
-            $model->lending_archived_date=Carbon::now();        
+            $model->lending_operator_id = $userid;
+        }
+
+        if ($model->isDirty('lending_archived'))
+            $model->lending_archived_date = Carbon::now();
 
         return parent::saving($model);
-
     }
 
     public function saved($model)
@@ -68,9 +45,12 @@ class LendingDocdelRequestObserver extends BaseObserver
         /** @var Elasticsearch\Client $client */
         $client = app('Elasticsearch\Client');
 
+        // Instantiate the trasformer
+        $transformer = new LendingDocdelRequestTransformer();
+
         // Elasticsearch request body params + lending library in case of accepted orphaned request
         $params = [
-            'index' => 'docdelrequests',
+            'index' => 'docdel_requests',
             'id' => $model->id,
             'body' => [
                 'id' => $model->id,
@@ -82,14 +62,26 @@ class LendingDocdelRequestObserver extends BaseObserver
                 'notfulfill_type' => $model->notfulfill_type,
                 'forward' => $model->forward,
                 'reference' => $model->reference->only([
-                    'id', 'material_type', 'pub_type', 'pub_title', 'pubyear', 'issn', 'isbn', 'oa_link'
+                    'id',
+                    'material_type',
+                    'pubyear',
+                    'oa_link',
+                    'doi',
+                    'pmid',
+                    'issn',
+                    'issn_l',
+                    'isbn',
+                    'sid',
+                    'sbn_docid',
+                    'acnp_cod',
+                    'pub_title'
                 ]),
-                'lending_library' => $model->lendinglibrary ? $this->createLibraryObject($model->lendinglibrary) : null
+                'lending_library' => $model->lendinglibrary ? $transformer->createLibraryObject($model->lendinglibrary) : null
             ]
         ];
 
         $client->update([
-            'index' => 'docdelrequests',
+            'index' => 'docdel_requests',
             'id' => $model->id,
             'body' => [
                 'doc' => $params['body']
