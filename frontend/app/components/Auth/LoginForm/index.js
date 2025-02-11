@@ -126,7 +126,7 @@ import './style.scss'
                           <Button
                             type="submit"
                             color="cta"
-                            className="m-auto"
+                            className="m-auto w-100 btn-cta"
                             // onClick={(e) => submitChange(e)}
                             disabled={props.auth.loading || formData.password === '' || formData.username === ''}
                           >
@@ -134,9 +134,9 @@ import './style.scss'
                           </Button>
                         </Col>
                         <Col xs="12" md="6">
-                          <Button color="cta" className="m-auto register-button" href={signupLink()}>
+                        <NavLink className="btn btn-cta register-button w-100" to={signupLink()} style={{ textDecoration: 'none' }}>
                               <FormattedMessage {...messages.signUpButton} />                            
-                          </Button>
+                        </NavLink>
                         </Col>
 
                         <Col xs="12" className="text-center pt-3">

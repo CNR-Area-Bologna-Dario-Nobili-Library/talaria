@@ -1,17 +1,43 @@
 .login-form {
     .card {
-        padding: 3rem 5rem;
+      padding: 3rem 5rem;
+  
+      // Adjust padding for smaller screens
+      @media (max-width: 768px) {
+        padding: 2rem;
+      }
     }
+  
+    /* Common styles for both buttons */
+    .btn-cta,
     .register-button {
-        max-width: 250px;
-        /*margin: 2rem auto;*/
-        
+      display: block; /* Ensure consistent rendering */
+      width: 100%; /* Full-width buttons on all screens */
+      min-width: 150px; /* Ensure a minimum width for both buttons */
+      box-sizing: border-box; /* Include padding and borders in the width */
+      text-align: center; /* Center-align text inside buttons */
+      margin-top: 1rem; /* Add spacing between buttons on mobile */
+  
+      @media (min-width: 769px) {
+        margin-top: 0; /* Remove extra spacing on desktop */
+      }
     }
-}
-
-.signUpButton {
-    width: 180px;
-    margin: 0 auto;
-    display: block;
-    margin-top: 50px;
-}
+  
+    /* Additional styling for NavLink to mimic Button */
+    .register-button {
+      text-decoration: none; /* Remove underline for NavLink */
+      display: flex; /* Use flexbox for consistent alignment */
+      align-items: center; /* Center content vertically */
+      justify-content: center; /* Center content horizontally */
+  
+      @media (max-width: 768px) {
+        margin: 1.5rem auto 0 auto; /* Add more spacing above the second button */
+        width: 100%; /* Ensure full width on mobile */
+      }
+    }
+  
+    .text-center.pt-3 {
+      // Ensure the "Forgot Password" link is centered on all screens
+      text-align: center;
+    }
+  }
