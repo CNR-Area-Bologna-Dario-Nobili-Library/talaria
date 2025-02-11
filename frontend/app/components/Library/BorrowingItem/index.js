@@ -482,8 +482,8 @@ const BorrowingItem = (props) => {
                {data.lendingLibrary && data.lendingLibrary.data.id>0  && 
                 <span>
                     <i className="fa-solid fa-landmark"></i> 
-                    <span id={`tooltip-${data.id}-${data.lendingLibrary.data.id}`} className="active">{data.lendingLibrary.data.name}</span> 
-                    <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-${data.id}-${data.lendingLibrary.data.id}`}>
+                    <span id={`btooltip-${data.id}-${data.lendingLibrary.data.id}`} className="active">{data.lendingLibrary.data.name}</span> 
+                    <UncontrolledTooltip autohide={false} placement="right" target={`btooltip-${data.id}-${data.lendingLibrary.data.id}`}>
                         <LibraryTooltipContent data={data.lendingLibrary.data}/>                    
                     </UncontrolledTooltip>                                        
                 </span>                
