@@ -209,8 +209,8 @@ button[type=button] {
         // margin-bottom: 4rem;
         /* padding-top: 2rem; */
         > .container {
-            margin-top: 8rem;
-            margin-bottom: 8rem;
+            margin-top: 4rem; /*8rem;*/
+            /*margin-bottom: 8rem;*/
             > .row > div[class*=col-] {
                 padding-top: 3.571rem;
             }
