@@ -53,7 +53,7 @@ function createFile(file) {
               <br></br>                
                     <Label for="uploadfile">{intl.formatMessage({id: "app.components.FileUploadForm.filechoose"})}</Label>
                     <input type="file" id="uploadfile" name="file" accept={AllowedFileTypes} capture="camera" onChange={onChange}  />
-                    {selectedFile && validfiletype && <button type="button" onClick={() => FileUploadCallBack(data, file, originalFilename, hideMessageFlag+1)} className="btn btn-info">Upload file</button>}
+                    {selectedFile && validfiletype && <button type="button" onClick={() => FileUploadCallBack(data, file, originalFilename, hideMessageFlag+1)} className="btn btn-info">{intl.formatMessage({id: "app.components.FileUploadForm.upload"})}</button>}
             </div>    
 
     );

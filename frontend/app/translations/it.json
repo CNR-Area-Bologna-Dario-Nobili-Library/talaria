@@ -710,6 +710,10 @@
   "app.components.BorrowingsList.BorrowingsNotFound": "Non ci sono borrowing",
   "app.components.BorrowingsList.BorrowingSelected": "Selezionati",
 
+  "app.components.BorrowingRequestDeliveryToDesk.fileDeliveryMethod": "Metodo 1: Carica e invia il file al desk",
+  "app.components.BorrowingRequestDeliveryToDesk.paperDeliveryMethod": "Metodo 2: Invia copia cartacea al desk",
+  "app.components.BorrowingRequestDeliveryToDesk.forwardFileToDesk": "Invia il file al desk per la stampa",
+
   "app.components.DeliveryList.DeliveryNotFound": "Non ci sono richieste in corso",
 
   "app.components.ProjectsList.header": "Lista progetti",
@@ -767,7 +771,8 @@
 
   "app.components.FulfillLendingRequest.chooseDeliveryMethod":"Scegliere la modalità di evasione",
 
-  "app.components.FileUploadForm.filechoose":"Scegli il file da inviare",
+  "app.components.FileUploadForm.filechoose":"Seleziona il file da caricare",
+  "app.components.FileUploadForm.upload":"Carica",
 
   "app.routes.LibraryProfile": "Profilo Biblioteca",
   "app.routes.LibraryUpgradeProfile":"Upgrade a profilo completo",

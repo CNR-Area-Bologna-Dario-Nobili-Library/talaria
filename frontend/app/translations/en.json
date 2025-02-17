@@ -710,6 +710,10 @@
   "app.components.BorrowingsList.BorrowingsNotFound": "No request",
   "app.components.BorrowingsList.BorrowingSelected": "Selected",
 
+  "app.components.BorrowingRequestDeliveryToDesk.fileDeliveryMethod": "Method 1: Upload and send file to desk",
+  "app.components.BorrowingRequestDeliveryToDesk.paperDeliveryMethod": "Method 2: Send printed copy to desk",
+  "app.components.BorrowingRequestDeliveryToDesk.forwardFileToDesk": "Send file to desk to print it",
+
   "app.components.DeliveryList.DeliveryNotFound": "No pending requests",
 
   "app.components.ProjectsList.header": "Projects list",
@@ -768,6 +772,7 @@
   "app.components.FulfillLendingRequest.chooseDeliveryMethod":"Choose delivery method",
 
   "app.components.FileUploadForm.filechoose":"Select file to upload",
+  "app.components.FileUploadForm.upload":"Upload",
 
   "app.routes.LibraryProfile": "Library Profile",
   "app.routes.LibraryUpgradeProfile":"Upgrade to full profile",

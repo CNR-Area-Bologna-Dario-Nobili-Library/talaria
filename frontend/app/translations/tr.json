@@ -710,6 +710,10 @@
   "app.components.BorrowingsList.BorrowingsNotFound": "Talep yok",
   "app.components.BorrowingsList.BorrowingSelected": "Seçili",
 
+  "app.components.BorrowingRequestDeliveryToDesk.fileDeliveryMethod": "Yöntem 1: Dosyayı masaya yükleyin ve gönderin",
+  "app.components.BorrowingRequestDeliveryToDesk.paperDeliveryMethod": "Yöntem 2: Basılı kopyayı masaya gönderin",
+  "app.components.BorrowingRequestDeliveryToDesk.forwardFileToDesk": "Yazdırmak için dosyayı masaya gönderin",
+
   "app.components.DeliveryList.DeliveryNotFound": "Bekleyen talep yok",
 
   "app.components.ProjectsList.header": "Proje listesi",
@@ -768,6 +772,7 @@
   "app.components.FulfillLendingRequest.chooseDeliveryMethod":"teslimat şekli seçin",
 
   "app.components.FileUploadForm.filechoose":"Yükleyeceğiniz dosyayı seçin",
+  "app.components.FileUploadForm.upload":"Yüklemek",
 
   "app.routes.LibraryProfile": "Kütüphane Profili",
   "app.routes.LibraryUpgradeProfile":"Full profile yükseltin",
