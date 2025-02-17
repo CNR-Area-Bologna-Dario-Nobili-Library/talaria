@@ -670,7 +670,7 @@
   "app.patronrequest.notfulfill_type": "Unfill reason",
   "app.patronrequest.notfulfill_type.NotAvailable":"Not available",
   "app.patronrequest.notfulfill_type.PatronNotEnabled":"Patron not enabled",
-  "app.patronrequest.notfulfill_type.PatronNotTake":"Patron didn't pick up it",
+  "app.patronrequest.notfulfill_type.PatronNotTake":"Patron didn't pick it up",
   "app.patronrequest.notfulfill_type.PatronNotAcceptCost":"Patron won't accept any cost",
   "app.patronrequest.notfulfill_type.PatronNotAnswerCost":"Patron didn't answer about cost policy",
   "app.patronrequest.notfulfill_type.NotAvailableForFree":"Not available for free",
