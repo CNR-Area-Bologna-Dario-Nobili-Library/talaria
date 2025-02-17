@@ -710,9 +710,9 @@
   "app.components.BorrowingsList.BorrowingsNotFound": "Sin peticiones",
   "app.components.BorrowingsList.BorrowingSelected": "Seleccionada",
 
-  "app.components.BorrowingRequestDeliveryToDesk.fileDeliveryMethod": "??? Method 1: Upload and send a file to desk",
-  "app.components.BorrowingRequestDeliveryToDesk.paperDeliveryMethod": "??? Method 2: Send paper to desk",
-  "app.components.BorrowingRequestDeliveryToDesk.forwardFileToDesk": "??? Forward file to desk to print",
+  "app.components.BorrowingRequestDeliveryToDesk.fileDeliveryMethod": "Método 1: cargar y enviar el archivo al punto de recogida",
+  "app.components.BorrowingRequestDeliveryToDesk.paperDeliveryMethod": "Método 2: enviar una copia impresa al punto de recogida",
+  "app.components.BorrowingRequestDeliveryToDesk.forwardFileToDesk": "Enviar archivo al punto de recogida para imprimirlo",
 
   "app.components.DeliveryList.DeliveryNotFound": "Sin peticiones pendientes",
 
