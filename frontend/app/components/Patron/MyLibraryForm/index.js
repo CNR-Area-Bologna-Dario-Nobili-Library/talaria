@@ -244,6 +244,7 @@ const MyLibraryForm = props => {
                   type="text"
                   id="label"
                   name="label"
+                  maxLength={5}
                   value={formData.label}
                   onChange={handleInputChange}
                   className="form-control"
