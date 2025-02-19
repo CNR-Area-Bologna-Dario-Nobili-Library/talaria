@@ -81,10 +81,9 @@ const MyLibraryItem = props => {
         {data.user_referent && (
           <div>
             <strong>
-              {intl.formatMessage({
+              <i className='fa fa-solid fa-user' title={intl.formatMessage({
                 id: 'app.containers.MyLibrariesPage.user_referent',
-              })}
-              :
+              })}></i>
             </strong>{' '}
             {data.user_referent}
           </div>
@@ -92,10 +91,9 @@ const MyLibraryItem = props => {
         {data.user_service_phone && (
           <div>
             <strong>
-              {intl.formatMessage({
+            <i className='fa fa-solid fa-phone' title={intl.formatMessage({
                 id: 'app.containers.MyLibrariesPage.user_service_phone',
-              })}
-              :
+              })}></i>
             </strong>{' '}
             {data.user_service_phone}
           </div>
@@ -103,10 +101,10 @@ const MyLibraryItem = props => {
         {data.user_service_email && (
           <div>
             <strong>
-              {intl.formatMessage({
+            <i className='fa fa-solid fa-envelope' title={intl.formatMessage({
                 id: 'app.containers.MyLibrariesPage.user_service_email',
-              })}
-              :
+              })}></i>
+              
             </strong>{' '}
             {data.user_service_email}
           </div>
