@@ -139,8 +139,13 @@ class BorrowingDocdelRequestObserver extends BaseObserver
             $client->index($params);
         } else {
             // This is an update, update it in elasticsearch
+
+            // If it is an update and all_lender is 1, copy it to Elasticsearch index
             if ($model->all_lender) {
                 $params['body']['orphaned'] = $model->all_lender;
+            } elseif ($model->borrowing_status == "newrequest") {
+                // This case is when a orphaned request is canceled so the flag will go back to 0
+                $params['body']['orphaned'] = 0;
             }
 
             $client->update([
