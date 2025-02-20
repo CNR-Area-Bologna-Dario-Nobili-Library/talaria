@@ -125,6 +125,9 @@ class InitializeElasticsearchIndex implements ShouldQueue
                         'archived' => [
                             'type' => 'long'
                         ],
+                        'orphaned' => [
+                            'type' => 'long'
+                        ],
                         'request_pdf_editorial' => [
                             'type' => 'long'
                         ],
@@ -498,7 +501,6 @@ class InitializeElasticsearchIndex implements ShouldQueue
                 ];
 
                 $aggregated_statuses = StatsHelper::aggregateStatus($request);
-                Log::info("called aggregateStatus", $aggregated_statuses);
 
                 $bulkParams['body'][] = [
                     'id' => $request->id,
@@ -513,6 +515,7 @@ class InitializeElasticsearchIndex implements ShouldQueue
                     'forward' => $request->forward,
                     'trash_type' => $request->trash_type,
                     'archived' => $request->archived,
+                    'orphaned' => null,
                     'request_pdf_editorial' => $request->request_pdf_editorial,
                     'request_special_delivery' => $request->request_special_delivery,
                     'patron_docdel_request_id' => $request->patron_docdel_request_id,
