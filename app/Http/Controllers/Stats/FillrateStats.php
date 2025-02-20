@@ -21,19 +21,19 @@ class FillrateStats extends BaseStatsController
   {
     // Validate optional parameters 'year' and 'library_id'
     $validated = $request->validate([
-      'year' => 'integer|min:2020|max:' . date('Y'),
-      'library_id' => 'integer|min:1',
+      'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
+      'library_id' => 'sometimes|integer|min:1',
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
 
     // Retrieve status mappings
-    $statusMap = $this->getStatusMap('borrowing');
-    $newStatuses = $statusMap[0];
-    $inProgressStatuses = $statusMap[1];
-    $receivedStatuses = $statusMap[2];
-    $canceledStatuses = $statusMap[4];
+    // $statusMap = $this->getStatusMap('borrowing');
+    // $newStatuses = $statusMap[0];
+    // $inProgressStatuses = $statusMap[1];
+    // $receivedStatuses = $statusMap[2];
+    // $canceledStatuses = $statusMap[4];
 
     // Elasticsearch query
     $query = [
@@ -63,27 +63,27 @@ class FillrateStats extends BaseStatsController
               ],
               'new' => [
                 'filter' => [
-                  'terms' => ['borrowing_status' => $newStatuses]
+                  'term' => ['aggregated_borrowing_status.keyword' => "New"]
                 ]
               ],
               'in_progress' => [
                 'filter' => [
-                  'terms' => ['borrowing_status' => $inProgressStatuses]
+                  'term' => ['aggregated_borrowing_status.keyword' => "In progress"]
                 ]
               ],
               'canceled' => [
                 'filter' => [
-                  'terms' => ['borrowing_status' => $canceledStatuses]
+                  'term' => ['aggregated_borrowing_status.keyword' => "Canceled"]
                 ]
               ],
               'received' => [
                 'filter' => [
-                  'terms' => ['borrowing_status' => $receivedStatuses]
+                  'term' => ['aggregated_borrowing_status.keyword' => "Received"]
                 ]
               ],
-              'trashed' => [
+              'direct' => [
                 'filter' => [
-                  'term' => ['trash_type' => 1]
+                  'term' => ['aggregated_borrowing_status.keyword' => "Patron direct request"]
                 ]
               ],
               'fill_rate' => [
@@ -94,9 +94,9 @@ class FillrateStats extends BaseStatsController
                     'in_progress' => 'in_progress._count',
                     'canceled'    => 'canceled._count',
                     'received'    => 'received._count',
-                    'trashed'     => 'trashed._count'
+                    'direct'      => 'direct._count'
                   ],
-                  'script' => "def denominator = params.total - params.new - params.in_progress - params.canceled; denominator > 0 ? (params.received - params.trashed) / denominator : 0"
+                  'script' => "def denominator = params.total - params.new - params.in_progress - params.canceled - params.direct; denominator > 0 ? (params.received) / denominator : 0"
                 ]
               ]
             ]
