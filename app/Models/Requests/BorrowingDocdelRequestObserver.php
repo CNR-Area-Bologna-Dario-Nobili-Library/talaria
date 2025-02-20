@@ -2,6 +2,7 @@
 
 namespace App\Models\Requests;
 
+use App\Helper\StatsHelper;
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
@@ -88,8 +89,8 @@ class BorrowingDocdelRequestObserver extends BaseObserver
         // Instantiate the trasformer
         $transformer = new BorrowingDocdelRequestTransformer();
 
-        // Log::info("borrowinglibrary = ", $transformer->createLibraryObject($model->borrowinglibrary));
-        // Log::info("This is the saving model = ", $model->toArray());
+        $aggregated_statuses = StatsHelper::aggregateStatus($model);
+        Log::info("I am borrower", $aggregated_statuses);
 
         // Elasticsearch request body params 
         $params = [
@@ -101,6 +102,8 @@ class BorrowingDocdelRequestObserver extends BaseObserver
                 // 'fulfill_date' => \Carbon\Carbon::parse($model->fulfill_date)->format('Y-m-d H:i:s'),
                 'borrowing_status' => $model->borrowing_status,
                 'lending_status' => $model->lending_status,
+                'aggregated_borrowing_status' => $aggregated_statuses['aggregated_borrowing_status'],
+                'aggregated_lending_status' => $aggregated_statuses['aggregated_lending_status'],
                 'trash_type' => $model->trash_type,
                 'archived' => $model->archived,
                 'request_special_delivery' => $model->request_special_delivery,
@@ -128,12 +131,18 @@ class BorrowingDocdelRequestObserver extends BaseObserver
             ]
         ];
 
+        // Log::info("borrowing observer invoked: ", $model->toarray());
+
         // Check if the request was newly created
         if ($model->wasRecentlyCreated) {
             // This is a new insertion, index it to elasticsearch
             $client->index($params);
         } else {
             // This is an update, update it in elasticsearch
+            if ($model->all_lender) {
+                $params['body']['orphaned'] = $model->all_lender;
+            }
+
             $client->update([
                 'index' => 'docdel_requests',
                 'id' => $model->id,

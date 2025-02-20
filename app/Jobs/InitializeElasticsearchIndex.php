@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Helper\StatsHelper;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -82,7 +83,25 @@ class InitializeElasticsearchIndex implements ShouldQueue
                                 ]
                             ]
                         ],
+                        'aggregated_borrowing_status' => [
+                            'type' => 'text',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
                         'lending_status' => [
+                            'type' => 'text',
+                            'fields' => [
+                                'keyword' => [
+                                    'type' => 'keyword',
+                                    'ignore_above' => 256
+                                ]
+                            ]
+                        ],
+                        'aggregated_lending_status' => [
                             'type' => 'text',
                             'fields' => [
                                 'keyword' => [
@@ -110,6 +129,9 @@ class InitializeElasticsearchIndex implements ShouldQueue
                             'type' => 'long'
                         ],
                         'request_special_delivery' => [
+                            'type' => 'long'
+                        ],
+                        'patron_docdel_request_id' => [
                             'type' => 'long'
                         ],
                         'borrowing_library' => [
@@ -458,82 +480,6 @@ class InitializeElasticsearchIndex implements ShouldQueue
         Log::info("Finished creating index");
     }
 
-
-    /**
-     * Parse the requests from the DB and populate the index in bulk.
-     */
-    // private function populateIndex()
-    // {
-    //     Log::info("Starting populating index");
-
-    //     $batchSize = 1000;
-
-    //     DocdelRequest::with(['reference', 'borrowinglibrary', 'lendinglibrary'])->chunk($batchSize, function ($requests) use ($batchSize) {
-    //         // Bulk params
-    //         $bulkParams = ['body' => []];
-
-    //         foreach($requests as $request) {
-    //             $bulkParams['body'][] = [
-    //                 'index' => [
-    //                     '_index' => 'docdel_requests',
-    //                     '_id' => $request->id
-    //                 ]
-    //             ];
-
-    //             $bulkParams['body'][] = [
-    //                 'id' => $request->id,
-    //                 'request_date' => $request->request_date ? Carbon::parse($request->request_date)->format('Y-m-d H:i:s') : null,
-    //                 'fulfill_date' => $request->fulfill_date ? Carbon::parse($request->fulfill_date)->format('Y-m-d H:i:s') : null,
-    //                 'borrowing_status' => $request->borrowing_status,
-    //                 'lending_status' => $request->lending_status,
-    //                 'fulfill_type' => $request->fulfill_type,
-    //                 'notfulfill_type' => $request->notfulfill_type,
-    //                 'forward' => $request->forward,
-    //                 'borrowing_library' => $this->createLibraryObject($request->borrowinglibrary),
-    //                 'lending_library' => $request->lendinglibrary ? $this->createLibraryObject($request->lendinglibrary) : null,
-    //                 'reference' => $request->reference->only([
-    //                     'id', 'material_type', 'pubyear', 'issn', 'isbn', 'oa_link', 'pub_title'
-    //                 ]),
-    //             ];
-
-    //             /**
-    //              * Each document requires 2 entries in the bulk request: 
-    //              * Action Entry ({ "index": { "_index": "docdel_requests", "_id": "1" } }) and 
-    //              * Document Body ({ "id": "1", "title": "Document title", "content": "Document content" })
-    //              */
-    //             if(count($bulkParams['body']) >= $batchSize * 2) {
-    //                 $this->sendBulkRequest($bulkParams);
-    //                 // Reset
-    //                 $bulkParams = ['body' => []];
-    //             }
-
-    //             // Error checks
-    //             if (isset($response['errors']) && $response['errors']) {
-    //                 foreach ($response['items'] as $item) {
-    //                     if (isset($item['index']['error'])) {
-    //                         Log::error('Failed to index document ' . $item['index']['_id'] . ': ' . json_encode($item['index']['error']));
-    //                     }
-    //                 }
-    //             }
-
-    //             unset($bulkParams);
-    //         }
-
-    //         // Send any remaining docs
-    //         if (!empty($bulkParams['body'])) {
-    //             $this->sendBulkRequest($bulkParams);
-    //         }
-    //     });
-
-    //     Log::info("Finished populating index");
-
-    //     // // Get all requests with eager loading
-    //     // $requests = DocdelRequest::with([
-    //     //     'reference',
-    //     //     'borrowinglibrary',
-    //     //     'lendinglibrary'
-    //     // ])->get();
-    // }
     private function populateIndex()
     {
         Log::info("Starting populating index");
@@ -551,12 +497,17 @@ class InitializeElasticsearchIndex implements ShouldQueue
                     ]
                 ];
 
+                $aggregated_statuses = StatsHelper::aggregateStatus($request);
+                Log::info("called aggregateStatus", $aggregated_statuses);
+
                 $bulkParams['body'][] = [
                     'id' => $request->id,
                     'request_date' => $request->request_date ? Carbon::parse($request->request_date)->format('Y-m-d H:i:s') : null,
                     'fulfill_date' => $request->fulfill_date ? Carbon::parse($request->fulfill_date)->format('Y-m-d H:i:s') : null,
                     'borrowing_status' => $request->borrowing_status,
+                    'aggregated_borrowing_status' => $aggregated_statuses['aggregated_borrowing_status'],
                     'lending_status' => $request->lending_status,
+                    'aggregated_lending_status' => $aggregated_statuses['aggregated_lending_status'],
                     'fulfill_type' => $request->fulfill_type,
                     'notfulfill_type' => $request->notfulfill_type,
                     'forward' => $request->forward,
@@ -564,6 +515,7 @@ class InitializeElasticsearchIndex implements ShouldQueue
                     'archived' => $request->archived,
                     'request_pdf_editorial' => $request->request_pdf_editorial,
                     'request_special_delivery' => $request->request_special_delivery,
+                    'patron_docdel_request_id' => $request->patron_docdel_request_id,
                     'borrowing_library' => $this->createLibraryObject($request->borrowinglibrary),
                     'lending_library' => $request->lendinglibrary ? $this->createLibraryObject($request->lendinglibrary) : null,
                     'reference' => $request->reference->only([

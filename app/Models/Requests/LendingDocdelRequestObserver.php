@@ -2,11 +2,12 @@
 
 namespace App\Models\Requests;
 
+use App\Helper\StatsHelper;
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-// use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log;
 
 class LendingDocdelRequestObserver extends BaseObserver
 {
@@ -42,11 +43,15 @@ class LendingDocdelRequestObserver extends BaseObserver
 
     public function saved($model)
     {
+
         /** @var Elasticsearch\Client $client */
         $client = app('Elasticsearch\Client');
 
         // Instantiate the trasformer
         $transformer = new LendingDocdelRequestTransformer();
+
+        $aggregated_statuses = StatsHelper::aggregateStatus($model);
+        // Log::info("I am lender", $aggregated_statuses);
 
         // Elasticsearch request body params + lending library in case of accepted orphaned request
         $params = [
@@ -58,6 +63,8 @@ class LendingDocdelRequestObserver extends BaseObserver
                 'fulfill_date' => \Carbon\Carbon::parse($model->fulfill_date)->format('Y-m-d H:i:s'),
                 'borrowing_status' => $model->borrowing_status,
                 'lending_status' => $model->lending_status,
+                'aggregated_borrowing_status' => $aggregated_statuses['aggregated_borrowing_status'],
+                'aggregated_lending_status' => $aggregated_statuses['aggregated_lending_status'],
                 'fulfill_type' => $model->fulfill_type,
                 'notfulfill_type' => $model->notfulfill_type,
                 'forward' => $model->forward,
