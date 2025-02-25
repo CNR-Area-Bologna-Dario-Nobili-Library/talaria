@@ -78,17 +78,17 @@ const routes = [
       { path: '/:page?', exact: true, name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, },            
       { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
     ]
-  },
+  },  
+  /*
+  NOT IMPLEMENTED
+
   { path: '/stats',  name: `Statistics`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
   children: [    
     { path: '/', exact: true, icon: 'chart-bar', name: `Statistics`, url: `/stats`, component: Fake, sidebar:true, order:1},    
     { path: '/libraries', exact: true, icon: 'chart-bar', name: `StatisticsLibraries`, url: `/stats/libraries`, component: Fake, sidebar:true, order:1,level:2},    
     { path: '/institutions', exact: true, icon: 'chart-bar', name: `StatisticsInstitutions`, url: `/stats/institutions`, component: Fake, sidebar:true, order:1,level:2}, 
   ]
-},
-  /*
-  NOT IMPLEMENTED
-
+  },
   { path: '/consortiums',  name: `Consortiums`, component: SubRouteSwitch, header: true, roles: ['manager'],
     children: [
       { path: '/', exact: true, icon: 'fa-solid fa-building', name: `Consortiums`, url: `/consortiums`, component: Fake, sidebar:true},
