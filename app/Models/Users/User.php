@@ -174,10 +174,13 @@ class User extends UserBase
     Actually only "database" notification were implemented
     */
     public function preferNotifiedBy() {
+        //NOTE: Notifications are now "disabled" by returning empty array, so no notification will be sent/saved
+        return [];
+        
         //if(...) return ['mail','xxx','xxx'...]
         //else
         //if(!mail_notification)
-        return ['database']; 
+        //return ['database']; 
         //else
         //return ['database','mail']; 
     }
