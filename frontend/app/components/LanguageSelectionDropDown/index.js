@@ -9,6 +9,7 @@ import flagIT from '../../images/lang/it.svg';
 import flagEN from '../../images/lang/en.svg';
 import flagES from '../../images/lang/es.svg';
 import flagTR from '../../images/lang/tr.svg';
+import flagAR from '../../images/lang/ar.svg';
 
 function LanguageSelectionDropDown(props) {
 
@@ -24,7 +25,8 @@ function LanguageSelectionDropDown(props) {
     { code: 'it', title: 'Italiano', flag: flagIT},
     { code: 'en', title: 'English (UK)' , flag: flagEN},
     { code: 'es', title: 'Español' , flag: flagES},
-    { code: 'tr', title: 'Türkçe', flag: flagTR}
+    { code: 'tr', title: 'Türkçe', flag: flagTR},
+    //{ code: 'ar', title: 'العربيّة', flag:flagAR}   
   ]);
 
   const getFlag=(code) => {
@@ -48,7 +50,8 @@ function LanguageSelectionDropDown(props) {
       case 'it': flag=flagIT; break;
       case 'en': flag=flagEN; break;
       case 'es': flag=flagES; break;
-      case 'tr': flag=flagTR; break;       
+      case 'tr': flag=flagTR; break;
+      case 'ar': flag=flagAR; break;       
     }
     if(flag!="" && code!="")           
       return <img className="flagIcon" src={flag}/>

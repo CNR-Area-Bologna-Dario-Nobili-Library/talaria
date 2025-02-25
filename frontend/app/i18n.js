@@ -17,6 +17,7 @@ const enTranslationMessages = require('./translations/en.json');
 const itTranslationMessages = require('./translations/it.json');
 const esTranslationMessages = require('./translations/es.json');
 const trTranslationMessages = require('./translations/tr.json');
+const arTranslationMessages = require('./translations/ar.json');
 
 // addLocaleData(enLocaleData);
 // addLocaleData(deLocaleData);
@@ -27,7 +28,8 @@ const appLocales = [
   'en',  
   'it',
   'es',
-  'tr'
+  'tr',
+  'ar'
 ];
 
 //const DEFAULT_LOCALE = 'it';
@@ -65,6 +67,7 @@ const translationMessages = {
   it: formatTranslationMessages('it', itTranslationMessages),
   es: formatTranslationMessages('es', esTranslationMessages),
   tr: formatTranslationMessages('tr', trTranslationMessages),
+  ar: formatTranslationMessages('ar', arTranslationMessages),  
 };
 
 exports.appLocales = appLocales;
