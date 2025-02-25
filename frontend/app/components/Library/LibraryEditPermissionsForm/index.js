@@ -11,17 +11,23 @@ const LibraryEditPermissionsForm = (props) => {
     const {data,submitCallback,operatorData,history,filterPerm}=props
 
     console.log("LibraryEditPermissionsForm",props)
+
+    const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
     
     const intl = useIntl()
 
     let initPerms={ 
       'borrow':false,     
-      'lend': false,
-      'deliver': false,
-      'manage':false,    
-      'manage-users':false,
-      'manage-licenses': false
+      'lend': false,      
+    /*
+   NOT IMPLEMENTED     
+    'manage-licenses': false,
+    */
     }
+
+      //add "delivery" and "manage-users" options only if patrons are enabled
+    if (patrons_enabled) 
+      initPerms={...initPerms,deliver: false,'manage-users': false,}
     
       const [mounted,setMounted]=useState(false);
 

@@ -10,16 +10,23 @@ const LibraryInviteOperatorForm = props => {
   const { submitCallback, userData, history,auth,filterPerm } = props;
   console.log('LibraryInviteOperatorForm', props);
 
+  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+
   const intl = useIntl();
 
   let initPerms = {
     borrow: false,
-    lend: false,
-    deliver: false,
-    manage: false,
-    'manage-users': false,
+    lend: false,    
+    manage: false,        
+   /*
+   NOT IMPLEMENTED     
     'manage-licenses': false,
+    */
   };
+
+  //add "delivery" and "manage-users" options only if patrons are enabled
+  if (patrons_enabled) 
+    initPerms={...initPerms,deliver: false,'manage-users': false,}
 
   const [mounted, setMounted] = useState(false);
   const [opPerms, setOpPerms] = useState({ ...initPerms });
@@ -115,7 +122,7 @@ const LibraryInviteOperatorForm = props => {
 
   return (
     mounted && (
-      <div className="editPermissionsForm">
+      <div className="editPermissionsForm">      
         <div className="card">
           <div className="card-body">
             {/* <h5 className='card-title'>User</h5> */}
