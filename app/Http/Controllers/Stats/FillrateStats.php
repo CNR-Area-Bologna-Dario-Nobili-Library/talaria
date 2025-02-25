@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
  * This controller handles the calculation of fill rate statistics.
  * 
  * The fill rate is calculated using the following formula:
- *  fill_rate = (received - trashed) / (total - new - in_progress - canceled)
+ *  fill_rate = (received - trashed) / (total - new - in_progress - canceled - direct)
  * 
  * The query can be optionally filtered by:
  * - Year (`year`): Only include requests withing the specified year.
