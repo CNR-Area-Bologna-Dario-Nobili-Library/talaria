@@ -251,6 +251,7 @@ class RequestsDistributionStats extends BaseStatsController
     $response = $this->client->search($params);
 
     $result = [
+      "total" => $response['hits']['total'],
       "by_borrowing_status" => $library_id ? $response['aggregations']['by_borrowing_status']['statuses'] : $response['aggregations']['by_borrowing_status'],
       "by_lending_status" => $library_id ? $response['aggregations']['by_lending_status']['statuses'] : $response['aggregations']['by_lending_status'],
       "borrowing_fulfilled_distribution" => $response['aggregations']['borrowing_fulfilled_distribution']['by_fulfill_type'],
