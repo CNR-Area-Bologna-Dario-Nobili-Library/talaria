@@ -21,10 +21,10 @@ class StatsHelper
      */
     $borrowingStatusMap = [
       0 => ["newrequest"],
-      1 => ["requested"],
+      1 => ["requested", "cancelrequested"],
       2 => ["deliveringtodesk", "deskreceived", "deliveredtouser", "fulfilled", "documentready"],
       3 => ["notdeliveredtouser", "notreceived", "notreceivedarchived"],
-      4 => ["canceledrequested", "canceledaccepted", "canceled"],
+      4 => ["cancelrequested", "canceledaccepted", "canceled"],
       5 => [],
       6 => ["documentnotready"],
       7 => ["canceleddirect", "deliveredtouserdirect", "notdeliveredtouserdirect"]
@@ -37,16 +37,15 @@ class StatsHelper
      * 2 => Fulfilled = lendingStatusMap[2]
      * 3 => Not fulfilled = lendingStatusMap[3]
      * 4 => Canceled = lendingStatusMap[4]
-     * 5 => Reiterated = all the requests that have forward = 1
      * 6 => Archived as not received by borrower -- not to display => lending_status = NULL && archived = 1 && aggregated_borrowing_status = 3
      * 7 => Patron direct request -- not to display => lending_status = NULL && aggregated_borrowing_status = 7
      */
     $lendingStatusMap = [
       0 => null,
-      1 => ["requestreceived", "willsupply"],
+      1 => ["requestreceived", "willsupply", "cancelrequested"],
       2 => ["copycompleted"],
       3 => ["unfilled"],
-      4 => ["canceledaccepted", "canceledrequested"],
+      4 => ["canceledaccepted"],
       5 => [],
       6 => null,
       7 => null
@@ -80,17 +79,12 @@ class StatsHelper
     $trashed          = $model->trash_type;
     $archived         = $model->archived;
 
-    if ($forward) {
-      return [
-        'aggregated_borrowing_status' => 'Reiterated',
-        'aggregated_lending_status' => 'Reiterated',
-      ];
-    }
-
     // ### Determine aggregated BORROWING status ###
     $aggregated_borrowing_status = null;
 
-    if (in_array($borrowing_status, $borrowingStatusMap[0])) {
+    if ($forward) {
+      $aggregated_borrowing_status = 'Reiterated';
+    } elseif (in_array($borrowing_status, $borrowingStatusMap[0])) {
       // New request
       $aggregated_borrowing_status = "New";
     } elseif (in_array($borrowing_status, $borrowingStatusMap[1])) {
@@ -117,7 +111,7 @@ class StatsHelper
       $aggregated_borrowing_status = "Patron direct request";
     }
 
-    // ### Determine aggregated BORROWING status ###
+    // ### Determine aggregated LENDING status ###
     $aggregated_lending_status = null;
 
     if ($lending_status === null) {
@@ -145,7 +139,8 @@ class StatsHelper
       }
     }
 
-    // Log::info($borrowing_status . " associated with " . $aggregated_borrowing_status);
+    // Log::info($model['borrowing_status'] . " associated with " . $aggregated_borrowing_status);
+    // Log::info($model['lending_status'] . " associated with " . $aggregated_lending_status);
 
     return [
       'aggregated_borrowing_status' => $aggregated_borrowing_status,
