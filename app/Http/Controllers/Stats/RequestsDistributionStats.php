@@ -17,8 +17,8 @@ class RequestsDistributionStats extends BaseStatsController
   {
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      'library_id' => 'sometimes|integer|min:1',
-      'material_type' => 'sometimes|integer|min:1',
+      'library_id' => 'sometimes|integer|exists:libraries,id',
+      'material_type' => 'sometimes|integer|min:1|max:5',
       // 'status' => 'sometimes|integer|min:0',
       // 'fulfill_type' => 'sometimes|integer|min:1|nullable',
       // 'notfulfill_type' => 'sometimes|integer|min:1|nullable'

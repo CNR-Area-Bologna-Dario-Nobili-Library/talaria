@@ -22,7 +22,7 @@ class FillrateStats extends BaseStatsController
     // Validate optional parameters 'year' and 'library_id'
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      'library_id' => 'sometimes|integer|min:1',
+      'library_id' => 'sometimes|integer|exists:libraries,id',
     ]);
 
     $year = $validated['year'] ?? null;
