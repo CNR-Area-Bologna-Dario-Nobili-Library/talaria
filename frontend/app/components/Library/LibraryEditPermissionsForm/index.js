@@ -19,6 +19,7 @@ const LibraryEditPermissionsForm = (props) => {
     let initPerms={ 
       'borrow':false,     
       'lend': false,      
+      'manage': false,      
     /*
    NOT IMPLEMENTED     
     'manage-licenses': false,
