@@ -29,13 +29,14 @@ const BelongingLibraries = ({
       case 0:
         return 'disabled';
       case 1:
-        return 'success';
+        return 'enabled';
       case 2:
         return 'pending';
       default:
         return status;
     }
   };
+
 
   const intl = useIntl();
 
@@ -49,6 +50,8 @@ const BelongingLibraries = ({
       }),
     );
   };
+
+  
 
   return (
     <div className="container mt-4">
@@ -74,9 +77,9 @@ const BelongingLibraries = ({
                   className={`fa-solid ${
                     library.status === 1
                       ? 'fa-circle-check text-success'
-                      : 'fa-circle-xmark text-danger'
+                      : library.status === 2 ?'fa-circle-xmark text-warning': 'fa-circle-xmark text-danger'
                   }`}
-                  title={library.status === 1 ? 'Enabled' : 'Disabled'}
+                  title={library.status === 1 ? intl.formatMessage({id: 'app.global.enabled'}) : library.status === 2? intl.formatMessage({id: 'app.global.pending'}):intl.formatMessage({id: 'app.global.disabled'})}
                 />
               </td>
             </tr>
