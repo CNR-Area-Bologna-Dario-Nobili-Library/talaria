@@ -4,7 +4,7 @@ import { useIntl } from 'react-intl';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { permissionBadgeClass,libraryStatusIcon } from '../../utils/utilityFunctions.js';
+import { permissionBadgeClass,libraryStatusIcon, translatePerm } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates';
 
 const LandingPageLibrariesBox = props => {
@@ -19,7 +19,7 @@ const LandingPageLibrariesBox = props => {
 
    
 
-  
+  //invite status class
   const statusClass = status => {
     switch (status) {
       case 0:
@@ -69,7 +69,7 @@ const LandingPageLibrariesBox = props => {
                             key={`badge_perm_${index}`}
                             className={`badge ${permissionBadgeClass(p)}`}
                           >
-                            {p}
+                            {translatePerm(p)}
                           </span>
                         ))}
                       </div>                      
@@ -166,7 +166,7 @@ const LandingPageLibrariesBox = props => {
                               key={`badge_temp_perm_${index}`}
                               className={`badge ${permissionBadgeClass(p)}`}
                             >
-                              {p}
+                              {translatePerm(p)}
                             </span>
                           ))}
                         </div>

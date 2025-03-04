@@ -705,7 +705,7 @@
   "app.components.RequestsList.RequestsNotFound": "Sin peticiones pendientes",
   "app.components.RequestsList.RequestSelected": "Seleccionada",
 
-  "app.components.BorrowingsList.header": "Borrowing Peticiones internas",
+  "app.components.BorrowingsList.header": "Peticiones internas",
   "app.components.BorrowingsList.createNewBorrowing": "Nueva petición",
   "app.components.BorrowingsList.BorrowingsNotFound": "Sin peticiones",
   "app.components.BorrowingsList.BorrowingSelected": "Seleccionada",
