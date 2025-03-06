@@ -31,13 +31,14 @@ export function checkRoutePermission(auth, route, resource) {
     return /*forbiddenroles && */true;
   }
 
+  //console.log ("ROUTE INFO",auth,route)
   //if(route.roles && route.permissions)
   //{    
   //  return checkPermissions(auth, route.permissions, resource) && checkRole(auth, route.roles)
   //}
   
   //12/06/2024 fix: permissions and roles are always in OR in route definition (so in routes we can specify roles OR permissions, but not both)!
-  return (route.roles && checkRole(auth, route.roles) || (route.permissions && checkPermissions(auth, route.permissions, resource)))
+  return (route.roles && checkRole(auth, route.roles) || (route.permissions && ( checkPermissions(auth, route.permissions, resource) )) )
 
 }
 

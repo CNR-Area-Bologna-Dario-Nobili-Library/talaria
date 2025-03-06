@@ -62,10 +62,11 @@ function LibraryPage(props) {
           });                                     
         }     
 
-        //filter library dashboard menu/route based on status + block route
-        //NOT for admin/comm manager, they must see everything
-        if((!checkRole(auth, "manager") && !checkRole(auth, "super-admin")) 
-        &&(library.library.status!=1 && library.library.status!=2)) //enabled or renewing
+        //filter library dashboard menu/route based on status + block route     
+        
+        //admin/manager can see only  MyLibrary
+        /*if(checkRole(auth, "manager") || checkRole(auth, "super-admin")) */ 
+        if (library.library.status!=1 && library.library.status!=2) //enabled or renewing
         {
           //remove all but not MyLibrary menu-item        
           libraryRoutes=libraryRoutes.filter( (route)=> {        
@@ -76,9 +77,10 @@ function LibraryPage(props) {
           if(libraryRoutes.length==1 && libraryRoutes[0].name=="MyLibrary") 
             libraryRoutes[0].children=libraryRoutes[0].children.filter( (child) => {
               return (child.name=="LibraryStatus"||child.name=="Subscriptions")
-            })
-          
+            })          
         }
+        
+
 
         //console.log("libraryRoutes DOPO",libraryRoutes)      
         
