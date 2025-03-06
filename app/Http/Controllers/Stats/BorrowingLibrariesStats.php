@@ -38,6 +38,12 @@ class BorrowingLibrariesStats extends BaseStatsController
                   'field' => 'borrowing_library.id'
                 ]
               ],
+              // Count of unique lending libraries per year
+              'lending_libraries' => [
+                'cardinality' => [
+                  'field' => 'lending_library.id'
+                ]
+              ],
             ]
           ]
         ]
