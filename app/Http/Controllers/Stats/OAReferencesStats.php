@@ -61,7 +61,21 @@ class OAReferencesStats extends BaseStatsController
     ];
 
     $response = $this->client->search($params);
+    $result = [];
+    $result["unique_references"] = $response["aggregations"]["unique_references"]["value"];
+    $result["references_with_oa"] = $response["aggregations"]["references_with_oa"]["doc_count"];
+    $result["unique_references_with_oa"] = $response["aggregations"]["references_with_oa"]["unique_references_with_oa"]["value"];
 
-    return $response;
+    foreach ($response['aggregations']['references_with_oa']['by_status']['buckets'] as $bucket) {
+      $result[$bucket["key"]] = [
+        "count" => $bucket["doc_count"],
+        "by_pdf_editorial" => []
+      ];
+      foreach ($bucket['by_pdf_editorial']['buckets'] as $pdf_editorial) {
+        $result[$bucket["key"]]['by_pdf_editorial'][] = $pdf_editorial;
+      }
+    }
+
+    return response()->json($result);
   }
 }

@@ -42,49 +42,13 @@ class CountriesStats extends BaseStatsController
     ];
 
     // I AM BORROWER AND I SEARCH WHO FULFILLS MY REQUESTS 
-    $query['body']['aggs']['borrowed_from'] = [
+    $query['body']['aggs']['requesting'] = [
       'filter' => [
         'bool' => [
           'must' => array_filter(
             [
               ['term' => ['aggregated_borrowing_status.keyword' => 'Received']],
               $query_id ? ['term' => [$borrowing_query_condition => $query_id]] : null // <-- This line is conditional because if nothing is provided it makes a leaderboard of countries
-            ]
-          )
-        ]
-      ],
-      'aggs' => [
-        'countries_requested_from' => [
-          'terms' => [
-            'field' => 'lending_library.country.name.keyword',
-            'size' => 100
-          ],
-          'aggs' => [
-            'country_details' => [
-              'top_hits' => [
-                'size' => 1,
-                '_source' => [
-                  'includes' => [
-                    'lending_library.country.id',
-                    'lending_library.country.code',
-                    'lending_library.country.name'
-                  ]
-                ]
-              ]
-            ]
-          ]
-        ]
-      ]
-    ];
-
-    // I AM LENDER AND I SEARCH WHO ASKS ME DOCUMENTS
-    $query['body']['aggs']['lent_to'] = [
-      'filter' => [
-        'bool' => [
-          'must' => array_filter(
-            [
-              ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
-              $query_id ? ['term' => [$lending_query_condition => $query_id]] : null // <-- This line is conditional because if nothing is provided it makes a leaderboard of countries
             ]
           )
         ]
@@ -113,6 +77,42 @@ class CountriesStats extends BaseStatsController
       ]
     ];
 
+    // I AM LENDER AND I SEARCH WHO ASKS ME DOCUMENTS
+    $query['body']['aggs']['providing'] = [
+      'filter' => [
+        'bool' => [
+          'must' => array_filter(
+            [
+              ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
+              $query_id ? ['term' => [$lending_query_condition => $query_id]] : null // <-- This line is conditional because if nothing is provided it makes a leaderboard of countries
+            ]
+          )
+        ]
+      ],
+      'aggs' => [
+        'countries_requested_from' => [
+          'terms' => [
+            'field' => 'lending_library.country.name.keyword',
+            'size' => 100
+          ],
+          'aggs' => [
+            'country_details' => [
+              'top_hits' => [
+                'size' => 1,
+                '_source' => [
+                  'includes' => [
+                    'lending_library.country.id',
+                    'lending_library.country.code',
+                    'lending_library.country.name'
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ];
+
     // If a year is provided, add it to the query
     if ($year) {
       $query['body']['query']['bool']['must'][] = [
@@ -126,8 +126,41 @@ class CountriesStats extends BaseStatsController
       ];
     }
 
-    $results = $this->client->search($query);
+    $response = $this->client->search($query);
+    $result = [
+      "total_requests" => $response["hits"]["total"]["value"],
+      "requesting" => [
+        "total" => $response["aggregations"]["requesting"]["doc_count"],
+        "countries" => []
+      ],
+      "providing" => [
+        "total" => $response["aggregations"]["providing"]["doc_count"],
+        "countries" => []
+      ]
+    ];
 
-    return $results;
+    // Extract requesting countries
+    foreach ($response["aggregations"]["requesting"]["countries_requested_from"]["buckets"] as $bucket) {
+      $country_data = $bucket["country_details"]["hits"]["hits"][0]["_source"]["borrowing_library"]["country"];
+      $result["requesting"]["countries"][] = [
+        // "id" => $country_data["id"],
+        "name" => $country_data["name"],
+        "code" => $country_data["code"],
+        "count" => $bucket["doc_count"]
+      ];
+    }
+
+    // Extract providing countries
+    foreach ($response["aggregations"]["providing"]["countries_requested_from"]["buckets"] as $bucket) {
+      $country_data = $bucket["country_details"]["hits"]["hits"][0]["_source"]["lending_library"]["country"];
+      $result["providing"]["countries"][] = [
+        // "id" => $country_data["id"],
+        "name" => $country_data["name"],
+        "code" => $country_data["code"],
+        "count" => $bucket["doc_count"]
+      ];
+    }
+
+    return response()->json($result);
   }
 }

@@ -106,9 +106,16 @@ class AvgWorkingTimeStats extends BaseStatsController
       ]
     ];
 
-    $results = $this->client->search($params);
+    $response = $this->client->search($params);
 
-    // return response()->json($results['aggregations']['requests_per_month']['buckets']);
-    return response()->json($results);
+    $averages = [];
+    foreach ($response['aggregations']['requests_per_month']['buckets'] as $bucket) {
+      $averages[$bucket['key_as_string']] = [
+        "borrowing" => $bucket['borrowing_avg_working_time']['avg_working_time']['value'],
+        "lending" => $bucket['lending_avg_working_time']['avg_working_time']['value'],
+      ];
+    }
+
+    return response()->json($averages);
   }
 }

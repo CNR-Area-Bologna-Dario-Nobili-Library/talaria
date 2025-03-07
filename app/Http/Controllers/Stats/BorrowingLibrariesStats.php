@@ -52,6 +52,15 @@ class BorrowingLibrariesStats extends BaseStatsController
 
     $response = $this->client->search($params);
 
-    return $response;
+    $result = [];
+    foreach ($response['aggregations']['years']['buckets'] as $bucket) {
+      $result[$bucket['key_as_string']] = [
+        "total_requests" => $bucket['total_requests']['value'],
+        "borrowing_libraries" => $bucket['borrowing_libraries']['value'],
+        "lending_libraries" => $bucket['lending_libraries']['value'],
+      ];
+    }
+
+    return response()->json($result);
   }
 }

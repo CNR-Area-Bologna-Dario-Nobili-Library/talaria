@@ -128,8 +128,10 @@ class FillrateStats extends BaseStatsController
     }
 
     // Execute the query on the Elasticsearch client
-    $result = $this->client->search($query);
+    $response = $this->client->search($query);
+    $result = [];
+    $result["fill_rate"] = $response["aggregations"]["all_docs"]["buckets"]["all"]["fill_rate"]["value"];
 
-    return $result;
+    return response()->json($result);
   }
 }
