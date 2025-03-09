@@ -78,6 +78,7 @@ class StatsHelper
     $forward          = $model->forward;
     $trashed          = $model->trash_type;
     $archived         = $model->archived;
+    $orphaned         = $model->all_lender;
 
     // ### Determine aggregated BORROWING status ###
     $aggregated_borrowing_status = null;
@@ -129,7 +130,12 @@ class StatsHelper
     } else {
       // Lending status provided
       if (in_array($lending_status, $lendingStatusMap[1])) {
-        $aggregated_lending_status = "In progress";
+        // If a request is orphaned and awaiting to be taken it is New for Lender
+        if ($orphaned == 1) {
+          $aggregated_lending_status = "New";
+        } else {
+          $aggregated_lending_status = "In progress";
+        }
       } elseif (in_array($lending_status, $lendingStatusMap[2])) {
         $aggregated_lending_status = "Fulfilled";
       } elseif (in_array($lending_status, $lendingStatusMap[3])) {
