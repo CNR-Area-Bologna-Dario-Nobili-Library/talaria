@@ -24,7 +24,7 @@ class StatsHelper
       1 => ["requested", "cancelrequested"],
       2 => ["deliveringtodesk", "deskreceived", "deliveredtouser", "fulfilled", "documentready"],
       3 => ["notdeliveredtouser", "notreceived", "notreceivedarchived"],
-      4 => ["cancelrequested", "canceledaccepted", "canceled"],
+      4 => ["canceledaccepted", "canceled"],
       5 => [],
       6 => ["documentnotready"],
       7 => ["canceleddirect", "deliveredtouserdirect", "notdeliveredtouserdirect"]
