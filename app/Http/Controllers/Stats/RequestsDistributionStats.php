@@ -13,6 +13,34 @@ use Illuminate\Support\Facades\Log;
  */
 class RequestsDistributionStats extends BaseStatsController
 {
+  /**
+   * Transform an aggregation’s buckets to a simpler structure.
+   */
+  function transformAggregation(array $agg, string $nestedKey): array
+  {
+    $result = [];
+    if (!isset($agg['buckets'])) {
+      return $result;
+    }
+    foreach ($agg['buckets'] as $bucket) {
+      $item = [
+        'key'   => $bucket['key'],
+        'count' => $bucket['doc_count']
+      ];
+      // If the bucket has a nested aggregation (e.g., by_material_type),
+      // convert that to a key => count mapping.
+      if (isset($bucket[$nestedKey]) && isset($bucket[$nestedKey]['buckets'])) {
+        $materialTypes = [];
+        foreach ($bucket[$nestedKey]['buckets'] as $subBucket) {
+          $materialTypes[(string)$subBucket['key']] = $subBucket['doc_count'];
+        }
+        $item['material_types'] = $materialTypes;
+      }
+      $result[] = $item;
+    }
+    return $result;
+  }
+
   public function __invoke(Request $request)
   {
     $validated = $request->validate([
@@ -251,13 +279,35 @@ class RequestsDistributionStats extends BaseStatsController
     $response = $this->client->search($params);
 
     $result = [
-      "total" => $response['hits']['total'],
-      "by_borrowing_status" => $library_id ? $response['aggregations']['by_borrowing_status']['statuses'] : $response['aggregations']['by_borrowing_status'],
-      "by_lending_status" => $library_id ? $response['aggregations']['by_lending_status']['statuses'] : $response['aggregations']['by_lending_status'],
-      "borrowing_fulfilled_distribution" => $response['aggregations']['borrowing_fulfilled_distribution']['by_fulfill_type'],
-      "borrowing_unfilled_distribution"  => $response['aggregations']['borrowing_unfilled_distribution']['by_notfulfill_type'],
-      "lending_fulfilled_distribution" => $response['aggregations']['lending_fulfilled_distribution']['by_fulfill_type'],
-      "lending_unfilled_distribution"  => $response['aggregations']['lending_unfilled_distribution']['by_notfulfill_type'],
+      'total' => $response['hits']['total']['value'],
+      'by_borrowing_status' => $this->transformAggregation(
+        $library_id
+          ? $response['aggregations']['by_borrowing_status']['statuses']
+          : $response['aggregations']['by_borrowing_status'],
+        'by_material_type'
+      ),
+      'by_lending_status' => $this->transformAggregation(
+        $library_id
+          ? $response['aggregations']['by_lending_status']['statuses']
+          : $response['aggregations']['by_lending_status'],
+        'by_material_type'
+      ),
+      'borrowing_fulfilled_distribution' => $this->transformAggregation(
+        $response['aggregations']['borrowing_fulfilled_distribution']['by_fulfill_type'],
+        'by_material_type'
+      ),
+      'borrowing_unfilled_distribution'  => $this->transformAggregation(
+        $response['aggregations']['borrowing_unfilled_distribution']['by_notfulfill_type'],
+        'by_material_type'
+      ),
+      'lending_fulfilled_distribution' => $this->transformAggregation(
+        $response['aggregations']['lending_fulfilled_distribution']['by_fulfill_type'],
+        'by_material_type'
+      ),
+      'lending_unfilled_distribution'  => $this->transformAggregation(
+        $response['aggregations']['lending_unfilled_distribution']['by_notfulfill_type'],
+        'by_material_type'
+      ),
     ];
 
     return response()->json($result);
