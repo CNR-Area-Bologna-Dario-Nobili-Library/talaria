@@ -42,7 +42,7 @@ function Footer(props) {
         </div>
         <div className="footer-logos bottom align-items-end">
           <a href="" target="_blank"><img className='mh-100' src={logo} alt="logo" /></a>                    
-          <span className="poweredby float-right"><a href="https://github.com/tugn0x/Talaria" target="_blank"><img className='' src={poweredBy} alt="Powered By Talaria" /></a></span>
+          <span className="poweredby float-right"><a href="https://github.com/CNR-Area-Bologna-Dario-Nobili-Library/talaria" target="_blank"><img className='' src={poweredBy} alt="Powered By Talaria" /></a></span>
         </div>
       </div>
     </footer>
