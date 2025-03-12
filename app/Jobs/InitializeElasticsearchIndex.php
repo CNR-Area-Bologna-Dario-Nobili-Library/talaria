@@ -515,7 +515,7 @@ class InitializeElasticsearchIndex implements ShouldQueue
                     'forward' => $request->forward,
                     'trash_type' => $request->trash_type,
                     'archived' => $request->archived,
-                    'orphaned' => null,
+                    'orphaned' => 0,
                     'request_pdf_editorial' => $request->request_pdf_editorial ?? 0,
                     'request_special_delivery' => $request->request_special_delivery ?? 0,
                     'patron_docdel_request_id' => $request->patron_docdel_request_id,

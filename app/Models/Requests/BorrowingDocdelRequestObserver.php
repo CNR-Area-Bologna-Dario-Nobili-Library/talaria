@@ -106,6 +106,7 @@ class BorrowingDocdelRequestObserver extends BaseObserver
                 'aggregated_lending_status' => $aggregated_statuses['aggregated_lending_status'],
                 'trash_type' => $model->trash_type,
                 'archived' => $model->archived,
+                'orphaned' => 0,
                 'request_special_delivery' => $model->request_special_delivery ?? 0,
                 'request_pdf_editorial' => $model->request_pdf_editorial ?? 0,
                 // 'fulfill_type' => $model->fulfill_type,
