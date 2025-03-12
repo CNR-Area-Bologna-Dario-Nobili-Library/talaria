@@ -15,7 +15,7 @@ class BorrowingLibrariesStats extends BaseStatsController
   public function __invoke()
   {
     $params = [
-      'index' => 'docdel_requests',
+      'index' => 'docdel_test',
       'body'  => [
         'size' => 0, // no documents in returns, only aggregations
         'aggs' => [

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * This controller returns the distribution of references publication year for fulfilled DD requests (both borrowing and lending)
- * It is possible to filter by year, library_id and material type.
+ * It is possible to filter by year, library_id, institution_id and material type.
  */
 class ReferencePubYearStats extends BaseStatsController
 {
@@ -18,12 +18,18 @@ class ReferencePubYearStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
       'material_type' => 'sometimes|integer|min:1|max:5'
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
     $material_type = $validated['material_type'] ?? null;
+
+    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
 
     $mustClauses = [];
 
@@ -55,7 +61,7 @@ class ReferencePubYearStats extends BaseStatsController
               'bool' => [
                 'must' => array_filter([
                   ['term' => ['aggregated_borrowing_status.keyword' => 'Received']],
-                  $library_id ? ['term' => ['borrowing_library.id' => $library_id]] : null
+                  $query_id ? ['term' => [$borrowing_query_condition => $query_id]] : null
                 ])
               ]
             ],
@@ -74,7 +80,7 @@ class ReferencePubYearStats extends BaseStatsController
               'bool' => [
                 'must' => array_filter([
                   ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
-                  $library_id ? ['term' => ['lending_library.id' => $library_id]] : null
+                  $query_id ? ['term' => [$lending_query_condition => $query_id]] : null
                 ])
               ]
             ],

@@ -21,19 +21,36 @@ class CountriesStats extends BaseStatsController
     // Validate optional parameters 'year', 'library_id' and 'country_id'
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      // 'library_id' => 'sometimes|integer|exists:libraries,id', // Using talaria normally
-      // 'country_id' => 'sometimes|integer|exists:countries,id'  // Using talaria normally
-      'library_id' => 'sometimes|integer',  // Using RSCVD prod for stats
-      'country_id' => 'sometimes|integer'   // Using RSCVD prod for stats
+      'library_id' => 'sometimes|integer|exists:libraries,id', // Using talaria normally
+      'country_id' => 'sometimes|integer|exists:countries,id',  // Using talaria normally
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
+      // 'library_id' => 'sometimes|integer',  // Using RSCVD prod for stats
+      // 'country_id' => 'sometimes|integer'   // Using RSCVD prod for stats
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
     $country_id = $validated['country_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
 
-    $borrowing_query_condition = "borrowing_library" . ($country_id !== null ? ".country" : "") . ".id";
-    $lending_query_condition = "lending_library" . ($country_id !== null ? ".country" : "") . ".id";
-    $query_id = ($library_id !== null) ? $library_id : ($country_id !== null ? $country_id : null); // when both are present, library_id has more priority than country_id
+    $borrowing_query_condition = null;
+    $lending_query_condition = null;
+    $query_id = null;
+
+    // Priority: Library >> Country >> Institution
+    if ($library_id) {
+      $borrowing_query_condition = "borrowing_library.id";
+      $lending_query_condition = "lending_library.id";
+      $query_id = $library_id;
+    } else if ($country_id) {
+      $borrowing_query_condition = "borrowing_library.country.id";
+      $lending_query_condition = "lending_library.country.id";
+      $query_id = $country_id;
+    } else if ($institution_id) {
+      $borrowing_query_condition = "borrowing_library.institution.id";
+      $lending_query_condition = "lending_library.institution.id";
+      $query_id = $institution_id;
+    }
 
     $query = [
       'index' => 'docdel_requests',

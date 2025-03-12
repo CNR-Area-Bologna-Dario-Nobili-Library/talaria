@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * This controller handles the calculation of fill rate statistics.
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
  * The query can be optionally filtered by:
  * - Year (`year`): Only include requests withing the specified year.
  * - Library ID (`library_id`): Only include requests from a specific library.
+ * - Institution ID (`institution_id`): Only include requests from all libraries of a specific institution.
  */
 class FillrateStats extends BaseStatsController
 {
@@ -23,17 +25,15 @@ class FillrateStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id'
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
 
-    // Retrieve status mappings
-    // $statusMap = $this->getStatusMap('borrowing');
-    // $newStatuses = $statusMap[0];
-    // $inProgressStatuses = $statusMap[1];
-    // $receivedStatuses = $statusMap[2];
-    // $canceledStatuses = $statusMap[4];
+    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
 
     // Elasticsearch query
     $query = [
@@ -118,11 +118,11 @@ class FillrateStats extends BaseStatsController
       ];
     }
 
-    // If a library is provided, add it to the query
-    if ($library_id) {
+    // If a library or institution is provided, add it to the query
+    if ($query_id) {
       $query['body']['query']['bool']['must'][] = [
         'term' => [
-          'borrowing_library.id' => $library_id
+          $borrowing_query_condition => $query_id
         ]
       ];
     }

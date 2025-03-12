@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * This controller returns the average turnaround time for references, grouped by reference.material_type.
- * It is possible to filter by request year and (borrowing) library_id.
+ * It is possible to filter by request year and (borrowing) library_id or (borrowing) institution_id.
  */
 class ReferenceTurnaroundStats extends BaseStatsController
 {
@@ -18,10 +18,15 @@ class ReferenceTurnaroundStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
     ]);
 
     $year = $validated['year'] ?? null;
     $borrowing_library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
+
+    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $borrowing_library_id === null ? ".institution" : "") . ".id";
+    $query_id = ($borrowing_library_id !== null) ? $borrowing_library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
 
     $mustClauses = [];
 
@@ -32,15 +37,15 @@ class ReferenceTurnaroundStats extends BaseStatsController
           'request_date' => [
             'gte' => "{$year}-01-01",
             'lte' => "{$year}-12-31",
-            'format' => 'yyyy-MM-dd HH:mm:ss'
+            'format' => 'yyyy-MM-dd'
           ]
         ]
       ];
     }
 
-    // Filter by borrowing library (optional)
-    if ($borrowing_library_id) {
-      $mustClauses[] = ['term' => ['borrowing_library.id' => $borrowing_library_id]];
+    // Filter by borrowing library or borrowing institution (optional)
+    if ($query_id) {
+      $mustClauses[] = ['term' => [$borrowing_query_condition => $query_id]];
     }
 
     $params = [

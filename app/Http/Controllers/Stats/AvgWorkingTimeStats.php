@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * This controller returns, monthly, the average working time calculated as fulfill_date - request_date (when both are available).
- * It is possible to filter by request year, library and material_type
+ * It is possible to filter by request year, library, institution and material_type
  */
 class AvgWorkingTimeStats extends BaseStatsController
 {
@@ -18,12 +18,18 @@ class AvgWorkingTimeStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
       'material_type' => 'sometimes|integer|min:1|max:5'
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
     $material_type = $validated['material_type'] ?? null;
+
+    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
 
     $mustClauses = [];
 
@@ -43,20 +49,20 @@ class AvgWorkingTimeStats extends BaseStatsController
       $mustClauses[] = ['term' => ['reference.material_type' => $material_type]];
     }
 
-    if ($library_id) {
+    if ($query_id) {
       $mustClauses[] = [
         'bool' => [
           'should' => [
-            ['term' => ['borrowing_library.id' => $library_id]],
-            ['term' => ['lending_library.id' => $library_id]],
+            ['term' => [$borrowing_query_condition => $query_id]],
+            ['term' => [$lending_query_condition => $query_id]],
           ],
           'minimum_should_match' => 1
         ]
       ];
     }
 
-    $filterBorrowing = $library_id ? ['term' => ['borrowing_library.id' => $library_id]] : ['match_all' => new \stdClass()];
-    $filterLending = $library_id ? ['term' => ['lending_library.id' => $library_id]] : ['match_all' => new \stdClass()];
+    $filterBorrowing = $query_id ? ['term' => [$borrowing_query_condition => $query_id]] : ['match_all' => new \stdClass()];
+    $filterLending = $query_id ? ['term' => [$lending_query_condition => $query_id]] : ['match_all' => new \stdClass()];
 
     $params = [
       'index' => 'docdel_requests',

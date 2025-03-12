@@ -46,18 +46,18 @@ class RequestsDistributionStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
       'material_type' => 'sometimes|integer|min:1|max:5',
-      // 'status' => 'sometimes|integer|min:0',
-      // 'fulfill_type' => 'sometimes|integer|min:1|nullable',
-      // 'notfulfill_type' => 'sometimes|integer|min:1|nullable'
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
     $material_type = $validated['material_type'] ?? null;
-    // $status = $validated['status'] ?? null;
-    // $fulfill_type = $validated['fulfill_type'] ?? null;
-    // $notfulfill_type = $validated['notfulfill_type'] ?? null;
+
+    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
 
     $globalFilters = [];
 
@@ -78,11 +78,11 @@ class RequestsDistributionStats extends BaseStatsController
 
     $query = count($globalFilters) > 0 ? ['bool' => ['filter' => $globalFilters]] : ['match_all' => (object)[]];
 
-    // Query by library id
-    if ($library_id) {
+    // Query by library id or institution id
+    if ($query_id) {
       $borrowingAggregation = [
         'filter' => [
-          'term' => ['borrowing_library.id' => $library_id]
+          'term' => [$borrowing_query_condition => $query_id]
         ],
         'aggs' => [
           'statuses' => [
@@ -102,7 +102,7 @@ class RequestsDistributionStats extends BaseStatsController
 
       $lendingAggregation = [
         'filter' => [
-          'term' => ['lending_library.id' => $library_id]
+          'term' => [$lending_query_condition => $query_id]
         ],
         'aggs' => [
           'statuses' => [
@@ -125,7 +125,7 @@ class RequestsDistributionStats extends BaseStatsController
         'bool' => [
           'must' => [
             ['term' => ['aggregated_borrowing_status.keyword' => 'Received']],
-            ['term' => ['borrowing_library.id' => $library_id]],
+            ['term' => [$borrowing_query_condition => $query_id]],
           ]
         ]
       ];
@@ -134,7 +134,7 @@ class RequestsDistributionStats extends BaseStatsController
         'bool' => [
           'must' => [
             ['term' => ['aggregated_borrowing_status.keyword' => 'Not received']],
-            ['term' => ['borrowing_library.id' => $library_id]],
+            ['term' => [$borrowing_query_condition => $query_id]],
           ]
         ]
       ];
@@ -144,7 +144,7 @@ class RequestsDistributionStats extends BaseStatsController
         'bool' => [
           'must' => [
             ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
-            ['term' => ['lending_library.id' => $library_id]],
+            ['term' => [$lending_query_condition => $query_id]],
           ]
         ]
       ];
@@ -153,7 +153,7 @@ class RequestsDistributionStats extends BaseStatsController
         'bool' => [
           'must' => [
             ['term' => ['aggregated_fulfilled_status.keyword' => 'Not fulfilled']],
-            ['term' => ['lending_library.id' => $library_id]],
+            ['term' => [$lending_query_condition => $query_id]],
           ]
         ]
       ];
@@ -281,13 +281,13 @@ class RequestsDistributionStats extends BaseStatsController
     $result = [
       'total' => $response['hits']['total']['value'],
       'by_borrowing_status' => $this->transformAggregation(
-        $library_id
+        $query_id
           ? $response['aggregations']['by_borrowing_status']['statuses']
           : $response['aggregations']['by_borrowing_status'],
         'by_material_type'
       ),
       'by_lending_status' => $this->transformAggregation(
-        $library_id
+        $query_id
           ? $response['aggregations']['by_lending_status']['statuses']
           : $response['aggregations']['by_lending_status'],
         'by_material_type'
