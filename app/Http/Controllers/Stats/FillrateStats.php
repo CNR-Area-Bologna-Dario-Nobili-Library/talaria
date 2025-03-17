@@ -131,6 +131,7 @@ class FillrateStats extends BaseStatsController
     $response = $this->client->search($query);
     $result = [];
     $result["fill_rate"] = $response["aggregations"]["all_docs"]["buckets"]["all"]["fill_rate"]["value"];
+    $result["unfill_rate"] = 1 - $result["fill_rate"];
 
     return response()->json($result);
   }
