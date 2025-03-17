@@ -278,20 +278,32 @@ class RequestsDistributionStats extends BaseStatsController
     // Execute the query with your Elasticsearch client.
     $response = $this->client->search($params);
 
+    // Filter by_borrowing_status output
+    $borrowing_aggregation = $this->transformAggregation(
+      $query_id
+        ? $response['aggregations']['by_borrowing_status']['statuses']
+        : $response['aggregations']['by_borrowing_status'],
+      'by_material_type'
+    );
+    $borrowing_shown_statuses = ['New', 'In progress', 'Received', 'Not received', 'Canceled', 'Reiterated', 'Not received but fulfilled by lender'];
+
+    // Filter by_lending_status output
+    $lending_aggregation = $this->transformAggregation(
+      $query_id
+        ? $response['aggregations']['by_lending_status']['statuses']
+        : $response['aggregations']['by_lending_status'],
+      'by_material_type'
+    );
+    $lending_shown_statuses = ['In progress', 'Fulfilled', 'Not fulfilled', 'Canceled'];
+
     $result = [
       'total' => $response['hits']['total']['value'],
-      'by_borrowing_status' => $this->transformAggregation(
-        $query_id
-          ? $response['aggregations']['by_borrowing_status']['statuses']
-          : $response['aggregations']['by_borrowing_status'],
-        'by_material_type'
-      ),
-      'by_lending_status' => $this->transformAggregation(
-        $query_id
-          ? $response['aggregations']['by_lending_status']['statuses']
-          : $response['aggregations']['by_lending_status'],
-        'by_material_type'
-      ),
+      'by_borrowing_status' => array_values(array_filter($borrowing_aggregation, function ($item) use ($borrowing_shown_statuses) {
+        return in_array($item['key'], $borrowing_shown_statuses);
+      })),
+      'by_lending_status' => array_values(array_filter($lending_aggregation, function ($item) use ($lending_shown_statuses) {
+        return in_array($item['key'], $lending_shown_statuses);
+      })),
       'borrowing_fulfilled_distribution' => $this->transformAggregation(
         $response['aggregations']['borrowing_fulfilled_distribution']['by_fulfill_type'],
         'by_material_type'
