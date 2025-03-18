@@ -131,6 +131,22 @@ export const admin_deleteInstitutionType = (options) => {
 };
 
 // Stats //
+
+export const admin_getFillrate = (options) => {
+  options = getOption(options);
+  const year = options.year;
+  const library_id = options.library_id;
+
+  const queryParams = new URLSearchParams();
+  if (year) { queryParams.append('year', year); }
+  if (library_id) { queryParams.append('library_id', library_id); }
+
+  return request(`${BASE_ADMIN_URL}/stats/fillrate/?${queryParams.toString()}`, options);
+}
+
+// OLD STUFF BELOW
+//! TO DELETE
+
 export const admin_getAvgWorkingTime = (options) => {
   options = getOption(options);
   console.log("admin_getAvgWorkingTime", options);
