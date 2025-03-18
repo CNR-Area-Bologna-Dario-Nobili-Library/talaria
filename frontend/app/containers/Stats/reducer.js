@@ -1,5 +1,8 @@
 import produce from 'immer';
 import {
+  FETCH_FILL_RATE_REQUEST, 
+  FETCH_FILL_RATE_SUCCESS, 
+  FETCH_FILL_RATE_FAILURE,
   FETCH_AVG_TIME_REQUEST,
   FETCH_AVG_TIME_SUCCESS,
   FETCH_AVG_TIME_FAILURE,
@@ -17,6 +20,11 @@ import {
 export const initialState = {
   loading: false,
   error: null,
+  fill_rate: null,
+
+  /* OLD STUFF BELOW */
+  //! TO DELETE
+
   avg_working_time_data: null,
   borrowing_requests_data: null,
   libraries: null,
@@ -26,6 +34,24 @@ export const initialState = {
 const statsReducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case FETCH_FILL_RATE_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_FILL_RATE_SUCCESS:
+        draft.loading = false;
+        draft.fill_rate = action.payload;
+        break;
+
+      case FETCH_FILL_RATE_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      /* OLD STUFF BELOW */
+      //! TO DELETE
+
       case FETCH_AVG_TIME_REQUEST:
         draft.loading = true;
         draft.error = null;
