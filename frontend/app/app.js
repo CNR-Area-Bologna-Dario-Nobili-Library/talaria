@@ -101,7 +101,11 @@ if (process.env.NODE_ENV === 'production') {
   const runtime = require('offline-plugin/runtime'); // eslint-disable-line global-require 
 
   //Update service worker
-  runtime.install({
+  runtime.install({    
+
+    onInstalled: () => {
+      console.log('SW Event:', 'onInstalled');
+    },
     onUpdating: () => {
       console.log('SW Event:', 'onUpdating');
     },
