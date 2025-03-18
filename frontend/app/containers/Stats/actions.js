@@ -1,4 +1,7 @@
-import { 
+import {
+  FETCH_FILL_RATE_REQUEST, 
+  FETCH_FILL_RATE_SUCCESS, 
+  FETCH_FILL_RATE_FAILURE, 
   FETCH_AVG_TIME_REQUEST,
   FETCH_AVG_TIME_SUCCESS,
   FETCH_AVG_TIME_FAILURE,
@@ -13,7 +16,24 @@ import {
   FETCH_COUNTRIES_FAILURE
 } from './constants';
 
-console.log("actions.js");
+export const fetchFillRateRequest = (year, library_id) => ({
+  type: FETCH_FILL_RATE_REQUEST,
+  year,
+  library_id
+});
+
+export const fetchFillRateSuccess = data => ({
+  type: FETCH_FILL_RATE_SUCCESS,
+  payload: data
+});
+
+export const fetchFillRateFailure = error => ({
+  type: FETCH_FILL_RATE_FAILURE,
+  payload: error
+})
+
+/* OLD STUFF BELOW */
+//! TO DELETE
 
 export const fetchAvgTimeRequest = (year) => ({
   type: FETCH_AVG_TIME_REQUEST,
