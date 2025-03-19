@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { FETCH_FILL_RATE_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST } from './constants';
-import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure } from './actions';
-import { admin_getFillrate, admin_requestDistribution } from '../../utils/apiAdmin';
+import { FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST } from './constants';
+import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure } from './actions';
+import { admin_countriesDistribution, admin_getFillrate, admin_requestDistribution } from '../../utils/apiAdmin';
 
 function* fetchFillRateSaga(action) {
   console.log("fetchfillratesaga triggered with action:", action);
@@ -33,8 +33,24 @@ function* fetchRequestsDistributionSaga(action) {
   }
 }
 
+function* fetchCountriesDistributionSaga(action) {
+  try {
+    const options = {
+      year: action.year,
+      country_id: action.country_id,
+      library_id: action.library_id,
+      institution_id: action.institution_id
+    };
+    const data = yield call(admin_countriesDistribution, options);
+    yield put(fetchCountriesDistributionSuccess(data));
+  } catch (error) {
+    yield put(fetchCountriesDistributionFailure(error.message));
+  }
+}
+
 export default function* statsSaga() {
   console.log("statsSaga");
   yield takeLatest(FETCH_FILL_RATE_REQUEST, fetchFillRateSaga);
   yield takeLatest(FETCH_REQUEST_DISTRIBUTION_REQUEST, fetchRequestsDistributionSaga);
+  yield takeLatest(FETCH_COUNTRIES_DISTRIBUTION_REQUEST, fetchCountriesDistributionSaga);
 } 

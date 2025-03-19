@@ -5,6 +5,9 @@ import {
   FETCH_REQUEST_DISTRIBUTION_REQUEST,
   FETCH_REQUEST_DISTRIBUTION_SUCCESS,
   FETCH_REQUEST_DISTRIBUTION_FAILURE,
+  FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
+  FETCH_COUNTRIES_DISTRIBUTION_SUCCESS,
+  FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -43,5 +46,25 @@ export const fetchRequestDistributionSuccess = data => ({
 
 export const fetchRequestDistributionFailure = error => ({
   type: FETCH_REQUEST_DISTRIBUTION_FAILURE,
+  payload: error
+});
+
+// Countries distribution stats
+
+export const fetchCountriesDistributionRequest = (year, country_id, library_id, institution_id) => ({
+  type: FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
+  year,
+  country_id,
+  library_id,
+  institution_id
+});
+
+export const fetchCountriesDistributionSuccess = data => ({
+  type: FETCH_COUNTRIES_DISTRIBUTION_SUCCESS,
+  payload: data
+});
+
+export const fetchCountriesDistributionFailure = error => ({
+  type: FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
   payload: error
 });

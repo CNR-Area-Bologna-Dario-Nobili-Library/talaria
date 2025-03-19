@@ -6,6 +6,9 @@ import {
   FETCH_REQUEST_DISTRIBUTION_REQUEST,
   FETCH_REQUEST_DISTRIBUTION_SUCCESS,
   FETCH_REQUEST_DISTRIBUTION_FAILURE,
+  FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
+  FETCH_COUNTRIES_DISTRIBUTION_SUCCESS,
+  FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -13,6 +16,7 @@ export const initialState = {
   error: null,
   fill_rate: null,
   request_distribution: null,
+  countries_distribution: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -48,6 +52,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_REQUEST_DISTRIBUTION_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Countries distribution stats
+
+      case FETCH_COUNTRIES_DISTRIBUTION_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_COUNTRIES_DISTRIBUTION_SUCCESS:
+        draft.loading = false;
+        draft.countries_distribution = action.payload;
+        break;
+
+      case FETCH_COUNTRIES_DISTRIBUTION_SUCCESS:
         draft.loading = false;
         draft.error = action.payload;
         break;

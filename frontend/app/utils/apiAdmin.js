@@ -161,3 +161,19 @@ export const admin_requestDistribution = (options) => {
 
   return request(`${BASE_ADMIN_URL}/stats/requests-distribution/?${queryParams.toString()}`, options);
 }
+
+export const admin_countriesDistribution = (options) => {
+  options = getOption(options);
+  const year = options.year;
+  const country_id = options.country_id;
+  const library_id = options.library_id;
+  const institution_id = options.institution_id;
+
+  const queryParams = new URLSearchParams();
+  if (year) { queryParams.append('year', year); }
+  if (country_id) { queryParams.append('country_id', country_id); }
+  if (library_id) { queryParams.append('library_id', library_id); }
+  if (institution_id) { queryParams.append('institution_id', institution_id); }
+
+  return request(`${BASE_ADMIN_URL}/stats/countries/?${queryParams.toString()}`, options);
+}
