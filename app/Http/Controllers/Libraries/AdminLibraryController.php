@@ -134,7 +134,8 @@ class AdminLibraryController extends AdminApiController
                 });
                 
                 foreach($abilities as $uabi) {
-                    $user->disallow($uabi->name, $lib);    
+                    $user->disallow($uabi->name, $lib); //remove permission (from permission table)
+                    $uabi->delete();   //remove also the ability (from abilities table) because the library was deleted
                 
                 }                    
             }                
