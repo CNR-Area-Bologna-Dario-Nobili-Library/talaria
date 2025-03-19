@@ -9,7 +9,8 @@ function* fetchFillRateSaga(action) {
   try {
     const options = {
       year: action.year,
-      library_id: action.library_id
+      library_id: action.library_id,
+      institution_id: action.institution_id
     };
     const data = yield call(admin_getFillrate, options);
     yield put(fetchFillRateSuccess(data));

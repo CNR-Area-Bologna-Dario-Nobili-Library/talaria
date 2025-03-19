@@ -136,10 +136,12 @@ export const admin_getFillrate = (options) => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
+  const institution_id = options.institution_id;
 
   const queryParams = new URLSearchParams();
   if (year) { queryParams.append('year', year); }
   if (library_id) { queryParams.append('library_id', library_id); }
+  if (institution_id) { queryParams.append('institution_id', institution_id); }
 
   return request(`${BASE_ADMIN_URL}/stats/fillrate/?${queryParams.toString()}`, options);
 }

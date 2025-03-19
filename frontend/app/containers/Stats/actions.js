@@ -16,10 +16,11 @@ import {
   FETCH_COUNTRIES_FAILURE
 } from './constants';
 
-export const fetchFillRateRequest = (year, library_id) => ({
+export const fetchFillRateRequest = (year, library_id, institution_id) => ({
   type: FETCH_FILL_RATE_REQUEST,
   year,
-  library_id
+  library_id,
+  institution_id
 });
 
 export const fetchFillRateSuccess = data => ({
