@@ -33,7 +33,29 @@ class FillrateStats extends BaseStatsController
     $institution_id = $validated['institution_id'] ?? null;
 
     $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
+    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
     $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
+
+    $mustClauses = [];
+
+    if ($year) {
+      $mustClauses[] = [
+        'range' => [
+          'request_date' => [
+            'gte' => "{$year}-01-01",
+            'lte' => "{$year}-12-31",
+            'format' => 'yyyy-MM-dd'
+          ]
+        ]
+      ];
+    }
+
+    $filterBorrowing = [];
+    if ($query_id !== null) {
+      $filterBorrowing[] = ['term' => [$borrowing_query_condition => $query_id]];
+    }
+    $filterBorrowing[] = ['term' => ['forward' => 0]];
+    $filterLending = $query_id ? ['term' => [$lending_query_condition => $query_id]] : ['match_all' => new \stdClass()];
 
     // Elasticsearch query
     $query = [
@@ -42,17 +64,18 @@ class FillrateStats extends BaseStatsController
         'size' => 0,
         'query' => [
           'bool' => [
-            'filter' => [
-              ['term' => ['forward' => 0]],
-              // Additional filters here, if needed
-            ]
+            'must' => $mustClauses
           ]
         ],
         'aggs' => [
-          'all_docs' => [
+          'borrowing_stats' => [
             'filters' => [
               'filters' => [
-                'all' => ['match_all' => (object)[]]
+                'borrowing' => [
+                  'bool' => [
+                    'must' => $filterBorrowing
+                  ]
+                ]
               ]
             ],
             'aggs' => [
@@ -86,7 +109,7 @@ class FillrateStats extends BaseStatsController
                   'term' => ['aggregated_borrowing_status.keyword' => "Patron direct request"]
                 ]
               ],
-              'fill_rate' => [
+              'borrowing_fill_rate' => [
                 'bucket_script' => [
                   'buckets_path' => [
                     'total'       => 'total',
@@ -100,38 +123,53 @@ class FillrateStats extends BaseStatsController
                 ]
               ]
             ]
+          ],
+          'lending_stats' => [
+            'filters' => [
+              'filters' => [
+                'lending' => $filterLending
+              ]
+            ],
+            'aggs' => [
+              'fulfilled' => [
+                'filter' => [
+                  'term' => ['aggregated_lending_status.keyword' => "Fulfilled"]
+                ]
+              ],
+              'unfilled' => [
+                'filter' => [
+                  'term' => ['aggregated_lending_status.keyword' => "Not fulfilled"]
+                ]
+              ],
+              'lending_fill_rate' => [
+                'bucket_script' => [
+                  'buckets_path' => [
+                    'fulfilled' => 'fulfilled._count',
+                    'unfilled'  => 'unfilled._count'
+                  ],
+                  'script' => "def denominator = params.fulfilled + params.unfilled ; denominator > 0 ? (params.fulfilled) / denominator : 0"
+                ]
+              ]
+            ]
           ]
         ]
       ]
     ];
 
-    // If a year is provided, add it to the query
-    if ($year) {
-      $query['body']['query']['bool']['must'][] = [
-        'range' => [
-          'request_date' => [
-            'gte' => "{$year}-01-01",
-            'lte' => "{$year}-12-31",
-            'format' => 'yyyy-MM-dd'
-          ]
-        ]
-      ];
-    }
-
-    // If a library or institution is provided, add it to the query
-    if ($query_id) {
-      $query['body']['query']['bool']['must'][] = [
-        'term' => [
-          $borrowing_query_condition => $query_id
-        ]
-      ];
-    }
-
     // Execute the query on the Elasticsearch client
     $response = $this->client->search($query);
+    $borrowingBucket = $response["aggregations"]["borrowing_stats"]["buckets"]["borrowing"] ?? [];
+    $lendingBucket   = $response["aggregations"]["lending_stats"]["buckets"]["lending"] ?? [];
+
+    // If no documents, default to 0.
+    $borrowingFillRate = ($borrowingBucket["borrowing_fill_rate"]["value"] ?? 0) * 100;
+    $lendingFillRate   = ($lendingBucket["lending_fill_rate"]["value"] ?? 0) * 100;
+
     $result = [];
-    $result["fill_rate"] = $response["aggregations"]["all_docs"]["buckets"]["all"]["fill_rate"]["value"];
-    $result["unfill_rate"] = 1 - $result["fill_rate"];
+    $result["borrowing_fill_rate"] = $borrowingFillRate;
+    $result["borrowing_unfill_rate"] = 100 - $borrowingFillRate;
+    $result["lending_fill_rate"] = $lendingFillRate;
+    $result["lending_unfill_rate"] = 100 - $lendingFillRate;
 
     return response()->json($result);
   }
