@@ -145,3 +145,19 @@ export const admin_getFillrate = (options) => {
 
   return request(`${BASE_ADMIN_URL}/stats/fillrate/?${queryParams.toString()}`, options);
 }
+
+export const admin_requestDistribution = (options) => {
+  options = getOption(options);
+  const year = options.year;
+  const library_id = options.library_id;
+  const institution_id = options.institution_id;
+  const material_type = options.material_type;
+
+  const queryParams = new URLSearchParams();
+  if (year) { queryParams.append('year', year); }
+  if (library_id) { queryParams.append('library_id', library_id); }
+  if (institution_id) { queryParams.append('institution_id', institution_id); }
+  if (material_type) { queryParams.append('material_type', material_type); }
+
+  return request(`${BASE_ADMIN_URL}/stats/requests-distribution/?${queryParams.toString()}`, options);
+}
