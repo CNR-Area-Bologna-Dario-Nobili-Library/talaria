@@ -67,43 +67,65 @@ class AvgWorkingTimeStats extends BaseStatsController
     $params = [
       'index' => 'docdel_requests',
       'body'  => [
-        'size' => 0, // No data returned, only aggregations
+        'size' => 0,
         'query' => [
           'bool' => ['must' => $mustClauses]
         ],
         'aggs' => [
-          'requests_per_month' => [
+          'requests_per_year' => [
             'date_histogram' => [
               'field' => 'request_date',
-              'calendar_interval' => 'month',
-              'format' => 'yyyy-MM',
+              'calendar_interval' => 'year',
+              'format' => 'yyyy',
               'min_doc_count' => 1
             ],
             'aggs' => [
-              'borrowing_avg_working_time' => [
-                'filter' => $filterBorrowing,
+              'requests_per_month' => [
+                'date_histogram' => [
+                  'field' => 'request_date',
+                  'calendar_interval' => 'month',
+                  'format' => 'yyyy-MM',
+                  'min_doc_count' => 1
+                ],
                 'aggs' => [
-                  'avg_working_time' => [
-                    'avg' => [
-                      'script' => [
-                        'source' => "if (doc['fulfill_date'].size() == 0 || doc['request_date'].size() == 0) { return null; } else { return (doc['fulfill_date'].value.millis - doc['request_date'].value.millis); }",
-                        'lang' => 'painless'
+                  'borrowing_avg_working_time' => [
+                    'filter' => $filterBorrowing,
+                    'aggs' => [
+                      'avg_working_time' => [
+                        'avg' => [
+                          'script' => [
+                            'source' => "if (doc['fulfill_date'].size() == 0 || doc['request_date'].size() == 0) { return null; } else { return (doc['fulfill_date'].value.millis - doc['request_date'].value.millis); }",
+                            'lang'   => 'painless'
+                          ]
+                        ]
+                      ]
+                    ]
+                  ],
+                  'lending_avg_working_time' => [
+                    'filter' => $filterLending,
+                    'aggs' => [
+                      'avg_working_time' => [
+                        'avg' => [
+                          'script' => [
+                            'source' => "if (doc['fulfill_date'].size() == 0 || doc['request_date'].size() == 0) { return null; } else { return (doc['fulfill_date'].value.millis - doc['request_date'].value.millis); }",
+                            'lang'   => 'painless'
+                          ]
+                        ]
                       ]
                     ]
                   ]
                 ]
               ],
-              'lending_avg_working_time' => [
-                'filter' => $filterLending,
-                'aggs' => [
-                  'avg_working_time' => [
-                    'avg' => [
-                      'script' => [
-                        'source' => "if (doc['fulfill_date'].size() == 0 || doc['request_date'].size() == 0) { return null; } else { return (doc['fulfill_date'].value.millis - doc['request_date'].value.millis); }",
-                        'lang' => 'painless'
-                      ]
-                    ]
-                  ]
+              // Pipeline aggregation -> average of borrowing monthly averages.
+              'yearly_borrowing_avg' => [
+                'avg_bucket' => [
+                  'buckets_path' => 'requests_per_month>borrowing_avg_working_time>avg_working_time'
+                ]
+              ],
+              // Pipeline aggregation -> average of lending monthly averages.
+              'yearly_lending_avg' => [
+                'avg_bucket' => [
+                  'buckets_path' => 'requests_per_month>lending_avg_working_time>avg_working_time'
                 ]
               ]
             ]
@@ -112,14 +134,20 @@ class AvgWorkingTimeStats extends BaseStatsController
       ]
     ];
 
+
     $response = $this->client->search($params);
 
     $averages = [];
-    foreach ($response['aggregations']['requests_per_month']['buckets'] as $bucket) {
-      $averages[$bucket['key_as_string']] = [
-        "borrowing" => $bucket['borrowing_avg_working_time']['avg_working_time']['value'],
-        "lending" => $bucket['lending_avg_working_time']['avg_working_time']['value'],
-      ];
+    foreach ($response['aggregations']['requests_per_year']['buckets'] as $yearBucket) {
+      $year = $yearBucket['key_as_string'];
+      $averages[$year]['yearly_borrowing'] = $yearBucket['yearly_borrowing_avg'];
+      $averages[$year]['yearly_lending'] = $yearBucket['yearly_lending_avg'];
+      foreach ($yearBucket['requests_per_month']['buckets'] as $monthBucket) {
+        $averages[$year][$monthBucket['key_as_string']] = [
+          "borrowing" => $monthBucket['borrowing_avg_working_time']['avg_working_time']['value'],
+          "lending"   => $monthBucket['lending_avg_working_time']['avg_working_time']['value'],
+        ];
+      }
     }
 
     return response()->json($averages);
