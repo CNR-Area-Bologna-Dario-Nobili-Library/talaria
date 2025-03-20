@@ -68,7 +68,7 @@ const statsReducer = (state = initialState, action) =>
         draft.countries_distribution = action.payload;
         break;
 
-      case FETCH_COUNTRIES_DISTRIBUTION_SUCCESS:
+      case FETCH_COUNTRIES_DISTRIBUTION_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;
