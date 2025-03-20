@@ -223,3 +223,19 @@ export const admin_referenceTurnaround = (options) => {
 
   return request(`${BASE_ADMIN_URL}/stats/reference-turnaround/?${queryParams.toString()}`, options);
 }
+
+export const admin_referencePubyearDistribution = (options) => {
+  options = getOption(options);
+  const year = options.year;
+  const library_id = options.library_id;
+  const institution_id = options.institution_id;
+  const material_type = options.material_type;
+
+  const queryParams = new URLSearchParams();
+  if (year) { queryParams.append('year', year); }
+  if (library_id) { queryParams.append('library_id', library_id); }
+  if (institution_id) { queryParams.append('institution_id', institution_id); }
+  if (material_type) { queryParams.append('material_type', material_type); }
+
+  return request(`${BASE_ADMIN_URL}/stats/pubyear-distribution/?${queryParams.toString()}`, options);
+}

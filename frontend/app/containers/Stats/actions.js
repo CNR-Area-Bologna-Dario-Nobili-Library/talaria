@@ -17,6 +17,9 @@ import {
   FETCH_REFERENCE_TURNAROUND_REQUEST,
   FETCH_REFERENCE_TURNAROUND_SUCCESS,
   FETCH_REFERENCE_TURNAROUND_FAILURE,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -134,5 +137,25 @@ export const fetchReferenceTurnaroundSuccess = data => ({
 
 export const fetchReferenceTurnaroundFailure = error => ({
   type: FETCH_REFERENCE_TURNAROUND_FAILURE,
+  payload: error
+});
+
+// Reference pubyear distribution stats
+
+export const fetchReferencePubyearDistributionRequest = (year, library_id, institution_id, material_type) => ({
+  type: FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
+  year,
+  library_id,
+  institution_id,
+  material_type
+});
+
+export const fetchReferencePubyearDistributionSuccess = data => ({
+  type: FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS,
+  payload: data
+});
+
+export const fetchReferencePubyearDistributionFailure = error => ({
+  type: FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
   payload: error
 });

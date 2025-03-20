@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { FETCH_AVG_WORKING_TIME_REQUEST, FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_REFERENCE_TURNAROUND_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST, FETCH_WORKING_TIME_REQUEST } from './constants';
-import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure, fetchWorkingTimeSuccess, fetchWorkingTimeFailure, fetchAvgWorkingTimeSuccess, fetchAvgWorkingTimeFailure, fetchReferenceTurnaroundSuccess, fetchReferenceTurnaroundFailure } from './actions';
-import { admin_avgWorkingTime, admin_countriesDistribution, admin_getFillrate, admin_referenceTurnaround, admin_requestDistribution, admin_workingTime } from '../../utils/apiAdmin';
+import { FETCH_AVG_WORKING_TIME_REQUEST, FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST, FETCH_REFERENCE_TURNAROUND_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST, FETCH_WORKING_TIME_REQUEST } from './constants';
+import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure, fetchWorkingTimeSuccess, fetchWorkingTimeFailure, fetchAvgWorkingTimeSuccess, fetchAvgWorkingTimeFailure, fetchReferenceTurnaroundSuccess, fetchReferenceTurnaroundFailure, fetchReferencePubyearDistributionSuccess, fetchReferencePubyearDistributionFailure } from './actions';
+import { admin_avgWorkingTime, admin_countriesDistribution, admin_getFillrate, admin_referencePubyearDistribution, admin_referenceTurnaround, admin_requestDistribution, admin_workingTime } from '../../utils/apiAdmin';
 
 function* fetchFillRateSaga(action) {
   console.log("fetchfillratesaga triggered with action:", action);
@@ -92,6 +92,21 @@ function* fetchReferenceTurnaroundSaga(action) {
   }
 }
 
+function* fetchReferencePubyearDistributionSaga(action) {
+  try {
+    const options = {
+      year: action.year,
+      library_id: action.library_id,
+      institution_id: action.institution_id,
+      material_type: action.material_type,
+    };
+    const data = yield call(admin_referencePubyearDistribution, options);
+    yield put(fetchReferencePubyearDistributionSuccess(data));
+  } catch (error) {
+    yield put(fetchReferencePubyearDistributionFailure(error.message));
+  }
+}
+
 export default function* statsSaga() {
   console.log("statsSaga");
   yield takeLatest(FETCH_FILL_RATE_REQUEST, fetchFillRateSaga);
@@ -100,4 +115,5 @@ export default function* statsSaga() {
   yield takeLatest(FETCH_WORKING_TIME_REQUEST, fetchWorkingTimeSaga);
   yield takeLatest(FETCH_AVG_WORKING_TIME_REQUEST, fetchAvgWorkingTimeSaga);
   yield takeLatest(FETCH_REFERENCE_TURNAROUND_REQUEST, fetchReferenceTurnaroundSaga);
+  yield takeLatest(FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST, fetchReferencePubyearDistributionSaga);
 } 

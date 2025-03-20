@@ -18,6 +18,9 @@ import {
   FETCH_REFERENCE_TURNAROUND_REQUEST,
   FETCH_REFERENCE_TURNAROUND_SUCCESS,
   FETCH_REFERENCE_TURNAROUND_FAILURE,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -29,6 +32,7 @@ export const initialState = {
   working_time: null,
   avg_working_time: null,
   reference_turnaround: null,
+  reference_pubyear_distribution: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -132,6 +136,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_REFERENCE_TURNAROUND_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Reference pubyear distribution stats
+
+      case FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS:
+        draft.loading = false;
+        draft.reference_pubyear_distribution = action.payload;
+        break;
+
+      case FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;
