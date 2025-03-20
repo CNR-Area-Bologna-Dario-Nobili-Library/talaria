@@ -15,6 +15,9 @@ import {
   FETCH_AVG_WORKING_TIME_REQUEST,
   FETCH_AVG_WORKING_TIME_SUCCESS,
   FETCH_AVG_WORKING_TIME_FAILURE,
+  FETCH_REFERENCE_TURNAROUND_REQUEST,
+  FETCH_REFERENCE_TURNAROUND_SUCCESS,
+  FETCH_REFERENCE_TURNAROUND_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -25,6 +28,7 @@ export const initialState = {
   countries_distribution: null,
   working_time: null,
   avg_working_time: null,
+  reference_turnaround: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -111,6 +115,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_AVG_WORKING_TIME_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Reference turnaround stats
+
+      case FETCH_REFERENCE_TURNAROUND_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_REFERENCE_TURNAROUND_SUCCESS:
+        draft.loading = false;
+        draft.reference_turnaround = action.payload;
+        break;
+
+      case FETCH_REFERENCE_TURNAROUND_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;

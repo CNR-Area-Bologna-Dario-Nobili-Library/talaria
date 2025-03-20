@@ -14,6 +14,9 @@ import {
   FETCH_AVG_WORKING_TIME_REQUEST,
   FETCH_AVG_WORKING_TIME_SUCCESS,
   FETCH_AVG_WORKING_TIME_FAILURE,
+  FETCH_REFERENCE_TURNAROUND_REQUEST,
+  FETCH_REFERENCE_TURNAROUND_SUCCESS,
+  FETCH_REFERENCE_TURNAROUND_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -112,5 +115,24 @@ export const fetchAvgWorkingTimeSuccess = data => ({
 
 export const fetchAvgWorkingTimeFailure = error => ({
   type: FETCH_AVG_WORKING_TIME_FAILURE,
+  payload: error
+});
+
+// Reference turnaround stats
+
+export const fetchReferenceTurnaroundRequest = (year, library_id, institution_id) => ({
+  type: FETCH_REFERENCE_TURNAROUND_REQUEST,
+  year,
+  library_id,
+  institution_id
+});
+
+export const fetchReferenceTurnaroundSuccess = data => ({
+  type: FETCH_REFERENCE_TURNAROUND_SUCCESS,
+  payload: data
+});
+
+export const fetchReferenceTurnaroundFailure = error => ({
+  type: FETCH_REFERENCE_TURNAROUND_FAILURE,
   payload: error
 });
