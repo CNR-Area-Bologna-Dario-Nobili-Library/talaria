@@ -24,6 +24,9 @@ import {
   FETCH_REQUESTS_LIBRARY_REQUEST,
   FETCH_REQUESTS_LIBRARY_SUCCESS,
   FETCH_REQUESTS_LIBRARY_FAILURE,
+  FETCH_OPENACCESS_REFERENCES_REQUEST,
+  FETCH_OPENACCESS_REFERENCES_SUCCESS,
+  FETCH_OPENACCESS_REFERENCES_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -37,6 +40,7 @@ export const initialState = {
   reference_turnaround: null,
   reference_pubyear_distribution: null,
   requests_per_library: null,
+  openaccess_references: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -174,6 +178,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_REQUESTS_LIBRARY_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // OpenAccess References stats
+
+      case FETCH_OPENACCESS_REFERENCES_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_OPENACCESS_REFERENCES_SUCCESS:
+        draft.loading = false;
+        draft.openaccess_references = action.payload;
+        break;
+
+      case FETCH_OPENACCESS_REFERENCES_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;

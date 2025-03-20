@@ -245,3 +245,9 @@ export const admin_requestsPerLibrary = (options = {}) => {
 
   return request(`${BASE_ADMIN_URL}/stats/borrowing-libraries/`, options);
 }
+
+export const admin_openAccessReferences = (options = {}) => {
+  options = getOption(options);
+
+  return request(`${BASE_ADMIN_URL}/stats/oareferences/`, options);
+}
