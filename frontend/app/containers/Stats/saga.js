@@ -107,7 +107,7 @@ function* fetchReferencePubyearDistributionSaga(action) {
   }
 }
 
-function* fetchRequestsPerLibrarySaga(action) {
+function* fetchRequestsPerLibrarySaga() {
   try {
     const data = yield call(admin_requestsPerLibrary);
     yield put(fetchRequestsPerLibrarySuccess(data));
