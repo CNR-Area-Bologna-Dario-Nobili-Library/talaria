@@ -20,6 +20,9 @@ import {
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS,
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
+  FETCH_REQUESTS_LIBRARY_REQUEST,
+  FETCH_REQUESTS_LIBRARY_SUCCESS,
+  FETCH_REQUESTS_LIBRARY_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -157,5 +160,21 @@ export const fetchReferencePubyearDistributionSuccess = data => ({
 
 export const fetchReferencePubyearDistributionFailure = error => ({
   type: FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
+  payload: error
+});
+
+// Requests per library stats
+
+export const fetchRequestsPerLibraryRequest = () => ({
+  type: FETCH_REQUESTS_LIBRARY_REQUEST
+});
+
+export const fetchRequestsPerLibrarySuccess = data => ({
+  type: FETCH_REQUESTS_LIBRARY_SUCCESS,
+  payload: data
+});
+
+export const fetchRequestsPerLibraryFailure = error => ({
+  type: FETCH_REQUESTS_LIBRARY_FAILURE,
   payload: error
 });

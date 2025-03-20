@@ -21,6 +21,9 @@ import {
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_SUCCESS,
   FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE,
+  FETCH_REQUESTS_LIBRARY_REQUEST,
+  FETCH_REQUESTS_LIBRARY_SUCCESS,
+  FETCH_REQUESTS_LIBRARY_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -33,6 +36,7 @@ export const initialState = {
   avg_working_time: null,
   reference_turnaround: null,
   reference_pubyear_distribution: null,
+  requests_per_library: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -153,6 +157,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Requests per library stats
+
+      case FETCH_REQUESTS_LIBRARY_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_REQUESTS_LIBRARY_SUCCESS:
+        draft.loading = false;
+        draft.requests_per_library = action.payload;
+        break;
+
+      case FETCH_REQUESTS_LIBRARY_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;

@@ -239,3 +239,9 @@ export const admin_referencePubyearDistribution = (options) => {
 
   return request(`${BASE_ADMIN_URL}/stats/pubyear-distribution/?${queryParams.toString()}`, options);
 }
+
+export const admin_requestsPerLibrary = (options = {}) => {
+  options = getOption(options);
+
+  return request(`${BASE_ADMIN_URL}/stats/borrowing-libraries/`, options);
+}
