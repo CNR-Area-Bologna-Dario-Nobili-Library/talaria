@@ -9,6 +9,9 @@ import {
   FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
   FETCH_COUNTRIES_DISTRIBUTION_SUCCESS,
   FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
+  FETCH_WORKING_TIME_REQUEST,
+  FETCH_WORKING_TIME_SUCCESS,
+  FETCH_WORKING_TIME_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -17,6 +20,7 @@ export const initialState = {
   fill_rate: null,
   request_distribution: null,
   countries_distribution: null,
+  working_time: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -69,6 +73,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_COUNTRIES_DISTRIBUTION_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Working time distribution stats
+
+      case FETCH_WORKING_TIME_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_WORKING_TIME_SUCCESS:
+        draft.loading = false;
+        draft.working_time = action.payload;
+        break;
+
+      case FETCH_WORKING_TIME_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;

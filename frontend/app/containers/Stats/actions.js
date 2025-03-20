@@ -8,6 +8,9 @@ import {
   FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
   FETCH_COUNTRIES_DISTRIBUTION_SUCCESS,
   FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
+  FETCH_WORKING_TIME_REQUEST,
+  FETCH_WORKING_TIME_SUCCESS,
+  FETCH_WORKING_TIME_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -66,5 +69,25 @@ export const fetchCountriesDistributionSuccess = data => ({
 
 export const fetchCountriesDistributionFailure = error => ({
   type: FETCH_COUNTRIES_DISTRIBUTION_FAILURE,
+  payload: error
+});
+
+// Working time distribution stats
+
+export const fetchWorkingTimeRequest = (year, library_id, institution_id, material_type) => ({
+  type: FETCH_WORKING_TIME_REQUEST,
+  year,
+  library_id,
+  institution_id,
+  material_type
+});
+
+export const fetchWorkingTimeSuccess = data => ({
+  type: FETCH_WORKING_TIME_SUCCESS,
+  payload: data
+});
+
+export const fetchWorkingTimeFailure = error => ({
+  type: FETCH_WORKING_TIME_FAILURE,
   payload: error
 });

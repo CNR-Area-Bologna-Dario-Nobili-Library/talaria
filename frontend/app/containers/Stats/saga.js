@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST } from './constants';
-import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure } from './actions';
-import { admin_countriesDistribution, admin_getFillrate, admin_requestDistribution } from '../../utils/apiAdmin';
+import { FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST, FETCH_WORKING_TIME_REQUEST } from './constants';
+import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure, fetchWorkingTimeSuccess, fetchWorkingTimeFailure } from './actions';
+import { admin_countriesDistribution, admin_getFillrate, admin_requestDistribution, admin_workingTime } from '../../utils/apiAdmin';
 
 function* fetchFillRateSaga(action) {
   console.log("fetchfillratesaga triggered with action:", action);
@@ -48,9 +48,25 @@ function* fetchCountriesDistributionSaga(action) {
   }
 }
 
+function* fetchWorkingTimeSaga(action) {
+  try {
+    const options = {
+      year: action.year,
+      library_id: action.library_id,
+      institution_id: action.institution_id,
+      material_type: action.material_type
+    };
+    const data = yield call(admin_workingTime, options);
+    yield put(fetchWorkingTimeSuccess(data));
+  } catch (error) {
+    yield put(fetchWorkingTimeFailure(error.message));
+  }
+}
+
 export default function* statsSaga() {
   console.log("statsSaga");
   yield takeLatest(FETCH_FILL_RATE_REQUEST, fetchFillRateSaga);
   yield takeLatest(FETCH_REQUEST_DISTRIBUTION_REQUEST, fetchRequestsDistributionSaga);
   yield takeLatest(FETCH_COUNTRIES_DISTRIBUTION_REQUEST, fetchCountriesDistributionSaga);
+  yield takeLatest(FETCH_WORKING_TIME_REQUEST, fetchWorkingTimeSaga);
 } 
