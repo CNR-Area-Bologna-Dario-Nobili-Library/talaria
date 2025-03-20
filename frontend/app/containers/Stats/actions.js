@@ -11,6 +11,9 @@ import {
   FETCH_WORKING_TIME_REQUEST,
   FETCH_WORKING_TIME_SUCCESS,
   FETCH_WORKING_TIME_FAILURE,
+  FETCH_AVG_WORKING_TIME_REQUEST,
+  FETCH_AVG_WORKING_TIME_SUCCESS,
+  FETCH_AVG_WORKING_TIME_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -89,5 +92,25 @@ export const fetchWorkingTimeSuccess = data => ({
 
 export const fetchWorkingTimeFailure = error => ({
   type: FETCH_WORKING_TIME_FAILURE,
+  payload: error
+});
+
+// Average working time stats
+
+export const fetchAvgWorkingtimeRequest = (year, library_id, institution_id, material_type) => ({
+  type: FETCH_AVG_WORKING_TIME_REQUEST,
+  year,
+  library_id,
+  institution_id,
+  material_type
+});
+
+export const fetchAvgWorkingTimeSuccess = data => ({
+  type: FETCH_AVG_WORKING_TIME_SUCCESS,
+  payload: data
+});
+
+export const fetchAvgWorkingTimeFailure = error => ({
+  type: FETCH_AVG_WORKING_TIME_FAILURE,
   payload: error
 });

@@ -12,6 +12,9 @@ import {
   FETCH_WORKING_TIME_REQUEST,
   FETCH_WORKING_TIME_SUCCESS,
   FETCH_WORKING_TIME_FAILURE,
+  FETCH_AVG_WORKING_TIME_REQUEST,
+  FETCH_AVG_WORKING_TIME_SUCCESS,
+  FETCH_AVG_WORKING_TIME_FAILURE,
 } from './constants';
 
 export const initialState = {
@@ -21,6 +24,7 @@ export const initialState = {
   request_distribution: null,
   countries_distribution: null,
   working_time: null,
+  avg_working_time: null,
 };
 
 const statsReducer = (state = initialState, action) =>
@@ -90,6 +94,23 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_WORKING_TIME_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Average working time stats
+
+      case FETCH_AVG_WORKING_TIME_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case FETCH_AVG_WORKING_TIME_SUCCESS:
+        draft.loading = false;
+        draft.avg_working_time = action.payload;
+        break;
+
+      case FETCH_AVG_WORKING_TIME_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;
