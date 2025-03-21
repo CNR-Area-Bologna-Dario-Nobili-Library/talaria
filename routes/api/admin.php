@@ -1,6 +1,5 @@
 <?php
 
-use app\Http\Controllers\Stats\FillrateStats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
