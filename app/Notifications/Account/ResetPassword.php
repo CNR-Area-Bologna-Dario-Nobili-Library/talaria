@@ -59,6 +59,7 @@ class ResetPassword extends Notification
         $link = config('app.frontend_domain').'/forgot-password/'.$this->token;
 
         //NOTE: template is in resources/views/vendor/notifications  folder
+        //all strings to be translated are defined in /resources/lang/xx/email.php
         //language is taken from user's preferred language 
         return (new MailMessage)
             ->subject(trans('email.password_reset_email_subject',[]))            

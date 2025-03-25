@@ -81,8 +81,7 @@ return [
     |
     */
 
-    'locale' => 'en',
-
+    'locale' => env('SYSTEM_DEFAULT_LANGUAGE', 'en'),
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
