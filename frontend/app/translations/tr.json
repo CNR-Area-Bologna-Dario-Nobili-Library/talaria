@@ -32,7 +32,9 @@
   "app.global.status": "Eyalet",
   "app.global.preferred": "Tercih edilen",
   "app.global.privacy_policy_accepted": "Gizlilik politikası",
-  "app.global.preflang":"Tercih edilen dil",
+  "app.global.preflang":"Tercih edilen dil",  
+  "app.global.user_service_email": "???Service email address",
+  "app.global.service_email": "???Receive email notifications",
   "app.global.userCreateSuccess": "Kullanıcı profili başarıyla oluşturuldu",
   "app.global.userUpdateSuccess": "Kullanıcı profili başarıyla güncellendi",
   "app.global.title_description": "Başlık/Tanım",
@@ -170,8 +172,6 @@
   "app.containers.MyLibrariesPage.title_id": "Benim niteliğim",
   "app.containers.MyLibrariesPage.user_referent": "Eğitmenim/danışmanım",
   "app.containers.MyLibrariesPage.user_mat": "Yeterliliğim/ kütüphane kart numaram",
-  "app.containers.MyLibrariesPage.user_service_phone": "Kontak telefon numaram",
-  "app.containers.MyLibrariesPage.user_service_email": "Kontak e-posta adresim",
   "app.containers.MyLibrariesPage.updateMessage": "Kütüphane başarıyla güncellendi",
   "app.containers.MyLibrariesPage.createMessage": "Kütüphane başarıyla eklendi",
   "app.containers.MyLibrariesPage.librarySubmit": "Kütüphanede kayıt yaptırın",
@@ -185,8 +185,6 @@
   "app.containers.MyLibrariesListPage.edit": "Düzenle",
   "app.containers.MyLibrariesListPage.user_referent": "Eğitmen/Danışman",
   "app.containers.MyLibrariesListPage.user_mat": "Yeterlilik/ Kütüphane kart numarası",
-  "app.containers.MyLibrariesListPage.user_service_phone": "Telefon",
-  "app.containers.MyLibrariesListPage.user_service_email": "e-posta",
   "app.containers.MyLibrariesListPage.librariesNotFound": "İlişkili kütüphane yok",
   
   "app.containers.LibrariesListPage.header": "Kütüphaneler",
@@ -240,8 +238,6 @@
   "app.containers.LibraryUserPage.header": "Kullanıcı durumunu değiştir",
   "app.containers.LibraryUserPage.user_referent": "Eğitmen/Danışman",
   "app.containers.LibraryUserPage.user_mat": "Yeterlilik/Kütüphane kart numarası",
-  "app.containers.LibraryUserPage.user_service_phone": "Telefon",
-  "app.containers.LibraryUserPage.user_service_email": "e-posta",
   "app.containers.FindLibraryPage.header": "???Registra una nuova biblioteca",
   "app.containers.FindLibraryPage.intro": "???Prima di registrare la nuova biblioteca, verifica che non sia già presente nel sistema utilizzando il box di ricerca sottostante; se non è presente sarà possibile registrarla.",
 
@@ -259,9 +255,7 @@
 
   "app.containers.LibraryUsersListPage.header": "Kullanıcılarım",
   "app.containers.LibraryUsersListPage.user_referent": "Eğitmenler/Danışmanlar",
-  "app.containers.LibraryUsersListPage.user_mat": "Yeterlilik/kütüphane kart numarası",
-  "app.containers.LibraryUsersListPage.user_service_phone": "Telefon",
-  "app.containers.LibraryUsersListPage.user_service_email": "e-posta",
+  "app.containers.LibraryUsersListPage.user_mat": "Yeterlilik/kütüphane kart numarası",  
   "app.containers.LibraryUsersListPage.createNew": "Kullanıcı ekle",
   "app.containers.LibraryUsersListPage.edit": "Kullanıcı düzenle",
 

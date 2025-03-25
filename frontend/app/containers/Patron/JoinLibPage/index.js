@@ -302,34 +302,7 @@ function JoinLibPage(props) {
                         </div>
                       </div>
 
-                      <div className="col-md-12">
-                        <div className="form-group">
-                          <label htmlFor="user_service_phone">
-                            {intl.formatMessage(messages.user_service_phone)}
-                          </label>
-                          <input
-                            type="tel"
-                            id="user_service_phone"
-                            name="user_service_phone"
-                            className="form-control"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="col-md-12">
-                        <div className="form-group">
-                          <label htmlFor="user_service_email">
-                            {intl.formatMessage(messages.user_service_email)}
-                          </label>
-                          <input
-                            type="email"
-                            id="user_service_email"
-                            name="user_service_email"
-                            className="form-control"
-                            required
-                          />
-                        </div>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>

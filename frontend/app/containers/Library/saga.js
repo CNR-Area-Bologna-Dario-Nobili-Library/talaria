@@ -185,8 +185,6 @@ export function* requestUpdateUserSaga(action) {
       title_id: action.request.title_id,
       user_referent: action.request.user_referent,
       user_mat: action.request.user_mat,
-      user_service_phone: action.request.user_service_phone,
-      user_service_email: action.request.user_service_email,
     },
   };
 

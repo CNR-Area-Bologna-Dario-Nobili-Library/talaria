@@ -49,6 +49,8 @@ class User extends UserBase
         'registration_date',
         'privacy_policy_accepted',
         'status',
+        'user_service_email',
+        'service_email' //do you want receive service email or just app notification?
     ];
 
     /**
@@ -169,25 +171,21 @@ class User extends UserBase
         return $this->morphMany(DatabaseNotification::class, 'notifiable')->orderBy('created_at', 'desc');
     }
 
-    /*
-    * NOTE: When sending notifications via the mail channel, the notification system will automatically look for an email property on your notifiable entity otherwise you've to override the routeNotificationForMail($notification)     
-    Actually only "database" notification were implemented
-    */
+    /* NOTE: When sending notifications via the mail channel, the notification system will automatically look for an email property on your notifiable entity otherwise you've to override the routeNotificationForMail($notification)        */
     public function preferNotifiedBy() {
-        //if(...) return ['mail','xxx','xxx'...]
-        //else
-        //if(!mail_notification)
-        return ['database']; 
-        //else
-        //return ['database','mail']; 
+        $notifyby=['database'];
+        if($this->service_email && $this->service_email==1) 
+          $notifyby[]='mail';
+        
+        return $notifyby;
     }
 
-
+    // Return email address field for mail notifications       
     public function routeNotificationForMail($notification)
-    {
-        // Return email address field
-        // TODO: use service_email field and not primary email address
-        return $this->email;         
+    {        
+        if(isset($this->user_service_email) && $this->user_service_email!="")         
+            return $this->user_service_email;
+        else return $this->email;
     }
 
     public function isPatronOf($libraryId) {

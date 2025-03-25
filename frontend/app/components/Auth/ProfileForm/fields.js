@@ -43,6 +43,15 @@ export const fields = {
         type: "number",
         name: "mobile",
     },
+    user_service_email: { 
+        type: "email",
+        name: 'user_service_email',
+    },
+    service_email: { 
+        type: "checkbox",
+        name: 'service_email',
+    },
+
     preflang: {
         type: "custom-select",
         name: "preflang",
@@ -53,7 +62,7 @@ export const fields = {
             { value: 'sp', label: 'Español' },                         
             { value: 'tr', label: 'Türkçe' }
         ]
-    },
+    }, 
     privacy_policy_accepted: {
         type: "switch",
         name: "privacy_policy_accepted",

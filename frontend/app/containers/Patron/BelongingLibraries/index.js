@@ -153,19 +153,7 @@ const BelongingLibraries = ({
                     {library.user_referent}
                     <br />
                   </>
-                )}
-                {library.user_service_phone && (
-                  <>
-                    {library.user_service_phone}
-                    <br />
-                  </>
-                )}
-                {library.user_service_email && (
-                  <>
-                    {library.user_service_email}
-                    <br />
-                  </>
-                )}
+                )}                
               </div>
             </div>
             {/* <div className="col-md-2">

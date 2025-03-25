@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+/* this class can be used as base model for all SERVICE notifications. Service notification will be received as APP notification or by email depending on user's choice in preferNotifiedBy method */
 class BaseNotification extends Notification
 {
     use Queueable;

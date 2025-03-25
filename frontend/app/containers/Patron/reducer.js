@@ -167,8 +167,6 @@ const PatronReducer = (state = initialState, action) =>
             title_name: lib.title? lib.title.data.name:'',
             user_referent: lib.user_referent,
             user_mat: lib.user_mat,
-            user_service_phone: lib.user_service_phone,
-            user_service_email: lib.user_service_email,
             preferred: lib.preferred,
             label: lib.label,
             //created_at: lib.library.data.created_at  

@@ -62,9 +62,7 @@ const MyLibraryItem = props => {
             <Col sm={5} className="info">
                 {data.department_name && <div><span className="font-weight-bold">Dipartimento </span><span>{data.department_name}</span></div>}
                 {data.title_name && <div><span className="font-weight-bold">Qualifica </span><span>{data.title_name}</span></div>}
-                {data.user_referent && <div><span className="font-weight-bold">Referente </span><span>{data.user_referent}</span></div> }
-                {data.user_service_phone && <div><span className="font-weight-bold">Telefono </span><span>{data.user_service_phone}</span></div> }
-                {data.user_service_email && <div><span className="font-weight-bold">Email </span><span>{data.user_service_email}</span></div> }
+                {data.user_referent && <div><span className="font-weight-bold">Referente </span><span>{data.user_referent}</span></div> }                
             </Col>
             <Col sm={2} className="icons align-self-center">                
                 <NavLink to={`${editurl(data.library_id, data.id)}`}  className="btn btn-icon">
