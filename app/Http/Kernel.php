@@ -48,18 +48,18 @@ class Kernel extends HttpKernel
             'bindings',
         ],
 
-       'iso18626' => [
+        'iso18626' => [
             'throttle:60,1',
             'iso_18626'
         ],
 
-//        // Convenience group containing the auth middleware for Passport and
-//        // Dingo so that the custom 'App\Providers\PassportDingoAuthProvider'
-//        // can bridge the auth systems:
-//        'auth:api-combined' => [
-//            'auth:api', // Passport
-//            'api.auth', // Dingo
-//        ],
+        //        // Convenience group containing the auth middleware for Passport and
+        //        // Dingo so that the custom 'App\Providers\PassportDingoAuthProvider'
+        //        // can bridge the auth systems:
+        //        'auth:api-combined' => [
+        //            'auth:api', // Passport
+        //            'api.auth', // Dingo
+        //        ],
     ];
 
     /**
@@ -76,7 +76,7 @@ class Kernel extends HttpKernel
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-//        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        //        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
@@ -84,6 +84,7 @@ class Kernel extends HttpKernel
         'roles' => \App\Http\Middleware\Roles::class,
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
         'iso_18626' => \App\Http\Middleware\ISO18626::class,
+        'stats' => \App\Http\Middleware\StatsAccessMiddleware::class,
     ];
 
     /**
