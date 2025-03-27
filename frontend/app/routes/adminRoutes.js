@@ -9,6 +9,7 @@ import ProjectsListPage from 'containers/Admin/ProjectsListPage/Loadable';
 
 import AvgTimeStats from 'containers/Stats/AvgWorkingTime/Loadable';
 import BorrowingStats from 'containers/Stats/BorrowingRequests/Loadable';
+import FillRate from 'containers/Stats/FillRate/Loadable';
 
 import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
@@ -88,8 +89,9 @@ const routes = [
     { path: '/', exact: true, icon: 'chart-bar', name: `Statistics`, url: `/stats`, component: Fake, sidebar:true, order:1},    
     // { path: '/libraries', exact: true, icon: 'chart-bar', name: `StatisticsLibraries`, url: `/stats/libraries`, component: Fake, sidebar:true, order:1,level:2},    
     // { path: '/institutions', exact: true, icon: 'chart-bar', name: `StatisticsInstitutions`, url: `/stats/institutions`, component: Fake, sidebar:true, order:1,level:2},
-    { path: '/avg-working-time', exact: true, icon: 'chart-bar', name: `StatisticsAVGWorkingTime`, url: `/stats/avg-working-time`, component: AvgTimeStats, sidebar:true, order:1,level:2},
-    { path: '/borrowing-requests', exact: true, icon: 'chart-bar', name: `StatisticsBorrowingRequests`, url: `/stats/borrowing-requests`, component: BorrowingStats, sidebar:true, order:1,level:2},
+    { path: '/fillrate', exact: true, icon: 'chart-bar', name: `StatisticsFillRate`, url: `/stats/fillrate`, component: FillRate, sidebar:true, order:1,level:2},
+    { path: '/avg-working-time', exact: true, icon: 'chart-bar', name: `StatisticsAVGWorkingTime`, url: `/stats/avg-working-time`, component: Fake, sidebar:true, order:1,level:2},
+    { path: '/borrowing-requests', exact: true, icon: 'chart-bar', name: `StatisticsBorrowingRequests`, url: `/stats/borrowing-requests`, component: Fake, sidebar:true, order:1,level:2},
   ]
 },
   /*
