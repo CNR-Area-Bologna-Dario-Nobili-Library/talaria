@@ -82,7 +82,10 @@ const routes = [
       { path: '/:page?', exact: true, name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, },            
       { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
     ]
-  },
+  },  
+  /*
+  NOT IMPLEMENTED
+
 
   { path: '/stats',  name: `Statistics`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
   children: [    

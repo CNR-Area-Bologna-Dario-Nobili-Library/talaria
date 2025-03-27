@@ -1,10 +1,13 @@
-@import '../../scss/variables';
 .landingPageBox {    
     margin:10px;
     padding:0;
 
     & .card-header {
       
+    }
+
+    & .card-title {
+        font-style: italic;
     }
     
     .landingBoxTitle {

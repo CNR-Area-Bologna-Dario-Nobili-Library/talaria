@@ -1,6 +1,5 @@
 import React from 'react';
 import { useIntl } from 'react-intl';
-import './style.scss';
 import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates.js';
 
@@ -66,7 +65,7 @@ const PendingOperator = props => {
                 onClick={() => acceptOpCallback()}
                 key={'acceptbutton'}
               >
-                <i className="bi bi-check-lg action-icon" />{' '}
+                <i className="fa-solid fa-check fa-lg" aria-hidden="true"/>{' '}
               </a>
             )}
             {rejectOpCallback && (
@@ -75,25 +74,21 @@ const PendingOperator = props => {
                 onClick={() => rejectOpCallback()}
                 key={'rejectbutton'}
               >
-                <i className="bi bi-x-lg action-icon" />
-                {' '}
+                <i className="fa-solid fa-times fa-lg" aria-hidden="true"/>{' '}
               </a>
             )}
           </div>
         )}
         {enableDelete && deleteOpCallback && (
-          <div
-            className="delete-button"
-            style={{ textAlign: 'center', width: '100%' }}
-          >
-            <a
-              className="btn btn-sm btn-secondary text-black"
+       
+            <button
+              className="btn btn-sm btn-danger"
               onClick={() => deleteOpCallback()}
               key={'deletebutton'}
             >
-              <i className="bi bi-trash action-icon" />
-            </a>
-          </div>
+              <i className="fa-solid fa-trash"></i>
+            </button>
+       
         )}
       </div>
     </div>

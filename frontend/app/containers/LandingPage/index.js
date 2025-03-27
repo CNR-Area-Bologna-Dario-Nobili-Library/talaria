@@ -1,46 +1,52 @@
-/**
- *
- * LandingPage
- *
- */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useIntl } from 'react-intl';
-import { useCallback } from 'react';
-import LandingPageAdminBox from '../../components/LandingPageAdminBox';
-import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox';
-import LandingPageProjectsBox from '../../components/LandingPageProjectsBox';
-import LandingPageConsortiaBox from '../../components/LandingPageConsortiaBox';
-import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
-import LandingPagePatronBox from '../../components/LandingPagePatronBox';
-import LandingPageConsortiasBox from '../../components/LandingPageConsortiaBox';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { requestPermissions } from '../Auth/AuthProvider/actions';
-import { requestAcceptPermission, requestRejectPermission } from './actions';
-import request from '../../utils/request';
-function LandingPage(props) {
-  console.log('LandingPage:', props);
-  const { dispatch } = props;
 
-  const patrons_enabled =
-    process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS == 'true'
-      ? true
-      : false;
-  const { match, history } = props;
+import {  
+  requestAcceptPermission,
+  requestRejectPermission,
+} from './actions';
+
+
+import LandingPagePatronBox from '../../components/LandingPagePatronBox';
+import LandingPageLibrariesBox from '../../components/LandingPageLibrariesBox';
+import LandingPageInstitutionsBox from '../../components/LandingPageInstitutionsBox'
+import LandingPageConsortiasBox from '../../components/LandingPageConsortiaBox'
+import LandingPageProjectsBox from '../../components/LandingPageProjectsBox'
+import LandingPageAdminBox from '../../components/LandingPageAdminBox'
+
+
+
+function LandingPage(props) {
+  const { auth, dispatch,  history, match } = props;
   const intl = useIntl();
-  const [resourceId, setResourceId] = useState(null); // State to track resource ID
+  const [mounted,setMounted]=useState(false);
+  const [resourceId, setResourceId] = useState(null);
   const [refreshPermissions, setrefreshPermissions] = useState(null);
+
+  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+
+
 
   const AcceptPermission = useCallback(
     id => {
-      setResourceId(id); // Set resource ID to trigger data fetching
-      dispatch(requestAcceptPermission(id, 1));
-      setrefreshPermissions({ resourceId: id }); // Ensure new object for deep comparison
+      setResourceId(id);
+      dispatch(requestAcceptPermission(id, 1,intl.formatMessage({id:"app.containers.LandingPage.acceptedMessage"})));
+      setrefreshPermissions({ resourceId: id });
     },
-    [dispatch, setrefreshPermissions],
+    [dispatch],
   );
 
   useEffect(() => {
+   setMounted(true)
+  }, []);
+
+
+  useEffect(() => {
     if (resourceId) {
-      dispatch(requestPermissions(resourceId)); // Fetch permissions based on resource ID
+      dispatch(requestPermissions(resourceId));
     }
   }, [dispatch, resourceId]);
 
@@ -53,113 +59,54 @@ function LandingPage(props) {
 
   const RejectPermission = useCallback(
     id => {
-      setResourceId(id); // Set resource ID to trigger data fetching
-      dispatch(requestRejectPermission(id, 2));
-      setrefreshPermissions({ resourceId: id }); // Ensure new object for deep comparison
+      setResourceId(id);
+      dispatch(requestRejectPermission(id, 2,intl.formatMessage({id:"app.containers.LandingPage.rejectedMessage"})));
+      setrefreshPermissions({ resourceId: id });
     },
-    [dispatch, setrefreshPermissions],
+    [dispatch],
   );
 
-  /*const [PatronReg,setPatronReg]=useState (true);
-  const togglePatronReg = () => {setPatronReg(true); setLibraryReg(false);}
-  const [LibraryReg,setLibraryReg]=useState (false);
-  const toggleLibraryReg = () => {setLibraryReg(true); setPatronReg(false);}  
-
-  useEffect(() => {
-  if(patrons_enabled)
-    togglePatronReg()
-  else toggleLibraryReg()
-    
-  }, [patrons_enabled])*/
-
+  
+  
   return (
-    /*(props.auth.permissions.roles && props.auth.permissions.roles.includes("registered") && 
-          (!props.auth.permissions.resources || props.auth.permissions.resources.length==0) 
-          && 
-       <>       
-       <p>{intl.formatMessage({id:'app.containers.LandingPage.intro'})}</p>       
-       <p>{intl.formatMessage({id:'app.containers.LandingPage.intro_library'})}</p>       
-       {patrons_enabled && 
-        <p>{intl.formatMessage({id:'app.containers.LandingPage.intro_patron'})}</p>
-       }
-       <nav>
-       {patrons_enabled && <NavLink
-              className="btn btn-primary mx-3"
-              key="associateLib"                                            
-              isActive={()=>PatronReg}         
-              onClick={(e)=>togglePatronReg()}      
-              to="#"        
-        >{intl.formatMessage({id:'app.global.patron'})}</NavLink>}
-        <NavLink
-              className="btn btn-primary mx-3"
-              key="registernewlibrary"                                          
-              isActive={()=>LibraryReg}        
-              to="#"        
-              onClick={(e)=>toggleLibraryReg()}            
-        >{intl.formatMessage({id:'app.global.librarian'})}</NavLink>           
-        </nav>
-        <div className="card-form card">
-          {(patrons_enabled && PatronReg) && <MyLibraryPage match={match} auth={props.auth}/>}
-          {LibraryReg && <RegisterLibrary {...props.auth}/> }  
+    mounted &&
+      <>    
+      <div className="d-flex justify-content-center align-items-center mt-5">
+        <div className="card text-center" style={{ width: '55rem' }}>
+          <div className="card-body">
+            <h2 className="text-primary">
+            {intl.formatMessage({id: 'app.containers.LandingPage.welcome'})} <b>{auth.user.name}</b>
+            </h2>
+            <p className="card-text lead">
+            {intl.formatMessage({id: 'app.containers.LandingPage.welcome_message'})}
+            </p>
+          </div>
         </div>
-        </>
-       ||
-       <>       
-       <p>You've multiple roles, please choose one from below</p>
-        Roles List:
-        <ul>
-          <li>Role 1</li>
-          <li>Role 2</li>
-          <li>Role 3</li>
-        </ul>
-      </>)
+      </div>
 
-      OLD CODE TO CHECK PERMISSIONS/ROLES...
-      {props.auth.permissions.roles.length == 1 &&
-          props.auth.permissions.roles.includes('registered') &&
-          Object.keys(props.auth.permissions.resources).length == 0 && (
-            <div>just registered</div>
-          )}
-        {props.auth.permissions.roles.length >= 1 &&
-          props.auth.permissions.roles.includes('patron') && <div>Patron</div>}
-        <br />
-        {props.auth.permissions.roles.length == 0 && <div>NO ROLES</div>}
-        <br />
-        {props.auth.permissions.roles.length >= 1 && (
-          <div>ONE/MANY ROLES (including "registered") </div>
-        )}
-        <br />
-        {props.auth.permissions.resources.libraries &&
-          props.auth.permissions.resources.libraries.length >= 1 && (
-            <div>ONE/MANY LIBRARIES</div>
-          )}
-        {props.auth.permissions.resources.institutions &&
-          props.auth.permissions.resources.institutions.length >= 1 && (
-            <div>ONE/MANY INSTITUTIONS</div>
-          )}
-
-    */
-
-    <>
-      <h1>{intl.formatMessage({id: "app.containers.LandingPage.header"})}</h1>
-      <div className="container">        
+      <div className="container">
         <div className="landingBoxes d-flex flex-row justify-content-start flex-wrap">
-          <LandingPagePatronBox
+          {patrons_enabled && <LandingPagePatronBox
             history={history}
-            title={intl.formatMessage({id: "app.containers.LandingPage.PatronBox.title"})}
-            auth={props.auth}
-            match={props.match}
-          />
+            intro={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.intro',})}             
+            title={intl.formatMessage({id: 'app.containers.LandingPage.PatronBox.title',})}
+            auth={auth}
+            match={match}
+          />}
           <LandingPageLibrariesBox
-            history={history}
-            title={intl.formatMessage({id: "app.containers.LandingPage.LibrariesBox.title"})}
-            auth={props.auth}
-            match={props.match}
+            history={history}            
+            intro={intl.formatMessage({id: 'app.containers.LandingPage.LibrariesBox.intro',})}
+            title={intl.formatMessage({id: 'app.containers.LandingPage.LibrariesBox.title',})}            
+            auth={auth}
+            match={match}           
             onAccept={AcceptPermission}
             onReject={RejectPermission}
           />
+          { // HIDDEN because now Institution/project/consortia management is not implemented*/
+            /*
           <LandingPageInstitutionsBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.InstitutionsBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -168,6 +115,7 @@ function LandingPage(props) {
           />
           <LandingPageProjectsBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.ProjectsBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -176,14 +124,16 @@ function LandingPage(props) {
           />
           <LandingPageConsortiasBox
             history={history}
+            intro={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.intro"})}
             title={intl.formatMessage({id: "app.containers.LandingPage.ConsortiaBox.title"})}
             auth={props.auth}
             match={props.match}
             onAccept={AcceptPermission}
             onReject={RejectPermission}
-          />
+          />*/}
           <LandingPageAdminBox
             history={history}
+            /*intro={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.intro"})}*/
             title={intl.formatMessage({id: "app.containers.LandingPage.AdminBox.title"})}
             auth={props.auth}
             match={props.match}
@@ -194,4 +144,14 @@ function LandingPage(props) {
   );
 }
 
-export default LandingPage;
+function mapDispatchToProps(dispatch) {
+  return {
+    dispatch,
+  };
+}
+
+const withConnect = connect(  
+  mapDispatchToProps,
+);
+
+export default compose(withConnect)((LandingPage));

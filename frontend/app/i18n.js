@@ -17,6 +17,7 @@ const enTranslationMessages = require('./translations/en.json');
 const itTranslationMessages = require('./translations/it.json');
 const esTranslationMessages = require('./translations/es.json');
 const trTranslationMessages = require('./translations/tr.json');
+const arTranslationMessages = require('./translations/ar.json');
 
 // addLocaleData(enLocaleData);
 // addLocaleData(deLocaleData);
@@ -27,18 +28,21 @@ const appLocales = [
   'en',  
   'it',
   'es',
-  'tr'
+  'tr',
+  'ar'
 ];
 
 //const DEFAULT_LOCALE = 'it';
-var userLang = navigator.language || navigator.userLanguage; 
+var userLang = navigator.language || navigator.userLanguage;  //Browser default language
 if (userLang.includes('-')) //en-US, it-IT, ar
 {
   userLang = userLang.substring(0, 2).toLowerCase();
-  if (!appLocales.includes(userLang))
-    userLang = 'en'
 }
+if (!appLocales.includes(userLang))  //if not supported -> fallback to english
+    userLang = 'en'
 
+
+//get user's preferred lang (stored on localStorage or get default lang from browser if supported or back to EN))
 const DEFAULT_LOCALE = localStorage.getItem("lang") ? localStorage.getItem("lang") : userLang;
 
 
@@ -63,6 +67,7 @@ const translationMessages = {
   it: formatTranslationMessages('it', itTranslationMessages),
   es: formatTranslationMessages('es', esTranslationMessages),
   tr: formatTranslationMessages('tr', trTranslationMessages),
+  ar: formatTranslationMessages('ar', arTranslationMessages),  
 };
 
 exports.appLocales = appLocales;

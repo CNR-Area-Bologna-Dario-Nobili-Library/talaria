@@ -3,6 +3,10 @@
 //- status "name" must be less than 20 char lenght!
 //- role/constraint are not defined, so averyone can call these statusChange
    //otherwise was too difficult to filter these methods
+//- notify: you can specify which users has to be notified (will send notification) 
+//  - Model: will run the specified "method" of the current model. This method has to return users collection
+//  - User: will run the specified "method" of the User model. This method has to return users collection
+// if notify is specified, must exist XXXNotification Object (XXX is the classname of the current model)
 //- everytime you change this, please run: php artisan cache:clear + php artisan optimize 
 
 return [

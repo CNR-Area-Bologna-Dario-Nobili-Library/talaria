@@ -104,6 +104,7 @@ module.exports = require('./webpack.base.babel')({
       relativePaths: false,
       publicPath: '/',
       appShell: '/',
+      autoUpdate: true,  //Enable automatic updates of the ServiceWorker and AppCache.
 
       // No need to cache .htaccess. See http://mxs.is/googmp,
       // this is applied before any match in `caches` section

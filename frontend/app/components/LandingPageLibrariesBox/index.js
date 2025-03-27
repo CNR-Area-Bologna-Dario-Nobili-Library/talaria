@@ -1,88 +1,90 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'reactstrap';
-import './style.scss';
+import { useIntl } from 'react-intl';
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import './style.scss';
+import { permissionBadgeClass,libraryStatusIcon, translatePerm } from '../../utils/utilityFunctions.js';
 import { formatDateTime } from '../../utils/dates';
-import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
-const LandingPageLibrariesBox = (props) => {
-  const {auth,title,match,history,canCollapse,collapsed}=props
-
+const LandingPageLibrariesBox = props => {
+  const { auth, title, intro,history, canCollapse, collapsed } = props;
+    
+  const intl = useIntl();
+  
   const fromOpenURLorPubmed =
     history &&
     history.location &&
     history.location.search.includes('byopenurl');
 
-  console.log('LandingPageLibrariesBox', props);
+   
 
+  //invite status class
   const statusClass = status => {
     switch (status) {
       case 0:
         return 'pending';
-        break;
-      // case 1: return 'success'; break;
       case 2:
         return 'disabled';
-        break;
+      default:
+        return status;
     }
-    return status;
   };
 
   return (
     <LandingPageBox
       iconClass="fa-solid fa-landmark"
       title={title}
+      intro={intro}
       canCollapse={canCollapse}
       collapsed={collapsed}
     >
       <>
+        {/* Display the two tables first */}
         {auth.permissions.resources.libraries &&
           auth.permissions.resources.libraries.length >= 1 && (
-            <div className="container">
-              <h3 className="text-center mb-4">Current Permissions</h3>
-              <div className="div-responsive">
+            <div className="container mb-5">
+              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.currentPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
+                    <div className="div-table-header" style={{ width: '41%' }}>
+                    {intl.formatMessage({id: 'app.global.library',})}
+                    </div>
                     <div className="div-table-header" style={{ width: '25%' }}>
-                      Library
-                    </div>
-                    <div className="div-table-header" style={{ width: '42%' }}>
-                      Permissions
-                    </div>
+                    {intl.formatMessage({id: 'app.global.permissions',})}
+                    </div>                    
                     <div
                       className="div-table-header"
                       style={{ width: '33%', textAlign: 'center' }}
                     >
-                      Actions
+                     {intl.formatMessage({id: 'app.global.actions',})}
                     </div>
                   </div>
                   {auth.permissions.resources.libraries.map((res, i) => (
                     <div className="div-table-row" key={`row-${i}`}>
-                      <div className="div-table-cell">{res.resource.name}</div>
-                      <div className="div-table-cell">
+                      <div className="div-table-cell" style={{ width: '33%' }}>{libraryStatusIcon(res.resource.status)} {res.resource.name}</div>
+                      <div className="div-table-cell" style={{ width: '25%' }}>
                         {res.permissions.map((p, index) => (
                           <span
                             key={`badge_perm_${index}`}
                             className={`badge ${permissionBadgeClass(p)}`}
                           >
-                            {p}
+                            {translatePerm(p)}
                           </span>
                         ))}
-                      </div>
-                      <div className="div-table-cell d-flex justify-content-center align-items-center">
-                        <div className="div-current-actions text-center">
+                      </div>                      
+                      <div className="div-table-cell justify-content-center align-items-center" style={{ width: '33%', textAlign: 'center' }}>
+                        <div className="div-actions text-center">
                           <Link
                             className="btn btn-sm btn-primary mb-2"
                             to={'/library/' + res.resource.id}
-                            key={'lib'+res.resource.id}
+                            key={'lib' + res.resource.id}
                           >
-                            Visit This Library
+                            {intl.formatMessage({id:'app.global.go'})}
                           </Link>
-                          {(res.permissions.includes('borrow') ||
-                            res.permissions.includes('manage')) && (
+                          {((res.permissions.includes('borrow') ||
+                            res.permissions.includes('manage')) && res.resource.status==1  ) && (
                             <>
-                            
                               {fromOpenURLorPubmed && (
                                 <Link
                                   className="btn btn-sm btn-success mb-2"
@@ -96,12 +98,12 @@ const LandingPageLibrariesBox = (props) => {
                                   }
                                   key={'openurllink' + res.resource.id}
                                 >
-                                  Import from Openurl/Pubmed
+                                  {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.importFromOpenurlButton'})}
                                 </Link>
                               )}
-                              {!fromOpenURLorPubmed && (
+                              {(
                                 <Link
-                                  className="btn btn-sm btn-info mb-2"
+                                  className="btn btn-sm btn-success mb-2"
                                   to={
                                     '/library/' +
                                     res.resource.id +
@@ -109,9 +111,9 @@ const LandingPageLibrariesBox = (props) => {
                                   }
                                   key={'borrlink' + res.resource.id}
                                 >
-                                  New request
+                                  {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.newRequestButton'})}
                                 </Link>
-                              )}
+                              )}                              
                             </>
                           )}
                         </div>
@@ -119,88 +121,84 @@ const LandingPageLibrariesBox = (props) => {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+              </div>            
           )}
-        <br />
-        <br />
+
         {auth.permissions.tempresources &&
           auth.permissions.tempresources.libraries &&
           auth.permissions.tempresources.libraries.filter(
             res => res.status === 0 || res.status === 2,
           ).length > 0 && (
-            <div className="container">
-              <h3 className="text-center mb-4">Pending/Rejected Requests</h3>
-              <div className="div-responsive">
+            <div className="container mb-5">
+              <h3 className="text-center mb-4">{intl.formatMessage({id:'app.components.LandingPageLibrariesBox.pendingPermissionsList'})}</h3>              
                 <div className="div-table">
                   <div className="div-table-row">
                     <div className="div-table-header" style={{ width: '25%' }}>
-                      Library
+                    {intl.formatMessage({id: 'app.global.library',})}
                     </div>
                     <div className="div-table-header" style={{ width: '19%' }}>
-                      Permissions
+                    {intl.formatMessage({id: 'app.global.permissions',})}
                     </div>
                     <div className="div-table-header" style={{ width: '10%' }}>
-                      Status
+                    {intl.formatMessage({id: 'app.global.status',})}
                     </div>
                     <div className="div-table-header" style={{ width: '13%' }}>
-                      Created
+                    {intl.formatMessage({id: 'app.global.created_at',})}
                     </div>
                     <div className="div-table-header" style={{ width: '13%' }}>
-                      Updated
+                    {intl.formatMessage({id: 'app.global.updated_at',})}
                     </div>
                     <div className="div-table-header" style={{ width: '20%' }}>
-                      Actions
+                      {intl.formatMessage({id: 'app.global.actions',})}
+
                     </div>
                   </div>
                   {auth.permissions.tempresources.libraries
                     .filter(res => res.status === 0 || res.status === 2) // Filter the libraries with status 0 or status 2
                     .map((res, i) => (
                       <div className="div-table-row" key={`pendrow-${i}`}>
-                        <div className="div-table-cell">
+                        <div className="div-table-cell" style={{ width: '25%' }}>
                           {res.resource.name}
                         </div>
-                        <div className="div-table-cell">
+                        <div className="div-table-cell" style={{ width: '19%' }}>
                           {res.permissions.map((p, index) => (
                             <span
                               key={`badge_temp_perm_${index}`}
                               className={`badge ${permissionBadgeClass(p)}`}
                             >
-                              {p}
+                              {translatePerm(p)}
                             </span>
                           ))}
                         </div>
-                        <div className="div-table-cell">
+                        <div className="div-table-cell" style={{ width: '10%' }}>
                           <div
                             className={`status-point ${statusClass(
                               res.status,
                             )}`}
                           />
                         </div>
-                        <div className="div-table-cell">
+                        <div className="div-table-cell" style={{ width: '13%' }}>
                           {formatDateTime(res.created_at)}
                         </div>
-                        <div className="div-table-cell">
+                        <div className="div-table-cell" style={{ width: '13%' }}>
                           {formatDateTime(res.updated_at)}
                         </div>
-                        <div className="div-table-cell">
-                          {res.status === 2 ? (
-                            <div>No Actions, Request Rejected</div>
-                          ) : (
+                        <div className="div-table-cell" style={{ width: '20%' }}>
+                          {res.status == 0 && (                            
                             <div className="div-actions">
                               <a
                                 className="btn btn-success btn-sm"
                                 href="#"
                                 onClick={() => props.onAccept(res.id)}
                               >
-                                Accept
+                                 <i className="fa-solid fa-check" title={intl.formatMessage({id: 'app.global.accept'})}></i>
                               </a>
                               <a
                                 className="btn btn-danger btn-sm"
                                 href="#"
                                 onClick={() => props.onReject(res.id)}
                               >
-                                Reject
+                                 <i className="fa-solid fa-times" title={intl.formatMessage({id: 'app.global.reject'})}></i>
                               </a>
                             </div>
                           )}
@@ -208,22 +206,27 @@ const LandingPageLibrariesBox = (props) => {
                       </div>
                     ))}
                 </div>
-              </div>
-            </div>
+              </div>            
           )}
-
-        <div className="container text-center mt-5">
-          <p>
-            Are you a librarian and want to register a new library into the
-            system?
-          </p>
-          <a className="btn btn-primary" href="/register-library/">
-            Register Your Library
-          </a>
+        
+        {/* Want register new library? */}
+        <div className='container mb-5'>
+          <h3 className="text-center mb-4">
+                {intl.formatMessage({id:'app.components.LandingPageLibrariesBox.findLibraryCommunity'})}
+          </h3>              
+          <div className="text-center">                  
+              <Link
+                      className="btn btn-primary"
+                      to={'/find-library'}
+                      aria-label={intl.formatMessage({id:"app.components.FindLibrary.registerButton"})}
+                    >
+                      {intl.formatMessage({id:"app.components.FindLibrary.registerButton"})}
+              </Link>
+          </div>
         </div>
-      </>
+      </>      
     </LandingPageBox>
   );
 };
-    
+
 export default LandingPageLibrariesBox;

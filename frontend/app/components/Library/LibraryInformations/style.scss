@@ -3,6 +3,14 @@
 
 .libraryInformations  {
     display: inline;
+
+    & i.fa-solid {
+        margin-right: 5px;
+    }
+
+    .library_name .alternative_name {
+        font-style: italic;        
+    }
 }
 
     .library_extra_info {      
@@ -10,7 +18,7 @@
 
         .coords {
             display: block;
-        }
+        }       
 
         & .project-item,
         & .identifier-item {

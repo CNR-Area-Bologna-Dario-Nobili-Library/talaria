@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useIntl } from 'react-intl';
-import './style.scss';
 import { permissionBadgeClass } from '../../utils/utilityFunctions.js';
 
 const Operator = (props) => {
@@ -28,16 +27,18 @@ const Operator = (props) => {
           ))}
       </div>
       <div className="div-table-cell" style={{ width: '20%' }}>
+        <div className="div-actions">
         {enableEdit && editPath && (
           <Link className="btn btn-sm btn-info me-2" to={editPath} key={'editbutton'}>
-            <i className="bi bi-pencil action-icon" /> {/* Bootstrap Pencil Icon */}
+            <i className="fa-solid fa-pencil"></i>
           </Link>
         )}
         {enableDelete && deleteOpCallback && (
           <button className="btn btn-sm btn-danger" onClick={deleteOpCallback} key={'deletebutton'}>
-            <i className="bi bi-trash action-icon" /> {/* Bootstrap Trash Icon */}
+            <i className="fa-solid fa-trash"></i>
           </button>
-        )}
+        )}        
+        </div>
       </div>
     </div>
   );

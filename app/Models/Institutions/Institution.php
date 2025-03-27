@@ -22,7 +22,7 @@ class Institution extends BaseModel
     protected static $observerClass = InstitutionObserver::class;
 
     protected $attributes= [
-        'status'=>1, //0=waiting approval, 1=valid
+        'status'=>1, 
     ];
 
     protected $fillable = [

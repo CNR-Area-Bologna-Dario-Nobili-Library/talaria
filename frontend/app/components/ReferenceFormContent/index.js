@@ -22,10 +22,15 @@ const ReferenceFormContent = (props) => {
             applyLabels, labelsOptionList, applyGroups, groupsOptionList,
             removeLabel, removeGroup, deleteReference/*,findOA,OALink*/} = props;
     const [formData, setFormData] = useState(() => {        
-        if(reference && Object.keys(reference.length > 0)) return {...reference}    
         
-        //in any case force to return default
-        return {material_type: 1, pubyear: "", authors: "", volume: "", pages: ""}         
+            //it will set material_type from imported data or null by default
+            if(reference && Object.keys(reference.length > 0)) 
+                return {
+                ...reference,
+                material_type:reference.material_type && reference.material_type>0?reference.material_type:null, 
+            }            
+            //in any case force to return default
+            return {material_type: null, pubyear: "", authors: "", volume: "", pages: ""}         
         
     })
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
@@ -107,27 +112,24 @@ const ReferenceFormContent = (props) => {
                         label={intl.formatMessage({id: "app.references.book"})} 
                         checked={formData.material_type === 2 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(2, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.thesis"})} 
                         checked={formData.material_type === 3 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(3, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.cartography"})} 
                         checked={formData.material_type === 4 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(4, 'material_type') : null}
-                        
                     />
                     <RadioButton 
                         label={intl.formatMessage({id: "app.references.manuscript"})} 
                         checked={formData.material_type === 5 ? true : false}
                         handleChange={(e) =>  e.target.checked ? handleChange(5, 'material_type') : null}
-                        
                     />
-                   {/* a che serve? <input className="form-control" type="radio" name="radio" hidden required /> */}
+                    {/* questo input hidden serve per gestire l'obbligatorietà dei radiobutton*/}
+                    <input className="form-control" type="radio" name="radio" hidden required /> 
                     <ErrorBox 
                         className="invalid-feedback" 
                         error={  intl.formatMessage({ id: 'app.global.invalid_field' })}
@@ -147,7 +149,7 @@ const ReferenceFormContent = (props) => {
                     {(formData.material_type === 1 || formData.material_type === 2 || formData.material_type === 3 || formData.material_type === 5) && 
                     <FormGroup>
                         <Input 
-                            label={formData.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : formData.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): intl.formatMessage({id: "app.references.chapter"})}
+                            label={formData.material_type === 1 ? intl.formatMessage({id: "app.references.part_title"}) : formData.material_type === 2 ? intl.formatMessage({id: "app.references.section"}): formData.material_type === 5 ? intl.formatMessage({id: "app.references.shelfmark"}):intl.formatMessage({id: "app.references.chapter"})}
                             handleChange={(value) => handleChange(value, 'part_title')}
                             input={formData.part_title ? formData.part_title : ""}
                             required={formData.material_type === 1?true:false}
@@ -224,7 +226,7 @@ const ReferenceFormContent = (props) => {
                     {(formData.material_type === 1 || formData.material_type === 2 || formData.material_type === 3 || formData.material_type === 4 || formData.material_type === 5) && 
                         <FormGroup className="col-md-3 col-lg-2">
                             <Input 
-                                label={intl.formatMessage({id: "app.references.pubyear"})}
+                                label={formData.material_type === 5?intl.formatMessage({id: "app.references.dating"}):intl.formatMessage({id: "app.references.pubyear"})}
                                 type="number"
                                 handleChange={(value) => handleChange(value, 'pubyear')}
                                 input={formData.pubyear ? formData.pubyear : ""}
@@ -359,7 +361,7 @@ const ReferenceFormContent = (props) => {
                     />
                     
                 </Card>
-                <h3>{formData.material_type === 3?intl.formatMessage({id: "app.references.indications"}):formData.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):intl.formatMessage({id: "app.references.note"})}</h3>
+                <h3>{formData.material_type === 3?intl.formatMessage({id: "app.references.indications"}):formData.material_type === 4?intl.formatMessage({id: "app.references.mathnote"}):formData.material_type === 5?intl.formatMessage({id: "app.references.mannote"}):intl.formatMessage({id: "app.references.note"})}</h3>
                 <Card>
                     <Input 
                         handleChange={(value) => handleChange(value, 'note')}

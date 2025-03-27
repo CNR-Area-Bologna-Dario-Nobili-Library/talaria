@@ -11,7 +11,7 @@ import { withGoogleReCaptcha } from "react-google-recaptcha-v3"
 import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import globalMessages from 'utils/globalMessages'
-import {withRouter} from "react-router-dom";
+import {withRouter,NavLink} from "react-router-dom";
 import {formatDate} from 'utils/dates'
 import {Loader, SocialAuth} from "../..";
 import {ErrorBox} from 'components';
@@ -240,9 +240,12 @@ function SignupForm(props) {
                   </InputGroup>
                   <Button color="success" block>
                     <FormattedMessage {...messages.subtitle} />
-                  </Button>
-                </Form>
+                  </Button>                  
+                </Form>              
               </CardBody>
+              <NavLink to='/forgot-password' key='/forgot-password' className="text-dark-text text-center">
+                              <FormattedMessage {...messages.forgot} />
+                  </NavLink>
               {/* <CardFooter className="p-4">
                 <SocialAuth loginFacebook={props.loginFacebook} loginGoogle={props.loginGoogle}/>
               </CardFooter> */}

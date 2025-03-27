@@ -122,18 +122,17 @@ const LibraryInviteOperator = props => {
             className="add-user-link"
             style={{ padding: '10px', cursor: 'pointer', textAlign: 'center' }}
           >
-            No user found,&nbsp;
-            <a
+          {intl.formatMessage({id:'app.components.LibraryInviteOperator.clickHereToInvite'})}<br/>
+          <a
+              className="btn btn-primary btn-sm"
               href="#"
               onClick={e => {
                 e.preventDefault();
                 handleAddUserManuallyClick();
               }}
-              style={{ color: 'blue', textDecoration: 'underline' }} 
-            >
-              Click here
-            </a>
-            &nbsp;to invite user manually
+              >
+               {intl.formatMessage({id:'app.components.LibraryInviteOperator.inviteOperator'})}
+              </a>       
           </div>
         )}
       </components.MenuList>
@@ -143,17 +142,15 @@ const LibraryInviteOperator = props => {
   return (
     <div className="container">
       <div className="row mt-2">
-        <div className="col col-md-8">
+        <div className="col col-md-12">
           <div className="invite-box">
-            <h2>Invite user</h2>
-            <p>Search for user by name, surname or email address.</p>
+            <h2>{intl.formatMessage({id:'app.components.LibraryInviteOperator.inviteOperator'})}</h2>
+            <p>{intl.formatMessage({id:'app.components.LibraryInviteOperator.intro'})}</p>
             <p>
-              If a user is found then assign permissions and invite your
-              colleague!
+            {intl.formatMessage({id:'app.components.LibraryInviteOperator.paragraph1'})}
             </p>
             <p>
-              If a user is not found fill the form with name, surname and email,
-              add permissions and invite!
+            {intl.formatMessage({id:'app.components.LibraryInviteOperator.paragraph2'})}
             </p>
 
             <Select
@@ -168,8 +165,9 @@ const LibraryInviteOperator = props => {
               onSelectResetsInput={false}
               hideSelectedOptions={false}
               placeholder={
-                'Search for a user filling his name, surname or email'
+                intl.formatMessage({id:'app.components.LibraryInviteOperator.searchBox'})
               }
+              noOptionsMessage={()=>intl.formatMessage({ id: 'app.global.noresult' })} 
               components={{ MenuList }}
             />
           </div>

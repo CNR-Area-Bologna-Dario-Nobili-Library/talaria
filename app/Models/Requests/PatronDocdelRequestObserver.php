@@ -1,6 +1,7 @@
 <?php namespace App\Models\Requests;
 
 use App\Models\BaseObserver;
+use App\Models\Users\User;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -44,10 +45,13 @@ class PatronDocdelRequestObserver extends BaseObserver
          if($br->save())
          {            
              $pdr=PatronDocdelRequest::find($model->id);
-            $n=new BorrowingDocdelRequestNotification($br);
+             $n=new BorrowingDocdelRequestNotification($br);
             
             foreach ($pdr->libraryOperators() as $op)    
-              $op->notify($n);           
+            {
+                    $u=User::findOrFail($op["user_id"]);
+                    $u->notify($n); 
+            }              
          }
 
                      

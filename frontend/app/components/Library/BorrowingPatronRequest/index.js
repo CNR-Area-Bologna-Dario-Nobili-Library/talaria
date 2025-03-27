@@ -43,8 +43,8 @@ export const BorrowingPatronRequest = (props) => {
             {pdr.user &&
             <span className="patron">
                 <i className="fa-solid fa-user-circle"></i> 
-                <span className="active" id={`tooltip-user-${pdr.user.data.id}`}>{pdr.user.data.full_name}</span>                
-                <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-user-${pdr.user.data.id}`}>
+                <span className="active" id={`tooltip-${pdr.id}-user-${pdr.user.data.id}`}>{pdr.user.data.full_name}</span>                
+                <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-${pdr.id}-user-${pdr.user.data.id}`}>
                     <div className="patron_data">
                         <span><b>{pdr.user.data.full_name}</b></span>
                         {pdr.user.data.email && <span><i className="fa-solid fa-envelope"></i> {pdr.user.data.email}</span>}

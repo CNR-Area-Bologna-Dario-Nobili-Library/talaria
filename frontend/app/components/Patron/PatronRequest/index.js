@@ -4,6 +4,7 @@ import {useIntl} from 'react-intl';
 import {formatDate,formatDateTime} from '../../../utils/dates';
 import './style.scss';
 import FileDownload from '../../../containers/FileDownload';
+import LibraryTooltipContent from '../../Library/LibraryTooltipContent';
 
 
 
@@ -161,7 +162,7 @@ export const PatronRequestData = (props) => {
                 <span><i className="fa-solid fa-landmark"></i></span>                 
                 <span id={`tooltip-${data.id}-${data.library.data.id}`} className="active">{data.library_label?data.library_label.data.label:data.library.name}</span> 
                 <UncontrolledTooltip autohide={false} placement="right" target={`tooltip-${data.id}-${data.library.data.id}`}>
-                    {data.library.data.name}
+                   <LibraryTooltipContent data={data.library.data}/>
                 </UncontrolledTooltip>                  
             </div> }
             {data.delivery && <div className="deliveryLabel pr-3"> 

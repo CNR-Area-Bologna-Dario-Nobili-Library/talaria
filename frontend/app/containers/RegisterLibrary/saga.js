@@ -75,7 +75,7 @@ export function* requestLibrarySubjectOptionListSaga(action) {
       const request = yield call(createPublicLibrary, options);
       // yield call(requestGetLibrariesListSaga);
       yield call(userPermissionsSaga) //update roles in user profiles without logout
-      yield put(push("/"));
+      yield put(push("/user/dashboard"));
       yield call(() => toast.success(action.message))
     } catch(e) {
       yield put(requestError(e.message));

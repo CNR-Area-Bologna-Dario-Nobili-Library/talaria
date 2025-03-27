@@ -15,7 +15,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { syncPersistanceRequest, isSync } from "../../persistence";
 import {requestLogout} from "../Auth/AuthProvider/actions";
-import {HomePage, NotAuthorizedPage,NotFoundPage, LoginPage, IdpPage, UserPage, PatronPage, AdminPage, RegisterLibraryPage} from 'containers';
+import {HomePage, NotAuthorizedPage,NotFoundPage, LoginPage, IdpPage, UserPage, PatronPage, AdminPage, RegisterLibraryPage,FindLibraryPage} from 'containers';
 import MyLibraryPage from '../../containers/Patron/MyLibraryPage/Loadable'
 
 // import {  Footer } from 'components'
@@ -68,7 +68,7 @@ function App(props) {
         <Route path="/admin" component={({match}) =>  props.isLogged?<AdminPage {...authProps} headermenu={true} changeLang={changeLanguage}  />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />        
         <Route path="/library/:library_id" component={({match}) =>  props.isLogged?<LibraryPage {...authProps} match={match} headermenu={true} changeLang={changeLanguage} />:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         
-
+        <Route path="/find-library" component={({match}) =>  props.isLogged?<FindLibraryPage {...authProps} headermenu={false} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         <Route path="/register-library" component={({match}) =>  props.isLogged?<RegisterLibraryPage {...authProps} headermenu={false} changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} /> }  />
         {/*NOT USED <Route path="/associate-library/:library_id" component={({match}) =>  props.isLogged?<AssociateLibraryPage history={history} match={match} {...authProps}  changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />*/}             
         {/*<Route path="/patron/my-libraries/new/:library_id" component={({match}) =>  props.isLogged?<MyLibraryPage history={history} match={match} {...authProps}  changeLang={changeLanguage}/>:<LoginPage {...authProps} match={match} tokensExistsExpired={props.tokensExistsExpired}  changeLang={changeLanguage} history={history} />}   />*/}             

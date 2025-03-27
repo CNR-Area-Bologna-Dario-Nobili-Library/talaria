@@ -17,4 +17,9 @@ export default defineMessages({
     id: `${scope}.subtitle`,
     defaultMessage: 'Create a profile',
   },
+  forgot: {
+    id: `${scope}.forgotPassword`,
+    defaultMessage: 'Forgot your password?',
+  },
+
 });

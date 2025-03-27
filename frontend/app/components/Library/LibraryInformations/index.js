@@ -68,7 +68,7 @@ const LibraryInformations =(props) => {
     let intl=useIntl();
 
     return (
-
+ 
 
         <div className={`libraryInformations ${customClass?customClass:''}`}>
             <div className='library_name'>
@@ -80,6 +80,7 @@ const LibraryInformations =(props) => {
             </Link>||
                 <span>{data.id} - {data.name}</span>
             }
+            {data.alt_name && data.alt_name!="" && <div className='alternative_name'><i className='fa-solid fa-tag'></i>{data.alt_name}</div>}
 
             </div>
             {data.institution && <div className='institution'>

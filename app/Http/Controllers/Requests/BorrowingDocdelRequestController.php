@@ -8,6 +8,7 @@ use App\Models\BaseTransformer;
 use App\Models\Libraries\Tag;
 use App\Models\Requests\BorrowingDocdelRequest;
 use App\Models\Requests\BorrowingDocdelRequestTransformer;
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -242,7 +243,10 @@ class BorrowingDocdelRequestController extends ApiController
                     $n=new BorrowingDocdelRequestNotification($newReq);
                     
                     foreach ($newReq->borrowingLibraryOperators() as $op)    
-                    $op->notify($n);           
+                    {
+                        $u=User::findOrFail($op["user_id"]);
+                        $u->notify($n); 
+                    }                               
                 } 
     
                 return $this->response->item($newReq, new $this->transformer())->setMeta($newReq->getInternalMessages())->morph();

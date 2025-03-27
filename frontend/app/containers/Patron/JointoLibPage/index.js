@@ -1,383 +1,88 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { useIntl } from 'react-intl';
+import messages from './messages';
 import makeSelectLibrary from 'containers/Library/selectors';
 import {
-  requestUser,
-  requestAccessToLibrary,
-  requestUpdateAccessToLibrary,
+  requestMyLibraries,
+  requestGetLibrary,
   requestGetTitlesOptionList,
   requestLibraryOptionList,
-  requestGetLibraryListNearTo,
-  requestSearchPlacesByText,
 } from '../actions';
-import { requestMyLibraries } from '../actions';
-import { fields, fieldsIsNew } from './fields';
-import BelongingLibraries from '../BelongingLibraries/';
-import { requestGetLibrary } from 'containers/Library/actions';
 import {
   placesSelector,
   librariesSelector,
   titlesSelector,
   libraryListSelector,
 } from '../selectors';
-
-import Select from 'react-select';
 import makeSelectPatron, { isPatronLoading } from '../selectors';
-import { CustomForm } from 'components';
-import messages from './messages';
+import BelongingLibraries from '../BelongingLibraries/';
 import history from 'utils/history';
 
 function JointoLibPage(props) {
   const intl = useIntl();
-  const { auth, dispatch, isLoading, patron, match } = props;
-  const { params } = match;
-  const isNew = !params || !params.id || params.id === 'new';
-  const departments = props.library.departmentOptionList || []; // Ensure departmentOptionList is not undefined
-  const titles = props.titles || []; // Ensure titles is not undefined
-  const libraries = props.libraries || [];
-  /*Paging*/
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); // default items per page::
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = currentPage * itemsPerPage;
-  /*Map Selection*/
-  const [selectedMarker, setSelectedMarker] = useState({});
-  const [showMapForm, setShowMapForm] = useState(false);
-  const Library_id_URL = match.params.library_id;
-  const [SelectedLibraryID, setSelectedLibraryID] = useState('');
-  const [selectedValueAll, setselectedValueAll] = useState(null);
-  const librariesList = patron.my_libraries.data;
-  const librariesToDisplay = librariesList.slice(startIndex, endIndex);
-  const [preferred, setPreferred] = useState(null);
-
-  // Function to handle changes in items per page
-  // const handleItemsPerPageChange = event => {
-  //   setItemsPerPage(Number(event.target.value));
-  //   setCurrentPage(currentPage); // Reset to first page when items per page changes
-  // };
-
-  // const handleGoToReferenceManager = () => {
-  //   history.push('/patron/references/new');
-  // };
-
-  // const handleGoToMyLibraries = () => {
-  //   history.push('/patron/my-libraries');
-  // };
-
-  // // Function to handle page change
-  // const handlePageChange = pageNumber => {
-  //   setCurrentPage(pageNumber);
-  // };
-
-  const handleShowMapForm = () => {
-    setShowMapForm(!showMapForm); // Toggle the value
-  };
+  const { auth, dispatch, patron } = props;
 
   useEffect(() => {
     dispatch(requestLibraryOptionList());
-    //dispatch(requestLibraryDepartmentsOptionList());
     dispatch(requestGetTitlesOptionList());
     dispatch(requestMyLibraries());
-    if (params && params.library_id) {
-      dispatch(requestGetLibrary(params.library_id, 'departments'));
-      if (!isNew) {
-        dispatch(requestUser(params.library_id, params.id));
-      }
-    }
-  }, [dispatch, params]);
-  //[dispatch, params, isNew]
-
-  // Define options for the React Select dropdown
-  const options = libraries.map(library => ({
-    value: library.value,
-    label: library.label,
-    isDisabled: librariesToDisplay.some(
-      item => item.library_id === library.value,
-    ),
-  }));
-
-  const selectedOptionIndex = options.findIndex(
-    option => option.value === parseInt(params.library_id, 10),
-  );
-  const selectedValue =
-    selectedOptionIndex !== -1 ? options[selectedOptionIndex] : null;
-
-  const handleStateUpdate = LibraryID => {
-    setSelectedLibraryID(LibraryID);
-    dispatch(requestGetLibrary(LibraryID, 'departments'));
-  };
-
-  const handleLibraryChange = event => {
-    var libraryFromMap = options.findIndex(
-      option => option.value === parseInt(event, 10),
-    );
-    var value = libraryFromMap !== -1 ? options[libraryFromMap] : options[0];
-    setselectedValueAll(value);
-    handleStateUpdate(value.value);
-    setShowMapForm(false);
-  };
-
-  const handleEdit = (library_id, id) => {
-    history.push('/patron/my-libraries/' + library_id + '/edit/' + id);
-  };
-
-  const handleDelete = libraryToDelete => {
-    alert('Delete action' + JSON.stringify(libraryToDelete));
-    // Implement your delete logic here
-    // Remove the library from the state or send a delete request to the server
-    // Update the librariesList state accordingly
-    // Example: setLibrariesList(updatedLibrariesList);
-  };
-
-  const handleMarkerSelection = LibraryID => {
-    var selectedLibFromUrl = options.findIndex(
-      option => option.value === parseInt(LibraryID, 10),
-    );
-    var value =
-      selectedLibFromUrl !== -1 ? options[selectedLibFromUrl] : options[0];
-    setselectedValueAll(value);
-    handleStateUpdate(LibraryID);
-    setShowMapForm(false);
-  };
-
-  const handleChangeData = (field_name, value) => {
-    //Usato per aggiornare le tendine con dipartimenti/... un base alla biblio scelta
-    if (field_name === 'library_id' && value)
-      dispatch(requestGetLibrary(value, 'departments'));
-  };
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
-    if (isNew) {
-      // Check if params.library_id exists and is greater than 0
-      if (params.library_id && parseInt(params.library_id, 10) > 0) {
-        // Dispatch requestAccessToLibrary with library_id
-        dispatch(
-          requestAccessToLibrary({
-            ...data,
-            user_id: props.auth.user.id,
-            library_id: params.library_id,
-          }),
-        );
-      } else {
-        // Dispatch requestAccessToLibrary without library_id
-        dispatch(
-          requestAccessToLibrary({
-            ...data,
-            user_id: props.auth.user.id,
-            url: params,
-          }),
-        );
-      }
-    } else {
-      // Dispatch requestUpdateAccessToLibrary for updating existing access
-      dispatch(
-        requestUpdateAccessToLibrary({
-          ...data,
-          library_id: params.library_id,
-          id: params.id,
-        }),
-      );
-    }
-  };
-
-  const handleMarkerClick = event => {
-    console.log('Marker clicked. State updated.');
-  };
+  }, [dispatch]);
 
   return (
     <>
-      {/* Render CustomForm based on the state */}
-      {showMapForm && (
-        <CustomForm
-          submitCallBack={formData =>
-            dispatch(
-              requestAccessToLibrary(
-                { ...formData, user_id },
-                intl.formatMessage(messages.libraryCreateMessage),
-              ),
-            )
-          }
-          submitText={intl.formatMessage(messages.librarySubmit)}
-          fields={fieldsIsNew}
-          selectedMarker={selectedMarker}
-          messages={messages}
-          backButton={false}
-          onChangeData={(field_name, value) =>
-            handleChangeData(field_name, value)
-          }
-          onPlacesSearch={search => dispatch(requestSearchPlacesByText(search))}
-          places={props.places}
-          placesFreeSearchPlaceholder={intl.formatMessage(
-            messages.placesFreeSearchPlaceholder,
-          )}
-          
-          getMarkers={pos => dispatch(requestGetLibraryListNearTo(pos))}
-          markers={props.libraryList}
-          onMarkerClick={handleMarkerClick}
-          markerPopupComponent={(marker, chooseMarkerFromMap) => (
-            <div className="libraryPopup">
-              <div className="card-body">
-                <h5 className="card-title">{marker.name}</h5>
-                <h6 className="card-subtitle mb-2 text-muted">
-                  {marker.address}
-                </h6>
-                <button onClick={() => handleMarkerSelection(marker.id)}>
-                  Select this Library
-                </button>
-              </div>
-            </div>
-          )}
-        />
+      {/* Top button: "Go to Reference Manager" */}
+      {auth.permissions.roles.includes('patron') && (
+        <div className="text-center mb-3">
+          <button
+            className="btn btn-success btn-lg btn-block"
+            onClick={() => history.push('/patron/references/new')}
+          >
+            {intl.formatMessage(messages.buttonReferenceManager)}
+          </button>
+        </div>
       )}
-
-      
-
-      <form onSubmit={handleSubmit} className="container mt-3">
-        <div className="row">
-          <div className="col-md-4">
-            {/* <div className="form-group"> */}
-            <label htmlFor="library_id">Library</label>
-            <div className="d-flex align-items-center">
-              <Select
-                name="library_id"
-                id="library_id"
-                styles={{
-                  container: provided => ({
-                    ...provided,
-                    width: '300px',
-                  }),
-                }}
-                options={options}
-                onChange={selectedOption => {
-                  handleLibraryChange(
-                    selectedOption ? selectedOption.value : '',
-                  );
-                }}
-                value={selectedValueAll || selectedValue}
-                isDisabled={Library_id_URL > 0}
-                isSearchable // Enables searching
-                required
-              />
-              <button
-                className="btn btn-success ml-2"
-                type="button"
-                onClick={handleShowMapForm}
-                disabled={Library_id_URL > 0}
-              >
-                <i className="fas fa-map-marker-alt" />{' '}
-              </button>
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="label">Label</label>
-              <input
-                type="text"
-                id="label"
-                name="label"
-                className="form-control"
-                required
-              />
-            </div>
-          </div>
-
-          {auth.permissions.roles && auth.permissions.roles.includes('patron') && (
-            <div className="col-md-4">
-              <div className="form-group">
-                <label htmlFor="department_id">Department</label>
-                <Select
-                  name="department_id"
-                  id="department_id"
-                  options={departments.map((dept, index) => ({
-                    value: dept.value,
-                    label: dept.label,
-                  }))}
-                />
+      {patron.my_libraries.data.length > 0 ? (
+        <div>
+          <BelongingLibraries
+            librariesList={patron.my_libraries.data}
+            gridtitleiconLink="/patron/my-libraries"
+            history={history}
+            dispatch={dispatch}
+            showeditbutton={false}
+            showpreferredbutton={false}
+          />
+        </div>
+      ) : (
+        <div className="container mt-3">
+          <div className="row justify-content-center">
+            <div className="col-md-12">
+              <div className="alert alert-info text-center">
+                <h3>{intl.formatMessage(messages.noassociatedlibraries)}</h3>
               </div>
-            </div>
-          )}
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="titleId">Title</label>
-              <Select
-                name="title_id"
-                id="title_id"
-                options={titles.map((title, index) => ({
-                  value: title.value,
-                  label: title.label,
-                }))}
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="userReferent">User Referent</label>
-              <input
-                type="text"
-                id="userReferent"
-                name="user_referent"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_mat">User Matriculation</label>
-              <input
-                type="text"
-                id="user_mat"
-                name="user_mat"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_service_phone">Service Phone</label>
-              <input
-                type="tel"
-                id="user_service_phone"
-                name="user_service_phone"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="form-group">
-              <label htmlFor="user_service_email">Service Email</label>
-              <input
-                type="email"
-                id="user_service_email"
-                name="user_service_email"
-                className="form-control"
-                required
-              />
             </div>
           </div>
         </div>
-        <button type="submit" className="btn btn-primary">
-          {isNew ? 'Join to Library' : 'Update'}
-        </button>
+      )}
 
-        <BelongingLibraries
-          librariesList={librariesList}
-          gridtitleiconLink="/patron/my-libraries"
-          history={history}
-          dispatch={dispatch}
-          showeditbutton={true}
-        />
-      </form>
+      {/* Bottom buttons */}
+      <div className="text-center mt-3">
+      {auth.permissions.roles.includes('patron') && (
+        <button
+          className="btn btn-primary btn-lg"
+          onClick={() => history.push('/patron/my-libraries')}
+        >
+          {intl.formatMessage(messages.manageYourLibraries)}
+        </button> )}
+        <button
+          className="btn btn-primary btn-lg ml-3"
+          onClick={() => history.push('/patron/my-libraries/new')}
+        >
+          {intl.formatMessage(messages.joinNewLibrary)}
+        </button>
+      </div>
     </>
   );
 }
@@ -385,12 +90,11 @@ function JointoLibPage(props) {
 const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
   places: placesSelector(),
-  titles: titlesSelector(),
-  libraries: librariesSelector(), //Populate librairies in dropdown
+  titles: titlesSelector,
+  libraries: librariesSelector,
   patron: makeSelectPatron(),
   isLoading: isPatronLoading(),
-  libraryList: libraryListSelector() //populate libaries to map
-
+  libraryList: libraryListSelector(),
 });
 
 function mapDispatchToProps(dispatch) {

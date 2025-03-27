@@ -11,17 +11,24 @@ const LibraryEditPermissionsForm = (props) => {
     const {data,submitCallback,operatorData,history,filterPerm}=props
 
     console.log("LibraryEditPermissionsForm",props)
+
+    const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
     
     const intl = useIntl()
 
     let initPerms={ 
       'borrow':false,     
-      'lend': false,
-      'deliver': false,
-      'manage':false,    
-      'manage-users':false,
-      'manage-licenses': false
+      'lend': false,      
+      'manage': false,      
+    /*
+   NOT IMPLEMENTED     
+    'manage-licenses': false,
+    */
     }
+
+      //add "delivery" and "manage-users" options only if patrons are enabled
+    if (patrons_enabled) 
+      initPerms={...initPerms,deliver: false,'manage-users': false,}
     
       const [mounted,setMounted]=useState(false);
 
@@ -89,8 +96,7 @@ const LibraryEditPermissionsForm = (props) => {
          mounted && 
             <div className='editPermissionsForm'>                 
               <div className='card'>
-                <div className="card-body">                    
-                    <p className='intro'>Lorem Ipsum mollit aliqua occaecat incididunt et ut laboris reprehenderit incididunt veniam cupidatat veniam pariatur exercitation.</p>
+                <div className="card-body">              
                     {operatorData && <h5 className='card-title'>{operatorData.name} {operatorData.surname} ({operatorData.full_name}) {operatorData.email}</h5>}
                     <h4>{intl.formatMessage({id: 'app.global.permissions'})}</h4>
                     <ul>

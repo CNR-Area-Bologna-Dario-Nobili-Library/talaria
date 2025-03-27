@@ -6,6 +6,8 @@ import { useState } from "react";
 import FileUpload from '../../../containers/FileUpload';
 
 const FulfillLendingRequest = props => {
+
+
     console.log('FulfillLendingRequest', props)
     const {data,customClass,FulfillLendingRequestStatus, unFulfillLendingRequestStatus} = props
     const intl = useIntl()
@@ -88,6 +90,19 @@ const FulfillLendingRequest = props => {
 
     });
 
+    const resetFormData = () => {
+        setFormData({
+            fulfill_type: null,
+            url: null,
+            fulfill_note: null,
+            filehash: null,
+            filename: null,
+            fulfill_inventorynr: null,
+            notfulfill_type: null,
+            lending_protnr: null,
+        });
+    };
+    
     function isEmpty(object) {
         for (const property in object) {
           return false;
@@ -104,13 +119,13 @@ return (
             <Row>
             {(data.all_lender == null || data.all_lender == 0) && data.lending_archived== null && (data.lending_status=="willSupply" || data.lending_status=="cancelRequested") &&
                 <Col sm={3}>                    
-                        <button type="button" className="btn btn-primary btn-lg" onClick={function() { setunfilPanelActions(false); setshowPanelActions(true); }}
+                        <button type="button" className="btn btn-primary btn-lg" onClick={function() { setunfilPanelActions(false); setshowPanelActions(true); resetFormData(); }}
                         >{intl.formatMessage({id: "app.requests.fulfill"})}</button>
                       
                 </Col>}
                 <Col sm={3}> 
                     {(data.all_lender == null || data.all_lender == 0) && data.lending_archived == null && data.lending_status!="cancelRequested" && 
-                      <button type="button" className="btn btn-danger btn-lg" onClick={function() { setunfilPanelActions(true); setshowPanelActions(false); }}>{intl.formatMessage({id: "app.requests.unfill"})}</button>
+                      <button type="button" className="btn btn-danger btn-lg" onClick={function() { setunfilPanelActions(true); setshowPanelActions(false); resetFormData(); }}>{intl.formatMessage({id: "app.requests.unfill"})}</button>
                     }
                 </Col>
             </Row>

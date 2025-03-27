@@ -20,6 +20,7 @@ import {
 export const initialState = {
   loading: false,
   error: null,
+
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -46,13 +47,13 @@ const permissionboxReducer = (state = initialState, action) =>
         draft.loading = true;
         draft.error = initialState.error;
         break;
-      case REQUEST_REJECT_PERMISSION_SUCCESS: 
+      case REQUEST_REJECT_PERMISSION_SUCCESS:
         draft.loading = false;
         draft.error = initialState.error;
         break;
-      case REQUEST_REJECT_PERMISSION_FAIL: 
-      draft.loading = false;
-      draft.error = initialState.error;
+      case REQUEST_REJECT_PERMISSION_FAIL:
+        draft.loading = false;
+        draft.error = initialState.error;
         break;
 
       case REQUEST_SUCCESS:

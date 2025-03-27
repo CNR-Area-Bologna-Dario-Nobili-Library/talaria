@@ -15,10 +15,13 @@ class Project extends BaseModel
 
     protected static $observerClass=ProjectObserver::class;
 
+    protected $attributes= [
+        'status', 
+    ];
+
 
     protected $fillable = [
-        'name',
-        'active',
+        'name',        
          /*info amministrative */
          'vatnumber',
          'fiscalcode',

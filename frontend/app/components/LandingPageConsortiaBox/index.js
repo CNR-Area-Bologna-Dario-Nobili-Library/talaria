@@ -3,11 +3,13 @@ import {Button} from 'reactstrap'
 import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import {formatDateTime} from '../../utils/dates';
 import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
 const LandingPageConsortiasBox = (props) => {
-    const {auth,title,match,history,canCollapse,collapsed}=props
+    const {auth,title,intro,match,history,canCollapse,collapsed}=props
+    let intl=useIntl();
 
     const statusClass = status => {
         switch (status) {
@@ -28,6 +30,7 @@ const LandingPageConsortiasBox = (props) => {
         <LandingPageBox
           iconClass="fa-solid fa-landmark"
           title={title}
+          intro={intro}
           canCollapse={canCollapse}
           collapsed={collapsed}
         >
@@ -66,7 +69,7 @@ const LandingPageConsortiasBox = (props) => {
                             ))}
                           </div>
                           <div className="div-table-cell d-flex justify-content-center align-items-center">
-                            <div className="div-current-actions text-center">
+                            <div className="div-actions text-center">
                               <Link
                                 className="btn btn-sm btn-primary mb-2"
                                 to={'/consortia/' + res.resource.id}
@@ -152,14 +155,14 @@ const LandingPageConsortiasBox = (props) => {
                                     href="#"
                                     onClick={() => props.onAccept(res.id)}
                                   >
-                                    Accept
+                                   <i className="fa-solid fa-check" title={intl.formatMessage({id: 'app.global.accept'})}></i>
                                   </a>
                                   <a
                                     className="btn btn-danger btn-sm"
                                     href="#"
                                     onClick={() => props.onReject(res.id)}
                                   >
-                                    Reject
+                                    <i className="fa-solid fa-times" title={intl.formatMessage({id: 'app.global.reject'})}></i>
                                   </a>
                                 </div>
                               )}

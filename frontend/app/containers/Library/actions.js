@@ -74,7 +74,10 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS,
    REQUEST_GET_USERS_OPTION_ITEMS,
    REQUEST_GET_USERS_OPTION_ITEMS_SUCCESS,
-   REQUEST_INVITE_LIBRARY_OPERATOR
+   REQUEST_INVITE_LIBRARY_OPERATOR,
+   REQUEST_GET_LIBRARY_OPTIONLIST,
+  REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
+  REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
    
   } from "./constants";
 
@@ -845,6 +848,27 @@ return {
     return {
       type: REQUEST_REMOVE_LIBRARY_PENDING_OPERATOR_SUCCESS,
       result
+    };
+  }
+
+  export function requestLibraryOptionList(query) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPTIONLIST,
+      query,
+    };
+  }
+  
+  export function requestLibraryOptionListSuccess(result) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
+      result,
+    };
+  }
+  
+  export function requestLibraryOptionListFail(query) {
+    return {
+      type: REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
+      query,
     };
   }
 

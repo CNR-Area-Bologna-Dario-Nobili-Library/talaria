@@ -13,6 +13,7 @@ import messages from './messages';
 import { Link, NavLink } from 'react-router-dom';
 import { DropdownItem, DropdownMenu, DropdownToggle, Nav, UncontrolledDropdown, Badge, NavItem } from 'reactstrap';
 import SubHeaderBar from 'components/SubHeaderBar'
+import LanguageSelectionDropDown from 'components/LanguageSelectionDropDown'
 import { AppAsideToggler, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from 'images/logo.png'
 import logomini from 'images/logo-mini.png'
@@ -30,6 +31,9 @@ function HeaderBar(props) {
   // console.log('HeaderBar', props)
 
   const { auth, isLogged, history, headermenu, routes, isMobile,match,resource } = props
+
+  const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
+
 
   const currentRoute = routes && routes.filter(route => route.current).length > 0 ? routes.filter(route => route.current) : null;
 
@@ -50,7 +54,7 @@ function HeaderBar(props) {
     <>
       <header className="app-header navbar bg-grey-white px-4">
       <div className="container">
-        <div className="header-container row">
+        <div className="header-container d-flex flex-row">
           <div className="header-left-col">            
             { isLogged && headermenu && isMobile &&
               currentRoute && currentRoute[0].children.length > 0 &&
@@ -79,13 +83,13 @@ function HeaderBar(props) {
                   { isLogged && (
                       <>
                         <Link className="nav-link" to="/user/dashboard">
-                        <i className="fa-solid fa-2x fa-user d-table-cell"></i>                        
+                        <i className="fa-solid fa-user d-table-cell"></i>                        
                         <span className="user-name d-none d-md-table-cell align-middle px-3">                          
                           {subStringer(auth.user.name, 10)}                          
                         </span>                        
                         </Link>
                         <DropdownToggle nav>
-                          <i className="fa-solid fa-2x fa-sort-down d-table-cell align-middle"></i>
+                          <i className="fa-solid fa-sort-down d-table-cell align-middle"></i>
                         </DropdownToggle>
                       </>
                     )
@@ -135,7 +139,7 @@ function HeaderBar(props) {
                         </div>
                       )}                     
                       {
-                        checkRole(auth, "patron") && (
+                        patrons_enabled && checkRole(auth, "patron") && (
                         <div className="resources-menu">
                           <Row className="head item">
                               <i className={`fa-solid fa-book-open-reader`}></i>
@@ -143,7 +147,7 @@ function HeaderBar(props) {
                           </Row>
                           <Row className="item">
                               <NavLink to={`/patron/references`} activeClassName="current">
-                                Patron main page 
+                              <FormattedMessage {...messages.patronDashboard} />
                               </NavLink>    
                           </Row>
                         </div>)
@@ -188,7 +192,10 @@ function HeaderBar(props) {
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
-            {isLogged && <Notification /> }
+            {/*DISABLED NOTIFICATION (NOT FULLY IMPLEMENTED 
+             isLogged && <Notification /> 
+             */}
+            {<LanguageSelectionDropDown changeLang={props.changeLang} /> }
           </div>
           </div>
         </div>

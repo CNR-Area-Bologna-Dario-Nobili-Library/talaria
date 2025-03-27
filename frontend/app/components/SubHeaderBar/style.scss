@@ -3,7 +3,7 @@
     overflow-y: auto;
     
     & .subheader-menu {
-        flex-wrap: nowrap;
+        /*flex-wrap: nowrap;*/
         padding: 0.5rem 0;
         & div:not(.current-page){
             a:hover {
@@ -20,6 +20,15 @@
                 padding: 10px;
             }
             
+        }
+
+        @media (max-width: 620px) {
+
+            & .current-page {
+                a {
+                    padding: 3px;
+                }
+            }
         }
     }
 }

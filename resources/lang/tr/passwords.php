@@ -13,9 +13,9 @@ return [
     |
     */
 
-    'password' => '???Passwords must be at least eight characters and match the confirmation.',
-    'reset' => '???Your password has been reset',
-    'sent' => '???We have e-mailed you a password reset link',
-    'token' => '???This password reset token is invalid.',
-    'user' => "???We can't find a user with that e-mail address.",    
+    'password' => 'Şifreler en az sekiz karakter uzunluğunda olmalı ve doğrulamaya uymalıdır.',
+    'reset' => 'Şifreniz yenilenmiştir',
+    'sent' => 'Size email ile bir şifre yenileme linki gönderdik',
+    'token' => 'Bu şifre yenileme talebi geçersiz',
+    'user' => "Bu email adresine sahip bir kullanıcı bulamadık.",    
 ];

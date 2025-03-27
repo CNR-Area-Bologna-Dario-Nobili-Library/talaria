@@ -50,7 +50,7 @@ const MyLibrariesListPage = (props) => {
     }
    
     return (
-        <>
+        <> 
             <MyLibrariesList 
                 data={librariesList}
                 loading={isLoading}

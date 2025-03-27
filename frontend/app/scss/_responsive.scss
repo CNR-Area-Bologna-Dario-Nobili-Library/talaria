@@ -1,6 +1,6 @@
-@include media-breakpoint-down(lg) {
+//@include media-breakpoint-down(lg) {
     .app-body {
-        margin-top: 90px;
+        margin-top: 120px;/*90px;*/
     }
     .app-header { 
         z-index: 1030;
@@ -14,7 +14,7 @@
         z-index: 1020;
         margin-top: 55px;
     }
-}
+//}
 
 @include media-breakpoint-down(md) {
     .app-subheader {

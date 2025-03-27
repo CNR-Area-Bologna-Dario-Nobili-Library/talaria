@@ -24,25 +24,7 @@ function Footer(props) {
   return (
     <footer className="app-footer">
       <div className="container">
-        <div className="top">
-          <div className="lang-change">
-            <NavLink to="#" onClick={(e)=>changeLang('it')}>
-              Italiano
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('en')}>
-              English (UK)
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('es')}>
-              Español
-            </NavLink>
-            <NavLink to="#" onClick={(e)=>changeLang('tr')}>
-              Türkçe
-            </NavLink>
-            {/*<NavLink to="#" onClick={(e)=>changeLang('fr')}>
-              Français (France)
-            </NavLink>
-            */}
-          </div>
+        <div className="top">  
           <div className="footer-menu">          
             <>
               <a href="https://l.cnr.it/talaria-software-manual" target="_blank">
@@ -60,7 +42,7 @@ function Footer(props) {
         </div>
         <div className="footer-logos bottom align-items-end">
           <a href="" target="_blank"><img className='mh-100' src={logo} alt="logo" /></a>                    
-          <span className="poweredby float-right"><a href="https://github.com/tugn0x/Talaria" target="_blank"><img className='' src={poweredBy} alt="Powered By Talaria" /></a></span>
+          <span className="poweredby float-right"><a href="https://github.com/CNR-Area-Bologna-Dario-Nobili-Library/talaria" target="_blank"><img className='' src={poweredBy} alt="Powered By Talaria" /></a></span>
         </div>
       </div>
     </footer>

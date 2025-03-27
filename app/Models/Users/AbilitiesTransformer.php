@@ -19,15 +19,16 @@ class AbilitiesTransformer extends BaseLightTransformer
             ->distinct()
             ->get()
             ->map(function ($item) {
-                $entity = $item->entity_type::select('name')->find($item->entity_id);
+                $entity = $item->entity_type::select(['name','status'])->find($item->entity_id);
                 if($entity) {
                     $item->resource = $entity->getTable();
                     $item->entity_name = $entity ? $entity->name : '';
+                    $item->entity_status = $entity ? $entity->status : '';
                 }
                 return $item;
             })
             ->filter(function ($item) {
-                return $item->entity_name;
+                return $item->entity_name." XXXXX";
             })
             ->groupBy(['resource','entity_id']);
 //            return $this->response->collection($resources, new PermissionTransformer);
@@ -38,7 +39,8 @@ class AbilitiesTransformer extends BaseLightTransformer
                 $resources_array[$class][] = [
                     'resource' => [
                         'id' => $id,
-                        'name' => $perms[0]['entity_name']
+                        'name' => $perms[0]['entity_name'],
+                        'status'=>$perms[0]['entity_status'],
                     ],
                     'permissions' => \Arr::pluck($perms, 'name')
                 ];

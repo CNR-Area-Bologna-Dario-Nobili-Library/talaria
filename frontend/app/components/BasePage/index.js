@@ -85,7 +85,9 @@ function BasePage(props) {
         history={props.history}
         auth={props.auth}
         logout={(request) => props.logout(request)}
-        resource={props.resource}/>
+        resource={props.resource}
+        changeLang={props.changeLang}
+        />
       <CSSTransition classNames="fade" unmountOnExit timeout={300} in={mounted} >
         <>
           <div className="app-body" onClick={closeSideBar}>

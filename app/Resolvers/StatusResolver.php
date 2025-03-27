@@ -5,10 +5,11 @@ namespace App\Resolvers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use \App\Models\User\User;
+use \App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Notifications\BaseNotification;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -189,7 +190,6 @@ class StatusResolver
         //executing jobs   
 
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); 
-        $collection = new Collection();                  
         if($this->flow->has('jobs'))
         {                      
             foreach ($this->flow->get('jobs') as $jobclass) {                
@@ -199,19 +199,19 @@ class StatusResolver
     }
 
     public function notify()
-    {        
+    {                
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); /*[$this->model->status()->first()->status]*/
-        $collection = new Collection();
+        $collection = new Collection(); //collection of users that has to receive the notification
         if($this->flow->has('notify'))
         {
             foreach ($this->flow->get('notify') as $entity=>$method) {
                 switch ($entity){
                     case 'Model':
-                        $items = $this->model->$method();
+                        $items = $this->model->$method();                        
                         if($items->count())
                         {
                                 foreach ($items as $item) {
-                                    $collection->add($item);
+                                    $collection->push($item);
                                 }
                         }
                         break;
@@ -220,25 +220,25 @@ class StatusResolver
                         if($items->count())
                         {
                                 foreach ($items as $item) {
-                                    $collection->add($item);
+                                    $collection->push($item);
                                 }
                         }
                         break;
                 }
-            }
+            }            
             if($collection && $collection->count()>0)
             {
                 $bn=new BaseNotification($this->model);   
+                                                                     
+                $notificationClass="App\\Notifications\\".(new \ReflectionClass($this->model))->getShortName()."Notification"; 
 
-                $userstobenotified=$collection->unique();            
-                foreach($userstobenotified as $u)
-                {
-                    $notificationClass="App\\Notifications\\".(new \ReflectionClass($this->model))->getShortName()."Notification";
-                    if(class_exists($notificationClass))                                        
-                        $bn=new $notificationClass($this->model);                       
-
-                    $u->notify($bn);                    
-                }
+                if(class_exists($notificationClass))     
+                    $bn=new $notificationClass($this->model);      
+                
+                $collection->unique('user_id')->each(function ($item,$coll) use ($bn) {                      
+                    $u=User::findOrFail($item["user_id"]);
+                    $u->notify($bn);                                                                        
+                });
             }
         }
         //return false;

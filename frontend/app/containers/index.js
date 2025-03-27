@@ -18,6 +18,7 @@ import UserPage from "./User/UserPage/Loadable"
 import PatronPage from "./Patron/PatronPage/Loadable"
 import AdminPage from "./Admin/AdminPage/Loadable"
 import RegisterLibraryPage from './RegisterLibrary'
+import FindLibraryPage from './Library/FindLibraryPage'
 import NotAuthorizedPage from './NotAuthorizedPage/Loadable';
 import NotFoundPage from './NotFoundPage/Loadable';
 
@@ -47,6 +48,7 @@ export {
   PatronPage,
   LibraryPage,
   RegisterLibraryPage,
+  FindLibraryPage,
   LibrarySearchPanel
 }
 

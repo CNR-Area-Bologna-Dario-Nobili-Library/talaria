@@ -44,7 +44,7 @@
         margin: 0;
     }
     .nav-item {
-        min-width: 32px;
+        min-width: 15px;
         .nav-link {
             color: $active;
             span, .fa-sort-down {
@@ -54,7 +54,7 @@
                 font-size: 1rem;
                 position: absolute;
                 top: -1px;
-                right: -5px;
+                right: -8px;
             }
             .fa-user {
                 font-size: 1.5rem;

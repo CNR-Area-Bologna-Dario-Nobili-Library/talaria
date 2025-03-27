@@ -1,5 +1,5 @@
 FROM --platform=linux/amd64 node:8.15.1
-# dovrebbe avere la npm v5.3 integrata
+# NOTE: cannot use node's arm/v8 version because packages are not available for such platform too and frontend would not start
 
 WORKDIR /usr/src
 

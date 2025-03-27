@@ -18,6 +18,10 @@ class Consortium extends BaseModel
         'name',
     ];
 
+    protected $attributes= [
+        'status', 
+    ];
+
     public function institutions()
     {
         return $this->belongsToMany(Institution::class);
