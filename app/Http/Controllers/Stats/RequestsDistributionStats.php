@@ -47,17 +47,37 @@ class RequestsDistributionStats extends BaseStatsController
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
       'institution_id' => 'sometimes|integer|exists:institutions,id',
+      'country_id' => 'sometimes|integer|exists:countries,id',
       'material_type' => 'sometimes|integer|min:1|max:5',
+      // 'library_id' => 'sometimes|integer',
+      // 'institution_id' => 'sometimes|integer',
+      // 'country_id' => 'sometimes|integer'
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
     $institution_id = $validated['institution_id'] ?? null;
+    $country_id = $validated['country_id'] ?? null;
     $material_type = $validated['material_type'] ?? null;
 
-    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
-    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
-    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
+    $borrowing_query_condition = null;
+    $lending_query_condition = null;
+    $query_id = null;
+
+    // Priority: Library >> Institution >> Country
+    if ($library_id) {
+      $borrowing_query_condition = "borrowing_library.id";
+      $lending_query_condition = "lending_library.id";
+      $query_id = $library_id;
+    } else if ($institution_id) {
+      $borrowing_query_condition = "borrowing_library.institution.id";
+      $lending_query_condition = "lending_library.institution.id";
+      $query_id = $institution_id;
+    } else if ($country_id) {
+      $borrowing_query_condition = "borrowing_library.country.id";
+      $lending_query_condition = "lending_library.country.id";
+      $query_id = $country_id;
+    }
 
     $globalFilters = [];
 
@@ -152,7 +172,7 @@ class RequestsDistributionStats extends BaseStatsController
       $lendingUnfilledFilter = [
         'bool' => [
           'must' => [
-            ['term' => ['aggregated_fulfilled_status.keyword' => 'Not fulfilled']],
+            ['term' => ['aggregated_lending_status.keyword' => 'Not fulfilled']],
             ['term' => [$lending_query_condition => $query_id]],
           ]
         ]
@@ -296,14 +316,21 @@ class RequestsDistributionStats extends BaseStatsController
     );
     $lending_shown_statuses = ['In progress', 'Fulfilled', 'Not fulfilled', 'Canceled'];
 
+    $filtered_borrowing = array_values(array_filter($borrowing_aggregation, function ($item) use ($borrowing_shown_statuses) {
+      return in_array($item['key'], $borrowing_shown_statuses);
+    }));
+
+    $filtered_lending = array_values(array_filter($lending_aggregation, function ($item) use ($lending_shown_statuses) {
+      return in_array($item['key'], $lending_shown_statuses);
+    }));
+
     $result = [
-      'total' => $response['hits']['total']['value'],
-      'by_borrowing_status' => array_values(array_filter($borrowing_aggregation, function ($item) use ($borrowing_shown_statuses) {
-        return in_array($item['key'], $borrowing_shown_statuses);
-      })),
-      'by_lending_status' => array_values(array_filter($lending_aggregation, function ($item) use ($lending_shown_statuses) {
-        return in_array($item['key'], $lending_shown_statuses);
-      })),
+      'total_borrowing_requests' => array_sum(array_column($filtered_borrowing, 'count')),
+      'by_borrowing_status' => $filtered_borrowing,
+
+      'total_lending_requests' => array_sum(array_column($filtered_lending, 'count')),
+      'by_lending_status' => $filtered_lending,
+
       'borrowing_fulfilled_distribution' => $this->transformAggregation(
         $response['aggregations']['borrowing_fulfilled_distribution']['by_fulfill_type'],
         'by_material_type'
