@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Log;
  * - Year (`year`): Only include requests withing the specified year.
  * - Library ID (`library_id`): Only include requests from a specific library.
  * - Institution ID (`institution_id`): Only include requests from all libraries of a specific institution.
+ * - Country ID (`country_id`): Only include requests from all libraries of a specific country.
  */
 class FillrateStats extends BaseStatsController
 {
@@ -25,16 +26,36 @@ class FillrateStats extends BaseStatsController
     $validated = $request->validate([
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
-      'institution_id' => 'sometimes|integer|exists:institutions,id'
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
+      'country_id' => 'sometimes|integer|exists:countries,id',
+      // 'library_id' => 'sometimes|integer',
+      // 'institution_id' => 'sometimes|integer',
+      // 'country_id' => 'sometimes|integer',
     ]);
 
     $year = $validated['year'] ?? null;
     $library_id = $validated['library_id'] ?? null;
     $institution_id = $validated['institution_id'] ?? null;
+    $country_id = $validated['country_id'] ?? null;
 
-    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
-    $lending_query_condition = "lending_library" . ($institution_id !== null && $library_id === null ? ".institution" : "") . ".id";
-    $query_id = ($library_id !== null) ? $library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
+    $borrowing_query_condition = null;
+    $lending_query_condition = null;
+    $query_id = null;
+
+    // Priority: Library >> Institution >> Country
+    if ($library_id) {
+      $borrowing_query_condition = "borrowing_library.id";
+      $lending_query_condition = "lending_library.id";
+      $query_id = $library_id;
+    } else if ($institution_id) {
+      $borrowing_query_condition = "borrowing_library.institution.id";
+      $lending_query_condition = "lending_library.institution.id";
+      $query_id = $institution_id;
+    } else if ($country_id) {
+      $borrowing_query_condition = "borrowing_library.country.id";
+      $lending_query_condition = "lending_library.country.id";
+      $query_id = $country_id;
+    }
 
     $mustClauses = [];
 
@@ -162,14 +183,17 @@ class FillrateStats extends BaseStatsController
     $lendingBucket   = $response["aggregations"]["lending_stats"]["buckets"]["lending"] ?? [];
 
     // If no documents, default to 0.
-    $borrowingFillRate = ($borrowingBucket["borrowing_fill_rate"]["value"] ?? 0) * 100;
-    $lendingFillRate   = ($lendingBucket["lending_fill_rate"]["value"] ?? 0) * 100;
+    $borrowingValue = $borrowingBucket["borrowing_fill_rate"]["value"] ?? null;
+    $lendingValue   = $lendingBucket["lending_fill_rate"]["value"] ?? null;
+
+    $borrowingFillRate = $borrowingValue !== null ? $borrowingValue * 100 : 0;
+    $lendingFillRate   = $lendingValue !== null ? $lendingValue * 100 : 0;
 
     $result = [];
     $result["borrowing_fill_rate"] = $borrowingFillRate;
-    $result["borrowing_unfill_rate"] = 100 - $borrowingFillRate;
+    $result["borrowing_unfill_rate"] = $borrowingValue !== null ? 100 - $borrowingFillRate : 0;
     $result["lending_fill_rate"] = $lendingFillRate;
-    $result["lending_unfill_rate"] = 100 - $lendingFillRate;
+    $result["lending_unfill_rate"] = $lendingValue !== null ? 100 - $lendingFillRate : 0;
 
     return response()->json($result);
   }
