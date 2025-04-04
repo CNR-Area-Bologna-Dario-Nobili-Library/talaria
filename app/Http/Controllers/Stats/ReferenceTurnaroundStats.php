@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * This controller returns the average turnaround time for references, grouped by reference.material_type.
- * It is possible to filter by request year and (borrowing) library_id or (borrowing) institution_id.
+ * It is possible to filter by request year and (borrowing) library_id, (borrowing) institution_id or (borrowing) country_id.
  */
 class ReferenceTurnaroundStats extends BaseStatsController
 {
@@ -19,14 +19,31 @@ class ReferenceTurnaroundStats extends BaseStatsController
       'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
       'library_id' => 'sometimes|integer|exists:libraries,id',
       'institution_id' => 'sometimes|integer|exists:institutions,id',
+      'country_id' => 'sometimes|integer|exists:countries,id'
+      // 'library_id' => 'sometimes|integer',
+      // 'institution_id' => 'sometimes|integer',
+      // 'country_id' => 'sometimes|integer'
     ]);
 
     $year = $validated['year'] ?? null;
     $borrowing_library_id = $validated['library_id'] ?? null;
     $institution_id = $validated['institution_id'] ?? null;
+    $country_id = $validated['country_id'] ?? null;
 
-    $borrowing_query_condition = "borrowing_library" . ($institution_id !== null && $borrowing_library_id === null ? ".institution" : "") . ".id";
-    $query_id = ($borrowing_library_id !== null) ? $borrowing_library_id : ($institution_id !== null ? $institution_id : null); // when both are present, library_id has more priority than institution_id
+    $borrowing_query_condition = null;
+    $query_id = null;
+
+    // Priority: Library >> Institution >> Country
+    if ($borrowing_library_id) {
+      $borrowing_query_condition = "borrowing_library.id";
+      $query_id = $borrowing_library_id;
+    } else if ($institution_id) {
+      $borrowing_query_condition = "borrowing_library.institution.id";
+      $query_id = $institution_id;
+    } else if ($country_id) {
+      $borrowing_query_condition = "borrowing_library.country.id";
+      $query_id = $country_id;
+    }
 
     $mustClauses = [];
 
