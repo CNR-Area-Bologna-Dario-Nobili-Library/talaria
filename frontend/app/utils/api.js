@@ -129,6 +129,12 @@ export const getNotification = (options) => {
   return request(`${BASE_URL}/api/v1/notifications/${id}?setToRead=${setToRead}`, options)
 };
 
+export function markNotificationAsRead(id, options) {
+  
+  options = getOption(options);
+  return request(`${BASE_URL}/api/v1/notifications/mark_notification_as_read/${id}`, options);
+}
+
 export const updateNotificationsAsRead = (options) => {
   options = getOption(options);
   return request(`${BASE_URL}/api/v1/notifications/mark_all_as_read`, options)

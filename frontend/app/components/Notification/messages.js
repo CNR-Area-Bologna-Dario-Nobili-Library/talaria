@@ -17,4 +17,8 @@ export default defineMessages({
     id: `${scope}.mark_all_as_read`,
     defaultMessage: 'Mark all as read',
   },
+  mark_notification_as_read: {
+    id: `${scope}.mark_notification_as_read`,
+    defaultMessage: 'Mark notification as read',
+  },
 });

@@ -314,6 +314,7 @@
   
   "app.components.Notification.header": "Bildirimler",
   "app.components.Notification.mark_all_as_read": "Hepsini okundu olarak işaretle",
+  "app.components.Notification.mark_notification_as_read": "?Mark notification as read",
   "app.components.LendingsList.LendingSelected":"Seçili",
 
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",

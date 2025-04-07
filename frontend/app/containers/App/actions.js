@@ -1,13 +1,14 @@
 import { REQUEST_GET_NOTIFICATION_LIST, REQUEST_GET_NOTIFICATION_LIST_SUCCESS,
-  REQUEST_GET_NOTIFICATION, REQUEST_GET_NOTIFICATION_SUCCESS, MARK_ALL_AS_READ,
+  REQUEST_GET_NOTIFICATION, REQUEST_GET_NOTIFICATION_SUCCESS, MARK_ALL_AS_READ,MARK_NOTIFICATION_AS_READ,
   REQUEST_ERROR, REQUEST_SUCCESS, REQUEST_CLEAR_NOTIFICATION_LIST
 } from './constants';
 
 
- export function requestNotifications(page = "") {
+ export function requestNotifications(page = "", readed = null) {
     return {
       type: REQUEST_GET_NOTIFICATION_LIST,
-      page
+      page,
+      readed,
     };
   }
 
@@ -39,6 +40,20 @@ import { REQUEST_GET_NOTIFICATION_LIST, REQUEST_GET_NOTIFICATION_LIST_SUCCESS,
     };
   }
   
+  export function updateNotificationsAsRead() {
+    return {
+      type: MARK_ALL_AS_READ,
+    };
+  }
+
+  export function markNotificationAsRead(id, setToRead) {
+      return {
+      type: MARK_NOTIFICATION_AS_READ,
+      id,
+      setToRead, 
+    };
+  }
+
   export function upadteNotificationsAsRead() {
     return {
       type: MARK_ALL_AS_READ,

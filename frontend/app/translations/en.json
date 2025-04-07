@@ -315,6 +315,8 @@
   
   "app.components.Notification.header": "Notifications",
   "app.components.Notification.mark_all_as_read": "Mark all as read",
+  "app.components.Notification.mark_notification_as_read": "Mark notification as read",
+
   "app.components.LendingsList.LendingSelected":"Selected",
 
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "???Invitare l'operatore selezionato?",
