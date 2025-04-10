@@ -98,7 +98,7 @@ class BorrowingDocdelRequestObserver extends BaseObserver
             'id' => $model->id,
             'body' => [
                 'id' => $model->id,
-                'request_date' => \Carbon\Carbon::parse($model->request_date)->format('Y-m-d H:i:s'),
+                'request_date' => $model->request_date ? \Carbon\Carbon::parse($model->request_date)->format('Y-m-d H:i:s') : null,
                 // 'fulfill_date' => \Carbon\Carbon::parse($model->fulfill_date)->format('Y-m-d H:i:s'),
                 'borrowing_status' => $model->borrowing_status,
                 'lending_status' => $model->lending_status,

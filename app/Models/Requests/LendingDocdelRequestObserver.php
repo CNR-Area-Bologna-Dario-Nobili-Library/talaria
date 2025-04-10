@@ -60,7 +60,7 @@ class LendingDocdelRequestObserver extends BaseObserver
             'body' => [
                 'id' => $model->id,
                 // 'request_date' => \Carbon\Carbon::parse($model->request_date)->format('Y-m-d H:i:s'),
-                'fulfill_date' => \Carbon\Carbon::parse($model->fulfill_date)->format('Y-m-d H:i:s'),
+                'fulfill_date' => $model->fulfill_date ? \Carbon\Carbon::parse($model->fulfill_date)->format('Y-m-d H:i:s') : null,
                 'borrowing_status' => $model->borrowing_status,
                 'lending_status' => $model->lending_status,
                 'aggregated_borrowing_status' => $aggregated_statuses['aggregated_borrowing_status'],
