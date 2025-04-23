@@ -528,7 +528,9 @@ class LibraryController extends ApiController
             $this->model = $this->model->byStatus($request->input('status')); 
         }
 
-
+        if ($request->filled('search')) {
+            $this->model = $this->model->searchByName($request->input('search'));
+        }
 
         return parent::index($request);    
     }

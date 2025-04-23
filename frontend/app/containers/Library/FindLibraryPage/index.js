@@ -13,7 +13,7 @@ import { FindLibrary } from '../../../components/Library/FindLibrary';
 import { makeSelectLibraryList } from '../selectors';
 import { createStructuredSelector } from 'reselect';
 
-import { requestLibraryOptionList} from '../actions';
+import { requestLibraryOptionList, requestClearLibraryOptionList} from '../actions';
 
 
 function FindLibraryPage(props) {
@@ -22,9 +22,14 @@ function FindLibraryPage(props) {
 
   const intl = useIntl();
 
-  useEffect(() => {
-    dispatch(requestLibraryOptionList());
-  }, [dispatch]);
+  const handleLibrarySearch = (query, action) => {
+    if (action === 'clear') {
+        dispatch(requestClearLibraryOptionList()); //dispatch is need since libraryList retains last search results when input is cleared.
+    }
+    if (action === 'input-change' && query.length >= 3) {
+        dispatch(requestLibraryOptionList(query));
+    }
+  };
   
   
 
@@ -34,7 +39,7 @@ function FindLibraryPage(props) {
       <BasePage {...props} routes={[]} headermenu={false}> 
           <h1 className="header">{intl.formatMessage({id:'app.containers.FindLibraryPage.header'})}</h1>      
           <p>{intl.formatMessage({id:'app.containers.FindLibraryPage.intro'})}</p>          
-          <FindLibrary  auth={auth} libraryList={libraryList} />
+          <FindLibrary  auth={auth} libraryList={libraryList} onLibrarySearch={handleLibrarySearch}/>
       </BasePage>          
   );
 }
