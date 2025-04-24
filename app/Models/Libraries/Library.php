@@ -324,11 +324,13 @@ class Library extends BaseModel
 
     public function scopeSearchByName($query, $searchTerm)
     {
-        return $query->where(function($q) use ($searchTerm) {
-            foreach (self::$simpleSearchFields as $field) {
-                $q->orWhere($field, 'LIKE', '%' . $searchTerm . '%');
+        $cleanTerm = strtolower(trim($searchTerm));
+
+        return $query->where(function($q) use ($cleanTerm) {
+            foreach ((new self)->simpleSearchFields as $field) {
+                $q->orWhereRaw("LOWER($field) LIKE ?", ['%' . $cleanTerm . '%']);
             }
-        })->limit(20);
+        });
     }
     
     public function operators($ability=null){               

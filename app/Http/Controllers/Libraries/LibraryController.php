@@ -528,10 +528,20 @@ class LibraryController extends ApiController
             $this->model = $this->model->byStatus($request->input('status')); 
         }
 
-        if ($request->filled('search')) {
-            $this->model = $this->model->searchByName($request->input('search'));
-        }
-
         return parent::index($request);    
+    }
+
+    public function optionList(Request $request)  // Note: No need to modify the generic Dispatcher logic, keeping it reusable across models. 
+    {
+        $this->talaria->disableAuthorize();
+        $collection = $this->talaria->optionList($this->model, $request, function($query, $request) {
+            if ($request->filled('q')) {
+                // Use strict search logic for libraries only
+                return $query->searchByName($request->input('q'));
+            }
+            return $query;
+        });
+        $this->talaria->enableAuthorize();
+        return response()->json($collection);
     }
 }
