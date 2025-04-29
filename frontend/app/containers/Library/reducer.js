@@ -61,6 +61,7 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
+  REQUEST_CLEAR_LIBRARY_OPTIONLIST
 } from "./constants";
 
 export const initialState = {
@@ -494,7 +495,10 @@ const libraryReducer = (state = initialState, action) =>
             draft.error = action.error;
             break;
 
-
+          case REQUEST_CLEAR_LIBRARY_OPTIONLIST:
+            draft.libraryOptionItemList = [];
+            draft.loading = false;
+            break;
           
 
       case UPLOAD_PROGRESS:

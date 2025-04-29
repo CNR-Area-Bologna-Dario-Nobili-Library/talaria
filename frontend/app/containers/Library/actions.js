@@ -78,6 +78,7 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_GET_LIBRARY_OPTIONLIST,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
+  REQUEST_CLEAR_LIBRARY_OPTIONLIST
    
   } from "./constants";
 
@@ -872,6 +873,12 @@ return {
     };
   }
 
+  export function requestClearLibraryOptionList() {
+    return {
+        type: REQUEST_CLEAR_LIBRARY_OPTIONLIST,
+    };
+  }
+  
   export function requestGetUsersOptionItems(query) {
     return {
       type: REQUEST_GET_USERS_OPTION_ITEMS,

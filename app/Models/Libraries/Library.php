@@ -322,6 +322,17 @@ class Library extends BaseModel
                 
     }
 
+    public function scopeSearchByName($query, $searchTerm)
+    {
+        $cleanTerm = strtolower(trim($searchTerm));
+
+        return $query->where(function($q) use ($cleanTerm) {
+            foreach ((new self)->simpleSearchFields as $field) {
+                $q->orWhereRaw("LOWER($field) LIKE ?", ['%' . $cleanTerm . '%']);
+            }
+        });
+    }
+    
     public function operators($ability=null){               
                 
          /*$users = User::all();      //WARNING: may be slow!!   

@@ -9,7 +9,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import './style.scss';
 
 export const FindLibrary = (props) => {
-    const {data,libraryList} = props
+    const {data,libraryList, onLibrarySearch} = props
     
     const [libraryId, setLibraryId] = useState(null);
     const [selectedValue, setSelectedValue] = useState(null);
@@ -100,12 +100,19 @@ export const FindLibrary = (props) => {
   };
 
   const onSearchInputChange = (query, e) => {
-    if (e.action === 'clear') {
-      resetSearchResults();
-    } else if (e.action === 'input-change') {
-      handleLibraryChange()
-    }
-  };
+    const action = e.action;
+
+    if (action === 'input-change') {
+      handleLibraryChange(null);
+      if (query.length >= 3) {
+        onLibrarySearch(query, action);   
+      } else {
+              resetSearchResults();             
+              onLibrarySearch('', 'clear');     
+        }
+      }
+        return query;   
+    };
 
     const handleLibraryChange = selectedOption => {
         setLocationError(null); // Reset any previous error message
