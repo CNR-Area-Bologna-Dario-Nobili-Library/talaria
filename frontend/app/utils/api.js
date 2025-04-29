@@ -858,37 +858,65 @@ export const getlibraryidentifierTypesOptionList = (options) => {
 
 //--------- STATS -------------//
 
-export const getFillrate = (options) => {
+export const getFillrate = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/fillrate/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/fillrate/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const requestDistribution = (options) => {
+export const requestDistribution = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
   const material_type = options.material_type;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
-  if (material_type) { queryParams.append('material_type', material_type); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (material_type) {
+    queryParams.append('material_type', material_type);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/requests-distribution/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/requests-distribution/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const countriesDistribution = (options) => {
+export const countriesDistribution = options => {
   options = getOption(options);
   const year = options.year;
   const country_id = options.country_id;
@@ -896,97 +924,164 @@ export const countriesDistribution = (options) => {
   const institution_id = options.institution_id;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (country_id) { queryParams.append('country_id', country_id); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/countries/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/countries/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const workingTime = (options) => {
+export const workingTime = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
   const material_type = options.material_type;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
-  if (material_type) { queryParams.append('material_type', material_type); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (material_type) {
+    queryParams.append('material_type', material_type);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/working-time/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/working-time/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const avgWorkingTime = (options) => {
+export const avgWorkingTime = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
   const material_type = options.material_type;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
-  if (material_type) { queryParams.append('material_type', material_type); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (material_type) {
+    queryParams.append('material_type', material_type);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/avg-working-time/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/avg-working-time/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const referenceTurnaround = (options) => {
+export const referenceTurnaround = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/reference-turnaround/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/reference-turnaround/?${queryParams.toString()}`,
+    options,
+  );
+};
 
-export const referencePubyearDistribution = (options) => {
+export const referencePubyearDistribution = options => {
   options = getOption(options);
   const year = options.year;
   const library_id = options.library_id;
   const institution_id = options.institution_id;
+  const country_id = options.country_id;
   const material_type = options.material_type;
 
   const queryParams = new URLSearchParams();
-  if (year) { queryParams.append('year', year); }
-  if (library_id) { queryParams.append('library_id', library_id); }
-  if (institution_id) { queryParams.append('institution_id', institution_id); }
-  if (material_type) { queryParams.append('material_type', material_type); }
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (material_type) {
+    queryParams.append('material_type', material_type);
+  }
 
-  return request(`${BASE_URL}/api/v1/stats/pubyear-distribution/?${queryParams.toString()}`, options);
-}
+  return request(
+    `${BASE_URL}/api/v1/stats/pubyear-distribution/?${queryParams.toString()}`,
+    options,
+  );
+};
 
 export const requestsPerLibrary = (options = {}) => {
   options = getOption(options);
 
   return request(`${BASE_URL}/api/v1/stats/borrowing-libraries/`, options);
-}
+};
 
 export const openAccessReferences = (options = {}) => {
   options = getOption(options);
 
   return request(`${BASE_URL}/api/v1/stats/oareferences/`, options);
-}
+};
 
 // export const getlibraryidentifierTypesOptionList = (options) => {
 //   options = getOption(options);
 //   const query = options.query ? options.query : "";
 //   return request(`${BASE_URL}/api/v1/projects/option-items?label=name&q=${query}`, options)
-  
 
 //   //return request(`${BASE_URL}/api/v1/projects/option-items`, options)
 // }
-
 
 /*
 |        | GET|HEAD | api/v1/institutions/institution-types                   | api.v1.institutions.index                              | App\Http\Controllers\Institutions\InstitutionTypeController@index         | api,auth:api                                     |
@@ -1002,7 +1097,6 @@ export const openAccessReferences = (options = {}) => {
 //   options = getOption(options);
 //   return request(`${BASE_URL}/api/reports/perceived_smells/`, options)
 // };
-
 
 // export const getNews = (options) => {
 //   options = getOption(options);
