@@ -1,0 +1,301 @@
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { fetchRequestDistributionRequest } from '../actions';
+import { useIntl } from 'react-intl';
+import FilterSelects from '../../../components/Stats/FilterSelects';
+import PieComponent from '../../../components/Stats/Charts/PieComponent';
+import {
+  requestGetCountriesOptionList,
+} from '../../../containers/Admin/actions';
+import {
+  requestLibraryOptionList,
+  requestGetInstitutionsOptionList,
+  requestClearLibraryOptionList,
+  requestClearInstitutionsOptionList,
+} from '../../Library/actions';
+import { checkRole } from '../../../utils/permissions';
+import { getDeliveryMethodLabel, getReasonUnfilledLabel } from '../../../utils/stats';
+import debounce from 'lodash/debounce';
+
+import './style.scss';
+
+const RequestsDistribution = props => {
+  const {
+    data,
+    dispatch,
+    loading,
+    error,
+    match,
+    libraries = [],
+    institutions = [],
+    countries = [],
+  } = props;
+
+  let intl = useIntl();
+
+  const allOption = {
+    label: intl.formatMessage({ id: 'app.stats.all' }),
+    value: '',
+  };
+
+  // Filters for the API call
+  const [filters, setFilters] = useState({
+    year: allOption,
+    materialType: allOption,
+    libraryId: allOption,
+    institutionId: allOption,
+    countryId: allOption,
+  });
+
+  // Add all option to each list
+  const librariesWithAll = [
+    allOption,
+    ...libraries.map(lib => ({ label: lib.label, value: lib.value })),
+  ];
+  const institutionsWithAll = [
+    allOption,
+    ...institutions.map(inst => ({ label: inst.label, value: inst.value })),
+  ];
+  const countriesWithAll = [allOption, ...countries];
+
+  /**
+   * Dispatches the action only if the input has at least 3 characters, filtering by input
+   * If the input is empty, dispatches the action to clear the list
+   */
+  const handleLibraryInput = debounce(input => {
+    if (input.length >= 3) {
+      dispatch(requestLibraryOptionList(input));
+    } else if (input.length === 0) {
+      dispatch(requestClearLibraryOptionList());
+    }
+  }, 300);
+
+  const handleInstitutionInput = debounce(input => {
+    if (input.length >= 3) {
+      dispatch(requestGetInstitutionsOptionList(input));
+    } else if (input.length === 0) {
+      dispatch(requestClearInstitutionsOptionList());
+    }
+  }, 300);
+
+  // Get libraryId from params, if present
+  const libraryIdFromParams = match && match.params && match.params.library_id;
+
+  // Check if the user has full access (super-admin or manager)
+  const hasFullAccess = checkRole(props.auth, ['super-admin', 'manager']);
+
+  /**
+   * Get all countries if the user is super-admin or manager
+   */
+  useEffect(() => {
+    if (hasFullAccess) {
+      dispatch(requestGetCountriesOptionList());
+    }
+  }, [dispatch, hasFullAccess]);
+
+  /**
+   * Fetch data from API
+   */
+  useEffect(() => {
+    if (!hasFullAccess && !libraryIdFromParams) {
+      return;
+    }
+
+    const selectedLibraryId = libraryIdFromParams
+      ? libraryIdFromParams
+      : filters.libraryId.value;
+
+    const action = fetchRequestDistributionRequest(
+      filters.year.value,
+      selectedLibraryId,
+      filters.institutionId.value,
+      filters.countryId.value,
+      filters.materialType.value,
+    );
+    dispatch(action);
+  }, [dispatch, filters]);
+
+  /**
+   * Displayed data for charts - by delivery method
+   */
+  let borrowing_data_delivery_method = [];
+  let lending_data_delivery_method = [];
+  if (data) {
+    borrowing_data_delivery_method = data.borrowing_fulfilled_distribution.map(item => ({
+      label: getDeliveryMethodLabel(item.key, intl),
+      count: item.count,
+    }));
+
+    lending_data_delivery_method = data.lending_fulfilled_distribution.map(item => ({
+      label: getDeliveryMethodLabel(item.key, intl),
+      count: item.count,
+    }));
+  }
+
+  /**
+   * Display data for charts - by reason of unfillment
+   */
+  let borrowing_data_unfillment_reason = [];
+  let lending_data_unfillment_reason = [];
+  if (data) {
+    borrowing_data_unfillment_reason = data.borrowing_unfilled_distribution.map(item => ({
+      label: getReasonUnfilledLabel(item.key, intl),
+      count: item.count,
+    }));
+
+    lending_data_unfillment_reason = data.lending_unfilled_distribution.map(item => ({
+      label: getReasonUnfilledLabel(item.key, intl),
+      count: item.count,
+    }));
+  }
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  return (
+    <div>
+      <h1>!!!Requests Details</h1>
+
+      <FilterSelects
+        filters={filters}
+        setFilters={setFilters}
+        libraries={libraryIdFromParams ? [] : librariesWithAll}
+        institutions={libraryIdFromParams ? [] : institutionsWithAll}
+        countries={libraryIdFromParams ? [] : countriesWithAll}
+        onLibraryInput={handleLibraryInput}
+        onInstitutionInput={handleInstitutionInput}
+        hasFullAccess={hasFullAccess}
+      />
+
+      {data && (
+        <>
+          <h1>!!!BORROWING</h1>
+          <div className="charts-container">
+            <div className="charts-box">
+              <PieComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.deliveryMethod.title',
+                })}
+                subtitle={intl.formatMessage(
+                  {
+                    id: 'app.stats.deliveryMethod.subtitle',
+                  },
+                  {
+                    YEAR: filters.year.label,
+                    MATERIAL_TYPE: filters.materialType.label,
+                  },
+                )}
+                labels={
+                  Array.isArray(borrowing_data_delivery_method)
+                    ? borrowing_data_delivery_method.map(item => item.label)
+                    : []
+                }
+                data={
+                  Array.isArray(borrowing_data_delivery_method)
+                    ? borrowing_data_delivery_method.map(item => item.count)
+                    : []
+                }
+                datasetLabel="!!!Total requests"
+              />
+            </div>
+            <div className="charts-box">
+            <PieComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.reasonUnfilled.title',
+                })}
+                subtitle={intl.formatMessage(
+                  {
+                    id: 'app.stats.reasonUnfilled.subtitle',
+                  },
+                  {
+                    YEAR: filters.year.label,
+                    MATERIAL_TYPE: filters.materialType.label,
+                  },
+                )}
+                labels={
+                  Array.isArray(borrowing_data_unfillment_reason)
+                    ? borrowing_data_unfillment_reason.map(item => item.label)
+                    : []
+                }
+                data={
+                  Array.isArray(borrowing_data_unfillment_reason)
+                    ? borrowing_data_unfillment_reason.map(item => item.count)
+                    : []
+                }
+                datasetLabel="!!!Total requests"
+              />
+            </div>
+          </div>
+          <h1>!!!LENDING</h1>
+          <div className="charts-container">
+            <div className="charts-box">
+              <PieComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.deliveryMethod.title',
+                })}
+                subtitle={intl.formatMessage(
+                  {
+                    id: 'app.stats.deliveryMethod.subtitle',
+                  },
+                  {
+                    YEAR: filters.year.label,
+                    MATERIAL_TYPE: filters.materialType.label,
+                  },
+                )}
+                labels={
+                  Array.isArray(lending_data_delivery_method)
+                    ? lending_data_delivery_method.map(item => item.label)
+                    : []
+                }
+                data={
+                  Array.isArray(lending_data_delivery_method)
+                    ? lending_data_delivery_method.map(item => item.count)
+                    : []
+                }
+                datasetLabel="!!!Total requests"
+              />
+            </div>
+            <div className="charts-box">
+            <PieComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.reasonUnfilled.title',
+                })}
+                subtitle={intl.formatMessage(
+                  {
+                    id: 'app.stats.reasonUnfilled.subtitle',
+                  },
+                  {
+                    YEAR: filters.year.label,
+                    MATERIAL_TYPE: filters.materialType.label,
+                  },
+                )}
+                labels={
+                  Array.isArray(lending_data_unfillment_reason)
+                    ? lending_data_unfillment_reason.map(item => item.label)
+                    : []
+                }
+                data={
+                  Array.isArray(lending_data_unfillment_reason)
+                    ? lending_data_unfillment_reason.map(item => item.count)
+                    : []
+                }
+                datasetLabel="!!!Total requests"
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+const mapStateToProps = state => ({
+  data: state.stats.request_distribution,
+  loading: state.stats.loading,
+  error: state.stats.error,
+  libraries: state.library.libraryOptionItemList,
+  institutions: state.library.institutionsOptionList,
+  countries: state.admin.countriesOptionList,
+});
+
+export default connect(mapStateToProps)(RequestsDistribution);
