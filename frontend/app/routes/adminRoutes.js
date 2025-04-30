@@ -11,7 +11,9 @@ import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
 import SubRouteSwitch from 'components/SubRouteSwitch';
 
-import RequestsDistribution from '../containers/Stats/RequestsDistribution';
+import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loadable';
+import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
+import FillRate from '../containers/Stats/FillRate/Loadable';
 
 /*import { matchPath } from "react-router-dom";
 
@@ -115,7 +117,7 @@ const routes = [
         icon: 'chart-bar',
         name: `StatisticsRequestsDetails`,
         url: `/stats/requests-details`,
-        component: Fake,
+        component: RequestsDetails,
         sidebar: true,
         order: 1,
         level: 2,
@@ -126,7 +128,7 @@ const routes = [
         icon: 'chart-bar',
         name: `StatisticsFillRate`,
         url: `/stats/fillrate`,
-        component: Fake,
+        component: FillRate,
         sidebar: true,
         order: 1,
         level: 2,

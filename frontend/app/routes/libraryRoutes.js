@@ -17,7 +17,9 @@ import LibraryPendingOperatorsPage from '../containers/Library/LibraryPendingOpe
 import LibraryOperatorsPage from '../containers/Library/LibraryOperatorsPage/Loadable';
 import LibraryOperatorEditPermissionPage from '../containers/Library/LibraryOperatorEditPermissionPage/Loadable';
 import UpgradeLibraryProfilePage from '../containers/Library/UpgradeLibraryProfilePage/Loadable';
-import RequestsDistribution from '../containers/Stats/RequestsDistribution';
+import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loadable';
+import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
+import FillRate from '../containers/Stats/FillRate/Loadable';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 const show_upgrade_to_full_profile=(process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;
@@ -126,7 +128,7 @@ const routes = [
         icon: 'chart-bar',
         name: `StatisticsRequestsDetails`,
         url: `/stats/requests-details`,
-        component: Fake,
+        component: RequestsDetails,
         sidebar: true,
         order: 1,
         level: 2,
@@ -137,7 +139,7 @@ const routes = [
         icon: 'chart-bar',
         name: `StatisticsFillRate`,
         url: `/stats/fillrate`,
-        component: Fake,
+        component: FillRate,
         sidebar: true,
         order: 1,
         level: 2,
