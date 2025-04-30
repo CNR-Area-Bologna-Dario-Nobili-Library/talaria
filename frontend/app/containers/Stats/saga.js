@@ -1,15 +1,55 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { FETCH_AVG_WORKING_TIME_REQUEST, FETCH_COUNTRIES_DISTRIBUTION_REQUEST, FETCH_FILL_RATE_REQUEST, FETCH_OPENACCESS_REFERENCES_REQUEST, FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST, FETCH_REFERENCE_TURNAROUND_REQUEST, FETCH_REQUEST_DISTRIBUTION_REQUEST, FETCH_REQUESTS_LIBRARY_REQUEST, FETCH_WORKING_TIME_REQUEST } from './constants';
-import { fetchFillRateSuccess, fetchFillRateFailure, fetchRequestDistributionSuccess, fetchRequestDistributionFailure, fetchCountriesDistributionSuccess, fetchCountriesDistributionFailure, fetchWorkingTimeSuccess, fetchWorkingTimeFailure, fetchAvgWorkingTimeSuccess, fetchAvgWorkingTimeFailure, fetchReferenceTurnaroundSuccess, fetchReferenceTurnaroundFailure, fetchReferencePubyearDistributionSuccess, fetchReferencePubyearDistributionFailure, fetchRequestsPerLibrarySuccess, fetchRequestsPerLibraryFailure, fetchOpenAccessReferencesSuccess, fetchOpenAccessReferencesFailure } from './actions';
-import { avgWorkingTime, countriesDistribution, getFillrate, openAccessReferences, referencePubyearDistribution, referenceTurnaround, requestDistribution, requestsPerLibrary, workingTime } from '../../utils/api';
+import {
+  FETCH_AVG_WORKING_TIME_REQUEST,
+  FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
+  FETCH_FILL_RATE_REQUEST,
+  FETCH_OPENACCESS_REFERENCES_REQUEST,
+  FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
+  FETCH_REFERENCE_TURNAROUND_REQUEST,
+  FETCH_REQUEST_DISTRIBUTION_REQUEST,
+  FETCH_REQUESTS_LIBRARY_REQUEST,
+  FETCH_WORKING_TIME_REQUEST,
+} from './constants';
+import {
+  fetchFillRateSuccess,
+  fetchFillRateFailure,
+  fetchRequestDistributionSuccess,
+  fetchRequestDistributionFailure,
+  fetchCountriesDistributionSuccess,
+  fetchCountriesDistributionFailure,
+  fetchWorkingTimeSuccess,
+  fetchWorkingTimeFailure,
+  fetchAvgWorkingTimeSuccess,
+  fetchAvgWorkingTimeFailure,
+  fetchReferenceTurnaroundSuccess,
+  fetchReferenceTurnaroundFailure,
+  fetchReferencePubyearDistributionSuccess,
+  fetchReferencePubyearDistributionFailure,
+  fetchRequestsPerLibrarySuccess,
+  fetchRequestsPerLibraryFailure,
+  fetchOpenAccessReferencesSuccess,
+  fetchOpenAccessReferencesFailure,
+} from './actions';
+import {
+  avgWorkingTime,
+  countriesDistribution,
+  getFillrate,
+  openAccessReferences,
+  referencePubyearDistribution,
+  referenceTurnaround,
+  requestDistribution,
+  requestsPerLibrary,
+  workingTime,
+} from '../../utils/api';
 
 function* fetchFillRateSaga(action) {
-  console.log("fetchfillratesaga triggered with action:", action);
+  console.log('fetchfillratesaga triggered with action:', action);
   try {
     const options = {
       year: action.year,
       library_id: action.library_id,
-      institution_id: action.institution_id
+      institution_id: action.institution_id,
+      country_id: action.country_id,
     };
     const data = yield call(getFillrate, options);
     yield put(fetchFillRateSuccess(data));
@@ -24,7 +64,8 @@ function* fetchRequestsDistributionSaga(action) {
       year: action.year,
       library_id: action.library_id,
       institution_id: action.institution_id,
-      material_type: action.material_type
+      country_id: action.country_id,
+      material_type: action.material_type,
     };
     const data = yield call(requestDistribution, options);
     yield put(fetchRequestDistributionSuccess(data));
@@ -39,7 +80,7 @@ function* fetchCountriesDistributionSaga(action) {
       year: action.year,
       country_id: action.country_id,
       library_id: action.library_id,
-      institution_id: action.institution_id
+      institution_id: action.institution_id,
     };
     const data = yield call(countriesDistribution, options);
     yield put(fetchCountriesDistributionSuccess(data));
@@ -54,7 +95,8 @@ function* fetchWorkingTimeSaga(action) {
       year: action.year,
       library_id: action.library_id,
       institution_id: action.institution_id,
-      material_type: action.material_type
+      country_id: action.country_id,
+      material_type: action.material_type,
     };
     const data = yield call(workingTime, options);
     yield put(fetchWorkingTimeSuccess(data));
@@ -69,7 +111,8 @@ function* fetchAvgWorkingTimeSaga(action) {
       year: action.year,
       library_id: action.library_id,
       institution_id: action.institution_id,
-      material_type: action.material_type
+      country_id: action.country_id,
+      material_type: action.material_type,
     };
     const data = yield call(avgWorkingTime, options);
     yield put(fetchAvgWorkingTimeSuccess(data));
@@ -84,6 +127,7 @@ function* fetchReferenceTurnaroundSaga(action) {
       year: action.year,
       library_id: action.library_id,
       institution_id: action.institution_id,
+      country_id: action.country_id,
     };
     const data = yield call(referenceTurnaround, options);
     yield put(fetchReferenceTurnaroundSuccess(data));
@@ -98,6 +142,7 @@ function* fetchReferencePubyearDistributionSaga(action) {
       year: action.year,
       library_id: action.library_id,
       institution_id: action.institution_id,
+      country_id: action.country_id,
       material_type: action.material_type,
     };
     const data = yield call(referencePubyearDistribution, options);
@@ -126,14 +171,29 @@ function* fetchOpenAccessReferencesSaga() {
 }
 
 export default function* statsSaga() {
-  console.log("statsSaga");
+  console.log('statsSaga');
   yield takeLatest(FETCH_FILL_RATE_REQUEST, fetchFillRateSaga);
-  yield takeLatest(FETCH_REQUEST_DISTRIBUTION_REQUEST, fetchRequestsDistributionSaga);
-  yield takeLatest(FETCH_COUNTRIES_DISTRIBUTION_REQUEST, fetchCountriesDistributionSaga);
+  yield takeLatest(
+    FETCH_REQUEST_DISTRIBUTION_REQUEST,
+    fetchRequestsDistributionSaga,
+  );
+  yield takeLatest(
+    FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
+    fetchCountriesDistributionSaga,
+  );
   yield takeLatest(FETCH_WORKING_TIME_REQUEST, fetchWorkingTimeSaga);
   yield takeLatest(FETCH_AVG_WORKING_TIME_REQUEST, fetchAvgWorkingTimeSaga);
-  yield takeLatest(FETCH_REFERENCE_TURNAROUND_REQUEST, fetchReferenceTurnaroundSaga);
-  yield takeLatest(FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST, fetchReferencePubyearDistributionSaga);
+  yield takeLatest(
+    FETCH_REFERENCE_TURNAROUND_REQUEST,
+    fetchReferenceTurnaroundSaga,
+  );
+  yield takeLatest(
+    FETCH_REFERENCE_PUBYEAR_DISTRIBUTION_REQUEST,
+    fetchReferencePubyearDistributionSaga,
+  );
   yield takeLatest(FETCH_REQUESTS_LIBRARY_REQUEST, fetchRequestsPerLibrarySaga);
-  yield takeLatest(FETCH_OPENACCESS_REFERENCES_REQUEST, fetchOpenAccessReferencesSaga);
-} 
+  yield takeLatest(
+    FETCH_OPENACCESS_REFERENCES_REQUEST,
+    fetchOpenAccessReferencesSaga,
+  );
+}
