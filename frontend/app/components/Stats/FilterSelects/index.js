@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { useIntl } from 'react-intl';
-import { checkRole } from '../../../utils/permissions';
 
 const FilterSelects = ({
-  roles = [],
   filters,
   setFilters,
   libraries = [],
@@ -12,6 +10,8 @@ const FilterSelects = ({
   countries = [],
   onLibraryInput,
   onInstitutionInput,
+  showMaterialType = true,
+  hasFullAccess = false
 }) => {
   const intl = useIntl();
 
@@ -52,8 +52,6 @@ const FilterSelects = ({
     { label: intl.formatMessage({ id: 'app.references.manuscript' }), value: 5 },
   ];
 
-  const hasFullAccess = checkRole(roles, ['super-admin', 'manager']);
-
   const handleChange = field => selected => {
     setFilters(prev => ({
       ...prev,
@@ -86,7 +84,7 @@ const FilterSelects = ({
           value={filters.year}
         />
       </div>
-      <div>
+      {showMaterialType && (<div>
         <label htmlFor="materialType">
           {intl.formatMessage({ id: 'app.references.material_type' })}
         </label>
@@ -96,7 +94,7 @@ const FilterSelects = ({
           onChange={handleChange('materialType')}
           value={filters.materialType}
         />
-      </div>
+      </div>)}
 
       {hasFullAccess &&
         libraries.length > 0 &&
