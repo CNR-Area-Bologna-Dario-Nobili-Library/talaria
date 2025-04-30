@@ -7,11 +7,12 @@ import {
   LinearScale,
   Tooltip,
   Title,
+  Legend,
 } from 'chart.js';
 
 import './style.scss';
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Title);
+ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Title, Legend);
 
 const COLORS = [
   '#135AE1',
@@ -27,25 +28,23 @@ const BarComponent = ({
   title,
   subtitle,
   labels,
-  data,
-  datasetLabel = 'Data',
+  datasets,
+  tooltipLabelFormatter,
 }) => {
   const chartData = {
-    labels,
-    datasets: [
-      {
-        label: datasetLabel,
-        data,
-        backgroundColor: COLORS.slice(0, data.length),
-      },
-    ],
+    labels: labels || [],
+    datasets: (datasets || []).map((ds, index) => ({
+      label: ds.label,
+      data: ds.data,
+      backgroundColor: COLORS[index % COLORS.length],
+    })),
   };
 
   const options = {
     responsive: true,
     plugins: {
       legend: {
-        display: false,
+        display: true,
       },
       title: {
         display: true,
@@ -63,14 +62,25 @@ const BarComponent = ({
       },
       tooltip: {
         enabled: true,
+        callbacks: {
+          label: tooltipLabelFormatter 
+          ? tooltipLabelFormatter 
+          : function (context) {
+            return `${context.dataset.label}: ${context.raw}`;
+          }
+        }
       },
-      datalabels: {
-        display: false,
-      },
+      // datalabels: {
+      //   display: false,
+      // },
     },
     maintainAspectRatio: false,
     scales: {
+      x: {
+        stacked: true,
+      },
       y: {
+        stacked: true,
         beginAtZero: true,
         ticks: {
           callback: function(value) {
