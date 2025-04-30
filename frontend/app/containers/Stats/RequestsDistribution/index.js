@@ -15,7 +15,7 @@ import {
   requestClearInstitutionsOptionList,
 } from '../../Library/actions';
 import { checkRole } from '../../../utils/permissions';
-import getMaterialTypeLabel from '../../../utils/stats';
+import { getMaterialTypeLabel } from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
@@ -116,22 +116,41 @@ const RequestsDistribution = props => {
     dispatch(action);
   }, [dispatch, filters]);
 
+  const materialTypeIds = ['1', '2', '3', '4', '5'];
+  const materialTypeNames = materialTypeIds.map(id => getMaterialTypeLabel(id, intl));
+
   /**
    * Displayed data for charts - by status
    */
-  let borrowing_data_byStatus = [];
-  let lending_data_byStatus = [];
-  if (data) {
-    borrowing_data_byStatus = data.by_borrowing_status.map(item => ({
-      Status: item.key,
-      Count: item.count,
-    }));
+  const borrowingDataByStatus = Object.values(data && data.by_borrowing_status ? data.by_borrowing_status : {});
+  const borrowingStatusLabels = borrowingDataByStatus.map(function(item) {
+    return item.key;
+  });
 
-    lending_data_byStatus = data.by_lending_status.map(item => ({
-      Status: item.key,
-      Count: item.count,
-    }));
-  }
+  const borrowing_datasets = materialTypeIds.map(function(matId) {
+    return {
+      label: materialTypeNames[matId-1] || "undefined",
+      data: borrowingDataByStatus.map(function(statusItem) {
+        var types = statusItem.material_types || {};
+        return Number(types[matId] || 0);
+      }),
+    };
+  });
+
+  const lendingDataByStatus = Object.values(data && data.by_lending_status ? data.by_lending_status : {});
+  const lendingStatusLabels = lendingDataByStatus.map(function(item) {
+    return item.key;
+  });
+
+  const lending_datasets = materialTypeIds.map(function(matId) {
+    return {
+      label: materialTypeNames[matId-1] || "undefined",
+      data: lendingDataByStatus.map(function(statusItem) {
+        var types = statusItem.material_types || {};
+        return Number(types[matId] || 0);
+      }),
+    };
+  });
 
   /**
    * Displayed data for charts - by material type
@@ -176,7 +195,6 @@ const RequestsDistribution = props => {
       <h1>!!!Requests Distribution</h1>
 
       <FilterSelects
-        roles={props.auth}
         filters={filters}
         setFilters={setFilters}
         libraries={libraryIdFromParams ? [] : librariesWithAll}
@@ -184,6 +202,7 @@ const RequestsDistribution = props => {
         countries={libraryIdFromParams ? [] : countriesWithAll}
         onLibraryInput={handleLibraryInput}
         onInstitutionInput={handleInstitutionInput}
+        hasFullAccess={hasFullAccess}
       />
 
       {data && (
@@ -204,9 +223,8 @@ const RequestsDistribution = props => {
                     MATERIAL_TYPE: filters.materialType.label,
                   },
                 )}
-                labels={borrowing_data_byStatus.map(item => item.Status)}
-                data={borrowing_data_byStatus.map(item => Number(item.Count))}
-                datasetLabel="!!!Total requests"
+                labels={borrowingStatusLabels}
+                datasets={borrowing_datasets}
               />
             </div>
             <div className="charts-box">
@@ -223,9 +241,8 @@ const RequestsDistribution = props => {
                     MATERIAL_TYPE: filters.materialType.label,
                   },
                 )}
-                labels={lending_data_byStatus.map(item => item.Status)}
-                data={lending_data_byStatus.map(item => Number(item.Count))}
-                datasetLabel="!!!Total requests"
+                labels={lendingStatusLabels}
+                datasets={lending_datasets}
               />
             </div>
           </div>
