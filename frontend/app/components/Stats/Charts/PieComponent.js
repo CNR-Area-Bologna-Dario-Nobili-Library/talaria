@@ -22,6 +22,7 @@ const PieComponent = ({
   labels,
   data,
   datasetLabel = 'Data',
+  tooltipLabelFormatter
 }) => {
   const chartData = {
     labels,
@@ -57,6 +58,13 @@ const PieComponent = ({
       },
       tooltip: {
         enabled: true,
+        callbacks: {
+          label: tooltipLabelFormatter 
+          ? tooltipLabelFormatter 
+          : function (context) {
+            return `${context.label}: ${context.raw}`;
+          }
+        }
       },
       datalabels: {
         display: false,
