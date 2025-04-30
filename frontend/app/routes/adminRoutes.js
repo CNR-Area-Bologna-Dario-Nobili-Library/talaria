@@ -7,13 +7,11 @@ import InstitutionTypesListPage from 'containers/Admin/InstitutionTypesListPage/
 import ProjectPage from 'containers/Admin/ProjectPage/Loadable';
 import ProjectsListPage from 'containers/Admin/ProjectsListPage/Loadable';
 
-import AvgTimeStats from 'containers/Stats/AvgWorkingTime/Loadable';
-import BorrowingStats from 'containers/Stats/BorrowingRequests/Loadable';
-import FillRate from 'containers/Stats/FillRate/Loadable';
-
 import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
 import SubRouteSwitch from 'components/SubRouteSwitch';
+
+import RequestsDistribution from '../containers/Stats/RequestsDistribution';
 
 /*import { matchPath } from "react-router-dom";
 
@@ -82,21 +80,70 @@ const routes = [
       { path: '/:page?', exact: true, name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, },            
       { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
     ]
-  },  
-  /*
-  NOT IMPLEMENTED
-
-
-  { path: '/stats',  name: `Statistics`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
-  children: [    
-    { path: '/', exact: true, icon: 'chart-bar', name: `Statistics`, url: `/stats`, component: Fake, sidebar:true, order:1},    
-    // { path: '/libraries', exact: true, icon: 'chart-bar', name: `StatisticsLibraries`, url: `/stats/libraries`, component: Fake, sidebar:true, order:1,level:2},    
-    // { path: '/institutions', exact: true, icon: 'chart-bar', name: `StatisticsInstitutions`, url: `/stats/institutions`, component: Fake, sidebar:true, order:1,level:2},
-    { path: '/fillrate', exact: true, icon: 'chart-bar', name: `StatisticsFillRate`, url: `/stats/fillrate`, component: FillRate, sidebar:true, order:1,level:2},
-    { path: '/avg-working-time', exact: true, icon: 'chart-bar', name: `StatisticsAVGWorkingTime`, url: `/stats/avg-working-time`, component: Fake, sidebar:true, order:1,level:2},
-    { path: '/borrowing-requests', exact: true, icon: 'chart-bar', name: `StatisticsBorrowingRequests`, url: `/stats/borrowing-requests`, component: Fake, sidebar:true, order:1,level:2},
-  ]
-},
+  },
+  {
+    path: '/stats',
+    name: `Statistics`,
+    component: SubRouteSwitch,
+    header: true,
+    roles: ['super-admin', 'manager'],
+    children: [
+      // {
+      //   path: '/',
+      //   exact: true,
+      //   icon: 'chart-bar',
+      //   name: `Statistics`,
+      //   url: `/stats`,
+      //   component: Fake,
+      //   sidebar: true,
+      //   order: 1,
+      // },
+      {
+        path: '/requests-distribution',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDistribution`,
+        url: `/stats/requests-distribution`,
+        component: RequestsDistribution,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/requests-details',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDetails`,
+        url: `/stats/requests-details`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/fillrate',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsFillRate`,
+        url: `/stats/fillrate`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/avg-working-time',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsAVGWorkingTime`,
+        url: `/stats/avg-working-time`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+    ],
+  },
   /*
   NOT IMPLEMENTED
 

@@ -17,6 +17,7 @@ import LibraryPendingOperatorsPage from '../containers/Library/LibraryPendingOpe
 import LibraryOperatorsPage from '../containers/Library/LibraryOperatorsPage/Loadable';
 import LibraryOperatorEditPermissionPage from '../containers/Library/LibraryOperatorEditPermissionPage/Loadable';
 import UpgradeLibraryProfilePage from '../containers/Library/UpgradeLibraryProfilePage/Loadable';
+import RequestsDistribution from '../containers/Stats/RequestsDistribution';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 const show_upgrade_to_full_profile=(process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;
@@ -99,11 +100,63 @@ const routes = [
       { path: '', exact: true, name: `LibraryUsers`,  url:'/patrons', component: UsersListPage, sidebar: true, order:1},
     ]
   },
+  {
+    path: '/stats',
+    name: `Statistics`,
+    component: SubRouteSwitch,
+    permissions: ['manage', 'borrow', 'lend', 'manage-users', 'deliver'],
+    roles: ['super-admin', 'manager'],
+    resource: { type: 'libraries', key: 'library_id' },
+    header: true,
+    children: [
+      {
+        path: '/requests-distribution',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDistribution`,
+        url: `/stats/requests-distribution`,
+        component: RequestsDistribution,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/requests-details',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDetails`,
+        url: `/stats/requests-details`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/fillrate',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsFillRate`,
+        url: `/stats/fillrate`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+      {
+        path: '/avg-working-time',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsAVGWorkingTime`,
+        url: `/stats/avg-working-time`,
+        component: Fake,
+        sidebar: true,
+        order: 1,
+        level: 2,
+      },
+    ],
+  },
   /*
   NOT IMPLEMENTED
-  {
-    path: '/stats', name: `Stats`, component: Fake, header: true, permissions: ['manage','manage-users','borrow','lend'], roles:["super-admin","manager"], resource: {type: 'libraries', key: 'library_id',},
-  },  
   {
     path: '/licenses', name: `Licenses`, component: Fake, header: true, permissions: ['manage','manage-licenses'], roles:["super-admin","manager"], resource: {type: 'libraries', key: 'library_id',},
   } */
