@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { REQUEST_GET_NOTIFICATION_LIST, MARK_ALL_AS_READ } from './constants';
-import { MARK_NOTIFICATION_AS_READ } from './constants';
+import { MARK_NOTIFICATION_AS_READ, DELETE_NOTIFICATION } from './constants';
 import {
   requestNotificationsSuccess,
   requestSuccess,
@@ -11,6 +11,7 @@ import {
   getNotifications,
   updateNotificationsAsRead,
   markNotificationAsRead,
+  deleteNotification
 } from 'utils/api';
 
 export function* requestNotificationsSaga(action = {}) {
@@ -66,9 +67,19 @@ export function* markNotificationAsReadSaga({ id, setToRead }) {
   }
 }
 
+export function* deleteNotificationSaga({ id }) {
+  try {
+    yield call(deleteNotification, id);
+    yield put(requestSuccess());
+    yield put({ type: REQUEST_GET_NOTIFICATION_LIST }); // Refresh list
+  } catch (e) {
+    yield put(requestError(e.message));
+  }
+}
 
 export default function* appSaga() {
   yield takeLatest(REQUEST_GET_NOTIFICATION_LIST, requestNotificationsSaga);
   yield takeLatest(MARK_ALL_AS_READ, updateNotificationsAsReadSaga);
   yield takeLatest(MARK_NOTIFICATION_AS_READ, markNotificationAsReadSaga);
+  yield takeLatest(DELETE_NOTIFICATION, deleteNotificationSaga); 
 }

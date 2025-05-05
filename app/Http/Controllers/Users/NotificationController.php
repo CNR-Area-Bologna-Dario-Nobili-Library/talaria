@@ -147,5 +147,22 @@ class NotificationController extends ApiController
             'id' => $notification->id,
         ]);
     }
+    public function destroy(Request $request, $id)
+    {
+        $notification = \Auth::user()->notifications()->where('id', $id)->firstOrFail();
+
+        //\Log::info('User deleted notification', [
+        //    'user_id' => auth()->id(),
+        //    'notification_id' => $id,
+        //]);
+
+        $notification->forceDelete(); // Hard delete
+        //$notification->delete(); // soft delete, need to do migration
+
+        return response()->json([
+            'message' => 'Notification deleted',
+            'id' => $id,
+        ]);
+    }
 
 }

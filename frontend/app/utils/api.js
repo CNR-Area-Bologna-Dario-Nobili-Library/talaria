@@ -145,6 +145,10 @@ export const getPermissions = (options) => {
   return request(`${BASE_URL}/api/v1/auth/permissions`, options)
 };
 
+export const deleteNotification = (id, options = {}) => {
+  options = {...getOption(options),method: 'DELETE'};
+  return request(`${BASE_URL}/api/v1/notifications/${id}`, options);
+};
 export const verifySms = (options) => {
   options = getOption(options);
   return request(`${BASE_URL}/oauth/verify/`, options)

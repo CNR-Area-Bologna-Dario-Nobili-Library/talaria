@@ -21,7 +21,7 @@ import { Loader } from 'components';
 import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { markNotificationAsRead } from 'containers/App/actions';
+import { requestNotificationsSaga } from 'containers/App/actions';
 
 const Notification = props => {
   const { dispatch } = props;
@@ -170,7 +170,7 @@ const Notification = props => {
     setAnimateBell(true);
     setTimeout(() => setAnimateBell(false), 1000);
 
-    dispatch(markNotificationAsRead(notify.id, wasUnread));
+    dispatch(requestNotificationsSaga(notify.id, wasUnread));
   };
 
   const getTabNotifications = () => {

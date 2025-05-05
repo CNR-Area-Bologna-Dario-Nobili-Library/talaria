@@ -5,6 +5,7 @@ import {
   updateNotificationsAsRead,
   clearNotifications,
   markNotificationAsRead,
+  deleteNotificationAction,
 } from '../../App/actions';
 
 import {
@@ -31,6 +32,8 @@ function NotificationInbox(props) {
   const [sortOrder, setSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [notificationsPerPage] = useState(10);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [notificationToDelete, setNotificationToDelete] = useState(null);
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -246,7 +249,7 @@ function NotificationInbox(props) {
       {/* 🔍 Ultra-Clean, Priority-Enforced Filter Box */}
       <div className="card shadow-sm border-0 mb-4">
         <div className="card-body">
-          {/* 🎯 Filters Row */}
+          {/* Filters Row */}
           <div className="row gy-3 gx-4">
             {/* 🔍 Search */}
             <div className="col-lg-3 col-md-6">
@@ -267,7 +270,7 @@ function NotificationInbox(props) {
               </div>
             </div>
 
-            {/* 📂 Status */}
+            {/* Status */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">Status</label>
               <br />
@@ -282,7 +285,7 @@ function NotificationInbox(props) {
               </select>
             </div>
 
-            {/* 📅 Start Date */}
+            {/* Start Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
                 Start Date
@@ -295,7 +298,7 @@ function NotificationInbox(props) {
               />
             </div>
 
-            {/* 📅 End Date */}
+            {/* End Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
                 End Date
@@ -309,7 +312,7 @@ function NotificationInbox(props) {
             </div>
           </div>
 
-          {/* 🔁 Reset Button - New Row */}
+          {/* Reset Button - New Row */}
           <div className="row mt-3">
             <div className="col text-end">
               <button
@@ -429,17 +432,23 @@ function NotificationInbox(props) {
                       )}
                     </td>
                     <td className="text-center">
-                      <div className="d-flex justify-content-center">
+                      <div className="d-flex justify-content-center align-items-center gap-0">
+                        {/* View */}
                         <button
-                          className="btn btn-sm btn-info me-2"
+                          className="btn btn-outline-info px-1 py-2 fs-2"
                           onClick={() => handleViewDetails(notification)}
+                          title="View Details"
                         >
-                          View Details
+                          <span style={{ fontSize: '1.5rem' }}>🔎</span>
                         </button>
+
+                        {/* Toggle Read */}
                         <button
-                          className={`btn btn-sm ${
-                            notification.read ? 'btn-danger' : 'btn-success'
-                          }`}
+                          className={`btn ${
+                            notification.read
+                              ? 'btn-outline-secondary'
+                              : 'btn-outline-success'
+                          } px-1 py-2 fs-5`}
                           onClick={() => {
                             dispatch(
                               markNotificationAsRead(
@@ -450,12 +459,29 @@ function NotificationInbox(props) {
                             setTimeout(
                               () => dispatch(requestNotifications()),
                               500,
-                            ); // ⏳ wait half a second
+                            );
                           }}
+                          title={
+                            notification.read
+                              ? 'Mark as Unread'
+                              : 'Mark as Read'
+                          }
                         >
-                          {notification.read
-                            ? 'Mark as Unread'
-                            : 'Mark as Read'}
+                          <span style={{ fontSize: '1.5rem' }}>
+                            {notification.read ? '📬' : '✉️'}
+                          </span>
+                        </button>
+
+                        {/* Delete */}
+                        <button
+                          className="btn btn-outline-danger px-1 py-2 fs-5"
+                          onClick={() => {
+                            setNotificationToDelete(notification);
+                            setShowDeleteModal(true);
+                          }}
+                          title="Delete"
+                        >
+                          <span style={{ fontSize: '1.5rem' }}>🗑</span>
                         </button>
                       </div>
                     </td>
@@ -543,6 +569,38 @@ function NotificationInbox(props) {
           </ModalFooter>
         </Modal>
       )}
+
+      {/* DELETE CONFIRMATION MODAL */}
+      <Modal
+        isOpen={showDeleteModal}
+        toggle={() => setShowDeleteModal(false)}
+        centered
+      >
+        <ModalHeader toggle={() => setShowDeleteModal(false)}>
+          Confirm Deletion
+        </ModalHeader>
+        <ModalBody>
+          Are you sure you want to delete this notification?
+        </ModalBody>
+        <ModalFooter>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              dispatch(deleteNotificationAction(notificationToDelete.id));
+              setShowDeleteModal(false);
+              setTimeout(() => dispatch(requestNotifications()), 500);
+            }}
+          >
+            Delete
+          </button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }
