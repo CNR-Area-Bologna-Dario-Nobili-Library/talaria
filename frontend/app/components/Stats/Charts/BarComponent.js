@@ -91,26 +91,26 @@ const BarComponent = ({
         },
         color: 'black',
         formatter: function(value, context) {
-          const datasetIndex = context.datasetIndex;
+          const chart = context.chart;
           const dataIndex = context.dataIndex;
-          // console.log(
-          //   'datasetIndex',
-          //   datasetIndex,
-          //   'dataIndex',
-          //   dataIndex,
-          //   'value',
-          //   value,
-          // );
 
-          // Show only the label of the topmost stack
-          const isLastStack =
-            datasetIndex === context.chart.data.datasets.length - 1;
+          // Get total from ALL datasets: visible or hidden
+          const total = chart.data.datasets.reduce(
+            (sum, ds) => sum + (ds.data[dataIndex] || 0),
+            0,
+          );
 
-          if (isLastStack) {
-            let total = 0;
-            context.chart.data.datasets.forEach(ds => {
-              total += ds.data[dataIndex] || 0;
-            });
+          // Find the topmost visible stack
+          const visibleDatasets = chart.data.datasets
+            .map((ds, i) => ({ ds, meta: chart.getDatasetMeta(i), index: i }))
+            .filter(({ meta }) => !meta.hidden);
+
+          const topVisibleIndex = visibleDatasets
+            .map(v => v.index)
+            .reduce((max, val) => Math.max(max, val), -1);
+
+          // Only render label on the top visible dataset
+          if (context.datasetIndex === topVisibleIndex) {
             return total;
           }
 
