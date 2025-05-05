@@ -11,7 +11,7 @@ const FilterSelects = ({
   onLibraryInput,
   onInstitutionInput,
   showMaterialType = true,
-  hasFullAccess = false
+  hasFullAccess = false,
 }) => {
   const intl = useIntl();
 
@@ -48,8 +48,14 @@ const FilterSelects = ({
     { label: intl.formatMessage({ id: 'app.references.article' }), value: 1 },
     { label: intl.formatMessage({ id: 'app.references.book' }), value: 2 },
     { label: intl.formatMessage({ id: 'app.references.thesis' }), value: 3 },
-    { label: intl.formatMessage({ id: 'app.references.cartography' }), value: 4 },
-    { label: intl.formatMessage({ id: 'app.references.manuscript' }), value: 5 },
+    {
+      label: intl.formatMessage({ id: 'app.references.cartography' }),
+      value: 4,
+    },
+    {
+      label: intl.formatMessage({ id: 'app.references.manuscript' }),
+      value: 5,
+    },
   ];
 
   const handleChange = field => selected => {
@@ -82,19 +88,35 @@ const FilterSelects = ({
           options={yearOptions}
           onChange={handleChange('year')}
           value={filters.year}
+          styles={{
+            control: (baseStyles, _) => ({
+              ...baseStyles,
+              marginBottom: '0.5rem',
+              marginTop: '-0.5rem',
+            }),
+          }}
         />
       </div>
-      {showMaterialType && (<div>
-        <label htmlFor="materialType">
-          {intl.formatMessage({ id: 'app.references.material_type' })}
-        </label>
-        <Select
-          inputId="materialType"
-          options={materialTypeOptions}
-          onChange={handleChange('materialType')}
-          value={filters.materialType}
-        />
-      </div>)}
+      {showMaterialType && (
+        <div>
+          <label htmlFor="materialType">
+            {intl.formatMessage({ id: 'app.references.material_type' })}
+          </label>
+          <Select
+            inputId="materialType"
+            options={materialTypeOptions}
+            onChange={handleChange('materialType')}
+            value={filters.materialType}
+            styles={{
+              control: (baseStyles, _) => ({
+                ...baseStyles,
+                marginBottom: '0.5rem',
+                marginTop: '-0.5rem',
+              }),
+            }}
+          />
+        </div>
+      )}
 
       {hasFullAccess &&
         libraries.length > 0 &&
@@ -112,6 +134,13 @@ const FilterSelects = ({
                 onChange={handleChange('libraryId')}
                 onInputChange={handleLibraryInputChange}
                 isDisabled={libraryDisabled}
+                styles={{
+                  control: (baseStyles, _) => ({
+                    ...baseStyles,
+                    marginBottom: '0.5rem',
+                    marginTop: '-0.5rem',
+                  }),
+                }}
               />
             </div>
             <div>
@@ -125,6 +154,13 @@ const FilterSelects = ({
                 onChange={handleChange('institutionId')}
                 onInputChange={handleInstitutionInputChange}
                 isDisabled={institutionDisabled}
+                styles={{
+                  control: (baseStyles, _) => ({
+                    ...baseStyles,
+                    marginBottom: '0.5rem',
+                    marginTop: '-0.5rem',
+                  }),
+                }}
               />
             </div>
             <div>
@@ -137,6 +173,13 @@ const FilterSelects = ({
                 value={filters.countryId}
                 onChange={handleChange('countryId')}
                 isDisabled={countryDisabled}
+                styles={{
+                  control: (baseStyles, _) => ({
+                    ...baseStyles,
+                    marginBottom: '0.5rem',
+                    marginTop: '-0.5rem',
+                  }),
+                }}
               />
             </div>
           </>
