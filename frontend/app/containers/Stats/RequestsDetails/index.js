@@ -118,13 +118,19 @@ const RequestsDistribution = props => {
   /**
    * Displayed data for charts - by delivery method
    */
+  let borrowing_data_total_received = 0;
+  let lending_data_total_fulfilled = 0;
   let borrowing_data_delivery_method = [];
   let lending_data_delivery_method = [];
   if (data) {
+    borrowing_data_total_received = (data && Array.isArray(data.by_borrowing_status) && (data.by_borrowing_status.find(function(e) { return e.key === "Received"; }) || {}).count) || 0;
+
     borrowing_data_delivery_method = data.borrowing_fulfilled_distribution.map(item => ({
       label: getDeliveryMethodLabel(item.key, intl),
       count: item.count,
     }));
+
+    lending_data_total_fulfilled = (data && Array.isArray(data.by_lending_status) && (data.by_lending_status.find(function(e) { return e.key === "Fulfilled"; }) || {}).count) || 0;
 
     lending_data_delivery_method = data.lending_fulfilled_distribution.map(item => ({
       label: getDeliveryMethodLabel(item.key, intl),
@@ -135,13 +141,19 @@ const RequestsDistribution = props => {
   /**
    * Display data for charts - by reason of unfillment
    */
+  let borrowing_data_total_not_received = 0;
+  let lending_data_total_not_fulfilled = 0;
   let borrowing_data_unfillment_reason = [];
   let lending_data_unfillment_reason = [];
   if (data) {
+    borrowing_data_total_not_received = (data && Array.isArray(data.by_borrowing_status) && (data.by_borrowing_status.find(function(e) { return e.key === "Not received"; }) || {}).count) || 0;
+
     borrowing_data_unfillment_reason = data.borrowing_unfilled_distribution.map(item => ({
       label: getReasonUnfilledLabel(item.key, intl),
       count: item.count,
     }));
+
+    lending_data_total_not_fulfilled = (data && Array.isArray(data.by_lending_status) && (data.by_lending_status.find(function(e) { return e.key === "Not fulfilled"; }) || {}).count) || 0;
 
     lending_data_unfillment_reason = data.lending_unfilled_distribution.map(item => ({
       label: getReasonUnfilledLabel(item.key, intl),
@@ -169,18 +181,19 @@ const RequestsDistribution = props => {
 
       {data && (
         <>
-          <h1>!!!BORROWING</h1>
+          {/* <h1>!!!BORROWING</h1> */}
           <div className="charts-container">
             <div className="charts-box">
               <PieComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.deliveryMethod.title',
+                  id: 'app.stats.borrowingByDeliveryMethod.title',
                 })}
                 subtitle={intl.formatMessage(
                   {
-                    id: 'app.stats.deliveryMethod.subtitle',
+                    id: 'app.stats.borrowingByDeliveryMethod.subtitle',
                   },
                   {
+                    TOTAL: borrowing_data_total_received,
                     YEAR: filters.year.label,
                     MATERIAL_TYPE: filters.materialType.label,
                   },
@@ -199,45 +212,16 @@ const RequestsDistribution = props => {
               />
             </div>
             <div className="charts-box">
-            <PieComponent
-                title={intl.formatMessage({
-                  id: 'app.stats.reasonUnfilled.title',
-                })}
-                subtitle={intl.formatMessage(
-                  {
-                    id: 'app.stats.reasonUnfilled.subtitle',
-                  },
-                  {
-                    YEAR: filters.year.label,
-                    MATERIAL_TYPE: filters.materialType.label,
-                  },
-                )}
-                labels={
-                  Array.isArray(borrowing_data_unfillment_reason)
-                    ? borrowing_data_unfillment_reason.map(item => item.label)
-                    : []
-                }
-                data={
-                  Array.isArray(borrowing_data_unfillment_reason)
-                    ? borrowing_data_unfillment_reason.map(item => item.count)
-                    : []
-                }
-                datasetLabel="!!!Total requests"
-              />
-            </div>
-          </div>
-          <h1>!!!LENDING</h1>
-          <div className="charts-container">
-            <div className="charts-box">
               <PieComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.deliveryMethod.title',
+                  id: 'app.stats.lendingByDeliveryMethod.title',
                 })}
                 subtitle={intl.formatMessage(
                   {
-                    id: 'app.stats.deliveryMethod.subtitle',
+                    id: 'app.stats.lendingByDeliveryMethod.subtitle',
                   },
                   {
+                    TOTAL: lending_data_total_fulfilled,
                     YEAR: filters.year.label,
                     MATERIAL_TYPE: filters.materialType.label,
                   },
@@ -255,16 +239,48 @@ const RequestsDistribution = props => {
                 datasetLabel="!!!Total requests"
               />
             </div>
+          </div>
+          {/* <h1>!!!LENDING</h1> */}
+          <div className="charts-container">
             <div className="charts-box">
-            <PieComponent
+              <PieComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.reasonUnfilled.title',
+                  id: 'app.stats.borrowingByReasonUnfilled.title',
                 })}
                 subtitle={intl.formatMessage(
                   {
-                    id: 'app.stats.reasonUnfilled.subtitle',
+                    id: 'app.stats.borrowingByReasonUnfilled.subtitle',
                   },
                   {
+                    TOTAL: borrowing_data_total_not_received,
+                    YEAR: filters.year.label,
+                    MATERIAL_TYPE: filters.materialType.label,
+                  },
+                )}
+                labels={
+                  Array.isArray(borrowing_data_unfillment_reason)
+                    ? borrowing_data_unfillment_reason.map(item => item.label)
+                    : []
+                }
+                data={
+                  Array.isArray(borrowing_data_unfillment_reason)
+                    ? borrowing_data_unfillment_reason.map(item => item.count)
+                    : []
+                }
+                datasetLabel="!!!Total requests"
+              />
+            </div>
+            <div className="charts-box">
+            <PieComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.lendingByReasonUnfilled.title',
+                })}
+                subtitle={intl.formatMessage(
+                  {
+                    id: 'app.stats.lendingByReasonUnfilled.subtitle',
+                  },
+                  {
+                    TOTAL: lending_data_total_not_fulfilled,
                     YEAR: filters.year.label,
                     MATERIAL_TYPE: filters.materialType.label,
                   },

@@ -207,7 +207,7 @@ const RequestsDistribution = props => {
 
       {data && (
         <>
-          <h1>!!!BY STATUS</h1>
+          {/* <h1>!!!BY STATUS</h1> */}
           <div className="charts-container">
             <div className="charts-box">
               <BarComponent
@@ -219,6 +219,7 @@ const RequestsDistribution = props => {
                     id: 'app.stats.borrowingByStatus.subtitle',
                   },
                   {
+                    TOTAL: data.total_borrowing_requests,
                     YEAR: filters.year.label,
                     MATERIAL_TYPE: filters.materialType.label,
                   },
@@ -237,6 +238,7 @@ const RequestsDistribution = props => {
                     id: 'app.stats.lendingByStatus.subtitle',
                   },
                   {
+                    TOTAL: data.total_lending_requests,
                     YEAR: filters.year.label,
                     MATERIAL_TYPE: filters.materialType.label,
                   },
@@ -246,7 +248,7 @@ const RequestsDistribution = props => {
               />
             </div>
           </div>
-          <h1>!!!BY MATERIAL TYPE</h1>
+          {/* <h1>!!!BY MATERIAL TYPE</h1> */}
           <div className="charts-container">
             <div className="charts-box">
               <PieComponent
@@ -258,6 +260,7 @@ const RequestsDistribution = props => {
                     id: 'app.stats.borrowingByMaterialType.subtitle',
                   },
                   {
+                    TOTAL: data.total_borrowing_requests,
                     YEAR: filters.year.label,
                   },
                 )}
@@ -284,6 +287,7 @@ const RequestsDistribution = props => {
                     id: 'app.stats.lendingByMaterialType.subtitle',
                   },
                   {
+                    TOTAL: data.total_lending_requests,
                     YEAR: filters.year.label,
                   },
                 )}
