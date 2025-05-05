@@ -62,7 +62,10 @@ const PieComponent = ({
           label: tooltipLabelFormatter 
           ? tooltipLabelFormatter 
           : function (context) {
-            return `${context.label}: ${context.raw}`;
+            const total = context.chart._metasets[0]._parsed.reduce((a, b) => a + b, 0);    // Sums all slices' value
+            const value = context.raw;
+            const percentage = ((value / total) * 100).toFixed(2);
+            return `${context.label}: ${value} (${percentage}%)`;
           }
         }
       },
