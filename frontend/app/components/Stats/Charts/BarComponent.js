@@ -10,9 +10,20 @@ import {
   Legend,
 } from 'chart.js';
 
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 import './style.scss';
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Title, Legend);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Title,
+  Legend,
+);
+
+ChartJS.register(ChartDataLabels);
 
 const COLORS = [
   '#135AE1',
@@ -63,16 +74,49 @@ const BarComponent = ({
       tooltip: {
         enabled: true,
         callbacks: {
-          label: tooltipLabelFormatter 
-          ? tooltipLabelFormatter 
-          : function (context) {
-            return `${context.dataset.label}: ${context.raw}`;
-          }
-        }
+          label: tooltipLabelFormatter
+            ? tooltipLabelFormatter
+            : function(context) {
+                return `${context.dataset.label}: ${context.raw}`;
+              },
+        },
       },
-      // datalabels: {
-      //   display: false,
-      // },
+      datalabels: {
+        display: 'auto',
+        anchor: 'end',
+        align: 'end',
+        font: {
+          weight: 'bold',
+          size: 12,
+        },
+        color: 'black',
+        formatter: function(value, context) {
+          const datasetIndex = context.datasetIndex;
+          const dataIndex = context.dataIndex;
+          // console.log(
+          //   'datasetIndex',
+          //   datasetIndex,
+          //   'dataIndex',
+          //   dataIndex,
+          //   'value',
+          //   value,
+          // );
+
+          // Show only the label of the topmost stack
+          const isLastStack =
+            datasetIndex === context.chart.data.datasets.length - 1;
+
+          if (isLastStack) {
+            let total = 0;
+            context.chart.data.datasets.forEach(ds => {
+              total += ds.data[dataIndex] || 0;
+            });
+            return total;
+          }
+
+          return null;
+        },
+      },
     },
     maintainAspectRatio: false,
     scales: {
