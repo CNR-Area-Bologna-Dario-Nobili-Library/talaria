@@ -286,8 +286,8 @@ export default defineMessages({
     id: `${scope}.StatisticsInstitutions`,
     defaultMessage: 'Institutions statistics',
   },
-  StatisticsAVGWorkingTime: {
-    id: `${scope}.StatisticsAVGWorkingTime`,
-    defaultMessage: 'Average working time',
+  StatisticsWorkingTime: {
+    id: `${scope}.StatisticsWorkingTime`,
+    defaultMessage: 'Working time',
   },
 });
