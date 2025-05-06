@@ -784,5 +784,13 @@
   "app.stats.lendingByDeliveryMethod.title": "Fulfilled lending requests by delivery method",
   "app.stats.lendingByDeliveryMethod.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
   "app.stats.lendingByReasonUnfilled.title": "Not fulfilled lending requests by reason of unfillment",
-  "app.stats.lendingByReasonUnfilled.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}"
+  "app.stats.lendingByReasonUnfilled.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
+  "app.stats.fillRate.borrowing.title": "Borrowing requests fill rate",
+  "app.stats.fillRate.borrowing.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}",
+  "app.stats.fillRate.lending.title": "Lending requests fill rate",
+  "app.stats.fillRate.lending.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}",
+  "app.stats.fillRate.borrowing": "Fill rate",
+  "app.stats.unFillRate.borrowing": "Unfill rate",
+  "app.stats.fillRate.lending": "Fill rate",
+  "app.stats.unFillRate.lending": "Unfill rate"
 }
