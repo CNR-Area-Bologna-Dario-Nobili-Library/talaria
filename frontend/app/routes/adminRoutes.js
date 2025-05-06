@@ -14,6 +14,7 @@ import SubRouteSwitch from 'components/SubRouteSwitch';
 import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loadable';
 import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
 import FillRate from '../containers/Stats/FillRate/Loadable';
+import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
 
 /*import { matchPath } from "react-router-dom";
 
@@ -134,12 +135,12 @@ const routes = [
         level: 2,
       },
       {
-        path: '/avg-working-time',
+        path: '/working-time',
         exact: true,
         icon: 'chart-bar',
-        name: `StatisticsAVGWorkingTime`,
-        url: `/stats/avg-working-time`,
-        component: Fake,
+        name: `StatisticsWorkingTime`,
+        url: `/stats/working-time`,
+        component: WorkingTime,
         sidebar: true,
         order: 1,
         level: 2,

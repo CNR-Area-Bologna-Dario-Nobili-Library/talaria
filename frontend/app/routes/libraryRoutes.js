@@ -20,6 +20,7 @@ import UpgradeLibraryProfilePage from '../containers/Library/UpgradeLibraryProfi
 import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loadable';
 import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
 import FillRate from '../containers/Stats/FillRate/Loadable';
+import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 const show_upgrade_to_full_profile=(process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;
@@ -145,12 +146,12 @@ const routes = [
         level: 2,
       },
       {
-        path: '/avg-working-time',
+        path: '/working-time',
         exact: true,
         icon: 'chart-bar',
-        name: `StatisticsAVGWorkingTime`,
-        url: `/stats/avg-working-time`,
-        component: Fake,
+        name: `StatisticsWorkingTime`,
+        url: `/stats/working-time`,
+        component: WorkingTime,
         sidebar: true,
         order: 1,
         level: 2,
