@@ -115,6 +115,16 @@ class FillrateStats extends BaseStatsController
                   'term' => ['aggregated_borrowing_status.keyword' => "In progress"]
                 ]
               ],
+              'not_received' => [
+                'filter' => [
+                  'term' => ['aggregated_borrowing_status.keyword' => "Not received"]
+                ]
+              ],
+              'not_received_fulfilled' => [
+                'filter' => [
+                  'term' => ['aggregated_borrowing_status.keyword' => "Not received but fulfilled by lender"]
+                ]
+              ],
               'canceled' => [
                 'filter' => [
                   'term' => ['aggregated_borrowing_status.keyword' => "Canceled"]
@@ -189,7 +199,12 @@ class FillrateStats extends BaseStatsController
     $borrowingFillRate = $borrowingValue !== null ? $borrowingValue * 100 : 0;
     $lendingFillRate   = $lendingValue !== null ? $lendingValue * 100 : 0;
 
+    $tmpBorrowingResp = $response["aggregations"]["borrowing_stats"]["buckets"]["borrowing"];
+    $tmpLendingResp   = $response["aggregations"]["lending_stats"]["buckets"]["lending"];
+
     $result = [];
+    $result["total_borrowing"] = $tmpBorrowingResp["received"]["doc_count"] + $tmpBorrowingResp["not_received"]["doc_count"] + $tmpBorrowingResp["not_received_fulfilled"]["doc_count"];
+    $result["total_lending"] = $tmpLendingResp["unfilled"]["doc_count"] + $tmpLendingResp["fulfilled"]["doc_count"];
     $result["borrowing_fill_rate"] = $borrowingFillRate;
     $result["borrowing_unfill_rate"] = $borrowingValue !== null ? 100 - $borrowingFillRate : 0;
     $result["lending_fill_rate"] = $lendingFillRate;
