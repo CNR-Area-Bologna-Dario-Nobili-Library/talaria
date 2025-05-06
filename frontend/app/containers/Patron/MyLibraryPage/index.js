@@ -12,6 +12,7 @@ import {
   requestGetTitlesOptionList,
   requestMyLibraries,
   requestLibraryOptionList,
+  requestClearLibraryOptionList
 } from '../actions';
 import {
   placesSelector,
@@ -64,10 +65,19 @@ const MyLibraryPage = props => {
     }));
   };
 
-  // Debounced handler for search input changes
   const handleSearchInputChange = debounce(input => {
     setSearchInput(input);
+  
+    if (input.length >= 3) {
+      dispatch(requestLibraryOptionList(input)); // input is a plain string (e.g., 'med')
+    } else {
+      //dispatch(requestClearLibraryOptionList());
+      setFilteredOptions([]);
+    }
   }, 300);
+  
+  
+  
 
   // Identify the library to edit, if in edit mode
   const libraryToEdit = isNew
@@ -79,7 +89,7 @@ const MyLibraryPage = props => {
       );
 
   useEffect(() => {
-    dispatch(requestLibraryOptionList());
+    //dispatch(requestLibraryOptionList());
     dispatch(requestGetTitlesOptionList());
     dispatch(requestMyLibraries());
   }, [dispatch]);

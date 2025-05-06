@@ -26,7 +26,7 @@ function JointoLibPage(props) {
   const { auth, dispatch, patron } = props;
 
   useEffect(() => {
-    dispatch(requestLibraryOptionList());
+    //dispatch(requestLibraryOptionList());
     dispatch(requestGetTitlesOptionList());
     dispatch(requestMyLibraries());
   }, [dispatch]);
