@@ -137,7 +137,7 @@ const BarComponent = ({
   };
 
   return (
-    <div className="pie-chart-container">
+    <div className="chart-container">
       <Bar data={chartData} options={options} />
     </div>
   );

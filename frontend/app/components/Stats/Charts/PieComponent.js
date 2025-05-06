@@ -22,7 +22,7 @@ const PieComponent = ({
   labels,
   data,
   datasetLabel = 'Data',
-  tooltipLabelFormatter
+  tooltipLabelFormatter,
 }) => {
   const chartData = {
     labels,
@@ -59,15 +59,18 @@ const PieComponent = ({
       tooltip: {
         enabled: true,
         callbacks: {
-          label: tooltipLabelFormatter 
-          ? tooltipLabelFormatter 
-          : function (context) {
-            const total = context.chart._metasets[0]._parsed.reduce((a, b) => a + b, 0);    // Sums all slices' value
-            const value = context.raw;
-            const percentage = ((value / total) * 100).toFixed(2);
-            return `${context.label}: ${value} (${percentage}%)`;
-          }
-        }
+          label: tooltipLabelFormatter
+            ? tooltipLabelFormatter
+            : function(context) {
+                const total = context.chart._metasets[0]._parsed.reduce(
+                  (a, b) => a + b,
+                  0,
+                ); // Sums all slices' value
+                const value = context.raw;
+                const percentage = ((value / total) * 100).toFixed(2);
+                return `${context.label}: ${value} (${percentage}%)`;
+              },
+        },
       },
       datalabels: {
         display: false,
@@ -77,7 +80,7 @@ const PieComponent = ({
   };
 
   return (
-    <div className="pie-chart-container">
+    <div className="chart-container">
       <Pie data={chartData} options={options} />
     </div>
   );
