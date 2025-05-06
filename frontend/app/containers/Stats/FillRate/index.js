@@ -126,7 +126,7 @@ const RequestsDistribution = props => {
         value: data.borrowing_fill_rate.toFixed(2),
       },
       {
-        label: intl.formatMessage({ id: 'app.stats.unfillRate.borrowing' }),
+        label: intl.formatMessage({ id: 'app.stats.unFillRate.borrowing' }),
         value: data.borrowing_unfill_rate.toFixed(2),
       }
     ]
@@ -143,7 +143,7 @@ const RequestsDistribution = props => {
         value: data.lending_fill_rate.toFixed(2),
       },
       {
-        label: intl.formatMessage({ id: 'app.stats.unfillRate.lending' }),
+        label: intl.formatMessage({ id: 'app.stats.unFillRate.lending' }),
         value: data.lending_unfill_rate.toFixed(2),
       }
     ]
@@ -175,15 +175,15 @@ const RequestsDistribution = props => {
             <div className="charts-box">
               <PieComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.fillrate.borrowing.title',
+                  id: 'app.stats.fillRate.borrowing.title',
                 })}
                 subtitle={intl.formatMessage(
                   {
-                    id: 'app.stats.fillrate.borrowing.subtitle',
+                    id: 'app.stats.fillRate.borrowing.subtitle',
                   },
                   {
+                    TOTAL: data.total_borrowing,
                     YEAR: filters.year.label,
-                    MATERIAL_TYPE: filters.materialType.label,
                   },
                 )}
                 labels={
@@ -202,15 +202,15 @@ const RequestsDistribution = props => {
             <div className="charts-box">
             <PieComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.fillrate.lending.title',
+                  id: 'app.stats.fillRate.lending.title',
                 })}
                 subtitle={intl.formatMessage(
                   {
-                    id: 'app.stats.fillrate.lending.subtitle',
+                    id: 'app.stats.fillRate.lending.subtitle',
                   },
                   {
+                    TOTAL: data.total_lending,
                     YEAR: filters.year.label,
-                    MATERIAL_TYPE: filters.materialType.label,
                   },
                 )}
                 labels={
