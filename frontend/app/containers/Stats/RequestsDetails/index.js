@@ -166,7 +166,7 @@ const RequestsDistribution = props => {
 
   return (
     <div>
-      <h1>!!!Requests Details</h1>
+      <h1>{intl.formatMessage({id: 'app.stats.requestsDetails.header'})}</h1>
 
       <FilterSelects
         filters={filters}

@@ -154,7 +154,7 @@ const RequestsDistribution = props => {
 
   return (
     <div>
-      <h1>!!!Fill Rate</h1>
+      <h1>{intl.formatMessage({id: 'app.stats.fillRate.header'})}</h1>
 
       <FilterSelects
         roles={props.auth}
