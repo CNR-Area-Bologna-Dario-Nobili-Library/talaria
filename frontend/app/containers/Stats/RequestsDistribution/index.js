@@ -5,9 +5,7 @@ import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
 import BarComponent from '../../../components/Stats/Charts/BarComponent';
 import PieComponent from '../../../components/Stats/Charts/PieComponent';
-import {
-  requestGetCountriesOptionList,
-} from '../../../containers/Admin/actions';
+import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
   requestLibraryOptionList,
   requestGetInstitutionsOptionList,
@@ -117,19 +115,23 @@ const RequestsDistribution = props => {
   }, [dispatch, filters]);
 
   const materialTypeIds = ['1', '2', '3', '4', '5'];
-  const materialTypeNames = materialTypeIds.map(id => getMaterialTypeLabel(id, intl));
+  const materialTypeNames = materialTypeIds.map(id =>
+    getMaterialTypeLabel(id, intl),
+  );
 
   /**
    * Displayed data for charts - by status
    */
-  const borrowingDataByStatus = Object.values(data && data.by_borrowing_status ? data.by_borrowing_status : {});
+  const borrowingDataByStatus = Object.values(
+    data && data.by_borrowing_status ? data.by_borrowing_status : {},
+  );
   const borrowingStatusLabels = borrowingDataByStatus.map(function(item) {
     return item.key;
   });
 
   const borrowing_datasets = materialTypeIds.map(function(matId) {
     return {
-      label: materialTypeNames[matId-1] || "undefined",
+      label: materialTypeNames[matId - 1] || 'undefined',
       data: borrowingDataByStatus.map(function(statusItem) {
         var types = statusItem.material_types || {};
         return Number(types[matId] || 0);
@@ -137,14 +139,16 @@ const RequestsDistribution = props => {
     };
   });
 
-  const lendingDataByStatus = Object.values(data && data.by_lending_status ? data.by_lending_status : {});
+  const lendingDataByStatus = Object.values(
+    data && data.by_lending_status ? data.by_lending_status : {},
+  );
   const lendingStatusLabels = lendingDataByStatus.map(function(item) {
     return item.key;
   });
 
   const lending_datasets = materialTypeIds.map(function(matId) {
     return {
-      label: materialTypeNames[matId-1] || "undefined",
+      label: materialTypeNames[matId - 1] || 'undefined',
       data: lendingDataByStatus.map(function(statusItem) {
         var types = statusItem.material_types || {};
         return Number(types[matId] || 0);
@@ -192,7 +196,9 @@ const RequestsDistribution = props => {
 
   return (
     <div>
-      <h1>{intl.formatMessage({id: 'app.stats.requestsDistribution.header'})}</h1>
+      <h1>
+        {intl.formatMessage({ id: 'app.stats.requestsDistribution.header' })}
+      </h1>
 
       <FilterSelects
         filters={filters}
