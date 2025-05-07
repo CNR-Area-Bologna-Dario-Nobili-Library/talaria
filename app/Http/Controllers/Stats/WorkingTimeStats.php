@@ -120,6 +120,20 @@ class WorkingTimeStats extends BaseStatsController
                     ]
                   ]
                 ]
+              ],
+              'valid_request_count' => [
+                'scripted_metric' => [
+                  'init_script' => 'state.count = 0',
+                  'map_script' => "
+                                      def requestDate = doc.containsKey('request_date') && doc['request_date'].size() > 0 ? doc['request_date'].value.toInstant().toEpochMilli() : null;
+                                      def fulfillDate = doc.containsKey('fulfill_date') && doc['fulfill_date'].size() > 0 ? doc['fulfill_date'].value.toInstant().toEpochMilli() : null;
+                                      if (requestDate != null && fulfillDate != null) {
+                                          state.count += 1;
+                                      }
+                                  ",
+                  'combine_script' => 'return state.count',
+                  'reduce_script' => 'return states.stream().mapToInt(s -> s).sum()'
+                ]
               ]
             ]
           ],
@@ -152,6 +166,20 @@ class WorkingTimeStats extends BaseStatsController
                     ]
                   ]
                 ]
+              ],
+              'valid_request_count' => [
+                'scripted_metric' => [
+                  'init_script' => 'state.count = 0',
+                  'map_script' => "
+                                      def requestDate = doc.containsKey('request_date') && doc['request_date'].size() > 0 ? doc['request_date'].value.toInstant().toEpochMilli() : null;
+                                      def fulfillDate = doc.containsKey('fulfill_date') && doc['fulfill_date'].size() > 0 ? doc['fulfill_date'].value.toInstant().toEpochMilli() : null;
+                                      if (requestDate != null && fulfillDate != null) {
+                                          state.count += 1;
+                                      }
+                                  ",
+                  'combine_script' => 'return state.count',
+                  'reduce_script' => 'return states.stream().mapToInt(s -> s).sum()'
+                ]
               ]
             ]
           ]
@@ -170,7 +198,12 @@ class WorkingTimeStats extends BaseStatsController
       ? $response['aggregations']['lending_stats']['working_time_buckets']['buckets']
       : [];
 
+    $totalBorrowing = $response['aggregations']['borrowing_stats']['valid_request_count']['value'] ?? 0;
+    $totalLending = $response['aggregations']['lending_stats']['valid_request_count']['value'] ?? 0;
+
     return response()->json([
+      'total_borrowing' => $totalBorrowing,
+      'total_lending' => $totalLending,
       'as_borrower' => $borrowingData,
       'as_lender' => $lendingData
     ]);
