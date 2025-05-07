@@ -24,7 +24,7 @@ import './style.scss';
 const WorkingTime = props => {
   const {
     data_working_time,
-    data_average_working_time,
+    data_avg_working_time,
     dispatch,
     loading,
     error,
@@ -116,6 +116,15 @@ const WorkingTime = props => {
       filters.materialType.value,
     );
     dispatch(action);
+
+    const avgAction = fetchAvgWorkingtimeRequest(
+      filters.year.value,
+      selectedLibraryId,
+      filters.institutionId.value,
+      filters.countryId.value,
+      filters.materialType.value,
+    );
+    dispatch(avgAction);
   }, [dispatch, filters]);
 
   const materialTypeIds = ['1', '2', '3', '4', '5'];
@@ -174,6 +183,87 @@ const WorkingTime = props => {
       }),
     };
   });
+
+  /**
+   * Line chart data
+   */
+  const prepareChartData = (apiData, selectedYear) => {
+    if (!apiData) {
+      return {
+        labels: [],
+        data: [],
+      };
+    }
+
+    if (!selectedYear || selectedYear === '') {
+      const years = Object.keys(apiData);
+      return {
+        labels: years,
+        data: [
+          {
+            label: intl.formatMessage({
+              id: 'app.stats.workingTime.average.yearlyBorrowing',
+            }),
+            data: years.map(year =>
+              apiData[year].yearly_borrowing.value
+                ? apiData[year].yearly_borrowing.value / 86400000 // Convert it to days
+                : 0,
+            ),
+          },
+          {
+            label: intl.formatMessage({
+              id: 'app.stats.workingTime.average.yearlyLending',
+            }),
+            data: years.map(year =>
+              apiData[year].yearly_lending.value
+                ? apiData[year].yearly_lending.value / 86400000 // Convert it to days
+                : 0,
+            ),
+          },
+        ],
+      };
+    }
+
+    const yearData = apiData[selectedYear];
+    if (!yearData) {
+      return {
+        labels: [],
+        data: [],
+      };
+    }
+
+    const months = Object.keys(yearData)
+      .filter(k => /^\d{4}-\d{2}$/.test(k))
+      .sort();
+    return {
+      labels: months,
+      data: [
+        {
+          label: intl.formatMessage({
+            id: 'app.stats.workingTime.average.monthlyBorrowing',
+          }),
+          data: months.map(month =>
+            yearData[month].borrowing
+              ? yearData[month].borrowing / 86400000
+              : 0,
+          ),
+        },
+        {
+          label: intl.formatMessage({
+            id: 'app.stats.workingTime.average.monthlyLending',
+          }),
+          data: months.map(month =>
+            yearData[month].lending ? yearData[month].lending / 86400000 : 0,
+          ),
+        },
+      ],
+    };
+  };
+
+  const { labels, data } = prepareChartData(
+    data_avg_working_time,
+    filters.year && filters.year.value ? filters.year.value : '',
+  );
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -235,6 +325,20 @@ const WorkingTime = props => {
               />
             </div>
           </div>
+          <div className="charts-container">
+            <div className="charts-box">
+              <LineComponent
+                title={intl.formatMessage({
+                  id: 'app.stats.workingTime.average.title',
+                })}
+                subtitle={intl.formatMessage({
+                  id: 'app.stats.workingTime.average.subtitle',
+                })}
+                labels={labels}
+                data={data}
+              />
+            </div>
+          </div>
         </>
       )}
     </div>
@@ -243,7 +347,7 @@ const WorkingTime = props => {
 
 const mapStateToProps = state => ({
   data_working_time: state.stats.working_time,
-  data_average_working_time: state.stats.avg_working_time,
+  data_avg_working_time: state.stats.avg_working_time,
   loading: state.stats.loading,
   error: state.stats.error,
   libraries: state.library.libraryOptionItemList,

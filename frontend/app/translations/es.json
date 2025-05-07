@@ -796,5 +796,11 @@
   "app.stats.workingTime.borrowing.title": "???Borrowing requests working time",
   "app.stats.workingTime.borrowing.subtitle": "???- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
   "app.stats.workingTime.lending.title": "???Lending requests working time",
-  "app.stats.workingTime.lending.subtitle": "???- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}"
+  "app.stats.workingTime.lending.subtitle": "???- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
+  "app.stats.workingTime.average.title": "???Average working time",
+  "app.stats.workingTime.average.subtitle": "???Calculated in days",
+  "app.stats.workingTime.average.yearlyBorrowing": "???Yearly borrowing",
+  "app.stats.workingTime.average.yearlyLending": "???Yearly lending",
+  "app.stats.workingTime.average.monthlyBorrowing": "???Monthly borrowing",
+  "app.stats.workingTime.average.monthlyLending": "???Monthly lending"
 }
