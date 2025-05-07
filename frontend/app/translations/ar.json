@@ -792,5 +792,9 @@
   "app.stats.fillRate.borrowing": "Fill rate",
   "app.stats.unFillRate.borrowing": "Unfill rate",
   "app.stats.fillRate.lending": "Fill rate",
-  "app.stats.unFillRate.lending": "Unfill rate"
+  "app.stats.unFillRate.lending": "Unfill rate",
+  "app.stats.workingTime.borrowing.title": "Borrowing requests working time",
+  "app.stats.workingTime.borrowing.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
+  "app.stats.workingTime.lending.title": "Lending requests working time",
+  "app.stats.workingTime.lending.subtitle": "- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}"
 }
