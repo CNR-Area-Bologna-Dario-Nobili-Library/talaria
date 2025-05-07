@@ -71,7 +71,7 @@ const LineComponent = ({
           label: tooltipLabelFormatter
             ? tooltipLabelFormatter
             : function(context) {
-                return `${context.label}: ${context.raw}`;
+                return `${context.label}: ${context.raw.toFixed(2)}`;
               },
         },
       },
