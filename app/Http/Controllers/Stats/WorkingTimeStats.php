@@ -112,6 +112,13 @@ class WorkingTimeStats extends BaseStatsController
                                   ",
                     'lang' => 'painless'
                   ]
+                ],
+                'aggs' => [
+                  'by_material_type' => [
+                    'terms' => [
+                      'field' => 'reference.material_type'
+                    ]
+                  ]
                 ]
               ]
             ]
@@ -136,6 +143,13 @@ class WorkingTimeStats extends BaseStatsController
                                       else return 'Longer than a week';
                                   ",
                     'lang' => 'painless'
+                  ]
+                ],
+                'aggs' => [
+                  'by_material_type' => [
+                    'terms' => [
+                      'field' => 'reference.material_type'
+                    ]
                   ]
                 ]
               ]
