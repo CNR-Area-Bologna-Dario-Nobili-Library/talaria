@@ -125,7 +125,14 @@ const WorkingTime = props => {
       filters.materialType.value,
     );
     dispatch(avgAction);
-  }, [dispatch, filters]);
+  }, [
+    dispatch,
+    filters.year.value,
+    filters.libraryId.value,
+    filters.institutionId.value,
+    filters.countryId.value,
+    filters.materialType.value,
+  ]);
 
   const materialTypeIds = ['1', '2', '3', '4', '5'];
   const materialTypeNames = materialTypeIds.map(id =>
@@ -187,6 +194,8 @@ const WorkingTime = props => {
   /**
    * Line chart data
    */
+
+  // Prepare data for line chart, in case of selectedYear = All it returns a yearly trend, otherwise it returns a monthly trend
   const prepareChartData = (apiData, selectedYear) => {
     if (!apiData) {
       return {
@@ -195,6 +204,7 @@ const WorkingTime = props => {
       };
     }
 
+    // If no year is selected, return yearly trend
     if (!selectedYear || selectedYear === '') {
       const years = Object.keys(apiData);
       return {
@@ -224,6 +234,7 @@ const WorkingTime = props => {
       };
     }
 
+    // If year is selected, get relative data
     const yearData = apiData[selectedYear];
     if (!yearData) {
       return {
@@ -233,8 +244,8 @@ const WorkingTime = props => {
     }
 
     const months = Object.keys(yearData)
-      .filter(k => /^\d{4}-\d{2}$/.test(k))
-      .sort();
+      .filter(k => /^\d{4}-\d{2}$/.test(k)) // Regex to get months (format YYYY-MM)
+      .sort(); // They should be already sorted but in case
     return {
       labels: months,
       data: [

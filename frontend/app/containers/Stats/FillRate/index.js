@@ -4,9 +4,7 @@ import { fetchFillRateRequest } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
 import PieComponent from '../../../components/Stats/Charts/PieComponent';
-import {
-  requestGetCountriesOptionList,
-} from '../../../containers/Admin/actions';
+import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
   requestLibraryOptionList,
   requestGetInstitutionsOptionList,
@@ -14,7 +12,6 @@ import {
   requestClearInstitutionsOptionList,
 } from '../../Library/actions';
 import { checkRole } from '../../../utils/permissions';
-import { getDeliveryMethodLabel, getReasonUnfilledLabel } from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
@@ -113,7 +110,14 @@ const RequestsDistribution = props => {
       filters.materialType.value,
     );
     dispatch(action);
-  }, [dispatch, filters]);
+  }, [
+    dispatch,
+    filters.year.value,
+    filters.libraryId.value,
+    filters.institutionId.value,
+    filters.countryId.value,
+    filters.materialType.value,
+  ]);
 
   /**
    * Displayed data for charts - borrowing fillrate
@@ -128,8 +132,8 @@ const RequestsDistribution = props => {
       {
         label: intl.formatMessage({ id: 'app.stats.unFillRate.borrowing' }),
         value: data.borrowing_unfill_rate.toFixed(2),
-      }
-    ]
+      },
+    ];
   }
 
   /**
@@ -145,8 +149,8 @@ const RequestsDistribution = props => {
       {
         label: intl.formatMessage({ id: 'app.stats.unFillRate.lending' }),
         value: data.lending_unfill_rate.toFixed(2),
-      }
-    ]
+      },
+    ];
   }
 
   if (loading) return <div>Loading...</div>;
@@ -154,7 +158,7 @@ const RequestsDistribution = props => {
 
   return (
     <div>
-      <h1>{intl.formatMessage({id: 'app.stats.fillRate.header'})}</h1>
+      <h1>{intl.formatMessage({ id: 'app.stats.fillRate.header' })}</h1>
 
       <FilterSelects
         roles={props.auth}
@@ -196,11 +200,13 @@ const RequestsDistribution = props => {
                     ? borrowing_fillrate.map(item => item.value)
                     : []
                 }
-                tooltipLabelFormatter={(context) => `${context.label}: ${context.raw}%`}
+                tooltipLabelFormatter={context =>
+                  `${context.label}: ${context.raw}%`
+                }
               />
             </div>
             <div className="charts-box">
-            <PieComponent
+              <PieComponent
                 title={intl.formatMessage({
                   id: 'app.stats.fillRate.lending.title',
                 })}
@@ -223,7 +229,9 @@ const RequestsDistribution = props => {
                     ? lending_fillrate.map(item => item.value)
                     : []
                 }
-                tooltipLabelFormatter={(context) => `${context.label}: ${context.raw}%`}
+                tooltipLabelFormatter={context =>
+                  `${context.label}: ${context.raw}%`
+                }
               />
             </div>
           </div>

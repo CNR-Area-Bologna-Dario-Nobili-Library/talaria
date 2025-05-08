@@ -112,8 +112,16 @@ const RequestsDistribution = props => {
       filters.materialType.value,
     );
     dispatch(action);
-  }, [dispatch, filters]);
+  }, [
+    dispatch,
+    filters.year.value,
+    filters.libraryId.value,
+    filters.institutionId.value,
+    filters.countryId.value,
+    filters.materialType.value,
+  ]);
 
+  // Fetch material types for stacked bar chart
   const materialTypeIds = ['1', '2', '3', '4', '5'];
   const materialTypeNames = materialTypeIds.map(id =>
     getMaterialTypeLabel(id, intl),
@@ -129,6 +137,7 @@ const RequestsDistribution = props => {
     return item.key;
   });
 
+  // Create a dataset for each material type
   const borrowing_datasets = materialTypeIds.map(function(matId) {
     return {
       label: materialTypeNames[matId - 1] || 'undefined',
@@ -146,6 +155,7 @@ const RequestsDistribution = props => {
     return item.key;
   });
 
+  // Create a dataset for each material type
   const lending_datasets = materialTypeIds.map(function(matId) {
     return {
       label: materialTypeNames[matId - 1] || 'undefined',
@@ -161,8 +171,11 @@ const RequestsDistribution = props => {
    */
   let borrowing_data_byMaterialType = {};
   let lending_data_byMaterialType = {};
+
   if (data) {
     const borrowingMaterialTypeTotals = {};
+
+    // For each status, sum up material types
     data.by_borrowing_status.forEach(status => {
       Object.entries(status.material_types).forEach(([typeId, count]) => {
         borrowingMaterialTypeTotals[typeId] =
@@ -177,6 +190,8 @@ const RequestsDistribution = props => {
     });
 
     const lendingMaterialTypeTotals = {};
+
+    // For each status, sum up material types
     data.by_lending_status.forEach(status => {
       Object.entries(status.material_types).forEach(([typeId, count]) => {
         lendingMaterialTypeTotals[typeId] =
@@ -280,7 +295,6 @@ const RequestsDistribution = props => {
                     ? borrowing_data_byMaterialType.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
             <div className="charts-box">
@@ -307,7 +321,6 @@ const RequestsDistribution = props => {
                     ? lending_data_byMaterialType.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
           </div>

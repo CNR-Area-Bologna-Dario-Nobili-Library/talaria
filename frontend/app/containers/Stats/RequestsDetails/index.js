@@ -4,9 +4,7 @@ import { fetchRequestDistributionRequest } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
 import PieComponent from '../../../components/Stats/Charts/PieComponent';
-import {
-  requestGetCountriesOptionList,
-} from '../../../containers/Admin/actions';
+import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
   requestLibraryOptionList,
   requestGetInstitutionsOptionList,
@@ -14,7 +12,10 @@ import {
   requestClearInstitutionsOptionList,
 } from '../../Library/actions';
 import { checkRole } from '../../../utils/permissions';
-import { getDeliveryMethodLabel, getReasonUnfilledLabel } from '../../../utils/stats';
+import {
+  getDeliveryMethodLabel,
+  getReasonUnfilledLabel,
+} from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
@@ -113,7 +114,14 @@ const RequestsDistribution = props => {
       filters.materialType.value,
     );
     dispatch(action);
-  }, [dispatch, filters]);
+  }, [
+    dispatch,
+    filters.year.value,
+    filters.libraryId.value,
+    filters.institutionId.value,
+    filters.countryId.value,
+    filters.materialType.value,
+  ]);
 
   /**
    * Displayed data for charts - by delivery method
@@ -122,20 +130,45 @@ const RequestsDistribution = props => {
   let lending_data_total_fulfilled = 0;
   let borrowing_data_delivery_method = [];
   let lending_data_delivery_method = [];
+
   if (data) {
-    borrowing_data_total_received = (data && Array.isArray(data.by_borrowing_status) && (data.by_borrowing_status.find(function(e) { return e.key === "Received"; }) || {}).count) || 0;
+    // Gets the total number of received requests
+    borrowing_data_total_received =
+      (data &&
+        Array.isArray(data.by_borrowing_status) &&
+        (
+          data.by_borrowing_status.find(function(e) {
+            return e.key === 'Received';
+          }) || {}
+        ).count) ||
+      0;
 
-    borrowing_data_delivery_method = data.borrowing_fulfilled_distribution.map(item => ({
-      label: getDeliveryMethodLabel(item.key, intl),
-      count: item.count,
-    }));
+    // Calculates the number of requests by delivery method
+    borrowing_data_delivery_method = data.borrowing_fulfilled_distribution.map(
+      item => ({
+        label: getDeliveryMethodLabel(item.key, intl),
+        count: item.count,
+      }),
+    );
 
-    lending_data_total_fulfilled = (data && Array.isArray(data.by_lending_status) && (data.by_lending_status.find(function(e) { return e.key === "Fulfilled"; }) || {}).count) || 0;
+    // Gets the total number of fulfilled requests
+    lending_data_total_fulfilled =
+      (data &&
+        Array.isArray(data.by_lending_status) &&
+        (
+          data.by_lending_status.find(function(e) {
+            return e.key === 'Fulfilled';
+          }) || {}
+        ).count) ||
+      0;
 
-    lending_data_delivery_method = data.lending_fulfilled_distribution.map(item => ({
-      label: getDeliveryMethodLabel(item.key, intl),
-      count: item.count,
-    }));
+    // Calculates the number of requests by delivery method
+    lending_data_delivery_method = data.lending_fulfilled_distribution.map(
+      item => ({
+        label: getDeliveryMethodLabel(item.key, intl),
+        count: item.count,
+      }),
+    );
   }
 
   /**
@@ -146,19 +179,43 @@ const RequestsDistribution = props => {
   let borrowing_data_unfillment_reason = [];
   let lending_data_unfillment_reason = [];
   if (data) {
-    borrowing_data_total_not_received = (data && Array.isArray(data.by_borrowing_status) && (data.by_borrowing_status.find(function(e) { return e.key === "Not received"; }) || {}).count) || 0;
+    // Gets the total number of not received requests
+    borrowing_data_total_not_received =
+      (data &&
+        Array.isArray(data.by_borrowing_status) &&
+        (
+          data.by_borrowing_status.find(function(e) {
+            return e.key === 'Not received';
+          }) || {}
+        ).count) ||
+      0;
 
-    borrowing_data_unfillment_reason = data.borrowing_unfilled_distribution.map(item => ({
-      label: getReasonUnfilledLabel(item.key, intl),
-      count: item.count,
-    }));
+    // Calculates the number of requests by reason of unfillment
+    borrowing_data_unfillment_reason = data.borrowing_unfilled_distribution.map(
+      item => ({
+        label: getReasonUnfilledLabel(item.key, intl),
+        count: item.count,
+      }),
+    );
 
-    lending_data_total_not_fulfilled = (data && Array.isArray(data.by_lending_status) && (data.by_lending_status.find(function(e) { return e.key === "Not fulfilled"; }) || {}).count) || 0;
+    // Gets the total number of not fulfilled requests
+    lending_data_total_not_fulfilled =
+      (data &&
+        Array.isArray(data.by_lending_status) &&
+        (
+          data.by_lending_status.find(function(e) {
+            return e.key === 'Not fulfilled';
+          }) || {}
+        ).count) ||
+      0;
 
-    lending_data_unfillment_reason = data.lending_unfilled_distribution.map(item => ({
-      label: getReasonUnfilledLabel(item.key, intl),
-      count: item.count,
-    }));
+    // Calculates the number of requests by reason of unfillment
+    lending_data_unfillment_reason = data.lending_unfilled_distribution.map(
+      item => ({
+        label: getReasonUnfilledLabel(item.key, intl),
+        count: item.count,
+      }),
+    );
   }
 
   if (loading) return <div>Loading...</div>;
@@ -166,7 +223,7 @@ const RequestsDistribution = props => {
 
   return (
     <div>
-      <h1>{intl.formatMessage({id: 'app.stats.requestsDetails.header'})}</h1>
+      <h1>{intl.formatMessage({ id: 'app.stats.requestsDetails.header' })}</h1>
 
       <FilterSelects
         filters={filters}
@@ -208,7 +265,6 @@ const RequestsDistribution = props => {
                     ? borrowing_data_delivery_method.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
             <div className="charts-box">
@@ -236,7 +292,6 @@ const RequestsDistribution = props => {
                     ? lending_data_delivery_method.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
           </div>
@@ -267,11 +322,10 @@ const RequestsDistribution = props => {
                     ? borrowing_data_unfillment_reason.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
             <div className="charts-box">
-            <PieComponent
+              <PieComponent
                 title={intl.formatMessage({
                   id: 'app.stats.lendingByReasonUnfilled.title',
                 })}
@@ -295,7 +349,6 @@ const RequestsDistribution = props => {
                     ? lending_data_unfillment_reason.map(item => item.count)
                     : []
                 }
-                datasetLabel="!!!Total requests"
               />
             </div>
           </div>
