@@ -3,26 +3,20 @@ version: "3.4"
 services:
   traefik:
     image: traefik:v1.7.18
-    command: --insecureskipverify=true --entryPoints='Name:http Address::80'
     ports:
       - "${WEBSERVER_EXTERNAL_PORT}:80"
-      # - "${WEBSERVER_HTTPS_EXTERNAL_PORT}:443"
+      - "${WEBSERVER_HTTPS_EXTERNAL_PORT}:443"
     volumes:
-      # - "${SSL_CERT_PATH}:/etc/ssl/traefik/localhost.crt"
-      # - "${SSL_KEY_PATH}:/etc/ssl/traefik/localhost.key"
-      # - "${SSL_API_CERT_PATH}:/etc/ssl/traefik/localhost-api.crt"
-      # - "${SSL_API_KEY_PATH}:/etc/ssl/traefik/localhost-api.key"
+      - "${SSL_CERT_PATH}:/etc/ssl/traefik/localhost.crt"
+      - "${SSL_KEY_PATH}:/etc/ssl/traefik/localhost.key"
+      - "${SSL_API_CERT_PATH}:/etc/ssl/traefik/localhost-api.crt"
+      - "${SSL_API_KEY_PATH}:/etc/ssl/traefik/localhost-api.key"
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./docker/traefik:/etc/traefik
-    # restart: unless-stopped
-
+    restart: always
     depends_on:
       - nginx
       - phpmyadmin
-
-    networks:
-      default:
-        ipv4_address: 172.18.0.12
 
   nginx:
     image: nginx:alpine
@@ -36,7 +30,7 @@ services:
       - ./:/application
     depends_on:
       - laravel
-    # restart: unless-stopped
+    restart: always
     labels:
       - "traefik.port=80"
       - "traefik.enable=true"
@@ -58,7 +52,7 @@ services:
       - ./:/application
       - ./docker/backend/php:/usr/local/etc/php
     user: "${UID}"
-    # restart: unless-stopped
+    restart: always
 
   laravelqueue:
     image: backend
@@ -87,21 +81,20 @@ services:
       - "${DB_EXTERNAL_PORT}"
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
-      # - MYSQL_USER=${DB_USERNAME}
-      # - MYSQL_PASSWORD=${DB_PASSWORD}
-      # - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
-      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:
       - ./docker/data/db-data:/var/lib/mysql
-    # restart: unless-stopped
+    restart: always
 
   dbbackup:
     image: fradelg/mysql-cron-backup
-    # restart: unless-stopped
+    restart: always
     depends_on:
       - mysql
     volumes:
-      - ./${DB_BACKUP_FOLDER}:/backup
+      - ${DB_BACKUP_FOLDER}:/backup
 
     environment:
       - MYSQL_DB=${DB_DATABASE}
@@ -125,18 +118,18 @@ services:
       - PMA_USER=root
       - PMA_PASSWORD=${DB_PASSWORD}
       - PMA_HOST=${DB_HOST}
-      - PMA_ABSOLUTE_URI=http://${API_DOMAIN}/phpmyadmin/
+      - PMA_ABSOLUTE_URI=https://${API_DOMAIN}/phpmyadmin/
     #ports:
     #- "${PMA_PORT}:80"
     expose:
       - 80
-    # restart: unless-stopped
+    restart: always
     labels:
       - "traefik.port=80"
       - "traefik.enable=true"
       - "traefik.backend=phpmyadmin"
       - "traefik.frontend.rule=Host:${API_DOMAIN};PathPrefixStrip:/phpmyadmin/"
-      # - "traefik.frontend.auth.basic.users=${PMA_AUTH}"
+      - "traefik.frontend.auth.basic.users=${PMA_AUTH}"
 
   horizon:
     build:
@@ -151,32 +144,29 @@ services:
       - redis
     volumes:
       - ./:/application
-    # restart: unless-stopped
+    restart: always
 
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
-    # restart: unless-stopped
+    restart: always
 
   frontend:
     build: ./frontend
     volumes:
       - ./frontend:/usr/src/app
       - ./.env:/usr/src/.env
-    # command: bash -c "npm install; npm run start:production"
-    command: npm start
+    command: bash -c "npm install; npm run start:production"
+    #command: npm start
     expose:
       - 3000
-    # restart: unless-stopped
+    restart: always
     labels:
       - "traefik.port=3000"
       - "traefik.enable=true"
       - "traefik.frontend.rule=Host:${FRONTEND_DOMAIN};PathPrefix:/"
       - "traefik.docker.network=proxy"
-    networks:
-      default:
-        ipv4_address: 172.18.0.5
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
@@ -187,7 +177,7 @@ services:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms4G -Xmx4G"
     ulimits:
       memlock:
         soft: -1
@@ -218,7 +208,6 @@ services:
 volumes:
   esdata2:
     driver: local
-####################################################
 #   shibboleth:
 # #    image: unicon/shibboleth-sp
 #     build: ./docker/shibboleth
@@ -251,7 +240,7 @@ volumes:
 
 #   #SPID
 #   authproxy:
-# #    # restart: unless-stopped
+# #    restart: always
 #     #image: spid-auth-proxy
 #     #build: ./docker/spid
 #       #context: .
@@ -325,9 +314,8 @@ volumes:
 #volumes:
 #  db-data:
 
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.18.0.0/16
+#networks:
+#  default:
+#    ipam:
+#      config:
+#        - subnet: 172.17.0.0/16
