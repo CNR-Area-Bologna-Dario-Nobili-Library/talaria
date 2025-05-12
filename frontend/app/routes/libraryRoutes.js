@@ -113,6 +113,15 @@ const routes = [
     header: true,
     children: [
       {
+        path: '/',
+        exact: true,
+        icon: 'chart-bar',
+        name: `Statistics`,
+        url: `/stats`,
+        component: Fake,
+        sidebar: true,
+      },
+      {
         path: '/requests-distribution',
         exact: true,
         icon: 'chart-bar',
@@ -120,8 +129,6 @@ const routes = [
         url: `/stats/requests-distribution`,
         component: RequestsDistribution,
         sidebar: true,
-        order: 1,
-        level: 2,
       },
       {
         path: '/requests-details',
@@ -131,8 +138,6 @@ const routes = [
         url: `/stats/requests-details`,
         component: RequestsDetails,
         sidebar: true,
-        order: 1,
-        level: 2,
       },
       {
         path: '/fillrate',
@@ -142,8 +147,6 @@ const routes = [
         url: `/stats/fillrate`,
         component: FillRate,
         sidebar: true,
-        order: 1,
-        level: 2,
       },
       {
         path: '/working-time',
@@ -153,8 +156,6 @@ const routes = [
         url: `/stats/working-time`,
         component: WorkingTime,
         sidebar: true,
-        order: 1,
-        level: 2,
       },
     ],
   },
