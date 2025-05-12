@@ -270,10 +270,6 @@ export default defineMessages({
     id: `${scope}.StatisticsFillRate`,
     defaultMessage: 'Fill rate statistics',
   },
-  StatisticsLibraries: {
-    id: `${scope}.StatisticsLibraries`,
-    defaultMessage: 'Libraries statistics',
-  },
   StatisticsRequestsDistribution: {
     id: `${scope}.StatisticsRequestsDistribution`,
     defaultMessage: 'Requests distribution',
@@ -281,10 +277,6 @@ export default defineMessages({
   StatisticsRequestsDetails: {
     id: `${scope}.StatisticsRequestsDetails`,
     defaultMessage: 'Requests details',
-  },
-  StatisticsInstitutions: {
-    id: `${scope}.StatisticsInstitutions`,
-    defaultMessage: 'Institutions statistics',
   },
   StatisticsWorkingTime: {
     id: `${scope}.StatisticsWorkingTime`,
