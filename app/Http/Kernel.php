@@ -84,7 +84,7 @@ class Kernel extends HttpKernel
         'roles' => \App\Http\Middleware\Roles::class,
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
         'iso_18626' => \App\Http\Middleware\ISO18626::class,
-        'stats' => \App\Http\Middleware\StatsAccessMiddleware::class,
+        'stats' => \App\Http\Middleware\LibraryStatsAccessMiddleware::class,
     ];
 
     /**
