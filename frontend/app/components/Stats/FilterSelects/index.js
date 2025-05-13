@@ -36,7 +36,7 @@ const FilterSelects = ({
   const startYear = parseInt(process.env.SERVICE_YEAR_START);
   const currentYear = new Date().getFullYear();
   const yearOptions = [
-    { label: intl.formatMessage({ id: 'app.stats.all' }), value: '' },
+    { label: intl.formatMessage({ id: 'app.global.all' }), value: '' },
   ];
   for (let y = startYear; y <= currentYear; y++) {
     yearOptions.push({ label: y.toString(), value: y.toString() });
@@ -44,7 +44,7 @@ const FilterSelects = ({
 
   // Material types for selector
   const materialTypeOptions = [
-    { label: intl.formatMessage({ id: 'app.stats.all' }), value: '' },
+    { label: intl.formatMessage({ id: 'app.global.all' }), value: '' },
     { label: intl.formatMessage({ id: 'app.references.article' }), value: 1 },
     { label: intl.formatMessage({ id: 'app.references.book' }), value: 2 },
     { label: intl.formatMessage({ id: 'app.references.thesis' }), value: 3 },
@@ -63,7 +63,7 @@ const FilterSelects = ({
       ...prev,
       [field]: selected || {
         value: '',
-        label: intl.formatMessage({ id: 'app.stats.all' }),
+        label: intl.formatMessage({ id: 'app.global.all' }),
       },
     }));
   };

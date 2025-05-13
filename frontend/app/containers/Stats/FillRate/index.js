@@ -31,7 +31,7 @@ const RequestsDistribution = props => {
   let intl = useIntl();
 
   const allOption = {
-    label: intl.formatMessage({ id: 'app.stats.all' }),
+    label: intl.formatMessage({ id: 'app.global.all' }),
     value: '',
   };
 
