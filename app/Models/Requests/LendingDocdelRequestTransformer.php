@@ -1,4 +1,6 @@
-<?php namespace App\Models\Requests;
+<?php
+
+namespace App\Models\Requests;
 
 use App\Models\BaseLightTransformer;
 use Carbon\Carbon;
@@ -16,52 +18,80 @@ use App\Models\Users\UserLightTransformer;
 
 class LendingDocdelRequestTransformer extends BaseTransformer
 {
-    protected $availableIncludes = [                                                
-    ];
+    protected $availableIncludes = [];
 
     protected $defaultIncludes = [
         'reference',
-        'library',  
+        'library',
         'borrowinglibrary',
-        'tags',        
+        'tags',
         'operator'
     ];
 
     public function includeReference(Model $model)
     {
-        if($model->reference)
+        if ($model->reference)
             return $this->item($model->reference, new BaseTransformer());
     }
 
     public function includeLibrary(Model $model)
     {
-        if($model->library)
+        if ($model->library)
             return $this->item($model->library, new BaseLightTransformer());  //new BaseLightTransformer());
     }
 
     public function includeBorrowingLibrary(Model $model)
     {
-        if($model->borrowinglibrary)
-            return $this->item($model->borrowinglibrary, new LibraryTransformer()); 
-             //new BaseLightTransformer());
+        if ($model->borrowinglibrary)
+            return $this->item($model->borrowinglibrary, new LibraryTransformer());
+        //new BaseLightTransformer());
     }
 
     public function includeTags(Model $model)
     {
-        if($model->tags)
+        if ($model->tags)
             return $this->collection($model->tags, new BaseLightTransformer());
     }
 
     public function includeOperator(Model $model)
     {
-        if($model->operator)
+        if ($model->operator)
             return $this->item($model->operator, new UserLightTransformer());
-    }    
+    }
+
+    public function createLibraryObject(Model $model)
+    {
+        return [
+            'id' => $model->id,
+            'name' => $model->name,
+            'country' => $model->country->only([
+                'id',
+                'name',
+                'code'
+            ]),
+            'subject' => $model->subject->only([
+                'id',
+                'name'
+            ]),
+            'institution' => [
+                'id' => $model->institution->id,
+                'name' => $model->institution->name,
+                'institution_type' => $model->institution->institution_type->only([
+                    'id',
+                    'name'
+                ]),
+                'country' => $model->institution->country->only([
+                    'id',
+                    'name',
+                    'code'
+                ])
+            ]
+        ];
+    }
 
     public function transform(Model $model)
     {
-        $to_merge = [
-        ];
+        $to_merge = [];
         return $this->applyTransform($model, $to_merge);
     }
 }

@@ -61,7 +61,8 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
-  REQUEST_CLEAR_LIBRARY_OPTIONLIST
+  REQUEST_CLEAR_LIBRARY_OPTIONLIST,
+  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST
 } from "./constants";
 
 export const initialState = {
@@ -206,6 +207,10 @@ const libraryReducer = (state = initialState, action) =>
         case REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS:
           draft.error = initialState.error;
           draft.institutionsOptionList = action.result.map(item => { return {value: item.id, label: item.name} } );        
+          break;
+        case REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST:
+          draft.institutionsOptionList = [];
+          draft.loading = false;
           break;
 
           case REQUEST_GET_INSTITUTION_TYPES_OPTIONLIST:

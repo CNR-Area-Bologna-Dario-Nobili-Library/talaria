@@ -8,8 +8,6 @@ use Bouncer;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
-
-
 class AppServiceProvider extends ServiceProvider
 {
     /**

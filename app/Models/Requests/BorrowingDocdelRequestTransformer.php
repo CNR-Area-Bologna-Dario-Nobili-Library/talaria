@@ -1,4 +1,6 @@
-<?php namespace App\Models\Requests;
+<?php
+
+namespace App\Models\Requests;
 
 use App\Models\BaseLightTransformer;
 use Carbon\Carbon;
@@ -18,67 +20,94 @@ class BorrowingDocdelRequestTransformer extends BaseTransformer
 {
 
     protected $availableIncludes = [
-        'tracking'                                                
+        'tracking'
     ];
 
     protected $defaultIncludes = [
         'reference',
-        'library',  
+        'library',
         'lendingLibrary',
         'patrondocdelrequest',
-        'tags',        
+        'tags',
         'operator'
     ];
 
     public function includeReference(Model $model)
     {
-        if($model->reference)
+        if ($model->reference)
             return $this->item($model->reference, new BaseTransformer());
     }
 
     public function includeLibrary(Model $model)
     {
-        if($model->library)
+        if ($model->library)
             return $this->item($model->library, new BaseLightTransformer());  //new BaseLightTransformer());
     }
 
     public function includeLendingLibrary(Model $model)
     {
-        if($model->lendinglibrary)
+        if ($model->lendinglibrary)
             return $this->item($model->lendinglibrary, new LibraryTransformer());  //new BaseLightTransformer());
     }
 
     public function includePatronDocdelRequest(Model $model)
     {
-        if($model->patrondocdelrequest)
+        if ($model->patrondocdelrequest)
             return $this->item($model->patrondocdelrequest, new PatronDocdelRequestTransformer());
     }
 
     public function includeTags(Model $model)
     {
-        if($model->tags)
+        if ($model->tags)
             return $this->collection($model->tags, new BaseLightTransformer());
     }
 
     public function includeOperator(Model $model)
     {
-        if($model->operator)
+        if ($model->operator)
             return $this->item($model->operator, new UserLightTransformer());
-    }    
-
-    public function includeTracking(Model $model)
-    {       
-        $track=$model->tracking();
-        if($track && $track->count()>0)
-            return $this->collection($track, new BorrowingDocdelRequestTransformer());            
     }
 
+    public function includeTracking(Model $model)
+    {
+        $track = $model->tracking();
+        if ($track && $track->count() > 0)
+            return $this->collection($track, new BorrowingDocdelRequestTransformer());
+    }
+
+    public function createLibraryObject(Model $model)
+    {
+        return [
+            'id' => $model->id,
+            'name' => $model->name,
+            'country' => $model->country->only([
+                'id',
+                'name',
+                'code'
+            ]),
+            'subject' => $model->subject->only([
+                'id',
+                'name'
+            ]),
+            'institution' => [
+                'id' => $model->institution->id,
+                'name' => $model->institution->name,
+                'institution_type' => $model->institution->institution_type->only([
+                    'id',
+                    'name'
+                ]),
+                'country' => $model->institution->country->only([
+                    'id',
+                    'name',
+                    'code'
+                ])
+            ]
+        ];
+    }
 
     public function transform(Model $model)
     {
-        $to_merge = [
-        ];
+        $to_merge = [];
         return $this->applyTransform($model, $to_merge);
     }
-
 }

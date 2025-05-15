@@ -9,9 +9,11 @@ use App\Models\Institutions\Institution;
 use App\Models\Institutions\InstitutionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\AdminApiController;
+use App\Http\Controllers\Stats\BaseStatsController;
 
-class AdminStatsController extends AdminApiController
+use Illuminate\Support\Facades\Log;
+
+class AdminStatsController extends BaseStatsController
 {
     /**
      * Create a new controller instance.
@@ -20,16 +22,9 @@ class AdminStatsController extends AdminApiController
      */
     public function __construct()
     {
+        parent::__construct();
+
         $this->broadcast = false;
+        // $this->client = app('Elasticsearch\Client');
     }
-
-    //Elastic Search TEST API
-    public function eltest(Request $request)
-    {                     
-        return ["a"=>3,"b"=>"test"];
-    }
-
-    
-
-
-}    
+}

@@ -12,6 +12,7 @@
         "barryvdh/laravel-cors": "^0.11.3",
         "dingo/api": "^2.4",
         "doctrine/dbal": "^2.9",
+        "elasticsearch/elasticsearch": "^7.11",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6",
         "laravel/horizon": "^3.2",

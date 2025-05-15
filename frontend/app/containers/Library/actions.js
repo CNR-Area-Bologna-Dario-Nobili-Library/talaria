@@ -78,7 +78,8 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
    REQUEST_GET_LIBRARY_OPTIONLIST,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
-  REQUEST_CLEAR_LIBRARY_OPTIONLIST
+  REQUEST_CLEAR_LIBRARY_OPTIONLIST,
+  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST
    
   } from "./constants";
 
@@ -213,6 +214,12 @@ export function requestGetInstitutionsOptionListSuccess(result) {
   return {
     type: REQUEST_GET_INSTITUTIONS_OPTIONLIST_SUCCESS,
     result
+  };
+}
+
+export function requestClearInstitutionsOptionList() {
+  return {
+    type: REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST,
   };
 }
 

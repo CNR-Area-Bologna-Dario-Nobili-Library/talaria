@@ -11,6 +11,11 @@ import InstitutionPage from 'containers/Admin/InstitutionPage/Loadable';
 import InstitutionTypePage from 'containers/Admin/InstitutionTypePage/Loadable';
 import SubRouteSwitch from 'components/SubRouteSwitch';
 
+import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loadable';
+import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
+import FillRate from '../containers/Stats/FillRate/Loadable';
+import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
+
 /*import { matchPath } from "react-router-dom";
 
 // examples/notes about permissions in routes
@@ -47,48 +52,175 @@ const routes = [
       { path: '/user/:id?', name: `UserUpdate`, component: UserPage, },
       { path: '/:page?', exact: true, name: `UsersList`, url: `/users/user`, component: UsersListPage, },
     ]
-  },*/      
-  { path: '/libraries',  name: `Libraries`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],sidebar: true,
-    children: [      
-      { path: '/', exact: true, icon: 'landmark', name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar:true,order:1},      
+  },*/
+
+  {
+    path: '/libraries',
+    name: `Libraries`,
+    component: SubRouteSwitch,
+    header: true,
+    roles: ['super-admin', 'manager'],
+    sidebar: true,
+    children: [
+      {
+        path: '/',
+        exact: true,
+        icon: 'landmark',
+        name: `Libraries`,
+        url: `/libraries`,
+        component: LibrariesListPage,
+        sidebar: true,
+        order: 1,
+      },
       //{ path: '/new', icon: 'plus', name: `LibraryCreateNew`, component: LibraryPage,  url: '/library/new', sidebar: true,order:2},
-      //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},                  
-      
-      //{path: '/:id?',exact: true,icon: 'landmark',name: `Library`, header: false, component: LibraryPage,  sidebar: false,order:2,level:1},                   
-      
-      //{path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
-      
-     
+      //{ path: '/:id/subscriptions', exact: true, name: `Subscription`, component: Fake, sidebar: false},
+
+      //{path: '/:id?',exact: true,icon: 'landmark',name: `Library`, header: false, component: LibraryPage,  sidebar: false,order:2,level:1},
+
+      //{path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},
+
       /*
       {path: '/:id?/:op?',exact: true, icon: 'landmark',name: `Library`,component: LibraryPage, sidebar: false,order:2,level:1},      
       { path: '/:page?', exact: true, name: `Libraries`, url: `/libraries`, component: LibrariesListPage,sidebar: false },
-      */                        
-    ]
-  },  
-//  { path: '/libraries',exact: true,  name: `Libraries`, component: LibrariesListPage, header: true, roles: ['super-admin','manager'],sidebar: true,},  
-  { path: '/institutions',  name: `Institutions`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
+      */
+    ],
+  },
+  //  { path: '/libraries',exact: true,  name: `Libraries`, component: LibrariesListPage, header: true, roles: ['super-admin','manager'],sidebar: true,},
+  {
+    path: '/institutions',
+    name: `Institutions`,
+    component: SubRouteSwitch,
+    header: true,
+    roles: ['super-admin', 'manager'],
     children: [
-      { path: '/institution-types', exact: true, icon: 'list-ul',  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: true,order:3},      
-      { path: '/institution-types/:id?/:op?', exact: true, name: `InstitutionType`, component: InstitutionTypePage, sidebar: false  },
-      { path: '/institution-types/:page?', exact: true,  name: `InstitutionTypes`, url: `/institutions/institution-types`, component: InstitutionTypesListPage,  sidebar: false},
-      { path: '/institution-types/new',exact: true, icon: 'plus', name: `InstitutionTypeNew`, url: `/institutions/institution-types/new`, component: InstitutionTypePage,  sidebar: true,order:4 },      
+      {
+        path: '/institution-types',
+        exact: true,
+        icon: 'list-ul',
+        name: `InstitutionTypes`,
+        url: `/institutions/institution-types`,
+        component: InstitutionTypesListPage,
+        sidebar: true,
+        order: 3,
+      },
+      {
+        path: '/institution-types/:id?/:op?',
+        exact: true,
+        name: `InstitutionType`,
+        component: InstitutionTypePage,
+        sidebar: false,
+      },
+      {
+        path: '/institution-types/:page?',
+        exact: true,
+        name: `InstitutionTypes`,
+        url: `/institutions/institution-types`,
+        component: InstitutionTypesListPage,
+        sidebar: false,
+      },
+      {
+        path: '/institution-types/new',
+        exact: true,
+        icon: 'plus',
+        name: `InstitutionTypeNew`,
+        url: `/institutions/institution-types/new`,
+        component: InstitutionTypePage,
+        sidebar: true,
+        order: 4,
+      },
 
-      { path: '/', exact: true, icon: 'building', name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, sidebar:true, order:1},
-      { path: '/:id?/:op?', exact:true,name: `Institutions`, component: InstitutionPage, sidebar: false },
-      { path: '/:page?', exact: true, name: `Institutions`, url: `/institutions`, component: InstitutionsListPage, },            
-      { path: '/new', icon: 'plus', name: `InstitutionNew`, component: InstitutionPage,  url: `/institutions/new`, sidebar: true,order:2},            
-    ]
-  },  
+      {
+        path: '/',
+        exact: true,
+        icon: 'building',
+        name: `Institutions`,
+        url: `/institutions`,
+        component: InstitutionsListPage,
+        sidebar: true,
+        order: 1,
+      },
+      {
+        path: '/:id?/:op?',
+        exact: true,
+        name: `Institutions`,
+        component: InstitutionPage,
+        sidebar: false,
+      },
+      {
+        path: '/:page?',
+        exact: true,
+        name: `Institutions`,
+        url: `/institutions`,
+        component: InstitutionsListPage,
+      },
+      {
+        path: '/new',
+        icon: 'plus',
+        name: `InstitutionNew`,
+        component: InstitutionPage,
+        url: `/institutions/new`,
+        sidebar: true,
+        order: 2,
+      },
+    ],
+  },
+  {
+    path: '/stats',
+    name: `Statistics`,
+    component: SubRouteSwitch,
+    header: true,
+    roles: ['super-admin', 'manager'],
+    children: [
+      {
+        path: '/',
+        exact: true,
+        icon: 'chart-bar',
+        name: `Statistics`,
+        url: `/stats`,
+        component: Fake,
+        sidebar: true,
+      },
+      {
+        path: '/requests-distribution',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDistribution`,
+        url: `/stats/requests-distribution`,
+        component: RequestsDistribution,
+        sidebar: true,
+      },
+      {
+        path: '/requests-details',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsRequestsDetails`,
+        url: `/stats/requests-details`,
+        component: RequestsDetails,
+        sidebar: true,
+      },
+      {
+        path: '/fillrate',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsFillRate`,
+        url: `/stats/fillrate`,
+        component: FillRate,
+        sidebar: true,
+      },
+      {
+        path: '/working-time',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsWorkingTime`,
+        url: `/stats/working-time`,
+        component: WorkingTime,
+        sidebar: true,
+      },
+    ],
+  },
   /*
   NOT IMPLEMENTED
 
-  { path: '/stats',  name: `Statistics`, component: SubRouteSwitch, header: true, roles: ['super-admin','manager'],
-  children: [    
-    { path: '/', exact: true, icon: 'chart-bar', name: `Statistics`, url: `/stats`, component: Fake, sidebar:true, order:1},    
-    { path: '/libraries', exact: true, icon: 'chart-bar', name: `StatisticsLibraries`, url: `/stats/libraries`, component: Fake, sidebar:true, order:1,level:2},    
-    { path: '/institutions', exact: true, icon: 'chart-bar', name: `StatisticsInstitutions`, url: `/stats/institutions`, component: Fake, sidebar:true, order:1,level:2}, 
-  ]
-  },
   { path: '/consortiums',  name: `Consortiums`, component: SubRouteSwitch, header: true, roles: ['manager'],
     children: [
       { path: '/', exact: true, icon: 'fa-solid fa-building', name: `Consortiums`, url: `/consortiums`, component: Fake, sidebar:true},

@@ -4,7 +4,6 @@ import {BASE_URL,getOption} from './api';
 
 const BASE_ADMIN_URL=BASE_URL+"/api/v1/admin";
 
-
 // Libraries //
 export const admin_getLibrariesList = (options) => {
   const page = options.page?options.page:1;
@@ -130,8 +129,3 @@ export const admin_deleteInstitutionType = (options) => {
   options = getOption(options);
   return request(`${BASE_ADMIN_URL}/institutions/institution-types/${institution_type_id}`, options)
 };
-
-
-
-  
-
