@@ -2,8 +2,8 @@
 
 // Fill the Elasticsearch client config params from the env variables
 return [
-  'hosts' => [
-        env('ELASTICSEARCH_HOST', 'localhost:9200'),
+    'hosts' => [
+        env('ELASTICSEARCH_HOST', null),
     ],
 
     // 'retries' => env('ELASTICSEARCH_RETRIES', 2),
@@ -14,4 +14,7 @@ return [
     ],
 
     'ssl_verification' => env('ELASTICSEARCH_SSL_VERIFICATION', true),
+
+    'ssl_cert' => env('SSL_API_CERT_PATH', null),
+    'ssl_key'  => env('SSL_API_KEY_PATH', null),
 ];

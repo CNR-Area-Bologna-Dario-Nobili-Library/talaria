@@ -17,20 +17,22 @@ class ElasticsearchServiceProvider extends ServiceProvider
     // Create a singleton Elasticsearch client that creates a new client
     $this->app->singleton('Elasticsearch\Client', function ($app) {
       $config = config('elasticsearch');
-      
+
       $client = ClientBuilder::create()
-          ->setHosts($config['hosts']);
+        ->setHosts($config['hosts']);
 
       if (!empty($config['retries'])) {
-          $client->setRetries($config['retries']);
+        $client->setRetries($config['retries']);
       }
 
       if (!empty($config['api_key'])) {
-          $client->setApiKey($config['api_key']['id'], $config['api_key']['key']);
+        $client->setApiKey($config['api_key']['id'], $config['api_key']['key']);
       }
 
-      if (!empty($config['ssl_verification'])) {
-          $client->setSSLVerification($config['ssl_verification']);
+      if (!empty($config['ssl_verification']) && !empty($config['ssl_cert']) && !empty($config['ssl_key'])) {
+        $client->setSSLVerification($config['ssl_verification']);
+        $client->setSSLKey(base_path($config['ssl_key']));
+        $client->setSSLCert(base_path($config['ssl_cert']));
       }
 
       return $client->build();
