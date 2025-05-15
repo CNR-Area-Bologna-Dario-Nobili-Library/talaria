@@ -66,6 +66,7 @@ services:
     ## for the queue worker, we use the same image, but run 
     ## artisan queue:work
     entrypoint: php /application/artisan queue:work --verbose --tries=3 --timeout=60
+    restart: always
 
   laravelscheduler:
     image: backend 
@@ -75,6 +76,7 @@ services:
       - ./:/application   
     ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
     entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose & sleep 300; done"
+    restart: always
   
 
   mysql:
@@ -168,7 +170,7 @@ services:
        - ./frontend:/usr/src/app
        - ./.env:/usr/src/.env     
      command: bash -c "npm install; npm run start:production"            
-    #  command: npm start
+     #command: npm start
      expose:
      - 3000
      restart: always
@@ -204,7 +206,8 @@ services:
     ports:
       - 9200:9200
     expose:
-      - 9200  
+      - 9200
+    restart: always  
     #labels:
     #  - "traefik.port=9200"
     #  - "traefik.enable=true"
@@ -226,8 +229,8 @@ services:
       - SERVER_SSL_KEY="/usr/share/kibana/kibana.key"
       - SERVER_SSL_CERTIFICATE="/usr/share/kibana/kibana.cert"
       # per non verificare certs locali
-      # - ELASTICSEARCH_SSL_VERIFICATIONMODE=none      
-      - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none      
+      #- ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
     volumes:
       - "${SSL_API_KEY_PATH}:/usr/share/kibana/kibana.key"
       - "${SSL_API_CERT_PATH}:/usr/share/kibana/kibana.cert"      
@@ -235,6 +238,7 @@ services:
       - elasticsearch      
     ports:
       - 5601:5601
+    restart: always
     #labels:
     #  - "traefik.port=5601"
     #  - "traefik.enable=true"
