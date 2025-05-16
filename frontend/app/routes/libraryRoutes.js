@@ -112,15 +112,15 @@ const routes = [
     resource: { type: 'libraries', key: 'library_id' },
     header: true,
     children: [
-      {
-        path: '/',
-        exact: true,
-        icon: 'chart-bar',
-        name: `Statistics`,
-        url: `/stats`,
-        component: Fake,
-        sidebar: true,
-      },
+      // {
+      //   path: '/',
+      //   exact: true,
+      //   icon: 'chart-bar',
+      //   name: `Statistics`,
+      //   url: `/stats`,
+      //   component: Fake,
+      //   sidebar: true,
+      // },
       {
         path: '/requests-distribution',
         exact: true,
