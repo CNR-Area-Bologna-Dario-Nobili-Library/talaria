@@ -38,12 +38,12 @@ The software is licensed under the terms of the [GNU General Public License v3.0
 
 **NOTE for Apple Silicon (M1/M2) users**: use `docker-compose -f docker-compose-appleM1.yml <up/down>` instead of `-f docker-compose.yml` that will use `Dockerfile-appleM1` (instead of `Dockerfile` file) for both frontend and backend containers and loads configuration ready for Apple Silicon M1 processor otherwise application will not run!
 
-## FRONTEND CONFIGURATION: ReactJS
+### FRONTEND CONFIGURATION: ReactJS
 
 The frontend don't need any configuration; it's based on a nodejs container
 and it automatically downloads and installs every needed component using `npm`.
 
-## BACKEND CONFIGURATION: Laravel
+### BACKEND CONFIGURATION: Laravel
 
 Run these commands from `talaria-laravel` container ONLY THE FIRST TIME you run the application
 
@@ -59,7 +59,7 @@ Then change `CLIENT_ID` and `CLIENT_SECRET` in your `.env` accordingly to ones g
 
 All scheduled/queued jobs are managed by `laravelqueue` and `laravelscheduler` containers
 
-### INITIAL SETUP
+#### INITIAL SETUP
 
 Run these commands from `talaria-laravel` container ONLY THE FIRST TIME you run the application
 
@@ -75,15 +75,15 @@ username: admin@talaria.local      password: password
 username: manager@talaria.local    password: password
 ```
 
-### DATABASE
+#### DATABASE
 
 You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  (see `phpmyadmin` container for configuration).
 
 `dbbackup` container (see configuration parameters in `docker-compose.yml` ) automatically saved a local DB dump in the folder specified by `DB_BACKUP_FOLDER` variable defined in `.env` file
 
-### ELASTICSEARCH & KIBANA
+#### ELASTICSEARCH & KIBANA
 
-#### Note: This procedure is necessary ONLY THE FIRST TIME you run the application
+> **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
 
 Reset `kibana_system`'s password by calling the following POST request:
 
@@ -125,11 +125,11 @@ bin/elasticsearch-reset-password --username elastic -i
 
 The flag `-i` asks the user to input the new password. If you want to automatically generate the password remove the flag `-i`. After changing the password store in the constant `ELASTIC_PASSWORD`, in your .env file.
 
-## FILE STORAGE
+### FILE STORAGE
 
 All uploaded files are stored temporarly in the `/storage/app/public` folder and will be automatically removed everyday at 23:00 by a Laravel scheduled job (see `AutomaticDeleteUploadedFiles.php`).
 
-## CUSTOMIZATION
+### CUSTOMIZATION
 
 All configuration settings are stored  in `.env`
 
@@ -140,11 +140,11 @@ php artisan cache:clear
 php artisan optimize
 ```
 
-### Logo
+#### Logo
 
 Used logo are stored in `/frontend/app/images/`, you can find `logo.png` (big) and `logo-mini.png` (small, used for mobile sidebar)
 
-### Mobile App Icon
+#### Mobile App Icon
 
 Used PWA icon is stored in `/frontend/app/images/icon-512x512.png`
 
