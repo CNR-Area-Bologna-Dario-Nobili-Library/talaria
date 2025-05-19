@@ -83,7 +83,7 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 #### ELASTICSEARCH & KIBANA
 
-> **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
+**Note: This procedure is necessary ONLY THE FIRST TIME you run the application**
 
 Reset `kibana_system`'s password by calling the following POST request:
 
