@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -146,7 +147,13 @@ class CountriesStats extends BaseStatsController
       ];
     }
 
-    $response = $this->client->search($query);
+    try {
+      $response = $this->client->search($query);
+    } catch (Exception $e) {
+      Log::error("Error in countries stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
+
     $result = [
       "total_requests" => $response["hits"]["total"]["value"],
       "requesting_from" => [

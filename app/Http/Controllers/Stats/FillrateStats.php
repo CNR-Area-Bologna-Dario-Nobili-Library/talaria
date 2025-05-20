@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -187,8 +188,15 @@ class FillrateStats extends BaseStatsController
       ]
     ];
 
-    // Execute the query on the Elasticsearch client
-    $response = $this->client->search($query);
+    try {
+      // Execute the query on the Elasticsearch client
+      $response = $this->client->search($query);
+    } catch (Exception $e) {
+      Log::error("Error in fill rate stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
+
+
     $borrowingBucket = $response["aggregations"]["borrowing_stats"]["buckets"]["borrowing"] ?? [];
     $lendingBucket   = $response["aggregations"]["lending_stats"]["buckets"]["lending"] ?? [];
 

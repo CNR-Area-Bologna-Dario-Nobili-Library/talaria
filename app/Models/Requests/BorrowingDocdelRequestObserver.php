@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Requests\DocdelRequest;
+use Exception;
 
 class BorrowingDocdelRequestObserver extends BaseObserver
 {
@@ -136,8 +137,12 @@ class BorrowingDocdelRequestObserver extends BaseObserver
 
         // Check if the request was newly created
         if ($model->wasRecentlyCreated) {
-            // This is a new insertion, index it to elasticsearch
-            $client->index($params);
+            try {
+                // This is a new insertion, index it to elasticsearch
+                $client->index($params);
+            } catch (Exception $e) {
+                Log::error("Error indexing to elasticsearch: " . $e->getMessage());
+            }
         } else {
             // This is an update, update it in elasticsearch
 
@@ -149,13 +154,17 @@ class BorrowingDocdelRequestObserver extends BaseObserver
                 $params['body']['orphaned'] = 0;
             }
 
-            $client->update([
-                'index' => 'docdel_requests',
-                'id' => $model->id,
-                'body' => [
-                    'doc' => $params['body']
-                ]
-            ]);
+            try {
+                $client->update([
+                    'index' => 'docdel_requests',
+                    'id' => $model->id,
+                    'body' => [
+                        'doc' => $params['body']
+                    ]
+                ]);
+            } catch (Exception $e) {
+                Log::error("Error indexing to elasticsearch: " . $e->getMessage());
+            }
         }
 
         return parent::saved($model);
@@ -167,10 +176,15 @@ class BorrowingDocdelRequestObserver extends BaseObserver
 
         /** @var Elasticsearch\Client $client */
         $client = app('Elasticsearch\Client');
-        $client->delete([
-            'index' => 'docdel_requests',
-            'id' => $model->id,
-        ]);
+
+        try {
+            $client->delete([
+                'index' => 'docdel_requests',
+                'id' => $model->id,
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error deleting from elasticsearch: " . $e->getMessage());
+        }
         return parent::deleting($model);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -60,7 +61,13 @@ class OAReferencesStats extends BaseStatsController
       ]
     ];
 
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in OA References stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
+
     $result = [];
     $result["unique_references"] = $response["aggregations"]["unique_references"]["value"];
     $result["references_with_oa"] = $response["aggregations"]["references_with_oa"]["doc_count"];

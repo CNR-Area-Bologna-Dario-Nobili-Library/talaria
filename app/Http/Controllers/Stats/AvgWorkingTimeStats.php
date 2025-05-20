@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -154,8 +155,12 @@ class AvgWorkingTimeStats extends BaseStatsController
       ]
     ];
 
-
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in avg working time stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
 
     $averages = [];
     foreach ($response['aggregations']['requests_per_year']['buckets'] as $yearBucket) {

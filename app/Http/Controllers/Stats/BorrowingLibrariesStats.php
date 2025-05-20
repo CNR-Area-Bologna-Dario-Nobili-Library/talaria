@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -50,7 +51,12 @@ class BorrowingLibrariesStats extends BaseStatsController
       ]
     ];
 
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in borrowing libraries stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
 
     $result = [];
     foreach ($response['aggregations']['years']['buckets'] as $bucket) {

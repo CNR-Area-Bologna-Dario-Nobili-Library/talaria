@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -118,7 +119,12 @@ class ReferencePubYearStats extends BaseStatsController
       ]
     ];
 
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in reference pubyear stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
 
     return response()->json([
       'as_borrower' => $response['aggregations']['as_borrower']['requests_by_pubyear']['buckets'] ?? [],

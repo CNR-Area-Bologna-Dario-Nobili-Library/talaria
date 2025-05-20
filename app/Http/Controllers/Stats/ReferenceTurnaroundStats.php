@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -117,7 +118,12 @@ class ReferenceTurnaroundStats extends BaseStatsController
       ]
     ];
 
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in reference turnaround stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
 
     $averages = [];
     foreach ($response['aggregations']['group_by_material_type']['buckets'] as $bucket) {

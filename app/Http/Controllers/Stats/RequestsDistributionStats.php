@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Stats\BaseStatsController;
+use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -295,8 +296,12 @@ class RequestsDistributionStats extends BaseStatsController
       ]
     ];
 
-    // Execute the query with your Elasticsearch client.
-    $response = $this->client->search($params);
+    try {
+      $response = $this->client->search($params);
+    } catch (Exception $e) {
+      Log::error("Error in requests distribution stats: " . $e->getMessage());
+      throw new Exception("Statistics are momentarily unavailable, please try again later.");
+    }
 
     // Filter by_borrowing_status output
     $borrowing_aggregation = $this->transformAggregation(

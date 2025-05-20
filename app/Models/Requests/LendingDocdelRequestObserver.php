@@ -6,6 +6,7 @@ use App\Helper\StatsHelper;
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
@@ -87,13 +88,17 @@ class LendingDocdelRequestObserver extends BaseObserver
             ]
         ];
 
-        $client->update([
-            'index' => 'docdel_requests',
-            'id' => $model->id,
-            'body' => [
-                'doc' => $params['body']
-            ]
-        ]);
+        try {
+            $client->update([
+                'index' => 'docdel_requests',
+                'id' => $model->id,
+                'body' => [
+                    'doc' => $params['body']
+                ]
+            ]);
+        } catch (Exception $e) {
+            Log::error("Error indexing in elasticsearch: " . $e->getMessage());
+        }
 
         return parent::saved($model);
     }
