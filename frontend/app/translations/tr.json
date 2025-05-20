@@ -768,6 +768,7 @@
   "app.routes.AllRequests": "Cevap verilmemiş talepler",
   "app.routes.Payments": "Ödemeler",
   "app.routes.Status": "Durum",
+  "app.stats.notAvailable": "???Statistics temporarily not available, please try again later.",
   "app.stats.year": "???Year",
   "app.stats.requestsDistribution.header": "???Requests distribution",
   "app.stats.requestsDetails.header": "???Requests details",

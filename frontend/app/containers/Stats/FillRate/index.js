@@ -154,7 +154,7 @@ const RequestsDistribution = props => {
   }
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (
     <div>

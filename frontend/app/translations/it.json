@@ -768,6 +768,7 @@
   "app.routes.AllRequests": "Richieste orfane",
   "app.routes.Payments": "Pagamenti",
   "app.routes.Status": "Stato",
+  "app.stats.notAvailable": "???Statistiche temporaneamente non disponibili, riprova più tardi.",
   "app.stats.year": "Anno",
   "app.stats.requestsDistribution.header": "???Distribuzione delle richieste",
   "app.stats.requestsDetails.header": "???Dettagli delle richieste",
