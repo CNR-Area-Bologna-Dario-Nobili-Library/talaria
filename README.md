@@ -85,7 +85,7 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 > **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
 
-Reset `kibana_system`'s password by calling the following POST request:
+Reset `kibana_system`'s password by calling the following POST request from inside the Elasticsearch docker container:
 
 ```bash
 curl -kX POST -u elastic "https://elasticsearch:9200/_security/user/kibana_system/_password" -H "Content-Type: application/json" -d '{"password": "your_preferred_password"}'
@@ -117,7 +117,7 @@ This call will create an API key with full access privilege to the Elasticsearch
 
 Now Laravel should communicate with Elasticsearch. Restart everything one last time and run the Laravel command `php artisan elasticsearch:init` to create the `docdel_request` index and import all existing data from the database.
 
-If you want to change the `elastic` password, access the Elastic docker container in bash and run the following command:
+If you want to change the `elastic` password, access the Elastic docker container in bash and run the following command from inside the Elasticsearch docker container:
 
 ```bash
 bin/elasticsearch-reset-password --username elastic -i
