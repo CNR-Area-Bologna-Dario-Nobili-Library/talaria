@@ -41,7 +41,7 @@ class DocdelRequest extends BaseModel
         'fulfill_inventorynr',        
         'all_lender', //0=no, 1=all lending library will see this request, 2=some lending libraries will see this request        
         'url',        
-
+        'orphaned',
         
         
 
