@@ -21,6 +21,7 @@ import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loada
 import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
 import FillRate from '../containers/Stats/FillRate/Loadable';
 import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
+import HomePage from '../containers/Stats/HomePage/Loadable';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 const show_upgrade_to_full_profile=(process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;
@@ -112,15 +113,15 @@ const routes = [
     resource: { type: 'libraries', key: 'library_id' },
     header: true,
     children: [
-      // {
-      //   path: '/',
-      //   exact: true,
-      //   icon: 'chart-bar',
-      //   name: `Statistics`,
-      //   url: `/stats`,
-      //   component: Fake,
-      //   sidebar: true,
-      // },
+      {
+        path: '/',
+        exact: true,
+        icon: 'chart-bar',
+        name: `Statistics`,
+        url: `/stats`,
+        component: HomePage,
+        sidebar: true,
+      },
       {
         path: '/requests-distribution',
         exact: true,

@@ -774,6 +774,8 @@
   "app.stats.requestsDetails.header": "???Requests details",
   "app.stats.fillRate.header": "???Fill rate",
   "app.stats.workingTime.header": "???Working time",
+  "app.stats.homepage.header": "???Welcome to the statistics page",
+  "app.stats.homepage.content": "???Please use the left menu to select the statistics you'd like to view.",
   "app.stats.borrowingByStatus.title": "???Borrowing requests by status",
   "app.stats.borrowingByStatus.subtitle": "???- Total no. of requests: {TOTAL}, Year: {YEAR}, Material type: {MATERIAL_TYPE}",
   "app.stats.lendingByStatus.title": "???Lending requests by status",

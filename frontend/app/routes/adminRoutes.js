@@ -15,6 +15,7 @@ import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loada
 import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
 import FillRate from '../containers/Stats/FillRate/Loadable';
 import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
+import HomePage from '../containers/Stats/HomePage/Loadable';
 
 /*import { matchPath } from "react-router-dom";
 
@@ -171,15 +172,15 @@ const routes = [
     header: true,
     roles: ['super-admin', 'manager'],
     children: [
-      // {
-      //   path: '/',
-      //   exact: true,
-      //   icon: 'chart-bar',
-      //   name: `Statistics`,
-      //   url: `/stats`,
-      //   component: Fake,
-      //   sidebar: true,
-      // },
+      {
+        path: '/',
+        exact: true,
+        icon: 'chart-bar',
+        name: `Statistics`,
+        url: `/stats`,
+        component: HomePage,
+        sidebar: true,
+      },
       {
         path: '/requests-distribution',
         exact: true,

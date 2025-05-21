@@ -774,6 +774,8 @@
   "app.stats.requestsDetails.header": "???Dettagli delle richieste",
   "app.stats.fillRate.header": "???Tasso di evasione",
   "app.stats.workingTime.header": "???Tempo di lavorazione",
+  "app.stats.homepage.header": "???Benvenuti nella pagina delle statistiche",
+  "app.stats.homepage.content": "???Utilizzare il menu di sinistra per selezionare le statistiche che si desidera visualizzare.",
   "app.stats.borrowingByStatus.title": "???Richieste di borrowing per stato",
   "app.stats.borrowingByStatus.subtitle": "???- Numero totale di richieste: {TOTAL}, Anno: {YEAR}, Tipo pubblicazione: {MATERIAL_TYPE}",
   "app.stats.lendingByStatus.title": "???Richieste di lending per stato",
