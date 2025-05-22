@@ -191,12 +191,12 @@ services:
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.http.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
-      # user xpack.security.http.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
+      # use xpack.security.http.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
       - xpack.security.http.ssl.verification_mode=none
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.transport.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
-      # user xpack.security.transport.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
+      # use xpack.security.transport.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
       - xpack.security.transport.ssl.verification_mode=none
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
