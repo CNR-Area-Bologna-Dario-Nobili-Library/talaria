@@ -85,6 +85,12 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 > **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
 
+To allow Elasticsearch to write in the `docker/elasticsearch` folder, it is important to set the owner of the folder to `1000` (UID of the Elasticsearch user):
+
+```bash
+sudo chown -R 1000:root ./docker/elasticsearch
+```
+
 Reset `kibana_system`'s password by calling the following POST request from inside the Elasticsearch docker container:
 
 ```bash
@@ -115,7 +121,23 @@ POST /_security/api_key
 
 This call will create an API key with full access privilege to the Elasticsearch cluster and therefore to its indices. Take note of the ID and API_KEY and store them in the .env file. Store the ID in `ELASTICSEARCH_API_KEY_ID` and the key in `ELASTICSEARCH_API_KEY_KEY`.
 
-Now Laravel should communicate with Elasticsearch. Restart everything one last time and run the Laravel command `php artisan elasticsearch:init` to create the `docdel_request` index and import all existing data from the database.
+Access the Laravel docker container and run the following commands:
+
+```bash
+php artisan config:cache
+php artisan optimize
+php artisan queue:restart     # Only in case the laravel_queue container was down
+```
+
+These commands are mandatory since the connection of Laravel to Elasticsearch relies on the usage of configuration files.
+
+Now Laravel should communicate with Elasticsearch. Restart everything one last time. Access the Laravel Docker container and run the Laravel command:
+
+```bash
+php artisan elasticsearch:init
+```
+
+to create the `docdel_request` index and import all existing data from the database.
 
 If you want to change the `elastic` password, access the Elastic docker container in bash and run the following command from inside the Elasticsearch docker container:
 
