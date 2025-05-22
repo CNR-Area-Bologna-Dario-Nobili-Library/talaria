@@ -5,6 +5,7 @@
 /vendor
 /docker/certs/*
 /docker/data/*
+/docker/elasticsearch/*
 /docker/spid-test-idp/conf/idp.crt
 /docker/spid-test-idp/conf/idp.key
 /docker/spid-test-idp/conf/idpSSL.crt

@@ -170,7 +170,7 @@ services:
        - ./frontend:/usr/src/app
        - ./.env:/usr/src/.env     
      command: bash -c "npm install; npm run start:production"            
-     #command: npm start
+    #  command: npm start
      expose:
      - 3000
      restart: always
@@ -191,9 +191,13 @@ services:
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.http.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
+      # user xpack.security.http.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
+      - xpack.security.http.ssl.verification_mode=none
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.transport.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
+      # user xpack.security.transport.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
+      - xpack.security.transport.ssl.verification_mode=none
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -201,18 +205,20 @@ services:
         hard: -1
     volumes:
       - esdata2:/usr/share/elasticsearch/data
+      - ./docker/elasticsearch/config:/usr/share/elasticsearch/config
       - "${SSL_API_KEY_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.key"
       - "${SSL_API_CERT_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.cert"      
     ports:
       - 9200:9200
     expose:
       - 9200
-    restart: always  
-    #labels:
-    #  - "traefik.port=9200"
-    #  - "traefik.enable=true"
-    #  - "traefik.backend=elasticsearch"
-    #  - "traefik.frontend.rule=Host:${API_DOMAIN};PathPrefixStrip:/elasticsearch/"
+    restart: always
+    user: "1000"  
+    labels:
+      - "traefik.port=9200"
+      - "traefik.enable=true"
+      - "traefik.backend=elasticsearch"
+      - "traefik.frontend.rule=Host:${API_DOMAIN}"
     #networks:
     #  default:
     #    ipv4_address: 172.18.0.20
@@ -228,9 +234,9 @@ services:
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_KEY="/usr/share/kibana/kibana.key"
       - SERVER_SSL_CERTIFICATE="/usr/share/kibana/kibana.cert"
-      # per non verificare certs locali
-      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none      
-      #- ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
+      # to not check SSL certs use ELASTICSEARCH_SSL_VERIFICATIONMODE=none 
+      # - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
     volumes:
       - "${SSL_API_KEY_PATH}:/usr/share/kibana/kibana.key"
       - "${SSL_API_CERT_PATH}:/usr/share/kibana/kibana.cert"      
@@ -239,11 +245,11 @@ services:
     ports:
       - 5601:5601
     restart: always
-    #labels:
-    #  - "traefik.port=5601"
-    #  - "traefik.enable=true"
-    #  - "traefik.backend=kibana"
-    #  - "traefik.frontend.rule=Host:${API_DOMAIN};PathPrefixStrip:/kibana/"
+    labels:
+      - "traefik.port=5601"
+      - "traefik.enable=true"
+      - "traefik.backend=kibana"
+      - "traefik.frontend.rule=Host:${API_DOMAIN}"
    # networks:
    #   default:
    #     ipv4_address: 172.18.0.21
