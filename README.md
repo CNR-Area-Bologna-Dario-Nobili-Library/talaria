@@ -85,12 +85,6 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 > **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
 
-To allow Elasticsearch to write in the `docker/elasticsearch` folder, it is important to set the owner of the folder to `1000` (UID of the Elasticsearch user):
-
-```bash
-sudo chown -R 1000:root ./docker/elasticsearch
-```
-
 Reset `kibana_system`'s password by calling the following POST request from inside the Elasticsearch docker container:
 
 ```bash
@@ -139,13 +133,15 @@ php artisan elasticsearch:init
 
 to create the `docdel_request` index and import all existing data from the database.
 
-If you want to change the `elastic` password, access the Elastic docker container in bash and run the following command from inside the Elasticsearch docker container:
+If you want to change the `elastic` password, access the Elasticsearch docker container in bash and run the following command from inside the Elasticsearch docker container:
 
 ```bash
 bin/elasticsearch-reset-password --username elastic -i
 ```
 
 The flag `-i` asks the user to input the new password. If you want to automatically generate the password remove the flag `-i`. After changing the password store in the constant `ELASTIC_PASSWORD`, in your .env file.
+
+You can access Elasticsearch server by opening `https://${API_DOMAIN}:9200`, this page is protected by HTTP Basic Auth, so you've to login with user: `elastic` and the password stored in the constant `ELASTIC_PASSWORD`.
 
 ### FILE STORAGE
 

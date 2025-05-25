@@ -199,7 +199,6 @@ services:
         hard: -1
     volumes:
       - esdata2:/usr/share/elasticsearch/data
-      - ./docker/elasticsearch/config:/usr/share/elasticsearch/config
       - "${SSL_API_KEY_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.key"
       - "${SSL_API_CERT_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.cert"      
     ports:
@@ -207,7 +206,6 @@ services:
     expose:
       - 9200
     restart: always
-    user: "1000"  
     labels:
       - "traefik.port=9200"
       - "traefik.enable=true"
