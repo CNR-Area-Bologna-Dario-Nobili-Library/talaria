@@ -76,6 +76,18 @@ class BorrowingDocdelRequestObserver extends BaseObserver
         if ($model->isDirty('lending_archived'))
             $model->lending_archived_date = Carbon::now();
 
+        if ($model->isDirty('all_lender'))
+        {
+            // If request has all_lender set to 1 AND orphaned is 0, set orphaned to 1
+            if ($model->all_lender == 1 && $model->orphaned == 0) {
+                $model->orphaned = 1;
+            }
+
+            // Special case: if request was previously sent to all lenders and then canceled --> the request returns to status new and we must set orphaned back to 0
+            if ($model->all_lender == 0 && $model->orphaned == 1 && $model->borrowing_status == "newrequest") {
+                $model->orphaned = 0;
+            }
+        }
 
         return parent::saving($model);
     }
@@ -91,7 +103,6 @@ class BorrowingDocdelRequestObserver extends BaseObserver
         $transformer = new BorrowingDocdelRequestTransformer();
 
         $aggregated_statuses = StatsHelper::aggregateStatus($model);
-        Log::info("I am borrower", $aggregated_statuses);
 
         // Elasticsearch request body params 
         $params = [

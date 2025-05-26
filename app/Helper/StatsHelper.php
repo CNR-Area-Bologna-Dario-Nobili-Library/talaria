@@ -78,7 +78,7 @@ class StatsHelper
     $forward          = $model->forward;
     $trashed          = $model->trash_type;
     $archived         = $model->archived;
-    $orphaned         = $model->all_lender;
+    $orphaned         = $model->orphaned;
 
     // ### Determine aggregated BORROWING status ###
     $aggregated_borrowing_status = null;
