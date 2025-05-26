@@ -175,23 +175,26 @@ services:
 
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    build:
+      context: ./docker/elasticsearch
+      dockerfile: Dockerfile
     environment:
       - node.name=es01
       - cluster.name=es-docker-cluster
       - discovery.type=single-node
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.http.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
       # use xpack.security.http.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
-      - xpack.security.http.ssl.verification_mode=none
+      # - xpack.security.http.ssl.verification_mode=none
       - xpack.security.transport.ssl.enabled=true
       - xpack.security.transport.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
       - xpack.security.transport.ssl.certificate="/usr/share/elasticsearch/config/cert/elasticsearch.cert"
       # use xpack.security.transport.ssl.verification_mode=none only if SSL cert are not trusted or selfsigned or missing alternatives names
-      - xpack.security.transport.ssl.verification_mode=none
+      # - xpack.security.transport.ssl.verification_mode=none
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -200,7 +203,7 @@ services:
     volumes:
       - esdata2:/usr/share/elasticsearch/data
       - "${SSL_API_KEY_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.key"
-      - "${SSL_API_CERT_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.cert"      
+      - "${SSL_API_CERT_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.cert"     
     ports:
       - 9200:9200
     expose:
