@@ -11,10 +11,10 @@ use Illuminate\Queue\SerializesModels;
 
 use Carbon\Carbon;
 use App\Models\Requests\DocdelRequest;
-
+use Exception;
 use Illuminate\Support\Facades\Log;
 
-class InitializeElasticsearchIndex implements ShouldQueue
+class SyncElasticsearchIndex implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,13 +35,21 @@ class InitializeElasticsearchIndex implements ShouldQueue
      */
     public function handle()
     {
-        // Log::info("Im here!");
         ini_set('memory_limit', '512M');
-        // Create index
-        $this->createIndex();
 
-        // Populate index
-        $this->populateIndex();
+        try {
+            // Create index
+            $this->createIndex();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+        try {
+            // Populate index
+            $this->populateIndex();
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 
     /**
@@ -49,10 +57,39 @@ class InitializeElasticsearchIndex implements ShouldQueue
      */
     private function createIndex()
     {
-        // Log::info("Starting creating index");
         /** @var Elasticsearch\Client $client */
         $client = app('Elasticsearch\Client');
 
+        $mainIndex = 'docdel_requests';
+        $backupIndex = 'docdel_requests_old';
+
+        // Check if the index already exists
+        if ($client->indices()->exists(['index' => $mainIndex])) {
+            try {
+                // If it already exists, create a backup copy and delete it
+                if ($client->indices()->exists(['index' => $backupIndex])) {
+                    $client->indices()->delete(['index' => $backupIndex]);
+                    Log::info("Deleted existing backup index: $backupIndex\n");
+                }
+
+                // Reindex the existing main index into backup
+                $client->reindex([
+                    'body' => [
+                        'source' => ['index' => $mainIndex],
+                        'dest' => ['index' => $backupIndex],
+                    ],
+                    'wait_for_completion' => true
+                ]);
+                Log::info("Reindexed $mainIndex to $backupIndex\n");
+
+                // Delete the main index
+                $client->indices()->delete(['index' => $mainIndex]);
+                Log::info("Deleted existing main index: $mainIndex\n");
+            } catch (Exception $e) {
+                Log::info("Error during index operations: " . $e->getMessage());
+            }
+        }
+        
         // Define the index structure with mappings
         $params = [
             'index' => 'docdel_requests', // The name of the index
@@ -467,25 +504,14 @@ class InitializeElasticsearchIndex implements ShouldQueue
             ]
         ];
 
-        // Check if the index already exists
-        if (!$client->indices()->exists(['index' => 'docdel_requests'])) {
-            // Create the index
-            $response = $client->indices()->create($params);
-
-            if ($response['acknowledged']) {
-                echo "Index 'docdel_requests' created successfully.\n";
-            } else {
-                echo "Failed to create the index.\n";
-            }
-        } else {
-            echo "Index 'docdel_requests' already exists.\n";
-        }
-        Log::info("Finished creating index");
+        // Create the new index
+        $client->indices()->create($params);
+        Log::info("Finished creating index\n");
     }
 
     private function populateIndex()
     {
-        Log::info("Starting populating index");
+        Log::info("Starting populating index\n");
 
         $batchSize = 2500;
         DocdelRequest::with(['reference', 'borrowinglibrary', 'lendinglibrary'])->chunk($batchSize, function ($requests) use ($batchSize) {
@@ -515,7 +541,7 @@ class InitializeElasticsearchIndex implements ShouldQueue
                     'forward' => $request->forward,
                     'trash_type' => $request->trash_type,
                     'archived' => $request->archived,
-                    'orphaned' => 0,
+                    'orphaned' => $request->orphaned,
                     'request_pdf_editorial' => $request->request_pdf_editorial ?? 0,
                     'request_special_delivery' => $request->request_special_delivery ?? 0,
                     'patron_docdel_request_id' => $request->patron_docdel_request_id,
@@ -555,7 +581,7 @@ class InitializeElasticsearchIndex implements ShouldQueue
             unset($bulkParams);
         });
 
-        Log::info("Finished populating index");
+        Log::info("Finished populating index\n");
     }
 
 
@@ -603,10 +629,10 @@ class InitializeElasticsearchIndex implements ShouldQueue
         $response = $client->bulk($bulkParams);
 
         if ($response['errors']) {
-            echo "Elasticsearch index failed to populate";
+            Log::info("Elasticsearch index failed to populate\n");
             var_dump($response);
         } else {
-            echo "Bulk indexing succesful.\n";
+            Log::info("Bulk indexing succesful.\n");
         }
     }
 }

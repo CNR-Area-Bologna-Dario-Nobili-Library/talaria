@@ -128,10 +128,12 @@ These commands are mandatory since the connection of Laravel to Elasticsearch re
 Now Laravel should communicate with Elasticsearch. Restart everything one last time. Access the Laravel Docker container and run the Laravel command:
 
 ```bash
-php artisan elasticsearch:init
+php artisan elasticsearch:sync
 ```
 
 to create the `docdel_request` index and import all existing data from the database.
+
+> **Note**: The Laravel command `php artisan elasticsearch:sync` is usable whenever you want to synchronize the MySQL database with Elasticsearch.
 
 If you want to change the `elastic` password, access the Elasticsearch docker container in bash and run the following command from inside the Elasticsearch docker container:
 
@@ -141,7 +143,7 @@ bin/elasticsearch-reset-password --username elastic -i
 
 The flag `-i` asks the user to input the new password. If you want to automatically generate the password remove the flag `-i`. After changing the password store in the constant `ELASTIC_PASSWORD`, in your .env file.
 
-You can access Elasticsearch server by opening `https://${API_DOMAIN}:9200`, this page is protected by HTTP Basic Auth, so you've to login with user: `elastic` and the password stored in the constant `ELASTIC_PASSWORD`.
+You can access Elasticsearch server by navigating to `https://${API_DOMAIN}:9200`, this page is protected by HTTP Basic Auth, so you've to login with user: `elastic` and the password stored in the constant `ELASTIC_PASSWORD`.
 
 ### FILE STORAGE
 

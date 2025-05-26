@@ -3,23 +3,23 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Jobs\InitializeElasticsearchIndex;
+use App\Jobs\SyncElasticsearchIndex;
 
-class InitializeElasticsearch extends Command
+class SyncElasticsearch extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'elasticsearch:init';
+    protected $signature = 'elasticsearch:sync';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Initializes Elasticsearch index by creating and populating it';
+    protected $description = 'Synchronizes the Elasticsearch index with the MySQL database by creating the index (if not already present) and populating it';
 
     /**
      * Create a new command instance.
@@ -38,7 +38,7 @@ class InitializeElasticsearch extends Command
      */
     public function handle()
     {
-        InitializeElasticsearchIndex::dispatch();
-        $this->info("Elasticsearch index initialization dispatched");
+        SyncElasticsearchIndex::dispatch();
+        $this->info("Elasticsearch index synchronization dispatched");
     }
 }
