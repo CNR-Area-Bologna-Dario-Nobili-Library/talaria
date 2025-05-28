@@ -27,14 +27,31 @@ done
 echo "Elasticsearch is up and running."
 
 # Disable disk allocation threshold
-curl -k -u "elastic:$ELASTIC_PASSWORD" -X PUT "$ELASTIC_HOST/_cluster/settings" -H "Content-Type: application/json" -d '{"persistent":{"cluster.routing.allocation.disk.threshold_enabled":false}}'
+response=$(curl -k -s -w "\n%{http_code}" -u "elastic:$ELASTIC_PASSWORD" -X PUT "$ELASTIC_HOST/_cluster/settings" -H "Content-Type: application/json" -d '{"persistent":{"cluster.routing.allocation.disk.threshold_enabled":false}}')
 
-echo "Disk allocation threshold disabled."
+# Split response into body and status
+http_body=$(echo "$response" | sed '$d') # Remove last newline (response ends with \n%{http_code})
+http_code=$(echo "$response" | tail -n1) # Get last line
+
+if [ "$http_code" -eq 200 ]; then
+  echo "Disk allocation threshold disabled."
+else
+  echo "Failed to disable disk allocation threshold. HTTP $http_code. Body: $http_body"
+  exit 1
+fi
 
 # Set kibana_system user password
-curl -k -u "elastic:$ELASTIC_PASSWORD" -X POST "$ELASTIC_HOST/_security/user/kibana_system/_password" -H "Content-Type: application/json" -d "{\"password\":\"$KIBANA_PASSWORD\"}"
+response=$(curl -k -s -w "\n%{http_code}" -u "elastic:$ELASTIC_PASSWORD" -X POST "$ELASTIC_HOST/_security/user/kibana_system/_password" -H "Content-Type: application/json" -d "{\"password\":\"$KIBANA_PASSWORD\"}")
 
-echo "kibana_system user password set."
+http_body=$(echo "$response" | sed '$d')
+http_code=$(echo "$response" | tail -n1)
+
+if [ "$http_code" -eq 200 ]; then
+  echo "kibana_system user password set."
+else
+  echo "Failed to set kibana_system user password. HTTP $http_code. Body: $http_body"
+  exit 1
+fi
 
 # Mark initialization as complete
 if touch "$INIT_MARKER"; then
