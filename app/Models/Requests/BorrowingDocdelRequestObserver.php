@@ -118,7 +118,7 @@ class BorrowingDocdelRequestObserver extends BaseObserver
                 'aggregated_lending_status' => $aggregated_statuses['aggregated_lending_status'],
                 'trash_type' => $model->trash_type,
                 'archived' => $model->archived,
-                'orphaned' => 0,
+                'orphaned' => $model->orphaned,
                 'request_special_delivery' => $model->request_special_delivery ?? 0,
                 'request_pdf_editorial' => $model->request_pdf_editorial ?? 0,
                 // 'fulfill_type' => $model->fulfill_type,
@@ -144,8 +144,6 @@ class BorrowingDocdelRequestObserver extends BaseObserver
             ]
         ];
 
-        // Log::info("borrowing observer invoked: ", $model->toarray());
-
         // Check if the request was newly created
         if ($model->wasRecentlyCreated) {
             try {
@@ -156,15 +154,6 @@ class BorrowingDocdelRequestObserver extends BaseObserver
             }
         } else {
             // This is an update, update it in elasticsearch
-
-            // If it is an update and all_lender is 1, copy it to Elasticsearch index
-            if ($model->all_lender) {
-                $params['body']['orphaned'] = $model->all_lender;
-            } elseif ($model->borrowing_status == "newrequest") {
-                // This case is when a orphaned request is canceled so the flag will go back to 0
-                $params['body']['orphaned'] = 0;
-            }
-
             try {
                 $client->update([
                     'index' => 'docdel_requests',
