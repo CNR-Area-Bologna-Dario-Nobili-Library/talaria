@@ -85,15 +85,9 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 > **Note**: This procedure is necessary ONLY THE FIRST TIME you run the application
 
-Reset `kibana_system`'s password by calling the following POST request from inside the Elasticsearch docker container:
+You can check if the Elasticsearch server is running by accessing `https://${API_DOMAIN}:9200`. The default password for the user `elastic` is `password` (stored in `.env` as `ELASTIC_PASSWORD`).
 
-```bash
-curl -kX POST -u elastic "https://elasticsearch:9200/_security/user/kibana_system/_password" -H "Content-Type: application/json" -d '{"password": "your_preferred_password"}'
-```
-
-The default password for the user `elastic` is `password`. After resetting, remember to store the new password in your .env file in the `KIBANA_PASSWORD` constant.
-
-Now you need an API key to allow the communication between Laravel and Elasticsearch. Log into Kibana `https://${API_DOMAIN}:5601`, with user `elastic` and password `password`. Access the "Dev Tools" and paste the following API call:
+Now you'll need an API key to allow the communication between Laravel and Elasticsearch. Log into Kibana `https://${API_DOMAIN}:5601`, with user `elastic` and password `password`. Access the "Dev Tools" and paste the following API call:
 
 ```json
 POST /_security/api_key
@@ -120,12 +114,12 @@ Access the Laravel docker container and run the following commands:
 ```bash
 php artisan config:cache
 php artisan optimize
-php artisan queue:restart     # Only in case the laravel_queue container was down
+php artisan queue:restart
 ```
 
 These commands are mandatory since the connection of Laravel to Elasticsearch relies on the usage of configuration files.
 
-Now Laravel should communicate with Elasticsearch. Restart everything one last time. Access the Laravel Docker container and run the Laravel command:
+Now Laravel should communicate with Elasticsearch. From the Laravel docker container run the following command:
 
 ```bash
 php artisan elasticsearch:sync
@@ -142,8 +136,6 @@ bin/elasticsearch-reset-password --username elastic -i
 ```
 
 The flag `-i` asks the user to input the new password. If you want to automatically generate the password remove the flag `-i`. After changing the password store in the constant `ELASTIC_PASSWORD`, in your .env file.
-
-You can access Elasticsearch server by navigating to `https://${API_DOMAIN}:9200`, this page is protected by HTTP Basic Auth, so you've to login with user: `elastic` and the password stored in the constant `ELASTIC_PASSWORD`.
 
 ### FILE STORAGE
 
