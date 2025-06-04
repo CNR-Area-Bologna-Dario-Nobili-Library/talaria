@@ -771,9 +771,13 @@
   "app.stats.notAvailable": "Statistiche temporaneamente non disponibili, riprova più tardi.",
   "app.stats.year": "Anno",
   "app.stats.requestsDistribution.header": "Distribuzione delle richieste",
+  "app.stats.requestsDistribution.description": "I grafici mostrano le richieste di borrowing e di lending che sono state gestite suddivise per lo stato attuale della richiesta e per tipo di pubblicazione.\nÈ possibile selezionare solo le richieste di uno specifico anno e di un certo tipo di pubblicazione.",
   "app.stats.requestsDetails.header": "Dettaglio delle richieste",
+  "app.stats.requestsDetails.description": "I primi due grafici mostrano le richieste di borrowing ricevute e le richieste di lending evase, suddivise per tipo di invio.\nGli ultimi due grafici mostrano le richieste di borrowing non ricevute e le richieste di lending inevase, suddivise per motivo di inevasione.\nÈ possibile selezionare solo le richieste di uno specifico anno e di un certo tipo di pubblicazione.",
   "app.stats.fillRate.header": "Tasso di successo",
+  "app.stats.fillRate.description": "I grafici mostrano il tasso di successo delle richieste di borrowing e di lending.\nNel borrowing, il tasso di successo è calcolato dividendo il numero totale di richieste ricevute per il numero totale delle richieste, sia ricevute che non ricevute. Non sono contate le richieste in corso, cancellate e non ancora inoltrate (nuove richieste). Anche le richieste reiterate non vengono contate poichè sono richieste di uno stesso riferimento bibliografico,  e il tasso di successo è un indicatore che vuole misurare la capacità del servizio di reperire i documenti desiderati dagli utenti (anche se uno stesso documento può essere stato richiesto più di una volta).\nÈ possibile selezionare solo le richieste di uno specifico anno.",
   "app.stats.workingTime.header": "Tempo di consegna",
+  "app.stats.workingTime.description": "I primi due grafici mostrano per il borrowing e per il lending il numero di richieste che sono state gestite entro un giorno, entro una settimana e in un tempo superiore a una settimana.\nL'ultimo grafico mostra il tempo medio di risposta in giorni delle richieste di borrowing e di lending. Se si seleziona un anno, il grafico mostra l'andamento mensile per l'anno selezionato.\nÈ possibile selezionare solo le richieste di uno specifico anno e di un certo tipo di pubblicazione.",
   "app.stats.homepage.header": "Benvenuti nella pagina delle statistiche",
   "app.stats.homepage.content": "Utilizzare il menu di sinistra per selezionare le statistiche che si desidera visualizzare.",
   "app.stats.borrowingByStatus.title": "Richieste di borrowing per stato",
@@ -809,5 +813,6 @@
   "app.stats.workingTime.average.yearlyBorrowing": "Media annuale per le richieste di borrowing",
   "app.stats.workingTime.average.yearlyLending": "Media annuale per le richieste di lending",
   "app.stats.workingTime.average.monthlyBorrowing": "Media mensile per le richieste di borrowing",
-  "app.stats.workingTime.average.monthlyLending": "Media mensile per le richieste di lending"
+  "app.stats.workingTime.average.monthlyLending": "Media mensile per le richieste di lending",
+  "app.stats.export": "È possibile esportare i grafici cliccando con il tasto destro sul grafico desiderato e selezionando \"Salva immagine come...\"."
 }

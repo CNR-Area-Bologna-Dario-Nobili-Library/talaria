@@ -771,9 +771,13 @@
   "app.stats.notAvailable": "Statistics temporarily not available, please try again later.",
   "app.stats.year": "Year",
   "app.stats.requestsDistribution.header": "Requests distribution",
+  "app.stats.requestsDistribution.description": "The charts show the borrowing and lending requests that have been managed. They are divided by the request's actual status and by publication types.\nFilters may be applied to select a specific year and publication type.",
   "app.stats.requestsDetails.header": "Requests details",
+  "app.stats.requestsDetails.description": "The first two charts show the borrowing received requests and the lending fulfilled requests by their delivery method.\nThe last two charts show the borrowing not received requests and the lending not fulfilled requests by their reason of unfillment.\nFilters may be applied to select a specific year and publication type.",
   "app.stats.fillRate.header": "Fill rate",
+  "app.stats.fillRate.description": "The charts show the fill rate for borrowing and lending requests.\nBorrowing fill rate is the ratio of received requests over the total number of received and not received requests. Canceled, in progress and new requests are not counted. Reiterated requests are not counted as  well because they refer to the same bibliographic reference and the fill rate aims to be an indicator about the ability of retrieving the desired references.\nLending fill rate is the ratio of fulfilled requests over the total number of fulfilled and not fulfilled requests.\nFilters may be applied to select a specific year.",
   "app.stats.workingTime.header": "Turnaround time",
+  "app.stats.workingTime.description": "The first two charts show for borrowing and for lending the number of requests managed within a day, within a week and more than a week.\nThe last chart shows the average turnaround time in days for borrowing and lending requests. If a year is selected, the chart shows the monthly trend for the selected year.\nFilters may be applied to select a specific year and publication type.",
   "app.stats.homepage.header": "Welcome to the statistics page",
   "app.stats.homepage.content": "Please use the left menu to select the statistics you'd like to view.",
   "app.stats.borrowingByStatus.title": "Borrowing requests by status",
@@ -809,5 +813,6 @@
   "app.stats.workingTime.average.yearlyBorrowing": "Yearly borrowing",
   "app.stats.workingTime.average.yearlyLending": "Yearly lending",
   "app.stats.workingTime.average.monthlyBorrowing": "Monthly borrowing",
-  "app.stats.workingTime.average.monthlyLending": "Monthly lending"
+  "app.stats.workingTime.average.monthlyLending": "Monthly lending",
+  "app.stats.export": "It is possible to export the charts by right clicking on the desired chart and selecting \"Save image as...\"."
 }

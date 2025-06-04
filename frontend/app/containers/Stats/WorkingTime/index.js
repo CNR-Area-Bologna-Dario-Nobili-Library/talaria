@@ -282,6 +282,12 @@ const WorkingTime = props => {
   return (
     <div>
       <h1>{intl.formatMessage({ id: 'app.stats.workingTime.header' })}</h1>
+      <p style={{ whiteSpace: 'pre-line' }}>
+        {intl.formatMessage({ id: 'app.stats.workingTime.description' })}
+      </p>
+      <p>
+        {intl.formatMessage({ id: 'app.stats.export' })}
+      </p>
 
       <FilterSelects
         filters={filters}

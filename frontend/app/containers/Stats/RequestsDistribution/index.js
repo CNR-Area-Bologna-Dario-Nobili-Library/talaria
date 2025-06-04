@@ -214,6 +214,12 @@ const RequestsDistribution = props => {
       <h1>
         {intl.formatMessage({ id: 'app.stats.requestsDistribution.header' })}
       </h1>
+      <p style={{ whiteSpace: 'pre-line' }}>
+        {intl.formatMessage({ id: 'app.stats.requestsDistribution.description' })}
+      </p>
+      <p>
+        {intl.formatMessage({ id: 'app.stats.export' })}
+      </p>
 
       <FilterSelects
         filters={filters}
