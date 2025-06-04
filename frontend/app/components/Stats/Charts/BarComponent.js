@@ -14,6 +14,23 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import './style.scss';
 
+// Add gap between legend and chart (for the number to NOT overlap the legend)
+const legendGap = {
+  id: 'legendGap',
+  beforeInit(chart, _args, opts) {
+    const extra = opts.gap ? opts.gap : 14;
+
+    const fitValue = chart.legend.fit;
+
+    chart.legend.fit = function fitWithGap() {
+      fitValue.call(this);
+      this.height += extra;
+    };
+  },
+};
+
+ChartJS.register(legendGap);
+
 ChartJS.register(
   BarElement,
   CategoryScale,
@@ -77,6 +94,8 @@ const BarComponent = ({
         display: 'auto',
         anchor: 'end',
         align: 'end',
+        offset: -5,
+        clamp: true,
         font: {
           weight: 'bold',
           size: 12,
