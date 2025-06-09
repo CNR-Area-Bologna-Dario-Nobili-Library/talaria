@@ -771,13 +771,13 @@
   "app.stats.notAvailable": "İstatistikler geçici olarak mevcut değil, lütfen daha sonra tekrar deneyiniz.",
   "app.stats.year": "Yıl",
   "app.stats.requestsDistribution.header": "Talep dağılımı",
-  "app.stats.requestsDistribution.description": "???The charts show the borrowing and lending requests that have been managed. They are divided by the request's actual status and by publication types.\nFilters may be applied to select a specific year and publication type.",
+  "app.stats.requestsDistribution.description": "Grafikler, yönetilen ödünç alma ve ödünç verme isteklerini göstermektedir. istekler, gerçek durumlarına ve yayın türlerine göre ayrılmıştır.\nBelirli bir yıl ve yayın türünü seçmek için filtreler uygulanabilir.",
   "app.stats.requestsDetails.header": "Talep detayları",
-  "app.stats.requestsDetails.description": "???The first two charts show the borrowing received requests and the lending fulfilled requests by their delivery method.\nThe last two charts show the borrowing not received requests and the lending not fulfilled requests by their reason of unfillment.\nFilters may be applied to select a specific year and publication type.",
+  "app.stats.requestsDetails.description": "İlk iki grafik, sağlama  yöntemine göre alınan ödünç alma isteklerini ve karşılanan ödünç verme isteklerini göstermektedir.\nSon iki grafik, sağlanamayan ödünç alma isteklerini ve karşılanamayan ödünç verme isteklerini, karşılanamama nedenlerine göre göstermektedir.\nBelirli bir yıl ve yayın türünü seçmek için filtreler uygulanabilir.",
   "app.stats.fillRate.header": "Doldurma hızı",
-  "app.stats.fillRate.description": "???The charts show the fill rate for borrowing and lending requests.\nBorrowing fill rate is the ratio of received requests over the total number of received and not received requests. Canceled, in progress and new requests are not counted. Reiterated requests are not counted as  well because they refer to the same bibliographic reference and the fill rate aims to be an indicator about the ability of retrieving the desired references.\nLending fill rate is the ratio of fulfilled requests over the total number of fulfilled and not fulfilled requests.\nFilters may be applied to select a specific year.",
+  "app.stats.fillRate.description": "Grafikler, ödünç alma ve ödünç verme isteklerinin karşılama oranlarını göstermektedir.\nÖdünç alma karşılama oranı, alınan isteklerin, alınan ve alınamayan toplam istek sayısına oranıdır. İptal edilmiş, devam eden ve yeni istekler bu hesaplamaya dahil edilmez. Aynı şekilde, yineleyen istekler de dahil edilmez çünkü bunlar aynı bibliyografik kaynağa referans verir ve karşılama oranı, istenen kaynaklara ulaşabilme yeteneğini gösteren bir gösterge olmayı amaçlar.\nÖdünç verme karşılama oranı, karşılanan isteklerin, karşılanan ve karşılanamayan toplam istek sayısına oranıdır.\nBelirli bir yılı seçmek için filtreler uygulanabilir.",
   "app.stats.workingTime.header": "Çalışma zamanı",
-  "app.stats.workingTime.description": "???The first two charts show for borrowing and for lending the number of requests managed within a day, within a week and more than a week.\nThe last chart shows the average turnaround time in days for borrowing and lending requests. If a year is selected, the chart shows the monthly trend for the selected year.\nFilters may be applied to select a specific year and publication type.",
+  "app.stats.workingTime.description": "İlk iki grafik, ödünç alma ve ödünç verme işlemleri için isteklerin bir gün içinde, bir hafta içinde ve bir haftadan uzun sürede sağlanan sayılarını göstermektedir.\nSon grafik, ödünç alma ve ödünç verme istekleri için ortalama işlem süresini (gün cinsinden) göstermektedir. Belirli bir yıl seçildiğinde, grafik o yıla ait aylık eğilimi gösterir.\nBelirli bir yıl ve yayın türünü seçmek için filtreler uygulanabilir.",
   "app.stats.homepage.header": "İstatistikler sayfasına hoşgeldiniz",
   "app.stats.homepage.content": "Görüntülemek istediğiniz istatistikleri lütfen soldaki menüden seçiniz",
   "app.stats.borrowingByStatus.title": "Durumlarına göre ödünç alma talepleri",
@@ -814,5 +814,5 @@
   "app.stats.workingTime.average.yearlyLending": "Yıllık ödünç verme",
   "app.stats.workingTime.average.monthlyBorrowing": "Aylık ödünç alma",
   "app.stats.workingTime.average.monthlyLending": "Aylık ödünç verme",
-  "app.stats.export": "???It is possible to export the charts by right clicking on the desired chart and selecting \"Save image as...\"."
+  "app.stats.export": "İstenilen grafik üzerine sağ tıklayarak ve \"Resmi farklı kaydet...\" seçeneğini seçerek grafiklerin dışa aktarılması mümkündür."
 }
