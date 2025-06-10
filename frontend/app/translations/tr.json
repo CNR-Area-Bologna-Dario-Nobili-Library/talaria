@@ -118,6 +118,7 @@
   "app.global.gps.notsupported": "GPS pozisyonu tarayıcınız tarafından desteklenmiyor",
   "app.global.noresult": "Sonuç yok",
   "app.global.all": "Hepsi",
+  "app.global.loading":"Yükleniyor ...",
   "app.containers.HomePage.header": "Kaynak Paylaşım topluluğunuzun KISALTMASI ve ADI",
   "app.containers.HomePage.subHeader": "Buraya kaynak paylaşım topluluğunuzun tanımını, misyonunu ve amaçlarını ekleyebilirsiniz.",
   "app.containers.LandingPage.welcome": "Hoşgeldiniz",

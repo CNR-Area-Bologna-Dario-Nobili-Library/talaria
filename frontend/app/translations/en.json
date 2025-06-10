@@ -111,6 +111,7 @@
   "app.global.library.created": "Created",
   "app.global.library.updated": "Updated",
   "app.global.go": "Go!",
+  "app.global.loading":"Loading ...",
   "app.global.gps.denied": "User denied the request for GPS position",
   "app.global.gps.unavailable": "GPS position information is unavailable",
   "app.global.gps.timeout": "The request to get GPS position timed out",

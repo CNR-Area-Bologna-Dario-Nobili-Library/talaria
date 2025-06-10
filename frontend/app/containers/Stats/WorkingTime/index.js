@@ -276,7 +276,7 @@ const WorkingTime = props => {
     filters.year && filters.year.value ? filters.year.value : '',
   );
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>{intl.formatMessage({ id: 'app.global.loading' })}</div>;
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (

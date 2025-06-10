@@ -118,6 +118,7 @@
   "app.global.gps.notsupported": "Rilevamento della posizione non supportato dal browser",
   "app.global.noresult": "Nessun risultato",
   "app.global.all": "Tutti",
+  "app.global.loading":"Caricamento ...",
   "app.containers.HomePage.header": "Benvenuti in ACRONIMO e NOME per esteso della tua comunità di biblioteche",
   "app.containers.HomePage.subHeader": "Inserisci qui la descrizione, la missione e gli scopi della tua comunità di Resource Sharing.",
   "app.containers.LandingPage.welcome": "Ti diamo il benvenuto",

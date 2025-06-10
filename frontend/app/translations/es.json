@@ -118,6 +118,7 @@
   "app.global.gps.notsupported": "La posición GPS no es compatible con su navegador",
   "app.global.noresult": "Sin resultados",
   "app.global.all": "Todo",
+  "app.global.loading":"Cargando ...",
   "app.containers.HomePage.header": "SIGLAS y NOMBRE extendido de su red bibliotecaria",
   "app.containers.HomePage.subHeader": "Inserte aquí la descripción, la misión y los propósitos de su red bibliotecaria.",
   "app.containers.LandingPage.welcome": "Bienvenida",
