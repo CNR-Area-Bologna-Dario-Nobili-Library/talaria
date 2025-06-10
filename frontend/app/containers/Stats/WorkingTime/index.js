@@ -20,6 +20,7 @@ import { getMaterialTypeLabel } from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
+import Loader from '../../../components/Form/Loader';
 
 const WorkingTime = props => {
   const {
@@ -276,7 +277,13 @@ const WorkingTime = props => {
     filters.year && filters.year.value ? filters.year.value : '',
   );
 
-  if (loading) return <div>{intl.formatMessage({ id: 'app.global.loading' })}</div>;
+   if(loading) return (
+    <div>
+      <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
+      <Loader show={loading}/>
+    </div>
+  )
+
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (

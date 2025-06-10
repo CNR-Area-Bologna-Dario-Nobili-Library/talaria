@@ -15,6 +15,7 @@ import { checkRole } from '../../../utils/permissions';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
+import Loader from '../../../components/Form/Loader';
 
 const RequestsDistribution = props => {
   const {
@@ -153,7 +154,14 @@ const RequestsDistribution = props => {
     ];
   }
 
-  if (loading) return <div>{intl.formatMessage({ id: 'app.global.loading' })}</div>;
+ if(loading) return (
+    <div>
+      <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
+      <Loader show={loading}/>
+    </div>
+  )
+
+
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (
