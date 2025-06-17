@@ -16,7 +16,7 @@ import {
   requestClearInstitutionsOptionList,
 } from '../../Library/actions';
 import { checkRole } from '../../../utils/permissions';
-import { getMaterialTypeLabel } from '../../../utils/stats';
+import { getMaterialTypeLabel, getWorkingTimeLabel } from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
@@ -151,7 +151,7 @@ const WorkingTime = props => {
 
   // Array of working time labels (within a day, within a week, more than a week)
   const borrowingStatusLabels = borrowingDataWorkingTime.map(function(item) {
-    return item.key;
+    return getWorkingTimeLabel(item.key, intl);
   });
 
   const borrowing_datasets = materialTypeIds.map(function(matId) {
@@ -177,7 +177,7 @@ const WorkingTime = props => {
 
   // Array of working time labels (within a day, within a week, more than a week)
   const lendingStatusLabels = lendingDataWorkingTime.map(function(item) {
-    return item.key;
+    return getWorkingTimeLabel(item.key, intl);
   });
 
   const lending_datasets = materialTypeIds.map(function(matId) {

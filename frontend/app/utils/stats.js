@@ -15,6 +15,44 @@ export function getMaterialTypeLabel(materialTypeId, intl) {
   }
 }
 
+export function getAggregatedBorrowingStatusLabel(aggregatedBorrowingStatus, intl) {
+  switch (aggregatedBorrowingStatus) {
+    case 'New':
+      return intl.formatMessage({ id: 'app.requests.newrequest' });
+    case 'Reiterated':
+      return intl.formatMessage({ id: 'app.requests.reiterated' });
+    case 'Received':
+      return intl.formatMessage({ id: 'app.requests.documentReady' });
+    case 'Not received':
+      return intl.formatMessage({ id: 'app.requests.documentNotReady' });
+    case 'Not received but fulfilled by lender':
+      return intl.formatMessage({ id: 'app.requests.notReceivedButFulfilledByLender' });
+    case 'In progress':
+      return intl.formatMessage({ id: 'app.requests.inProgress' });
+    case 'Canceled':
+      return intl.formatMessage({ id: 'app.requests.canceled' });
+    case 'Patron direct request':
+      return intl.formatMessage({ id: 'app.requests.patronDirectRequest' });
+    default:
+      return null;
+  }
+}
+
+export function getAggregatedLendingStatusLabel(aggregatedLendingStatus, intl) {
+  switch (aggregatedLendingStatus) {
+    case 'Fulfilled':
+      return intl.formatMessage({ id: 'app.requests.fulfilled' });
+    case 'Not fulfilled':
+      return intl.formatMessage({ id: 'app.requests.notReceived' });
+    case 'In progress':
+      return intl.formatMessage({ id: 'app.requests.inProgress' });
+    case 'Canceled':
+      return intl.formatMessage({ id: 'app.requests.canceled' });
+    default:
+      return null;
+  }
+}
+
 export function getDeliveryMethodLabel(deliveryMethodId, intl) {
   switch (deliveryMethodId) {
     case 1:
@@ -50,6 +88,19 @@ export function getReasonUnfilledLabel(reasonUnfilledId, intl) {
       return intl.formatMessage({ id: 'app.requests.notfulfill_type.MaxReqNumber' });
     case 7:
       return intl.formatMessage({ id: 'app.requests.notfulfill_type.Other' });
+    default:
+      return null;
+  }
+}
+
+export function getWorkingTimeLabel(workingTime, intl) {
+  switch (workingTime) {
+    case 'Within a day':
+      return intl.formatMessage({ id: 'app.stats.workingTime.withinDay' });
+    case 'Within a week':
+      return intl.formatMessage({ id: 'app.stats.workingTime.withinWeek' });
+    case 'Longer than a week':
+      return intl.formatMessage({ id: 'app.stats.workingTime.moreWeek' });
     default:
       return null;
   }

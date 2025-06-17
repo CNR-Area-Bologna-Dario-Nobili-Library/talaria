@@ -13,7 +13,7 @@ import {
   requestClearInstitutionsOptionList,
 } from '../../Library/actions';
 import { checkRole } from '../../../utils/permissions';
-import { getMaterialTypeLabel } from '../../../utils/stats';
+import { getMaterialTypeLabel, getAggregatedBorrowingStatusLabel, getAggregatedLendingStatusLabel } from '../../../utils/stats';
 import debounce from 'lodash/debounce';
 
 import './style.scss';
@@ -135,7 +135,7 @@ const RequestsDistribution = props => {
     data && data.by_borrowing_status ? data.by_borrowing_status : {},
   );
   const borrowingStatusLabels = borrowingDataByStatus.map(function(item) {
-    return item.key;
+    return getAggregatedBorrowingStatusLabel(item.key, intl);
   });
 
   // Create a dataset for each material type
@@ -153,7 +153,7 @@ const RequestsDistribution = props => {
     data && data.by_lending_status ? data.by_lending_status : {},
   );
   const lendingStatusLabels = lendingDataByStatus.map(function(item) {
-    return item.key;
+    return getAggregatedLendingStatusLabel(item.key, intl);
   });
 
   // Create a dataset for each material type
