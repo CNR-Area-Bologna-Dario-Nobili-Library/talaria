@@ -258,7 +258,7 @@ services:
    #   default:
    #     ipv4_address: 172.18.0.21
 
-metricbeat:
+  metricbeat:
     image: docker.elastic.co/beats/metricbeat:8.14.3
     container_name: metricbeat
     user: root
