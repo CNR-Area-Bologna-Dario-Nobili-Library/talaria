@@ -191,6 +191,7 @@ services:
       - ELASTIC_HOST=${ELASTICSEARCH_HOST}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+      - METRICBEAT_PASSWORD=${METRICBEAT_PASSWORD}
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
       - xpack.security.http.ssl.key="/usr/share/elasticsearch/config/cert/elasticsearch.key"      
@@ -209,6 +210,7 @@ services:
         hard: -1
     volumes:
       - esdata2:/usr/share/elasticsearch/data
+      - ./docker/elasticsearch/es-init.sh:/usr/share/elasticsearch/config/init/elasticsearch-init.sh
       - "${SSL_API_KEY_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.key"
       - "${SSL_API_CERT_PATH}:/usr/share/elasticsearch/config/cert/elasticsearch.cert"      
     ports:
@@ -255,6 +257,29 @@ services:
    # networks:
    #   default:
    #     ipv4_address: 172.18.0.21
+
+metricbeat:
+    image: docker.elastic.co/beats/metricbeat:8.14.3
+    container_name: metricbeat
+    user: root
+    restart: always
+    command: >
+      --strict.perms=false
+    depends_on:
+      - elasticsearch
+      - kibana
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+      - METRICBEAT_PASSWORD=${METRICBEAT_PASSWORD}
+    volumes:
+      - ./docker/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+    labels:
+      - "traefik.enable=false"
 
 volumes:
   esdata2:

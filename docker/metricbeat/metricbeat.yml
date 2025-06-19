@@ -1,0 +1,41 @@
+# Global options
+setup.kibana:
+  host: "https://kibana:5601"
+  username: "${KIBANA_USERNAME:kibana_system}"
+  password: "${KIBANA_PASSWORD}"
+  ssl.verification_mode: none
+
+output.elasticsearch:
+  hosts: ["https://elasticsearch:9200"]
+  username: "${ELASTICSEARCH_USERNAME:elastic}"
+  password: "${ELASTIC_PASSWORD}"
+  ssl.verification_mode: none
+processors:
+  - add_host_metadata: ~
+  - add_docker_metadata: ~
+
+########################################
+# Modules enabled
+########################################
+metricbeat.modules:
+  - module: elasticsearch # ES node + cluster metrics
+    xpack.enabled: true
+    period: 10s
+    hosts: ["https://elasticsearch:9200"]
+    username: "metricbeat_internal"
+    password: "${METRICBEAT_PASSWORD}"
+    ssl.verification_mode: none
+
+  - module: kibana # Kibana metrics
+    period: 10s
+    hosts: ["https://kibana:5601"]
+    username: "kibana_system"
+    password: "${KIBANA_PASSWORD}"
+    ssl.verification_mode: none
+
+  - module: docker # Container CPU/mem/net, etc.
+    hosts: ["unix:///var/run/docker.sock"]
+    period: 10s
+
+  - module: system # OS-level metrics for the Docker host
+    period: 10s

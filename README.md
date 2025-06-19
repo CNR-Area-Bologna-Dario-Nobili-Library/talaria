@@ -87,6 +87,8 @@ You can access DB data using PHPMyAdmin at `https://${API_DOMAIN}/phpmyadmin/`  
 
 You can check if the Elasticsearch server is running by accessing `https://${API_DOMAIN}:9200`. The default password for the user `elastic` is `password` (stored in `.env` as `ELASTIC_PASSWORD`).
 
+There is the cluster health monitoring through Metricbeat (user `metricbeat_internal` with password stored in `.env` as `METRICBEAT_PASSWORD`). It is possible to access monitoring through Kibana.
+
 Now you'll need an API key to allow the communication between Laravel and Elasticsearch. Log into Kibana `https://${API_DOMAIN}:5601`, with user `elastic` and password `password`. Access the "Dev Tools" and paste the following API call:
 
 ```json

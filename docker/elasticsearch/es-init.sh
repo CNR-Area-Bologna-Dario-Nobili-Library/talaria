@@ -53,6 +53,19 @@ else
   exit 1
 fi
 
+# Create metricbeat_internal user
+response=$(curl -k -s -w "\n%{http_code}" -u "elastic:$ELASTIC_PASSWORD" -X POST "$ELASTIC_HOST/_security/user/metricbeat_internal/" -H "Content-Type: application/json" -d "{\"password\":\"$METRICBEAT_PASSWORD\", \"roles\": [\"remote_monitoring_collector\", \"remote_monitoring_agent\"], \"full_name\": \"Metricbeat internal user\", \"enabled\": true}")
+
+http_body=$(echo "$response" | sed '$d')
+http_code=$(echo "$response" | tail -n1)
+
+if [ "$http_code" -eq 200 ]; then
+  echo "metricbeat_internal user created."
+else
+  echo "Failed to create metricbeat_internal user. HTTP $http_code. Body: $http_body"
+  exit 1
+fi
+
 # Mark initialization as complete
 if touch "$INIT_MARKER"; then
   echo "Initialization complete. Marker file created at $INIT_MARKER"
