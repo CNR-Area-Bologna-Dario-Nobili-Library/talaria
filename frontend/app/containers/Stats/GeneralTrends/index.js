@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchFillRateRequest } from '../actions';
+import { fetchRequestDistributionRequest } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
-import PieComponent from '../../../components/Stats/Charts/PieComponent';
+import GroupedBarComponent from '../../../components/Stats/Charts/GroupedBarComponent';
 import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
   requestLibraryOptionList,
@@ -17,7 +17,7 @@ import debounce from 'lodash/debounce';
 import './style.scss';
 import Loader from '../../../components/Form/Loader';
 
-const FillRate = props => {
+const GeneralTrends = props => {
   const {
     data,
     dispatch,
@@ -31,6 +31,9 @@ const FillRate = props => {
 
   let intl = useIntl();
 
+  // State for yearly data
+  const [yearlyData, setYearlyData] = useState({});
+
   const allOption = {
     label: intl.formatMessage({ id: 'app.global.all' }),
     value: '',
@@ -38,8 +41,6 @@ const FillRate = props => {
 
   // Filters for the API call
   const [filters, setFilters] = useState({
-    year: allOption,
-    materialType: allOption,
     libraryId: allOption,
     institutionId: allOption,
     countryId: allOption,
@@ -55,6 +56,15 @@ const FillRate = props => {
     ...institutions.map(inst => ({ label: inst.label, value: inst.value })),
   ];
   const countriesWithAll = [allOption, ...countries];
+
+  // Array of years
+  const serviceYears = [];
+
+  // Loop from process.env.SERVICE_YEAR_START to current year
+  const currentYear = new Date().getFullYear();
+  for (let i = parseInt(process.env.SERVICE_YEAR_START); i <= currentYear; i++) {
+    serviceYears.push(i);
+  }
 
   /**
    * Dispatches the action only if the input has at least 3 characters, filtering by input
@@ -103,82 +113,117 @@ const FillRate = props => {
       ? libraryIdFromParams
       : filters.libraryId.value;
 
-    const action = fetchFillRateRequest(
-      filters.year.value,
-      selectedLibraryId,
-      filters.institutionId.value,
-      filters.countryId.value,
-      filters.materialType.value,
-    );
-    dispatch(action);
+    serviceYears.forEach(year => {
+      const action = fetchRequestDistributionRequest(
+        year,
+        selectedLibraryId,
+        filters.institutionId.value,
+        filters.countryId.value,
+      );
+      console.log('action', action);
+      dispatch(action);
+    });
   }, [
     dispatch,
-    filters.year.value,
     filters.libraryId.value,
     filters.institutionId.value,
     filters.countryId.value,
-    filters.materialType.value,
   ]);
 
   /**
-   * Displayed data for charts - borrowing fillrate
+   * Store data when it changes
    */
-  let borrowing_fillrate = {};
-  if (data) {
-    borrowing_fillrate = [
-      {
-        label: intl.formatMessage({ id: 'app.stats.fillRate.borrowing' }),
-        value: data.borrowing_fill_rate.toFixed(2),
+  useEffect(() => {
+    if (!data || data.year == "") {
+      return;
+    }
+
+    setYearlyData(prev => ({
+      ...prev,
+      [data.year]: {
+        borrowing: data.by_borrowing_status,
+        lending: data.by_lending_status,
       },
-      {
-        label: intl.formatMessage({ id: 'app.stats.unFillRate.borrowing' }),
-        value: data.borrowing_unfill_rate.toFixed(2),
-      },
-    ];
-  }
+    }));
+  }, [data]);
 
   /**
-   * Display data for charts - lending fillrate
+   * Displayed data for charts - by year
    */
-  let lending_fillrate = {};
-  if (data) {
-    lending_fillrate = [
-      {
-        label: intl.formatMessage({ id: 'app.stats.fillRate.lending' }),
-        value: data.lending_fill_rate.toFixed(2),
-      },
-      {
-        label: intl.formatMessage({ id: 'app.stats.unFillRate.lending' }),
-        value: data.lending_unfill_rate.toFixed(2),
-      },
-    ];
+  const yearlyDataByYear = Object.values(yearlyData);
+
+  const allYearsBorrowing = yearlyDataByYear.map(item => item.borrowing);
+  const borrowing_totalCountsByYear = [];
+  const borrowing_receivedCountsByYear = [];
+  
+  const allYearsLending = yearlyDataByYear.map(item => item.lending);
+  const lending_totalCountsByYear = [];
+  const lending_fulfilledCountsByYear = [];
+
+  allYearsBorrowing.forEach(statuses => {
+    let total = 0;
+    let received = 0;
+    statuses.forEach(element => {
+      total += element.count;
+      if (element.key === 'Received') {
+        received = element.count;
+      }
+    });
+
+    borrowing_totalCountsByYear.push(total);
+    borrowing_receivedCountsByYear.push(received);
+  })
+
+  allYearsLending.forEach(statuses => {
+    let total = 0;
+    let fulfilled = 0;
+    statuses.forEach(element => {
+      total += element.count;
+      if (element.key === 'Fulfilled') {
+        fulfilled = element.count;
+      }
+    });
+
+    lending_totalCountsByYear.push(total);
+    lending_fulfilledCountsByYear.push(fulfilled);
+  })
+
+  // Borrowing dataset
+  const borrowingDatasets = [
+    { key: 'borrowing_total', label: intl.formatMessage({ id: 'app.stats.borrowingGeneralTrends.total' }), data: borrowing_totalCountsByYear },
+    { key: 'received', label: intl.formatMessage({ id: 'app.stats.borrowingGeneralTrends.received' }), data: borrowing_receivedCountsByYear },
+  ];
+
+  // Lending dataset
+  const lendingDatasets = [
+    { key: 'lending_total', label: intl.formatMessage({ id: 'app.stats.lendingGeneralTrends.total' }), data: lending_totalCountsByYear },
+    { key: 'fulfilled', label: intl.formatMessage({ id: 'app.stats.lendingGeneralTrends.fulfilled' }), data: lending_fulfilledCountsByYear },
+  ];
+
+  if (loading) {
+    return (
+      <div>
+        <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
+        <Loader show={loading}/>
+      </div>
+    )
   }
-
- if(loading) return (
-    <div>
-      <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
-      <Loader show={loading}/>
-    </div>
-  )
-
 
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (
     <div>
-      <h1>{intl.formatMessage({ id: 'app.stats.fillRate.header' })}</h1>
+      <h1>
+        {intl.formatMessage({ id: 'app.stats.homepage.header' })}
+      </h1>
       <p style={{ whiteSpace: 'pre-line' }}>
-        {intl.formatMessage({ id: 'app.stats.fillRate.description' })}
-      </p>
-      <p>
-        {intl.formatMessage({ id: 'app.stats.filterYear' })}
+        {intl.formatMessage({ id: 'app.stats.homepage.content' })}
       </p>
       <p>
         {intl.formatMessage({ id: 'app.stats.export' })}
       </p>
 
       <FilterSelects
-        roles={props.auth}
         filters={filters}
         setFilters={setFilters}
         libraries={libraryIdFromParams ? [] : librariesWithAll}
@@ -186,69 +231,30 @@ const FillRate = props => {
         countries={libraryIdFromParams ? [] : countriesWithAll}
         onLibraryInput={handleLibraryInput}
         onInstitutionInput={handleInstitutionInput}
-        showMaterialType={false}
         hasFullAccess={hasFullAccess}
+        showMaterialType={false}
+        showYear={false}
       />
 
       {data && (
         <>
           <div className="charts-container">
             <div className="charts-box">
-              <PieComponent
+              <GroupedBarComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.fillRate.borrowing.title',
+                  id: 'app.stats.borrowingGeneralTrends.title',
                 })}
-                subtitle={intl.formatMessage(
-                  {
-                    id: 'app.stats.fillRate.borrowing.subtitle',
-                  },
-                  {
-                    TOTAL: data.total_borrowing,
-                    YEAR: filters.year.label,
-                  },
-                )}
-                labels={
-                  Array.isArray(borrowing_fillrate)
-                    ? borrowing_fillrate.map(item => item.label)
-                    : []
-                }
-                data={
-                  Array.isArray(borrowing_fillrate)
-                    ? borrowing_fillrate.map(item => item.value)
-                    : []
-                }
-                tooltipLabelFormatter={context =>
-                  `${context.label}: ${context.raw}%`
-                }
+                labels={serviceYears}
+                datasets={borrowingDatasets}
               />
             </div>
             <div className="charts-box">
-              <PieComponent
+              <GroupedBarComponent
                 title={intl.formatMessage({
-                  id: 'app.stats.fillRate.lending.title',
+                  id: 'app.stats.lendingGeneralTrends.title',
                 })}
-                subtitle={intl.formatMessage(
-                  {
-                    id: 'app.stats.fillRate.lending.subtitle',
-                  },
-                  {
-                    TOTAL: data.total_lending,
-                    YEAR: filters.year.label,
-                  },
-                )}
-                labels={
-                  Array.isArray(lending_fillrate)
-                    ? lending_fillrate.map(item => item.label)
-                    : []
-                }
-                data={
-                  Array.isArray(lending_fillrate)
-                    ? lending_fillrate.map(item => item.value)
-                    : []
-                }
-                tooltipLabelFormatter={context =>
-                  `${context.label}: ${context.raw}%`
-                }
+                labels={serviceYears}
+                datasets={lendingDatasets}
               />
             </div>
           </div>
@@ -259,7 +265,7 @@ const FillRate = props => {
 };
 
 const mapStateToProps = state => ({
-  data: state.stats.fill_rate,
+  data: state.stats.request_distribution,
   loading: state.stats.loading,
   error: state.stats.error,
   libraries: state.library.libraryOptionItemList,
@@ -267,4 +273,4 @@ const mapStateToProps = state => ({
   countries: state.admin.countriesOptionList,
 });
 
-export default connect(mapStateToProps)(FillRate);
+export default connect(mapStateToProps)(GeneralTrends);

@@ -26,6 +26,9 @@ import {
   FETCH_OPENACCESS_REFERENCES_REQUEST,
   FETCH_OPENACCESS_REFERENCES_SUCCESS,
   FETCH_OPENACCESS_REFERENCES_FAILURE,
+  EXPORT_CSV_REQUEST,
+  EXPORT_CSV_SUCCESS,
+  EXPORT_CSV_FAILURE,
 } from './constants';
 
 // Fill rate stats
@@ -240,5 +243,31 @@ export const fetchOpenAccessReferencesSuccess = data => ({
 
 export const fetchOpenAccessReferencesFailure = error => ({
   type: FETCH_OPENACCESS_REFERENCES_FAILURE,
+  payload: error,
+});
+
+// Export CSV stats
+
+export const exportCSVRequest = (
+  year,
+  library_id,
+  institution_id,
+  country_id,
+  material_type,
+) => ({
+  type: EXPORT_CSV_REQUEST,
+  year,
+  library_id,
+  institution_id,
+  country_id,
+  material_type,
+});
+
+export const exportCSVSuccess = data => ({
+  type: EXPORT_CSV_SUCCESS,
+});
+
+export const exportCSVFailure = error => ({
+  type: EXPORT_CSV_FAILURE,
   payload: error,
 });

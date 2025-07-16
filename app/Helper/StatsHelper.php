@@ -145,12 +145,117 @@ class StatsHelper
       }
     }
 
-    // Log::info($model['borrowing_status'] . " associated with " . $aggregated_borrowing_status);
-    // Log::info($model['lending_status'] . " associated with " . $aggregated_lending_status);
-
     return [
       'aggregated_borrowing_status' => $aggregated_borrowing_status,
       'aggregated_lending_status'   => $aggregated_lending_status,
+    ];
+  }
+
+  /**
+   * Creates the query object.
+   * @return array The query object
+   */
+  public static function createQuery($request)
+  {
+    $validated = $request->validate([
+      'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
+      'library_id' => 'sometimes|integer|exists:libraries,id',
+      'institution_id' => 'sometimes|integer|exists:institutions,id',
+      'country_id' => 'sometimes|integer|exists:countries,id',
+      'material_type' => 'sometimes|integer|min:1|max:5',
+      // 'library_id' => 'sometimes|integer',
+      // 'institution_id' => 'sometimes|integer',
+      // 'country_id' => 'sometimes|integer'
+    ]);
+
+    $year = $validated['year'] ?? null;
+    $library_id = $validated['library_id'] ?? null;
+    $institution_id = $validated['institution_id'] ?? null;
+    $country_id = $validated['country_id'] ?? null;
+    $material_type = $validated['material_type'] ?? null;
+
+    $globalFilters = [];
+
+    if ($year) {
+      $globalFilters[] = [
+        'range' => [
+          'request_date' => [
+            'gte' => "{$year}-01-01",
+            'lte' => "{$year}-12-31",
+            'format' => 'yyyy-MM-dd'
+          ]
+        ]
+      ];
+    }
+
+    if ($material_type) {
+      $globalFilters[] = ['term' => ['reference.material_type' => $material_type]];
+    }
+
+    // Priority: Library >> Institution >> Country
+
+    $idField = null;
+    $idValue = null;
+
+    if ($library_id) {
+      $idField = [
+        'borrowing' => 'borrowing_library.id',
+        'lending' => 'lending_library.id'
+      ];
+      $idValue = $library_id;
+
+      $globalFilters[] = [
+        'bool' => [
+          'should' => [
+            ['term' => ['borrowing_library.id' => $library_id]],
+            ['term' => ['lending_library.id' => $library_id]],
+          ],
+          'minimum_should_match' => 1
+        ]
+      ];
+    } elseif ($institution_id) {
+      $idField = [
+        'borrowing' => 'borrowing_library.institution.id',
+        'lending' => 'lending_library.institution.id'
+      ];
+      $idValue = $institution_id;
+
+      $globalFilters[] = [
+        'bool' => [
+          'should' => [
+            ['term' => ['borrowing_library.institution.id' => $institution_id]],
+            ['term' => ['lending_library.institution.id' => $institution_id]],
+          ],
+          'minimum_should_match' => 1
+        ]
+      ];
+    } elseif ($country_id) {
+      $idField = [
+        'borrowing' => 'borrowing_library.country.id',
+        'lending' => 'lending_library.country.id'
+      ];
+      $idValue = $country_id;
+
+      $globalFilters[] = [
+        'bool' => [
+          'should' => [
+            ['term' => ['borrowing_library.country.id' => $country_id]],
+            ['term' => ['lending_library.country.id' => $country_id]],
+          ],
+          'minimum_should_match' => 1
+        ]
+      ];
+    }
+    
+    $query = count($globalFilters) > 0 ? ['bool' => ['filter' => $globalFilters]] : ['match_all' => (object)[]];
+
+    return [
+      'query' => $query,
+      'agg_info' => [
+        'borrowing_field' => $idField['borrowing'] ?? null,
+        'lending_field' => $idField['lending'] ?? null,
+        'query_id' => $idValue
+      ],
     ];
   }
 }

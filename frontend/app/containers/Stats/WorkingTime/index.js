@@ -6,7 +6,7 @@ import {
 } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
-import BarComponent from '../../../components/Stats/Charts/BarComponent';
+import StackedBarComponent from '../../../components/Stats/Charts/StackedBarComponent';
 import LineComponent from '../../../components/Stats/Charts/LineComponent';
 import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
@@ -293,6 +293,9 @@ const WorkingTime = props => {
         {intl.formatMessage({ id: 'app.stats.workingTime.description' })}
       </p>
       <p>
+        {intl.formatMessage({ id: 'app.stats.filterYearAndType' })}
+      </p>
+      <p>
         {intl.formatMessage({ id: 'app.stats.export' })}
       </p>
 
@@ -311,7 +314,7 @@ const WorkingTime = props => {
         <>
           <div className="charts-container">
             <div className="charts-box">
-              <BarComponent
+              <StackedBarComponent
                 title={intl.formatMessage({
                   id: 'app.stats.workingTime.borrowing.title',
                 })}
@@ -330,7 +333,7 @@ const WorkingTime = props => {
               />
             </div>
             <div className="charts-box">
-              <BarComponent
+              <StackedBarComponent
                 title={intl.formatMessage({
                   id: 'app.stats.workingTime.lending.title',
                 })}

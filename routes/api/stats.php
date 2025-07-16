@@ -17,4 +17,7 @@ Route::group([
   Route::get('/pubyear-distribution', 'ReferencePubYearStats@__invoke')->name('pubyear-distribution');
   Route::get('/borrowing-libraries', 'BorrowingLibrariesStats@__invoke')->name('borrowing-libraries');
   Route::get('/oareferences', 'OAReferencesStats@__invoke')->name('oareferences');
+  
+  // -- Export API --
+  Route::get('/export', 'ExportController@__invoke')->name('export');
 });

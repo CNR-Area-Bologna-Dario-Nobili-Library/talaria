@@ -155,7 +155,6 @@ class CountriesStats extends BaseStatsController
     }
 
     $result = [
-      "total_requests" => $response["hits"]["total"]["value"],
       "requesting_from" => [
         "total" => $response["aggregations"]["requesting"]["doc_count"],
         "countries" => []

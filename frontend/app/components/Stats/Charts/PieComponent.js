@@ -7,6 +7,8 @@ import './style.scss';
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 import { COLORS } from './config';
+import { useIntl } from 'react-intl';
+import { createNoDataPlugin } from './noDataPlugin';
 
 const PieComponent = ({
   title,
@@ -16,6 +18,13 @@ const PieComponent = ({
   datasetLabel = 'Data',
   tooltipLabelFormatter,
 }) => {
+  const intl = useIntl();
+
+  // If all fields in data.datasets[0].data are "0.00" set noDataFlag to true
+  const noDataFlag = data.every(item => item === "0.00");
+
+  const noData = createNoDataPlugin(intl);
+
   const chartData = {
     labels,
     datasets: [
@@ -33,6 +42,7 @@ const PieComponent = ({
     plugins: {
       legend: {
         position: 'bottom',
+        display: !noDataFlag,
       },
       title: {
         display: true,
@@ -42,7 +52,7 @@ const PieComponent = ({
         },
       },
       subtitle: {
-        display: true,
+        display: !noDataFlag,
         text: subtitle,
         font: {
           size: 16,
@@ -67,13 +77,16 @@ const PieComponent = ({
       datalabels: {
         display: false,
       },
+      noData: {
+        noDataFlag
+      }
     },
     maintainAspectRatio: false,
   };
 
   return (
     <div className="chart-container">
-      <Pie data={chartData} options={options} />
+      <Pie data={chartData} options={options} plugins={[noData]} />
     </div>
   );
 };

@@ -21,7 +21,9 @@ import RequestsDistribution from '../containers/Stats/RequestsDistribution/Loada
 import RequestsDetails from '../containers/Stats/RequestsDetails/Loadable';
 import FillRate from '../containers/Stats/FillRate/Loadable';
 import WorkingTime from '../containers/Stats/WorkingTime/Loadable';
-import HomePage from '../containers/Stats/HomePage/Loadable';
+import GeneralTrends from '../containers/Stats/GeneralTrends/Loadable';
+import Countries from '../containers/Stats/Countries/Loadable';
+import Export from '../containers/Stats/Export/Loadable';
  
 const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
 const show_upgrade_to_full_profile=(process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;
@@ -119,7 +121,7 @@ const routes = [
         icon: 'chart-bar',
         name: `Statistics`,
         url: `/stats`,
-        component: HomePage,
+        component: GeneralTrends,
         sidebar: true,
       },
       {
@@ -156,6 +158,24 @@ const routes = [
         name: `StatisticsWorkingTime`,
         url: `/stats/working-time`,
         component: WorkingTime,
+        sidebar: true,
+      },
+      {
+        path: '/countries',
+        exact: true,
+        icon: 'chart-bar',
+        name: `StatisticsCountries`,
+        url: `/stats/countries`,
+        component: Countries,
+        sidebar: true,
+      },
+      {
+        path: '/export',
+        exact: true,
+        icon: 'file-csv',
+        name: `StatisticsExport`,
+        url: `/stats/export`,
+        component: Export,
         sidebar: true,
       },
     ],

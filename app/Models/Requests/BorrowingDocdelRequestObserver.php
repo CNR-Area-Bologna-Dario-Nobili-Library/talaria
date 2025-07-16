@@ -172,8 +172,6 @@ class BorrowingDocdelRequestObserver extends BaseObserver
 
     public function deleting($model)
     {
-        Log::info("I should delete this model:", $model->toArray());
-
         /** @var Elasticsearch\Client $client */
         $client = app('Elasticsearch\Client');
 

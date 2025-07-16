@@ -1075,6 +1075,37 @@ export const openAccessReferences = (options = {}) => {
   return request(`${BASE_URL}/api/v1/stats/oareferences/`, options);
 };
 
+export const exportCSVStats = options => {
+  options = getOption(options);
+  const year = options.year;
+  const library_id = options.library_id;
+  const institution_id = options.institution_id;
+  const country_id = options.country_id;
+  const material_type = options.material_type;
+
+  const queryParams = new URLSearchParams();
+  if (year) {
+    queryParams.append('year', year);
+  }
+  if (library_id) {
+    queryParams.append('library_id', library_id);
+  }
+  if (institution_id) {
+    queryParams.append('institution_id', institution_id);
+  }
+  if (country_id) {
+    queryParams.append('country_id', country_id);
+  }
+  if (material_type) {
+    queryParams.append('material_type', material_type);
+  }
+
+  return fetch(
+    `${BASE_URL}/api/v1/stats/export/?${queryParams.toString()}`,
+    options,
+  );
+};
+
 // export const getlibraryidentifierTypesOptionList = (options) => {
 //   options = getOption(options);
 //   const query = options.query ? options.query : "";

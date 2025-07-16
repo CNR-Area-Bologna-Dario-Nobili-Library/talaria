@@ -225,7 +225,7 @@ return (
                             <option value="3">{intl.formatMessage({id: "app.requests.notfulfill_type.NotOnShelf"})}</option>
                             <option value="4">{intl.formatMessage({id: "app.requests.notfulfill_type.ILLNotPermittedByLicense"})}</option>
                             <option value="5">{intl.formatMessage({id: "app.requests.notfulfill_type.WrongRef"})}</option>
-                            <option value="6">{intl.formatMessage({id: "app.requests.notfulfill_type.MaxReqNumber"})}</option>
+                            <option value="6">{intl.formatMessage({id: "app.requests.notfulfill_type.LibraryPolicy"})}</option>
                             <option value="7">{intl.formatMessage({id: "app.requests.notfulfill_type.Other"})}</option>
                         </select>     
                     </Col>

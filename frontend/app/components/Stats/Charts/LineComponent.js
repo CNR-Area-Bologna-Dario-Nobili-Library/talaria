@@ -81,6 +81,9 @@ const LineComponent = ({
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          precision: 2,
+        },
       },
     },
   };

@@ -268,7 +268,7 @@ export default defineMessages({
   },
   StatisticsFillRate: {
     id: `${scope}.StatisticsFillRate`,
-    defaultMessage: 'Fill rate statistics',
+    defaultMessage: 'Fill rate',
   },
   StatisticsRequestsDistribution: {
     id: `${scope}.StatisticsRequestsDistribution`,
@@ -282,4 +282,12 @@ export default defineMessages({
     id: `${scope}.StatisticsWorkingTime`,
     defaultMessage: 'Working time',
   },
+  StatisticsCountries: {
+    id: `${scope}.StatisticsCountries`,
+    defaultMessage: 'Countries',
+  },
+  StatisticsExport: {
+    id: `${scope}.StatisticsExport`,
+    defaultMessage: 'Export data',
+  }
 });

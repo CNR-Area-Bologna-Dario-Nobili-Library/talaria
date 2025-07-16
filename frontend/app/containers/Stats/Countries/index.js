@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { fetchFillRateRequest } from '../actions';
+import { fetchCountriesDistributionRequest } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
-import PieComponent from '../../../components/Stats/Charts/PieComponent';
+import TableComponent from '../../../components/Stats/Table/TableComponent'
 import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
   requestLibraryOptionList,
@@ -17,7 +17,7 @@ import debounce from 'lodash/debounce';
 import './style.scss';
 import Loader from '../../../components/Form/Loader';
 
-const FillRate = props => {
+const Countries = props => {
   const {
     data,
     dispatch,
@@ -103,12 +103,11 @@ const FillRate = props => {
       ? libraryIdFromParams
       : filters.libraryId.value;
 
-    const action = fetchFillRateRequest(
+    const action = fetchCountriesDistributionRequest(
       filters.year.value,
+      filters.countryId.value,
       selectedLibraryId,
       filters.institutionId.value,
-      filters.countryId.value,
-      filters.materialType.value,
     );
     dispatch(action);
   }, [
@@ -117,68 +116,60 @@ const FillRate = props => {
     filters.libraryId.value,
     filters.institutionId.value,
     filters.countryId.value,
-    filters.materialType.value,
   ]);
 
-  /**
-   * Displayed data for charts - borrowing fillrate
-   */
-  let borrowing_fillrate = {};
+  let tableData = [];
+  let columns = [];
+
   if (data) {
-    borrowing_fillrate = [
-      {
-        label: intl.formatMessage({ id: 'app.stats.fillRate.borrowing' }),
-        value: data.borrowing_fill_rate.toFixed(2),
-      },
-      {
-        label: intl.formatMessage({ id: 'app.stats.unFillRate.borrowing' }),
-        value: data.borrowing_unfill_rate.toFixed(2),
-      },
+    // Transform the data to have rows like this: 
+    // [{name: 'Italy', requesting_from: 1, providing_to: 2}]
+    const mergedCountriesMap = {};
+  
+    data.requesting_from.countries.forEach(({ name, count }) => {
+      mergedCountriesMap[name] = { name, requesting_from: count, providing_to: 0 }; 
+    });
+  
+    data.providing_to.countries.forEach(({ name, count }) => {
+      if (!mergedCountriesMap[name]) {
+        mergedCountriesMap[name] = { name, requesting_from: 0, providing_to: count };
+      } else {
+        mergedCountriesMap[name].providing_to = count;
+      }
+    });
+  
+    // Sort alphabetically by country name
+    tableData = Object.values(mergedCountriesMap).sort((a, b) => a.name.localeCompare(b.name));
+
+    columns = [
+      { dataField: 'name', text: intl.formatMessage({ id: 'app.global.country' }) },
+      { dataField: 'requesting_from', text: intl.formatMessage({ id: 'app.stats.country.requesting_from' }) },
+      { dataField: 'providing_to', text: intl.formatMessage({ id: 'app.stats.country.providing_to' }) },
     ];
   }
 
-  /**
-   * Display data for charts - lending fillrate
-   */
-  let lending_fillrate = {};
-  if (data) {
-    lending_fillrate = [
-      {
-        label: intl.formatMessage({ id: 'app.stats.fillRate.lending' }),
-        value: data.lending_fill_rate.toFixed(2),
-      },
-      {
-        label: intl.formatMessage({ id: 'app.stats.unFillRate.lending' }),
-        value: data.lending_unfill_rate.toFixed(2),
-      },
-    ];
-  }
 
- if(loading) return (
-    <div>
-      <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
-      <Loader show={loading}/>
-    </div>
-  )
-
+  if(loading) return (
+     <div>
+       <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
+       <Loader show={loading}/>
+     </div>
+   )
+ 
 
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (
     <div>
-      <h1>{intl.formatMessage({ id: 'app.stats.fillRate.header' })}</h1>
+      <h1>{intl.formatMessage({ id: 'app.stats.countries.header' })}</h1>
       <p style={{ whiteSpace: 'pre-line' }}>
-        {intl.formatMessage({ id: 'app.stats.fillRate.description' })}
+        {intl.formatMessage({ id: 'app.stats.countries.description' })}
       </p>
       <p>
         {intl.formatMessage({ id: 'app.stats.filterYear' })}
       </p>
-      <p>
-        {intl.formatMessage({ id: 'app.stats.export' })}
-      </p>
 
       <FilterSelects
-        roles={props.auth}
         filters={filters}
         setFilters={setFilters}
         libraries={libraryIdFromParams ? [] : librariesWithAll}
@@ -186,69 +177,18 @@ const FillRate = props => {
         countries={libraryIdFromParams ? [] : countriesWithAll}
         onLibraryInput={handleLibraryInput}
         onInstitutionInput={handleInstitutionInput}
-        showMaterialType={false}
         hasFullAccess={hasFullAccess}
+        showMaterialType={false}
       />
 
       {data && (
         <>
-          <div className="charts-container">
-            <div className="charts-box">
-              <PieComponent
-                title={intl.formatMessage({
-                  id: 'app.stats.fillRate.borrowing.title',
-                })}
-                subtitle={intl.formatMessage(
-                  {
-                    id: 'app.stats.fillRate.borrowing.subtitle',
-                  },
-                  {
-                    TOTAL: data.total_borrowing,
-                    YEAR: filters.year.label,
-                  },
-                )}
-                labels={
-                  Array.isArray(borrowing_fillrate)
-                    ? borrowing_fillrate.map(item => item.label)
-                    : []
-                }
-                data={
-                  Array.isArray(borrowing_fillrate)
-                    ? borrowing_fillrate.map(item => item.value)
-                    : []
-                }
-                tooltipLabelFormatter={context =>
-                  `${context.label}: ${context.raw}%`
-                }
-              />
-            </div>
-            <div className="charts-box">
-              <PieComponent
-                title={intl.formatMessage({
-                  id: 'app.stats.fillRate.lending.title',
-                })}
-                subtitle={intl.formatMessage(
-                  {
-                    id: 'app.stats.fillRate.lending.subtitle',
-                  },
-                  {
-                    TOTAL: data.total_lending,
-                    YEAR: filters.year.label,
-                  },
-                )}
-                labels={
-                  Array.isArray(lending_fillrate)
-                    ? lending_fillrate.map(item => item.label)
-                    : []
-                }
-                data={
-                  Array.isArray(lending_fillrate)
-                    ? lending_fillrate.map(item => item.value)
-                    : []
-                }
-                tooltipLabelFormatter={context =>
-                  `${context.label}: ${context.raw}%`
-                }
+          <div className='charts-container'>
+            <div className='charts-box'>
+              <TableComponent
+                data={tableData}
+                headers={columns}
+                // title={intl.formatMessage({ id: 'app.stats.countries.title' })}
               />
             </div>
           </div>
@@ -259,7 +199,7 @@ const FillRate = props => {
 };
 
 const mapStateToProps = state => ({
-  data: state.stats.fill_rate,
+  data: state.stats.countries_distribution,
   loading: state.stats.loading,
   error: state.stats.error,
   libraries: state.library.libraryOptionItemList,
@@ -267,4 +207,4 @@ const mapStateToProps = state => ({
   countries: state.admin.countriesOptionList,
 });
 
-export default connect(mapStateToProps)(FillRate);
+export default connect(mapStateToProps)(Countries);
