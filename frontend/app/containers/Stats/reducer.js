@@ -27,6 +27,9 @@ import {
   FETCH_OPENACCESS_REFERENCES_REQUEST,
   FETCH_OPENACCESS_REFERENCES_SUCCESS,
   FETCH_OPENACCESS_REFERENCES_FAILURE,
+  EXPORT_CSV_REQUEST,
+  EXPORT_CSV_SUCCESS,
+  EXPORT_CSV_FAILURE
 } from './constants';
 
 export const initialState = {
@@ -195,6 +198,22 @@ const statsReducer = (state = initialState, action) =>
         break;
 
       case FETCH_OPENACCESS_REFERENCES_FAILURE:
+        draft.loading = false;
+        draft.error = action.payload;
+        break;
+
+      // Export CSV stats
+
+      case EXPORT_CSV_REQUEST:
+        draft.loading = true;
+        draft.error = null;
+        break;
+
+      case EXPORT_CSV_SUCCESS:
+        draft.loading = false;
+        break;
+
+      case EXPORT_CSV_FAILURE:
         draft.loading = false;
         draft.error = action.payload;
         break;

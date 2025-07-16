@@ -11,6 +11,7 @@ const FilterSelects = ({
   onLibraryInput,
   onInstitutionInput,
   showMaterialType = true,
+  showYear = true,
   hasFullAccess = false,
 }) => {
   const intl = useIntl();
@@ -79,24 +80,26 @@ const FilterSelects = ({
 
   return (
     <>
-      <div>
-        <label htmlFor="year">
-          {intl.formatMessage({ id: 'app.stats.year' })}
-        </label>
-        <Select
-          inputId="year"
-          options={yearOptions}
-          onChange={handleChange('year')}
-          value={filters.year}
-          styles={{
-            control: (baseStyles, _) => ({
-              ...baseStyles,
-              marginBottom: '0.5rem',
-              marginTop: '-0.5rem',
-            }),
-          }}
-        />
-      </div>
+      {showYear && (
+        <div>
+          <label htmlFor="year">
+            {intl.formatMessage({ id: 'app.stats.year' })}
+          </label>
+          <Select
+            inputId="year"
+            options={yearOptions}
+            onChange={handleChange('year')}
+            value={filters.year}
+            styles={{
+              control: (baseStyles, _) => ({
+                ...baseStyles,
+                marginBottom: '0.5rem',
+                marginTop: '-0.5rem',
+              }),
+            }}
+          />
+        </div>
+      )}
       {showMaterialType && (
         <div>
           <label htmlFor="materialType">

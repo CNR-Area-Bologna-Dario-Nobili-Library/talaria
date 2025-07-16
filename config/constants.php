@@ -89,7 +89,7 @@ return [
         'NotOnShelf'=>3,
         'ILLNotPermittedByLicense'=>4,
         'WrongRef'=>5,
-        'MaxReqNumber'=>6,
+        'LibraryPolicy'=>6,  // changed to "not allowed by library policy"
         'Other'=>7,
     ],
     'borrowingdocdelrequest_desk_delivery_format' => [

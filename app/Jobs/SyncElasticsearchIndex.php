@@ -103,6 +103,10 @@ class SyncElasticsearchIndex implements ShouldQueue
                         'id' => [
                             'type' => 'long'
                         ],
+                        'created_at' => [
+                            'type' => 'date',
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
+                        ],
                         'request_date' => [
                             'type' => 'date',
                             'format' => 'yyyy-MM-dd HH:mm:ss'
@@ -530,6 +534,7 @@ class SyncElasticsearchIndex implements ShouldQueue
 
                 $bulkParams['body'][] = [
                     'id' => $request->id,
+                    'created_at' => Carbon::parse($request->created_at)->format('Y-m-d H:i:s'),
                     'request_date' => $request->request_date ? Carbon::parse($request->request_date)->format('Y-m-d H:i:s') : null,
                     'fulfill_date' => $request->fulfill_date ? Carbon::parse($request->fulfill_date)->format('Y-m-d H:i:s') : null,
                     'borrowing_status' => $request->borrowing_status,

@@ -21,7 +21,7 @@ import debounce from 'lodash/debounce';
 import './style.scss';
 import Loader from '../../../components/Form/Loader';
 
-const RequestsDistribution = props => {
+const RequestsDetails = props => {
   const {
     data,
     dispatch,
@@ -236,6 +236,9 @@ const RequestsDistribution = props => {
         {intl.formatMessage({ id: 'app.stats.requestsDetails.description' })}
       </p>
       <p>
+        {intl.formatMessage({ id: 'app.stats.filterYearAndType' })}
+      </p>
+      <p>
         {intl.formatMessage({ id: 'app.stats.export' })}
       </p>
 
@@ -381,4 +384,4 @@ const mapStateToProps = state => ({
   countries: state.admin.countriesOptionList,
 });
 
-export default connect(mapStateToProps)(RequestsDistribution);
+export default connect(mapStateToProps)(RequestsDetails);

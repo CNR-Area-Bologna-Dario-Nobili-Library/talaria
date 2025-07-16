@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Stats;
 
+use App\Helper\StatsHelper;
 use App\Http\Controllers\Stats\BaseStatsController;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,76 +17,40 @@ class ReferencePubYearStats extends BaseStatsController
 {
   public function __invoke(Request $request)
   {
-    $validated = $request->validate([
-      'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      'library_id' => 'sometimes|integer|exists:libraries,id',
-      'institution_id' => 'sometimes|integer|exists:institutions,id',
-      'country_id' => 'sometimes|integer|exists:countries,id',
-      'material_type' => 'sometimes|integer|min:1|max:5',
-      // 'library_id' => 'sometimes|integer',
-      // 'institution_id' => 'sometimes|integer',
-      // 'country_id' => 'sometimes|integer',
-    ]);
+    $create_query = StatsHelper::createQuery($request);
+    $query = $create_query['query'];
+    $agg_info = $create_query['agg_info'];
 
-    $year = $validated['year'] ?? null;
-    $library_id = $validated['library_id'] ?? null;
-    $institution_id = $validated['institution_id'] ?? null;
-    $country_id = $validated['country_id'] ?? null;
-    $material_type = $validated['material_type'] ?? null;
+    $filterBorrower = [
+      'bool' => [
+        'must' => array_values(array_filter([
+          ['term' => ['aggregated_borrowing_status.keyword' => 'Received']],
+          $agg_info['borrowing_field'] && $agg_info['query_id'] !== null
+            ? ['term' => [$agg_info['borrowing_field'] => $agg_info['query_id']]]
+            : null
+        ]))
+      ]
+    ];
 
-    $borrowing_query_condition = null;
-    $lending_query_condition = null;
-    $query_id = null;
-
-    // Priority: Library >> Institution >> Country
-    if ($library_id) {
-      $borrowing_query_condition = "borrowing_library.id";
-      $lending_query_condition = "lending_library.id";
-      $query_id = $library_id;
-    } else if ($institution_id) {
-      $borrowing_query_condition = "borrowing_library.institution.id";
-      $lending_query_condition = "lending_library.institution.id";
-      $query_id = $institution_id;
-    } else if ($country_id) {
-      $borrowing_query_condition = "borrowing_library.country.id";
-      $lending_query_condition = "lending_library.country.id";
-      $query_id = $country_id;
-    }
-
-    $mustClauses = [];
-
-    if ($year) {
-      $mustClauses[] = [
-        'range' => [
-          'request_date' => [
-            'gte' => "{$year}-01-01",
-            'lte' => "{$year}-12-31",
-            'format' => 'yyyy-MM-dd'
-          ]
-        ]
-      ];
-    }
-    if ($material_type) {
-      $mustClauses[] = ['term' => ['reference.material_type' => $material_type]];
-    }
+    $filterLender = [
+      'bool' => [
+        'must' => array_values(array_filter([
+          ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
+          $agg_info['lending_field'] && $agg_info['query_id'] !== null
+            ? ['term' => [$agg_info['lending_field'] => $agg_info['query_id']]]
+            : null
+        ]))
+      ]
+    ];
 
     $params = [
       'index' => 'docdel_requests',
       'body' => [
         'size' => 0,
-        'query' => [
-          'bool' => ['must' => $mustClauses]
-        ],
+        'query' => $query,
         'aggs' => [
           'as_borrower' => [
-            'filter' => [
-              'bool' => [
-                'must' => array_filter([
-                  ['term' => ['aggregated_borrowing_status.keyword' => 'Received']],
-                  $query_id ? ['term' => [$borrowing_query_condition => $query_id]] : null
-                ])
-              ]
-            ],
+            'filter' => $filterBorrower,
             'aggs' => [
               'requests_by_pubyear' => [
                 'terms' => [
@@ -97,14 +62,7 @@ class ReferencePubYearStats extends BaseStatsController
             ]
           ],
           'as_lender' => [
-            'filter' => [
-              'bool' => [
-                'must' => array_filter([
-                  ['term' => ['aggregated_lending_status.keyword' => 'Fulfilled']],
-                  $query_id ? ['term' => [$lending_query_condition => $query_id]] : null
-                ])
-              ]
-            ],
+            'filter' => $filterLender,
             'aggs' => [
               'requests_by_pubyear' => [
                 'terms' => [

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { fetchRequestDistributionRequest } from '../actions';
 import { useIntl } from 'react-intl';
 import FilterSelects from '../../../components/Stats/FilterSelects';
-import BarComponent from '../../../components/Stats/Charts/BarComponent';
+import StackedBarComponent from '../../../components/Stats/Charts/StackedBarComponent';
 import PieComponent from '../../../components/Stats/Charts/PieComponent';
 import { requestGetCountriesOptionList } from '../../../containers/Admin/actions';
 import {
@@ -207,14 +207,13 @@ const RequestsDistribution = props => {
     });
   }
 
-  if(loading) return (
-     <div>
-       <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
-       <Loader show={loading}/>
-     </div>
-   )
+  if (loading) return (
+    <div>
+      <div className='alert alert-warning'>{intl.formatMessage({ id: 'app.global.loading' })}</div>
+      <Loader show={loading}/>
+    </div>
+  )
  
-
   if (error || (!data)) return <div>{intl.formatMessage({ id: 'app.stats.notAvailable' })}</div>;
 
   return (
@@ -224,6 +223,9 @@ const RequestsDistribution = props => {
       </h1>
       <p style={{ whiteSpace: 'pre-line' }}>
         {intl.formatMessage({ id: 'app.stats.requestsDistribution.description' })}
+      </p>
+      <p>
+        {intl.formatMessage({ id: 'app.stats.filterYearAndType' })}
       </p>
       <p>
         {intl.formatMessage({ id: 'app.stats.export' })}
@@ -245,7 +247,7 @@ const RequestsDistribution = props => {
           {/* <h1>!!!BY STATUS</h1> */}
           <div className="charts-container">
             <div className="charts-box">
-              <BarComponent
+              <StackedBarComponent
                 title={intl.formatMessage({
                   id: 'app.stats.borrowingByStatus.title',
                 })}
@@ -264,7 +266,7 @@ const RequestsDistribution = props => {
               />
             </div>
             <div className="charts-box">
-              <BarComponent
+              <StackedBarComponent
                 title={intl.formatMessage({
                   id: 'app.stats.lendingByStatus.title',
                 })}

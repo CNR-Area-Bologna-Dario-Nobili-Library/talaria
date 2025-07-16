@@ -17,22 +17,18 @@ class LibraryStatsAccessMiddleware
      */
     public function handle($request, Closure $next)
     {
-        Log::info("Stats middleware invoked!");
         $response = app(ResponseFactory::class);
         // Log::info("Here's the request: $request");
         $user = $request->user();
-        Log::info("User info: $user");
+        // Log::info("User info: $user");
 
         $userroles = $user->getRoles();
-        Log::info("User roles: $userroles");
+        // Log::info("User roles: $userroles");
 
         if ($user->isA('super-admin', 'manager')) {
-            Log::info("Super user detected");
+            // Log::info("Super user detected");
             return $next($request); // full access
-        } else {
-            Log::info("Normal user detected");
         }
-
         // Check for required library_id for regular users
         $libraryId = $request->input('library_id');
 

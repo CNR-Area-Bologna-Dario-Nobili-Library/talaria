@@ -69,7 +69,7 @@ export const lendingUnfilledReason = (data) => {
         case 3: ret=intl.formatMessage({id: "app.requests.notfulfill_type.NotOnShelf"}); break;
         case 4: ret=intl.formatMessage({id: "app.requests.notfulfill_type.ILLNotPermittedByLicense"}); break;
         case 5: ret=intl.formatMessage({id: "app.requests.notfulfill_type.WrongRef"}); break;
-        case 6: ret=intl.formatMessage({id: "app.requests.notfulfill_type.MaxReqNumber"}); break; 
+        case 6: ret=intl.formatMessage({id: "app.requests.notfulfill_type.LibraryPolicy"}); break; 
         case 7: ret=intl.formatMessage({id: "app.requests.notfulfill_type.Other"}); break;
     }
     //return ret!=""?<><i className="fa-solid fa-comment text-danger"></i> {ret}</>:'';

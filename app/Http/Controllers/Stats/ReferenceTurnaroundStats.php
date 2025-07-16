@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Stats;
 
+use App\Helper\StatsHelper;
 use App\Http\Controllers\Stats\BaseStatsController;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,63 +17,29 @@ class ReferenceTurnaroundStats extends BaseStatsController
 {
   public function __invoke(Request $request)
   {
-    $validated = $request->validate([
-      'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      'library_id' => 'sometimes|integer|exists:libraries,id',
-      'institution_id' => 'sometimes|integer|exists:institutions,id',
-      'country_id' => 'sometimes|integer|exists:countries,id'
-      // 'library_id' => 'sometimes|integer',
-      // 'institution_id' => 'sometimes|integer',
-      // 'country_id' => 'sometimes|integer'
-    ]);
+    $create_query = StatsHelper::createQuery($request);
+    $query = $create_query['query'];
+    $agg_info = $create_query['agg_info'];
 
-    $year = $validated['year'] ?? null;
-    $borrowing_library_id = $validated['library_id'] ?? null;
-    $institution_id = $validated['institution_id'] ?? null;
-    $country_id = $validated['country_id'] ?? null;
+    $filterBorrowing = array_values(array_filter([
+      $agg_info['borrowing_field'] && $agg_info['query_id'] !== null
+        ? ['term' => [$agg_info['borrowing_field'] => $agg_info['query_id']]]
+        : null
+    ]));
 
-    $borrowing_query_condition = null;
-    $query_id = null;
+    // $query has filters by year, library_id, institution_id or country_id and material_type
+    $final_query = $query;
 
-    // Priority: Library >> Institution >> Country
-    if ($borrowing_library_id) {
-      $borrowing_query_condition = "borrowing_library.id";
-      $query_id = $borrowing_library_id;
-    } else if ($institution_id) {
-      $borrowing_query_condition = "borrowing_library.institution.id";
-      $query_id = $institution_id;
-    } else if ($country_id) {
-      $borrowing_query_condition = "borrowing_library.country.id";
-      $query_id = $country_id;
-    }
-
-    $mustClauses = [];
-
-    // Filter by year (optional)
-    if ($year) {
-      $mustClauses[] = [
-        'range' => [
-          'request_date' => [
-            'gte' => "{$year}-01-01",
-            'lte' => "{$year}-12-31",
-            'format' => 'yyyy-MM-dd'
-          ]
-        ]
-      ];
-    }
-
-    // Filter by borrowing library or borrowing institution (optional)
-    if ($query_id) {
-      $mustClauses[] = ['term' => [$borrowing_query_condition => $query_id]];
+    // Let's add filters to the query to get only borrowing data
+    if (!empty($filterBorrowing)) {
+      $final_query = ['bool' => ['must' => $filterBorrowing]];
     }
 
     $params = [
       'index' => 'docdel_requests',
       'body'  => [
         'size' => 0,
-        'query' => [
-          'bool' => ['must' => $mustClauses]
-        ],
+        'query' => $final_query,
         'aggs' => [
           'group_by_material_type' => [
             'terms' => [

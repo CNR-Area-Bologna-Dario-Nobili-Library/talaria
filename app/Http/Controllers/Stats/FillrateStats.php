@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Stats;
 
+use App\Helper\StatsHelper;
 use App\Http\Controllers\Stats\BaseStatsController;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,72 +24,27 @@ class FillrateStats extends BaseStatsController
 {
   public function __invoke(Request $request)
   {
-    // Validate optional parameters 'year' and 'library_id'
-    $validated = $request->validate([
-      'year' => 'sometimes|integer|min:2020|max:' . date('Y'),
-      'library_id' => 'sometimes|integer|exists:libraries,id',
-      'institution_id' => 'sometimes|integer|exists:institutions,id',
-      'country_id' => 'sometimes|integer|exists:countries,id',
-      // 'library_id' => 'sometimes|integer',
-      // 'institution_id' => 'sometimes|integer',
-      // 'country_id' => 'sometimes|integer',
-    ]);
+    $create_query = StatsHelper::createQuery($request);
+    $query = $create_query['query'];
+    $agg_info = $create_query['agg_info'];
 
-    $year = $validated['year'] ?? null;
-    $library_id = $validated['library_id'] ?? null;
-    $institution_id = $validated['institution_id'] ?? null;
-    $country_id = $validated['country_id'] ?? null;
+    $filterBorrowing = array_values(array_filter([
+      $agg_info['borrowing_field'] && $agg_info['query_id'] !== null
+        ? ['term' => [$agg_info['borrowing_field'] => $agg_info['query_id']]]
+        : null,
+      ['term' => ['forward' => 0]],
+    ]));
 
-    $borrowing_query_condition = null;
-    $lending_query_condition = null;
-    $query_id = null;
-
-    // Priority: Library >> Institution >> Country
-    if ($library_id) {
-      $borrowing_query_condition = "borrowing_library.id";
-      $lending_query_condition = "lending_library.id";
-      $query_id = $library_id;
-    } else if ($institution_id) {
-      $borrowing_query_condition = "borrowing_library.institution.id";
-      $lending_query_condition = "lending_library.institution.id";
-      $query_id = $institution_id;
-    } else if ($country_id) {
-      $borrowing_query_condition = "borrowing_library.country.id";
-      $lending_query_condition = "lending_library.country.id";
-      $query_id = $country_id;
-    }
-
-    $mustClauses = [];
-
-    if ($year) {
-      $mustClauses[] = [
-        'range' => [
-          'request_date' => [
-            'gte' => "{$year}-01-01",
-            'lte' => "{$year}-12-31",
-            'format' => 'yyyy-MM-dd'
-          ]
-        ]
-      ];
-    }
-
-    $filterBorrowing = [];
-    if ($query_id !== null) {
-      $filterBorrowing[] = ['term' => [$borrowing_query_condition => $query_id]];
-    }
-    $filterBorrowing[] = ['term' => ['forward' => 0]];
-    $filterLending = $query_id ? ['term' => [$lending_query_condition => $query_id]] : ['match_all' => new \stdClass()];
+    $filterLending = $agg_info['lending_field'] && $agg_info['query_id'] !== null
+      ? ['term' => [$agg_info['lending_field'] => $agg_info['query_id']]]
+      : ['match_all' => new \stdClass()];
 
     // Elasticsearch query
-    $query = [
+    $params = [
       'index' => 'docdel_requests',
       'body'  => [
         'size' => 0,
-        'query' => [
-          'bool' => [
-            'must' => $mustClauses
-          ]
-        ],
+        'query' => $query,
         'aggs' => [
           'borrowing_stats' => [
             'filters' => [
@@ -190,7 +146,7 @@ class FillrateStats extends BaseStatsController
 
     try {
       // Execute the query on the Elasticsearch client
-      $response = $this->client->search($query);
+      $response = $this->client->search($params);
     } catch (Exception $e) {
       Log::error("Error in fill rate stats: " . $e->getMessage());
       throw new Exception("Statistics are momentarily unavailable, please try again later.");
@@ -214,9 +170,13 @@ class FillrateStats extends BaseStatsController
     $result["total_borrowing"] = $tmpBorrowingResp["received"]["doc_count"] + $tmpBorrowingResp["not_received"]["doc_count"] + $tmpBorrowingResp["not_received_fulfilled"]["doc_count"];
     $result["total_lending"] = $tmpLendingResp["unfilled"]["doc_count"] + $tmpLendingResp["fulfilled"]["doc_count"];
     $result["borrowing_fill_rate"] = $borrowingFillRate;
-    $result["borrowing_unfill_rate"] = $borrowingValue !== null ? 100 - $borrowingFillRate : 0;
+    $result["borrowing_fill_number"] = $tmpBorrowingResp["received"]["doc_count"];
+    $result["borrowing_unfill_rate"] = $result["total_borrowing"] !== 0 ? 100 - $borrowingFillRate : 0;
+    $result["borrowing_unfill_number"] = $tmpBorrowingResp["not_received"]["doc_count"] + $tmpBorrowingResp["not_received_fulfilled"]["doc_count"];
     $result["lending_fill_rate"] = $lendingFillRate;
-    $result["lending_unfill_rate"] = $lendingValue !== null ? 100 - $lendingFillRate : 0;
+    $result["lending_fill_number"] = $tmpLendingResp["fulfilled"]["doc_count"];
+    $result["lending_unfill_rate"] = $result["total_lending"] !== 0 ? 100 - $lendingFillRate : 0;
+    $result["lending_unfill_number"] = $tmpLendingResp["unfilled"]["doc_count"];
 
     return response()->json($result);
   }

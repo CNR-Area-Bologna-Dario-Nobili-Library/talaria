@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
   FETCH_AVG_WORKING_TIME_REQUEST,
   FETCH_COUNTRIES_DISTRIBUTION_REQUEST,
@@ -9,6 +9,7 @@ import {
   FETCH_REQUEST_DISTRIBUTION_REQUEST,
   FETCH_REQUESTS_LIBRARY_REQUEST,
   FETCH_WORKING_TIME_REQUEST,
+  EXPORT_CSV_REQUEST,
 } from './constants';
 import {
   fetchFillRateSuccess,
@@ -29,6 +30,8 @@ import {
   fetchRequestsPerLibraryFailure,
   fetchOpenAccessReferencesSuccess,
   fetchOpenAccessReferencesFailure,
+  exportCSVSuccess,
+  exportCSVFailure,
 } from './actions';
 import {
   avgWorkingTime,
@@ -40,7 +43,9 @@ import {
   requestDistribution,
   requestsPerLibrary,
   workingTime,
+  exportCSVStats,
 } from '../../utils/api';
+import { saveAs } from 'file-saver';
 
 function* fetchFillRateSaga(action) {
   console.log('fetchfillratesaga triggered with action:', action);
@@ -68,6 +73,7 @@ function* fetchRequestsDistributionSaga(action) {
       material_type: action.material_type,
     };
     const data = yield call(requestDistribution, options);
+    data.year = action.year;
     yield put(fetchRequestDistributionSuccess(data));
   } catch (error) {
     yield put(fetchRequestDistributionFailure(error.message));
@@ -170,10 +176,39 @@ function* fetchOpenAccessReferencesSaga() {
   }
 }
 
+function* exportCSVSaga(action) {
+  try {
+    const options = {
+      method: 'get',
+      responseType: 'blob',
+      headers: {
+        'Content-Type': 'text/csv',
+      },
+      year: action.year,
+      library_id: action.library_id,
+      institution_id: action.institution_id,
+      country_id: action.country_id,
+      material_type: action.material_type,
+    };
+    const response = yield call(exportCSVStats, options);
+    
+    if (!response.ok) {
+      const errorText = yield call([response, 'text']);
+      throw new Error(errorText || `HTTP ${response.status}`);
+    }
+
+    const blob = yield call([response, 'blob']);
+    yield call(saveAs, blob, 'requests_distribution_stats.csv');
+
+    yield put(exportCSVSuccess());
+  } catch (error) {
+    yield put(exportCSVFailure(error.message));
+  }
+}
+
 export default function* statsSaga() {
-  console.log('statsSaga');
   yield takeLatest(FETCH_FILL_RATE_REQUEST, fetchFillRateSaga);
-  yield takeLatest(
+  yield takeEvery(
     FETCH_REQUEST_DISTRIBUTION_REQUEST,
     fetchRequestsDistributionSaga,
   );
@@ -196,4 +231,5 @@ export default function* statsSaga() {
     FETCH_OPENACCESS_REFERENCES_REQUEST,
     fetchOpenAccessReferencesSaga,
   );
+  yield takeLatest(EXPORT_CSV_REQUEST, exportCSVSaga);
 }

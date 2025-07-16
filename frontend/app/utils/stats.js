@@ -85,7 +85,7 @@ export function getReasonUnfilledLabel(reasonUnfilledId, intl) {
     case 5:
       return intl.formatMessage({ id: 'app.requests.notfulfill_type.WrongRef' });
     case 6:
-      return intl.formatMessage({ id: 'app.requests.notfulfill_type.MaxReqNumber' });
+      return intl.formatMessage({ id: 'app.requests.notfulfill_type.LibraryPolicy' });
     case 7:
       return intl.formatMessage({ id: 'app.requests.notfulfill_type.Other' });
     default:
