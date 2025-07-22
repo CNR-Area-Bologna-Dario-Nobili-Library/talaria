@@ -1,90 +1,152 @@
-@import '../../scss/vendors/variables';
-@import '../../scss/variables';
+// ✅ Used styles from style.scss in Notification component
 
-.notification.navbar-nav {
+.notification {
+  &.navbar-nav {
     .fa-bell {
-        font-size: 1.5rem;
-        position: relative;
-        span {
-            font-size: 0.8rem;
-            font-family: $font-family-base;
-            position: absolute;
-            top: -5px;
-            right: -11px;
-            background: $line;
-            border-radius: 18px;
-            width: 18px;
-            height: 18px;
-            line-height: 18px;
-            color: white;
-        }
+      font-size: 1.5rem;
+      position: relative;
+
+      &.bell-animated {
+        animation: bell-shake 0.8s ease-in-out;
+      }
+
+      span.count {
+        font-size: 0.8rem;
+        position: absolute;
+        top: -5px;
+        right: -11px;
+        background: #007bff;
+        border-radius: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        color: white;
+      }
     }
-    .item {
-        width: 100%;
-        cursor: pointer;
-        max-width: inherit;
-        > * {
-            vertical-align: middle;
-            display: table-cell;
-        }
-        > span {
-            width: 80%;
-        }
-        .fa-close {
-            position: absolute;
-            right: 0;
-            top: 17px
-        }
-        .fa-close:before {
-            float: right;
-        }
-    }
-    .items-menu {
-        max-height: 300px;
-        width: 350px;
-        top: 12px !important;
-        > div:not(.dropdown-header) {
-            height: 50px;
-            line-height: 0;
-            margin-left: 0;
-        }
-        .dropdown-header {
-            display: table;
-            width: 100%;
-            > div {
-                display: table-cell;
-                &:first-child {
-                    float: left;
-                }
-                &:last-child {
-                    float: right;
-                }
-            }
-        }
-    }
-    .app.loader{
-        min-height: auto;
-        margin-top: -30px;
-    }
-    .dropdown-header {
-        a {
-            font-size: 12px;
-        }
-    }
+  }
 }
 
-@include media-breakpoint-down(md) { 
-  /*   .notification.navbar-nav {
-        .items-menu {
-            top: 15px !important;
-        }
-    } */
+.notification-dropdown-menu {
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 400px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-@include media-breakpoint-down(xs) { 
-    .notification.navbar-nav {
-        .fa-bell {
-            font-size: 1.3rem;
-        }
+.notification-tab-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 16px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #007bff;
+  transition: 0.3s ease;
+
+  &.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+}
+
+.notification-item {
+  padding: 7px;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 12px;
+  line-height: 1.4;
+  transition: background-color 0.3s ease;
+
+  &.unread {
+    background-color: #f8f9fa !important;
+  }
+
+  &.read {
+    background-color: #e9fce9 !important;
+  }
+
+  &.animated-entry {
+    animation: slideFadeIn 0.3s ease-out;
+  }
+}
+
+.notification-action-btn {
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+
+  &.read {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  &.unread {
+    background-color: #d4edda;
+    color: #155724;
+  }
+}
+
+.notification-footer-button {
+  text-align: center;
+  padding: 8px;
+
+  .load-more-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    margin-bottom: 6px;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e2e6ea;
     }
+  }
+}
+
+.notification-footer-link {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #eee;
+
+  .go-to-inbox-link {
+    text-decoration: none;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #007bff;
+    transition: color 0.3s ease;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover {
+      color: darken(#007bff, 10%);
+    }
+  }
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bell-shake {
+  0% { transform: rotate(0); }
+  15% { transform: rotate(-15deg); }
+  30% { transform: rotate(10deg); }
+  45% { transform: rotate(-5deg); }
+  60% { transform: rotate(3deg); }
+  100% { transform: rotate(0); }
 }

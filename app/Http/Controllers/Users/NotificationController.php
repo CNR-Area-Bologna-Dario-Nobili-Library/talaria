@@ -95,16 +95,74 @@ class NotificationController extends ApiController
 
     public function markAllAsRead(Request $request)
     {
-        if( !empty($this->validate) )
+        \Log::info('User wants to mark all as read');
+    
+        if (!empty($this->validate))
+            $this->validate($request, $this->validate);
+    
+        $notifications = \Auth::user()->unreadNotifications;
+    
+        if ($notifications->count()) {
+            $notifications->markAsRead(); // ✅ persist read status
+        }
+    
+        return $this->response->array([]);
+    }
+    
+
+    public function markAllAsUnread(Request $request)
+    {
+        if (!empty($this->validate))
             $this->validate($request, $this->validate);
 
-        $notifications = \Auth::user()->unreadNotifications;
+        $notifications = \Auth::user()->notifications()->whereNotNull('read_at')->get();
 
-        if($notifications->count() && !is_null($notifications->markAsRead()))
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.update_failed'));
+        foreach ($notifications as $notification) {
+            $notification->read_at = null;
+            $notification->save();
+        }
 
         return $this->response->array([]);
+    }
 
+    public function markNotificationAsRead($id)
+    {
+        $notification = \Auth::user()->notifications()->where('id', $id)->firstOrFail();
+
+        \Log::info('User updated notification', ['user_id' => auth()->id(), 'notification_id' => $id]);
+
+
+        if ($notification->read_at === null) {
+            $notification->read_at = now();
+            $notification->save();
+        }
+        else
+        {
+            $notification->read_at = null;
+            $notification->save();
+        }
+
+        return response()->json([
+            'message' => 'Notification marked as read',
+            'id' => $notification->id,
+        ]);
+    }
+    public function destroy(Request $request, $id)
+    {
+        $notification = \Auth::user()->notifications()->where('id', $id)->firstOrFail();
+
+        //\Log::info('User deleted notification', [
+        //    'user_id' => auth()->id(),
+        //    'notification_id' => $id,
+        //]);
+
+        $notification->forceDelete(); // Hard delete
+        //$notification->delete(); // soft delete, need to do migration
+
+        return response()->json([
+            'message' => 'Notification deleted',
+            'id' => $id,
+        ]);
     }
 
 }
