@@ -3,11 +3,14 @@ import {Button} from 'reactstrap'
 import './style.scss'
 import LandingPageBox from '../LandingPageBox';
 import { Link } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 import {formatDateTime} from '../../utils/dates';
 import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
 const LandingPageConsortiasBox = (props) => {
     const {auth,title,match,history,canCollapse,collapsed}=props
+
+    const intl=useIntl();
 
     const statusClass = status => {
         switch (status) {
