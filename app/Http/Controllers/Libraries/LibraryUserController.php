@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Models\Libraries\LibraryUserTransformer;
 use App\Models\Libraries\LibraryUser;
+use App\Models\Users\User;
+use App\Notifications\Library\PatronAskJoinLibraryAwaitsApprovalNotification;
+use App\Notifications\Library\PatronAskJoinLibraryNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LibraryUserController extends ApiController
 {
@@ -50,13 +54,36 @@ class LibraryUserController extends ApiController
 
     public function store(Request $request)
     {
+        Log::info("User joins ....");
         if( !empty($this->validate) )
             $this->validate($request, $this->validate);
 
         $model = $this->talaria->store($this->model, $request);
 
-        if($this->broadcast && config('apitalaria.broadcast'))
-            broadcast(new ApiStoreBroadcast($model, $model->getTable(), $request->input('include')));
+        //if($this->broadcast && config('apitalaria.broadcast'))
+        //    broadcast(new ApiStoreBroadcast($model, $model->getTable(), $request->input('include')));
+        
+        $user=$this->model->user;
+        $pn=new PatronAskJoinLibraryNotification($this->model);
+        
+
+        //Notify to library manager+users manager        
+        $lib=$this->model->library;
+        $operators=array();
+        $operators+=$lib->manageOperators()->toArray();
+        $operators+=$lib->usersOperators()->toArray();
+        
+        //unique operators
+        $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+
+        foreach ($operatorsID as $item) {
+            $u=User::findOrFail($item);                 
+            $u->notify($pn);            
+        }    
+                
+        $pnwr=new PatronAskJoinLibraryAwaitsApprovalNotification($this->model);
+        $user->notify($pnwr);
 
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();;
     }

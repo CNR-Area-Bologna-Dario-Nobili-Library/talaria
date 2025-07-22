@@ -2,6 +2,10 @@
 //- everytime you change this, please run: php artisan cache:clear + php artisan optimize 
 
 return [
+
+    'support_email'=> env('SUPPORT_EMAIL','community@talaria.local'),
+    'tech_support_email'=>env('TECH_SUPPORT_EMAIL','support@talaria.local'),
+
     'morphmap' => [
         //        'libraries'     => 'App\Models\Libraries\Library',
         //        'institutions'  => 'App\Models\Institutions\Institution',

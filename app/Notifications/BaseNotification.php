@@ -3,25 +3,37 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
-/* this class can be used as base model for all SERVICE notifications. Service notification will be received as APP notification or by email depending on user's choice in preferNotifiedBy method */
+/* this class can be used as base model for all SERVICE notifications. Service notification will be received as APP notification or by email depending on user's choice in preferNotifiedBy method    
+NOTE: we take default tltle (maybe overridden by parent classes) and we add notification translated text
+*/
 class BaseNotification extends Notification
 {
     use Queueable;
 
     protected $object;
+    protected $title;
+    protected $url;   
+    protected $extraDataArr;
+
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($model)
-    {        
-        $this->object=$model;        
+    public function __construct()
+    {
+        $this->extraDataArr=[];                   
+    }
+
+    protected function addTitleIdentifier($id) {
+        //Set title prepending passed ID
+        if($id && $id!="")
+            $this->title="#".$id." - ";
     }
 
     /**
@@ -31,23 +43,25 @@ class BaseNotification extends Notification
      * @return array
      */
     public function via($notifiable)
-    {
-        //return ['mail', 'database'];
+    {        
         return $notifiable->preferNotifiedBy();
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     /**
+     * we override toMail method in order to send notification by EMAIL with our template with text translated into user's preferred language
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $lang=$notifiable->preferredLocale(); 
+
+        //title is taken from <classname>_title variable in translations file ("resources/lang/<lang>/notification.php").
+        //We set it here becase here we've notifiable object and we can use user's language        
+        $this->title=$this->title.trans("notification.".class_basename(get_class($this))."_title",[],$lang);    
+
+        //pass url to extraDataArr so in the email we can use notification url
+        $this->extraDataArr+=['notification_url'=>$this->url];
+
+        return (new BaseMailMessage($this->title,$this->extraDataArr,"mail.notification.lang.$lang.".class_basename(get_class($this)),false));      //will look for "resources/view/mail/notificatiom/<lang>/<ClassName>.blade.php    
     }
 
     /**
@@ -57,13 +71,23 @@ class BaseNotification extends Notification
      * @return array
      */
     public function toArray($notifiable)
-    {
-       return [      
-               'title'=>'Notification title!',   
-               'message'=>'bla bla bla!',
-               'url'=>'https://www.google.com',
-               'object_type'=>get_class($this->object),
-               'object_id'=>$this->object->id              
-       ];
+    {     
+        
+        //title is taken from <classname>_title variable in translations file ("resources/lang/<lang>/notification.php").
+        //We set it here becase here we've notifiable object and we can use user's language
+        $lang=$notifiable->preferredLocale();
+        $this->title=$this->title.trans("notification.".class_basename(get_class($this))."_title",[],$lang);    
+
+       $myobj= [      
+               'title'=>$this->title?$this->title:'',                  
+               'url'=>$this->url?$this->url:'',
+        ];
+
+        //save object extra data on DB
+        if($this->object)           
+            $myobj[]=['object_type'=>get_class($this->object),'object_id'=>$this->object->id];              
+
+
+       return $myobj;  
     }    
 }

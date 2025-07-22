@@ -2,9 +2,10 @@
 
 namespace App\Models\Users;
 
+use App\Helper\Helper;
 use App\Models\Libraries\LibraryUser;
 use App\Models\Users\UserObserver;
-use App\Notifications\Account\ResetPassword;
+use App\Notifications\Account\ResetPasswordNotification;
 use App\Traits\Auth\RolesAbilitiesPermissionsTrait;
 use App\Traits\Model\ModelTrait;
 use App\Models\Users\DatabaseNotificationObserver;
@@ -18,6 +19,7 @@ use App\Models\References\Group;
 use App\Models\References\Label;
 use App\Models\References\Reference;
 use App\Models\Requests\PatronDocdelRequest;
+use App\Notifications\Account\PasswordChangedNotification;
 
 class User extends UserBase
 {
@@ -158,8 +160,13 @@ class User extends UserBase
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPassword($token, $this->email));
+        $this->notify(new ResetPasswordNotification($token));
     }
+
+    public function sendPasswordChangeNotification() {
+        $this->notify(new PasswordChangedNotification());
+    }
+
     /**
      * Get the entity's notifications.
      *
@@ -196,5 +203,13 @@ class User extends UserBase
      public function deliveries()
      {
          return $this->belongsToMany('App\Models\Libraries\Delivery','delivery_user')->withTimestamps(); 
+     }
+
+     public static function getAllSuperAdmins() {
+        return Helper::getUsersWithRole('super-admin');
+     }
+
+     public static function getAllCommunityManagers() {
+        return Helper::getUsersWithRole('manager');
      }
 }

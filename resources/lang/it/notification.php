@@ -1,0 +1,27 @@
+<?php 
+
+return [    
+    'contacts'=>'Per qualunque informazione contattaci all\'indirizzo <a href="mailto:'.config('constants.support_email').'">'.config('constants.support_email').'</a>. Per problemi tecnici scrivi invece all\'indirizzo <a href="mailto:'.config('constants.tech_support_email').'">'.config('constants.tech_support_email').'</a>',
+    'UserSignupNotification_title'=>'Benvenuto',
+    'ResetPasswordNotification_title'=>'Recupero password',
+    'PasswordChangedNotification_title'=>'La password è stata modificata',
+    'UserRegistersNewLibraryNotification_title'=>'La registrazione della tua biblioteca è in attesa di approvazione dal community manager',
+    'NewLibraryHasBeenRegisteredNotification_title'=>'Registrazione nuova biblioteca',
+    'LibraryHasBeenDeletedNotification_title'=>'La bibliotesa è stata eliminata',
+    'LibraryHasBeenEnabledNotification_title'=>'La biblioteca è stata attivata',
+    'LibraryHasBeenDisabledNotification_title'=>'La biblioteca è stata disattivata',
+    'LibraryHasBeenDisabledBecauseBadBehaviourNotification_title'=>'La biblioteca è stata disattivata per cattivo comportamento',
+    'LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'=>'La biblioteca è stata disattivata perchè è scaduta la sottoscrizione',
+    'LibraryHasBeenDisabledBecauseDidntPaidNotification'=>'La biblioteca è stata disattivata per mancato pagamento',
+    'LibraryHasToRenewSubscriptionNotification'=>'La biblioteca deve rinnovare la sottoscrizione',
+    'RequestReceivedNotification_title'=>'Un item è stato richiesto alla tua biblioteca',
+    'RequestWillSupplyNotification_title'=>'Verrà fornito alla tua biblioteca',
+    'RequestCopyCompletedNotification_title'=>'Un item è stato evaso alla tua biblioteca',
+    'RequestUnfilledNotification_title'=>'Non può essere evaso alla tua biblioteca',
+    'CancelRequestedNotification_title'=>'richiesta di annullamento',
+    'CancelAcceptedNotification_title'=>'Annullamento accettato',
+    'LibraryOperatorInvitationNotification_title'=>'Una biblioteca ti invita come operatore',
+    'LibraryOperatorInvitationNewUserNotification_title'=>'Una biblioteca ti invita come operatore',
+    'PatronAskJoinLibraryNotification_title'=>'Registrazione utente alla biblioteca',
+    'PatronAskJoinLibraryAwaitsApprovalNotification_title'=>'La tua richiesta di registrazione alla biblioteca è in attesa di approvazione',
+];

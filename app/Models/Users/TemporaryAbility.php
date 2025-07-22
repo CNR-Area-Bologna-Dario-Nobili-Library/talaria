@@ -8,6 +8,10 @@ use App\Models\Institutions\Institution;
 use App\Models\Libraries\Library;
 use App\Models\Projects\Project;
 use App\Models\Users\User;
+use App\Notifications\BaseMailMessage;
+use App\Notifications\Library\LibraryOperatorInvitationNotification;
+use App\Notifications\Library\LibraryOperatorInvitationNewUserNotification;
+use Illuminate\Support\Facades\Notification as FacadesNotification;
 
 class TemporaryAbility extends BaseModel
 {
@@ -101,6 +105,23 @@ class TemporaryAbility extends BaseModel
         if($etype!=null) {
             $this->entity_id=$entityID;
             $this->entity_type=$etype;
+        }
+    }
+
+    public function notifyToUser() {        
+        $u=$this->user;
+        
+        //Create notification email template for invitation ... 
+        if(isset($u) && $u->id>0)
+        { 
+            $u->notify(new LibraryOperatorInvitationNotification($this));
+            
+        }
+        else //if no existing user 
+        if (isset($this->user_email))
+        {          
+            //send email using on-demand notifications...
+            FacadesNotification::route('mail', $this->user_email)->notify(new LibraryOperatorInvitationNewUserNotification($this));
         }
     }
 }

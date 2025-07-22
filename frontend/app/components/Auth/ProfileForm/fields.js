@@ -59,7 +59,7 @@ export const fields = {
         options: [
             { value: 'it', label: 'Italiano' },
             { value: 'en', label: 'English' },
-            { value: 'sp', label: 'Español' },                         
+            { value: 'es', label: 'Español' },                         
             { value: 'tr', label: 'Türkçe' }
         ]
     }, 

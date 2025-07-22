@@ -1,6 +1,8 @@
 <?php
 namespace App\Helper;
 
+use App\Models\Users\User;
+
 class Helper{
   public static function import_CSV($filename, $delimiter = ','){
     if(!file_exists($filename) || !is_readable($filename))
@@ -45,6 +47,15 @@ class Helper{
       }
 
       return $decimal;
+  }
+
+  public static function getUsersWithRole($role) {
+    return User::whereIs($role)->get(); 
+  }
+
+  //returns associative array
+  public static function getTranslationFromJson($path){
+    return json_decode(file_get_contents($path),true);
   }
 
 }

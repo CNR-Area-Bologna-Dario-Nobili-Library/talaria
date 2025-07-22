@@ -81,17 +81,30 @@ class DocdelRequest extends BaseModel
         return $this->belongsTo(Library::class,'borrowing_library_id');
     }
 
-    public function borrowingLibraryOperators() {
+    public function borrowingLibraryBorrowingOperators() {
         $blib=$this->borrowinglibrary;        
         if($blib)
             return $blib->operators("borrow");
     }
 
-    public function lendingLibraryOperators() {
-        $blib=$this->lendinglibrary;        
+    public function borrowingLibraryManageOperators() {
+        $blib=$this->borrowinglibrary;        
         if($blib)
-            return $blib->operators("lend");
+            return $blib->manageOperators();
     }
+
+    public function lendingLibraryLendingOperators() {
+        $llib=$this->lendinglibrary;        
+        if($llib)
+            return $llib->operators("lend");
+    }
+
+    public function lendingLibraryManageOperators() {
+        $llib=$this->lendinglibrary;        
+        if($llib)
+            return $llib->manageOperators();
+    }
+
 
     public function lendinglibrary() //can not get library borrowing name!!
     {

@@ -20,6 +20,8 @@ use App\Models\Users\TemporaryAbilityTransformer;
 use App\Models\Users\User;
 use App\Models\Users\UserLightTransformer;
 use App\Models\Users\UserTransformer;
+use App\Notifications\Library\NewLibraryHasBeenRegisteredNotification;
+use App\Notifications\Library\UserRegistersNewLibraryNotification;
 use Illuminate\Support\Facades\Auth;
 use Whoops\Util\TemplateHelper;
 
@@ -192,7 +194,8 @@ class LibraryController extends ApiController
         $tempPerm->setEntity("library",$id);
         $tempPerm->save();    
         
-        //TODO: SEND EMAIL to user
+        //SEND notification to user (existing or not)
+        $tempPerm->notifyToUser();
         
         return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
         
@@ -469,6 +472,15 @@ class LibraryController extends ApiController
 
         //Fire events
         event($model->getTable() . '.stored', $model);
+
+        //Notify to library manager
+        $request->user()->notify(new UserRegistersNewLibraryNotification($model));
+
+        //notify to all comm managers
+        $commmanagers = Helper::getUsersWithRole('manager'); //find all users that has "manager" role
+        foreach ($commmanagers as $comman) {
+            $comman->notify(new NewLibraryHasBeenRegisteredNotification($model));
+        }
 
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
     }

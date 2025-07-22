@@ -4,9 +4,10 @@
 //- role/constraint are not defined, so averyone can call these statusChange
    //otherwise was too difficult to filter these methods
 //- notify: you can specify which users has to be notified (will send notification) 
-//  - Model: will run the specified "method" of the current model. This method has to return users collection
-//  - User: will run the specified "method" of the User model. This method has to return users collection
-// if notify is specified, must exist XXXNotification Object (XXX is the classname of the current model)
+//          by default it will use  XXXNotification object (must exist App\Notifications\XXXNotification.php  (XXX is the classname of the current model) otherwise you can customize it (see below)
+//  - Model: if it's a string, it wilk run the specified "method" of the current model, this method has to return users collection.
+//           if it's an ARRAY [ [<methodname1>,"notificationClass1"],[<methodname2>,"notificationClass2"], ... ] it will send <notificationClass1> to the users collection obtained by running the specified <methodname1> and send <notificationClass2> to the users collection obtained by running the specified <methodname2> ... and so on ...
+//  - User: will run the specified "method" of the User class. This method has to return users collection (with props like user_id,email ... fields)
 //- everytime you change this, please run: php artisan cache:clear + php artisan optimize 
 
 return [
@@ -105,33 +106,39 @@ return [
             ],
             'App\Models\Requests\BorrowingDocdelRequest'=> [
                 'flow_tree' => [
+                    //restart as new request
                     'newrequest'	=> [
                         'role'  =>  [],
                     'next_statuses'  =>  ['canceled','canceledDirect','requested','notDeliveredToUserDirect','notReceived','deliveredToUserDirect','deskReceived','deliveringToDesk'],
                         'constraints'   =>  [],                        
-                        'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                            
-                        ],  
+                        /*'notify'    =>  [
+                            'Model'=>'borrowingLibraryBorrowingOperators',                            
+                        ],*/  
                         //TODO: 'jobs'=>['App\\Jobs\\BorrowingRequestReset'] //clean all temp lender to start new request and update lender (if only 1) saying request was canceled
-                    ],                   
+                    ],       
+                        
                     'canceled'	=> [
                         'role'  =>  [],
                         'next_statuses'  =>  [],
                         'constraints'   =>  [],  
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                            
+                            'Model'=>[ 
+                                ['borrowingLibraryManageOperators', 'DDILL\\CancelAcceptedNotification'],
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\CancelAcceptedNotification']                                
+                            ]
                         ],  
-                        'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify']
+                        //'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify'] */
                     ],
                     //NOTE on canceledDirect: i removed constraint because this status can be changed both from patron or borrower                       
                     'canceledDirect'	=> [
                         'role'  =>  [],
                         'next_statuses'  =>  [],
                         'constraints'   =>  [],     
+                        /* NO NEED TO NOTIFY because never requested to lender
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',
+                            'Model'=>'borrowingLibraryBorrowingOperators',
                         ],                                              
-                        'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify'] 
+                        'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify'] */
                     ],
                     //NOTE on cancelRequested: i removed constraint because this status can be changed both from patron or borrower                       
                     'cancelRequested'	=> [
@@ -139,16 +146,18 @@ return [
                         'next_statuses'  =>  ['canceled'],
                         'constraints'   =>  [],  
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',
-                        ],  
-                        'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify']
+                            'Model'=>[ 
+                                ['lendingLibraryManageOperators', 'DDILL\\CancelRequestedNotification'],
+                                ['lendingLibraryLendingOperators', 'DDILL\\CancelRequestedNotification'] 
+                            ]
+                        ],                          
                     ],
                     /*'canceledAccepted'	=> [
                         'role'  =>  [],//borrow/lend/manage?,
                         'next_statuses'  =>  ['canceled'],
                         'constraints'   =>  [],  
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                            
+                            'Model'=>'borrowingLibraryBorrowingOperators',                            
                         ],                        
                     ],*/
 
@@ -159,9 +168,12 @@ return [
                         'next_statuses'  =>  ['newrequest','canceled','canceledDirect','cancelRequested','fulfilled','notReceived'], 
                         'constraints'   =>  ["canBorrow"],  
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                        
-                        ],  
-                        'jobs' => ['App\\Jobs\\LendingRequestUpdateNotify']
+                           // 'Model'=>'borrowingLibraryBorrowingOperators',         
+                              'Model'=>[
+                                ['lendingLibraryManageOperators', 'DDILL\\RequestReceivedNotification'], 
+                                ['lendingLibraryLendingOperators', 'DDILL\\RequestReceivedNotification']
+                             ],                                                
+                        ],                          
                     ],
                     //this configuration is needed by status resolver to exists because it checks when do status change FROM this state
                     //but it will not change TO this state cause is instead the lender that change directly borrowing_status field without doing a borrow->changeStatus
@@ -174,19 +186,21 @@ return [
                         'role'  =>  [],
                         'next_statuses'  =>  ['deliveredToUser','notDeliveredToUser','deskReceived','deliveringToDesk'], 
                         'constraints'   =>  ["canBorrow"],  
+                        /* NO NEED TO NOTIFY because we notify from Lending status change 
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                        
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                        
                         ],                          
-                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
+                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']*/
                     ],                    
                     'documentNotReady'	=> [ 
                         'role'  =>  [],
                         'next_statuses'  =>  ['notDeliveredToUser'], 
                         'constraints'   =>  ["canBorrow"],  
+                        /* NO NEED TO NOTIFY because we notify from Lending status change 
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                        
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                        
                         ],                          
-                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
+                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']*/
                     ],
                     //this configuration is needed by status resolver to exists because it checks when do status change FROM this state
                     //and because it's used just in the case of a new request (but with parent) that must be set as notReceived+archived
@@ -195,17 +209,17 @@ return [
                         'role'  =>  [],
                         'next_statuses'  =>  ['notDeliveredToUser'], 
                         'constraints'   =>  ["canBorrow"],                                                   
-                        'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                        
+                        /*'notify'    =>  [
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                        
                         ],  
-                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
+                        'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']*/
                     ],                    
                     'notDeliveredToUserDirect' => [
                         'role'  =>  [],
                         'next_statuses'  =>  [''], 
                         'constraints'   =>  ["canDeliver"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                                                                                
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                                                                                
                             'Model'=>'deskLibraryOperators'
                         ], 
                         'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
@@ -215,7 +229,7 @@ return [
                         'next_statuses'  =>  [''], 
                         'constraints'   =>  ["canDeliver"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                                                                                
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                                                                                
                             'Model'=>'deskLibraryOperators'
                         ], 
                         'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
@@ -225,7 +239,7 @@ return [
                         'next_statuses'  =>  [''], 
                         'constraints'   =>  ["canDeliver"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',       
+                            'Model'=>'borrowingLibraryBorrowingOperators',       
                             'Model'=>'deskLibraryOperators'                                                                             
                         ], 
                         'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
@@ -235,7 +249,7 @@ return [
                         'next_statuses'  =>  [''], 
                         'constraints'   =>  ["canDeliver"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',       
+                            'Model'=>'borrowingLibraryBorrowingOperators',       
                             'Model'=>'deskLibraryOperators'                                                                            
                         ], 
                         'jobs' => ['App\\Jobs\\BorrowingUpdatePatronRequest']
@@ -246,7 +260,7 @@ return [
                         'next_statuses'  =>  ['deskReceived','deskNotReceived','notDeliveredToUser','notDeliveredToUserDirect'], 
                         'constraints'   =>  ["canBorrow"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',         
+                            'Model'=>'borrowingLibraryBorrowingOperators',         
                             'Model'=>'deskLibraryOperators'                                                                  
                         ],                                 
                     ],
@@ -255,7 +269,7 @@ return [
                         'next_statuses'  =>  ['deliveredToUser','notDeliveredToUser','deliveredToUserDirect','notDeliveredToUserDirect'], 
                         'constraints'   =>  ["canDeliver"],
                         'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators',                                                                                    
+                            'Model'=>'borrowingLibraryBorrowingOperators',                                                                                    
                             'Model'=>'deskLibraryOperators'
                         ], 
                         'jobs' => ['App\\Jobs\\PatronRequestUpdateNotify'] //notify to patron
@@ -266,7 +280,7 @@ return [
                         'next_statuses'  =>  ['notDeliveredToUserDirect','notDeliveredToUser'], 
                         'constraints'   =>  ["canDeliver"],
                         /*'notify'    =>  [
-                            'Model'=>'borrowingLibraryOperators', 
+                            'Model'=>'borrowingLibraryBorrowingOperators', 
                             'Model'=>'deskLibraryOperators'                                                                                
                         ],*/                         
                     ],                    
@@ -286,9 +300,11 @@ return [
                         'next_statuses' => ['copyCompleted','unFilled'],
                         'constraints' => [], 
                         'notify' => [
-                            'Model'=>'lendingLibraryOperators',
-                        ], 
-                        'jobs' => ['App\\Jobs\\BorrowingRequestUpdateNotify']
+                            'Model'=>[ 
+                                ['borrowingLibraryManageOperators', 'DDILL\\RequestWillSupplyNotification'],
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\RequestWillSupplyNotification'],            
+                            ]  
+                        ],                         
                     ],
                     //this configuration is needed by status resolver to exists because it checks when do status change FROM this state
                     //but it will not change TO this state cause is instad the borrow that change directly lending_status field without doing a lending->changeStatus                    
@@ -302,27 +318,33 @@ return [
                         'next_statuses' => [],
                         'constraints' => [], 
                         'notify' => [
-                             'Model'=>'lendingLibraryOperators', 
-                        ],                     
-                        'jobs' => ['App\\Jobs\\BorrowingRequestUpdateNotify']
+                            'Model'=> [ 
+                                ['borrowingLibraryManageOperators', 'DDILL\\CancelAcceptedNotification'],
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\CancelAcceptedNotification'],                                   
+                            ],                     
+                        ],                        
                     ],
                     'unFilled' => [
                         'role' => [],//borrow/lend/manage?
                         'next_statuses' => [],
                         'constraints' => [], 
                         'notify' => [
-                            'Model'=>'lendingLibraryOperators', 
-                        ],                         
-                        'jobs' => ['App\\Jobs\\BorrowingRequestUpdateNotify']
+                            'Model'=>[ 
+                                ['borrowingLibraryManageOperators', 'DDILL\\RequestUnfilledNotification'],
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\RequestUnfilledNotification'],   
+                            ]
+                        ],                                               
                     ],
                     'copyCompleted' => [
                         'role' => [],//borrow/lend/manage?
                         'next_statuses' => [''],
                         'constraints' => [], 
                         'notify' => [
-                            'Model'=>'lendingLibraryOperators', 
-                        ], 
-                        'jobs' => ['App\\Jobs\\BorrowingRequestUpdateNotify']
+                            'Model'=>[
+                                ['borrowingLibraryManageOperators', 'DDILL\\RequestCopyCompletedNotification'],
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\RequestCopyCompletedNotification'],   
+                            ]
+                        ],                         
                     ],
                            
                 ],
@@ -336,28 +358,28 @@ return [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled"),config("constants.library_status.renewing")],                            
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledNotification'], 
                             ], 
                         ],
                         config("constants.library_status.disabled_bad") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled")],
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseBadBehaviourNotification'], 
                             ], 
                         ],
                         config("constants.library_status.disabled_subscription_expired") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.disabled"),config("constants.library_status.renewing")],
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'], 
                             ], 
                         ],
                         config("constants.library_status.disabled_didntpaid") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled")],
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseDidntPaidNotification'], 
                             ], 
                         ],
                         //new
@@ -371,7 +393,7 @@ return [
                             'next_statuses'  =>  [config("constants.library_status.disabled"), config("constants.library_status.disabled_bad"), config("constants.library_status.disabled_didntpaid"),config("constants.library_status.renewing")],
                             'constraints'   =>  ["canBeEnabled"], 
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenEnabledNotification'], 
                             ],                             
                         ],
                         //renewing
@@ -379,7 +401,7 @@ return [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled"),config("constants.library_status.disabled"),config("constants.library_status.disabled_subscription_expired")],
                             'notify' => [
-                                'Model'=>'manageOperators', 
+                                'Model'=>['manageOperators', 'Library\\LibraryHasToRenewSubscriptionNotification'], 
                             ], 
                         ],
                 ],
@@ -394,23 +416,23 @@ return [
                         'role'  =>  ['super-admin','manager'],
                         'next_statuses'  =>  [config("constants.institution_status.enabled")],     
                         'constraints'   =>  ["canBeDisabled"],                         
-                        'notify' => [
+                        /*'notify' => [
                             'Model'=>'manageOperators', 
-                        ], 
+                        ],*/ 
                     ],
                     config("constants.institution_status.enabled") => [
                         'role'  =>  ['super-admin','manager'],
                         'next_statuses'  =>  [config("constants.institution_status.disabled")],
-                        'notify' => [
+                        /*'notify' => [
                             'Model'=>'manageOperators', 
-                        ], 
+                        ],*/ 
                     ],
                     config("constants.institution_status.pending") => [
                         'role'  =>  ['super-admin','manager'],
                         'next_statuses'  =>  [config("constants.institution_status.enabled")],
-                        'notify' => [
+                        /*'notify' => [
                             'Model'=>'manageOperators', 
-                        ], 
+                        ],*/ 
                     ],
                 ]
             ]

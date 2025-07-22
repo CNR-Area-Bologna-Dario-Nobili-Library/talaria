@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminApiController;
 use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
 use App\Models\Users\User;
+use App\Notifications\Library\LibraryHasBeenDeletedNotification;
 use Hamcrest\Type\IsInteger;
 
 class AdminLibraryController extends AdminApiController
@@ -123,6 +124,15 @@ class AdminLibraryController extends AdminApiController
     public function delete(Request $request, $id)
     {
         $model = $this->talaria->delete($this->model, $request, $id, null,function ($lib) {
+
+            //will call this function just before deleting it so the model still exists!
+            
+            //notify to all library's managers
+            $ln=new LibraryHasBeenDeletedNotification($lib);
+            foreach ($lib->manageOperators() as $item) {
+                $u=User::findOrFail($item["user_id"]);                 
+                $u->notify($ln);
+            }
                     
             //remove also granted permissions
             $users=$lib->operators();

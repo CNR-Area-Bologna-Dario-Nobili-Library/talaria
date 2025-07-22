@@ -68,6 +68,7 @@ export function* signupAuthSaga(action) {
       email: action.request.email,
       username: action.request.email,
       password: action.request.password,
+      preflang: action.request.preflang,
       password_confirmation: action.request.password_confirmation,
       privacy_policy_accepted: action.request.privacy_policy_accepted,
       // privacy_policy_accepted: new Date(),

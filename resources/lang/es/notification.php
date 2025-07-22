@@ -1,0 +1,28 @@
+<?php 
+
+return [    
+    'contacts'=>'???For any informations please contact us at <a href="mailto:'.config('constants.support_email').'">'.config('constants.support_email').'</a>. For technical issues instead please contact our technical staff at <a href="mailto:'.config('constants.tech_support_email').'">'.config('constants.tech_support_email').'</a>',
+    'UserSignupNotification_title'=>'???Welcome',
+    'ResetPasswordNotification_title'=>'???Password recovery',
+    'PasswordChangedNotification_title'=>'???Password has been changed',
+    'UserRegistersNewLibraryNotification_title'=>'???Your library registration awaits approval by the community manager',
+    'NewLibraryHasBeenRegisteredNotification_title'=>'???New library registration request',
+    'LibraryHasBeenDeletedNotification_title'=>'???Library has been deleted',
+    'LibraryHasBeenEnabledNotification_title'=>'???Library has been enabled',
+    'LibraryHasBeenDisabledNotification_title'=>'???Library has been disabled',
+    'LibraryHasBeenDisabledBecauseBadBehaviourNotification_title'=>'???Library has been disabled for bad behaviour',
+    'LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'=>'???Library has been disabled because of subscription expired',
+    'LibraryHasBeenDisabledBecauseDidntPaidNotification'=>'???Library has been disabled because didn\'t paid',
+    'LibraryHasToRenewSubscriptionNotification'=>'???Library has to renew its subscription',
+    'RequestReceivedNotification_title'=>'???An item has been requested from your library',
+    'RequestWillSupplyNotification_title'=>'???Will be supplied to your library',
+    'RequestCopyCompletedNotification_title'=>'???Has been fulfilled to your library',
+    'RequestUnfilledNotification_title'=>'???Cannot be fulfilled to your library',
+    'CancelRequestedNotification_title'=>'???Cancel request',
+    'CancelAcceptedNotification_title'=>'???Has been canceled',
+    'LibraryOperatorInvitationNotification_title'=>'???A library is inviting you as operator',
+    'LibraryOperatorInvitationNewUserNotification_title'=>'???A library is inviting you as operator',
+    'PatronAskJoinLibraryNotification_title'=>'???New patron registration request',
+    'PatronAskJoinLibraryAwaitsApprovalNotification_title'=>'???Your registration request awaits approval',
+    
+];

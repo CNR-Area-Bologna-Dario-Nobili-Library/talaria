@@ -9,6 +9,7 @@ use \App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Notifications\BaseNotification;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Log;
 
@@ -42,7 +43,7 @@ class StatusResolver
     public function __construct(Model $model, $user=false)
     {
         if(!$model->exists)
-            throw (new ModelNotFoundException)->setModel(get_class($model));
+            throw (new ModelNotFoundException())->setModel(get_class($model));
 
         $this->model = $model;
 
@@ -199,46 +200,82 @@ class StatusResolver
     }
 
     public function notify()
-    {                
+    {              
+        Log::info("Status resolver NOTIFY:");  
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); /*[$this->model->status()->first()->status]*/
-        $collection = new Collection(); //collection of users that has to receive the notification
+        $collection = new Collection(); //collection of array object [user, notificationClass] that has to receive the notification (of the class specified)
         if($this->flow->has('notify'))
         {
-            foreach ($this->flow->get('notify') as $entity=>$method) {
-                switch ($entity){
-                    case 'Model':
-                        $items = $this->model->$method();                        
-                        if($items->count())
-                        {
-                                foreach ($items as $item) {
-                                    $collection->push($item);
-                                }
-                        }
-                        break;
-                    case 'User':
-                        $items = User::$method();
-                        if($items->count())
-                        {
-                                foreach ($items as $item) {
-                                    $collection->push($item);
-                                }
-                        }
-                        break;
-                }
-            }            
-            if($collection && $collection->count()>0)
-            {
-                $bn=new BaseNotification($this->model);   
-                                                                     
-                $notificationClass="App\\Notifications\\".(new \ReflectionClass($this->model))->getShortName()."Notification"; 
-
-                if(class_exists($notificationClass))     
-                    $bn=new $notificationClass($this->model);      
+            foreach ($this->flow->get('notify') as $entity=>$methodarr) {
                 
-                $collection->unique('user_id')->each(function ($item,$coll) use ($bn) {                      
-                    $u=User::findOrFail($item["user_id"]);
-                    $u->notify($bn);                                                                        
+                    switch ($entity){
+                        case 'Model':
+
+                            $methodslist=[];
+
+                            if(!is_array($methodarr))
+                            {
+                                $notificationClass=(new \ReflectionClass($this->model))->getShortName()."Notification"; 
+                                $methodslist=[ [$methodarr,$notificationClass] ];  //converto in array di array
+                            }
+                            else                             
+                                $methodslist=$methodarr;                                                            
+
+
+                            foreach($methodslist as $entry) {   //entry = [method,NotifyClass]
+                                                
+                                $method=$entry[0];
+                                $users=$this->model->$method();
+                                $classname="App\\Notifications\\".$entry[1];       
+                                                                
+                                if(class_exists($classname) && $users && $users->count())
+                                {
+                                        foreach ($users as $u) {
+                                            $collection->push([$u,$classname]);
+                                        }
+                                }
+                            }
+                            break;
+                        case 'User': //in this case we have only a string that's the User's class method to call
+                            $items = User::$methodarr();
+                            $notificationClass="App\\Notifications\\".(new \ReflectionClass($this->model))->getShortName()."Notification"; 
+                            if(class_exists($notificationClass) && $items && $items->count())
+                            {
+                                    foreach ($items as $item) {                                        
+                                        $collection->push([$item,$notificationClass]);
+                                    }
+                            }
+                            break;
+                    }              
+            }    
+
+            if($collection && $collection->count()>0)
+            {      
+
+                $unique = $collection->unique(function ($item,$coll) {
+
+                    return $item[0]["email"].$item[1];
+                
                 });
+                
+                                 
+                $users=$unique->values()->all();
+                
+                //$collection->unique('user_id')->each(function ($arr,$coll) {                       
+                foreach($users as $arr)
+                {
+                    $item=$arr[0];
+                    $noti=$arr[1];
+                      
+                    $bn=new $noti($this->model);      
+                
+                    $u=User::findOrFail($item["user_id"]);
+                    $u->notify($bn);                              
+                }   
+                                                                                      
+                //});
+
+
             }
         }
         //return false;

@@ -4,7 +4,7 @@ use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Notifications\BorrowingDocdelRequestNotification;
+
 
 class PatronDocdelRequestObserver extends BaseObserver
 {
@@ -44,10 +44,13 @@ class PatronDocdelRequestObserver extends BaseObserver
          if($br->save())
          {            
              $pdr=PatronDocdelRequest::find($model->id);
-            $n=new BorrowingDocdelRequestNotification($br);
+            // OLD CODE
+            /* $n=new BorrowingDocdelRequestNotification($br);
             
             foreach ($pdr->libraryOperators() as $op)    
               $op->notify($n);           
+            */
+            //TODO: notify to borrow from status resolver
          }
 
                      

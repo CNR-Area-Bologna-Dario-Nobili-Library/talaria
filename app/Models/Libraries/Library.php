@@ -364,6 +364,10 @@ class Library extends BaseModel
         return $this->operators("manage");
     }
 
+    public function usersOperators() {
+        return $this->operators("manage-users");
+    }
+
     public function changeStatus($newstatus,$others=[]) {
         $sr=new StatusResolver($this);                                
 

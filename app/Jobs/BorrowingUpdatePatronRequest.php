@@ -8,7 +8,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Requests\BorrowingDocdelRequest;
-use App\Notifications\BorrowingDocdelRequestNotification;
 
 class BorrowingUpdatePatronRequest implements ShouldQueue
 {
