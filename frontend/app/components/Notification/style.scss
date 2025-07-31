@@ -131,6 +131,23 @@
   }
 }
 
+.notification-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.notification-link {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.notification-action-btn i {
+  font-size: 1rem;
+  margin-left: auto;
+}
+
 @keyframes slideFadeIn {
   from {
     opacity: 0;
@@ -141,6 +158,82 @@
     transform: translateY(0);
   }
 }
+
+/* **CHANGED**: improve UX while saving */
+.notification-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notification-tabs {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 10px;
+}
+
+.notification-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.notification-link {
+  color: #007bff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.notification-button-end {
+  margin-left: auto; // push button to the far end (right)
+}
+
+.notification-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notification-empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+
+.notification-row {
+  display: flex;
+  align-items: center;        // vertically center text & button
+  gap: 12px;                  // space between text and button
+}
+
+.notification-text {
+  flex: 1 1 auto;             // take remaining width
+  min-width: 0;               // allow ellipsis/shrink
+}
+
+.notification-title {
+  color: #007bff;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  /* choose ONE of the two options below */
+
+  // Option A: single-line with ellipsis
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  // Option B (alternate): multi-line clamp
+  // overflow: hidden;
+  // display: -webkit-box;
+  // -webkit-line-clamp: 2;   // show up to 2 lines
+  // -webkit-box-orient: vertical;
+}
+
+.notification-action-btn {
+  flex: 0 0 auto;             // keep at natural width on the right
+  white-space: nowrap;        // keep label on one line
+}
+
+
 
 @keyframes bell-shake {
   0% { transform: rotate(0); }

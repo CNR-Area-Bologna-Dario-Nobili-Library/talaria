@@ -1,46 +1,174 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Nav,
   DropdownToggle,
   DropdownMenu,
   Dropdown,
   Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   TabContent,
   TabPane,
 } from 'reactstrap';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { requestNotifications } from 'containers/App/actions';
+import {
+  requestNotifications,
+  // ⬇️ use the same action the inbox uses
+  markNotificationAsRead,
+} from 'containers/App/actions';
 import makeSelectApp from 'containers/App/selectors';
 import { Loader } from 'components';
-import { useIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import './style.scss';
-import { requestNotificationsSaga } from 'containers/App/actions';
 
 const Notification = props => {
   const { dispatch } = props;
+
   const [readNotifications, setReadNotifications] = useState([]);
   const [unreadNotifications, setUnreadNotifications] = useState([]);
   const [allNotifications, setAllNotifications] = useState([]);
-  const [unreaded_total, setUnreaded_total] = useState(0);
-  const [showPermissionModal, setShowPermissionModal] = useState(false);
+
   const [activeTab, setActiveTab] = useState('all');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const manuallyUpdatedNotifications = useRef({});
+
   const page = props.app.notifications.pagination;
   const loading = props.app.loading;
-  const [prevUnreadTotal, setPrevUnreadTotal] = useState(0);
+
   const [animateBell, setAnimateBell] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5);
   const [animatedIds, setAnimatedIds] = useState([]);
+  const [pendingIds, setPendingIds] = useState(new Set());
+  const [prevUnreadTotal, setPrevUnreadTotal] = useState(0);
 
   const toggleDropdown = () => setDropdownOpen(prev => !prev);
+
+  const normalizeNotification = n => ({
+    ...n,
+    read: !!n.read_at,
+  });
+
+  // Build lists whenever store data changes
+  useEffect(() => {
+    const raw = (props.app.notifications && props.app.notifications.data) || [];
+    const merged = raw.map(normalizeNotification);
+
+    const read = merged.filter(n => n.read);
+    const unread = merged.filter(n => !n.read);
+
+    setAllNotifications(merged);
+    setReadNotifications(read);
+    setUnreadNotifications(unread);
+
+    // Animate bell when unread increases (using authoritative store value when present)
+    const storeUnread =
+      props.app.notifications && props.app.notifications.unreaded_total;
+    const effectiveUnread =
+      typeof storeUnread === 'number' ? storeUnread : unread.length;
+
+    if (effectiveUnread > prevUnreadTotal) {
+      setAnimateBell(true);
+      setTimeout(() => setAnimateBell(false), 800);
+    }
+    setPrevUnreadTotal(effectiveUnread);
+  }, [props.app.notifications, prevUnreadTotal]);
+
+  // Fresh pull whenever dropdown opens
+  useEffect(() => {
+    if (dropdownOpen) {
+      dispatch(requestNotifications());
+    }
+  }, [dropdownOpen, dispatch]);
+
+  // Use store unread count primarily, fallback to local computation
+  const unreadTotal = useMemo(() => {
+    const storeUnread =
+      props.app.notifications && props.app.notifications.unreaded_total;
+    if (typeof storeUnread === 'number') return storeUnread;
+    return allNotifications.filter(n => !n.read_at).length;
+  }, [props.app.notifications, allNotifications]);
+
+  const lazyLoad = event => {
+    const menuTop = event.target.scrollTop;
+    const menuHeight = event.target.clientHeight;
+    const firstChild =
+      event.target && event.target.children && event.target.children[0];
+    const itemHeight = firstChild ? firstChild.offsetHeight : 0;
+
+    const totalItemsHeight =
+      (readNotifications.length + unreadNotifications.length) * itemHeight;
+
+    const currPage = page ? page.current_page : 1;
+    const totalPages = page ? page.total_pages : 1;
+
+    if (menuTop >= totalItemsHeight - menuHeight && totalPages > currPage) {
+      if (!loading) {
+        dispatch(requestNotifications(currPage + 1));
+      }
+    }
+  };
+
+  // Server‑authoritative toggle (no optimistic local flip)
+  const handleToggleReadStatus = notify => {
+    if (pendingIds.has(notify.id)) return;
+
+    const markAsRead = !notify.read_at; // unread -> true, read -> false
+
+    setPendingIds(prev => {
+      const next = new Set(prev);
+      next.add(notify.id);
+      return next;
+    });
+
+    // Use the SAME action signature the inbox uses
+    dispatch(markNotificationAsRead(notify.id, markAsRead));
+
+    // After backend updates, pull fresh data
+    setTimeout(() => {
+      dispatch(requestNotifications());
+      setPendingIds(prev => {
+        const next = new Set(prev);
+        next.delete(notify.id);
+        return next;
+      });
+    }, 400);
+  };
+
+  const getTabNotifications = () => {
+    switch (activeTab) {
+      case 'unread':
+        return unreadNotifications;
+      case 'read':
+        return readNotifications;
+      default:
+        return allNotifications;
+    }
+  };
+
+  // Initial fetch
+  useEffect(() => {
+    const hasData =
+      props.app.notifications &&
+      props.app.notifications.data &&
+      props.app.notifications.data.length;
+    if (!hasData && !loading) {
+      dispatch(requestNotifications());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLoadMore = () => {
+    const nextVisible = visibleCount + 5;
+    const newlyAdded = getTabNotifications()
+      .slice(visibleCount, nextVisible)
+      .map(n => n.id);
+    setAnimatedIds(newlyAdded);
+    setVisibleCount(nextVisible);
+  };
+
+  const handleShowLess = () => {
+    setVisibleCount(5);
+    setAnimatedIds([]);
+  };
 
   function extractLibraryName(title) {
     const hashIndex = title.indexOf('#');
@@ -55,155 +183,10 @@ const Notification = props => {
   }
 
   function parseNotification(notification) {
-    const { data } = notification;
+    const data = notification.data;
     const libraryName = extractLibraryName(data.title);
-    let libraryStatus = '';
-    let description = data.message;
-
-    const statusMatch = data.message.match(/status[:\s]*([a-zA-Z0-9_-]+)/i);
-    if (statusMatch) {
-      libraryStatus = statusMatch[1];
-    }
-
-    return { libraryName, libraryStatus, description };
+    return { libraryName, libraryStatus: '', description: '' };
   }
-
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      setShowPermissionModal(true);
-    }
-  }, []);
-
-  const handleRequestPermission = () => {
-    Notification.requestPermission().then(() => {
-      setShowPermissionModal(false);
-    });
-  };
-
-  // const showBrowserNotification = (title, message, url) => {
-  //   if (Notification.permission === 'granted') {
-  //     try {
-  //       const notification = new Notification(title, {
-  //         body: message,
-  //         icon: '/path-to-icon.png',
-  //       });
-  //       notification.onclick = () => {
-  //         window.open(url, '_blank');
-  //       };
-  //     } catch (error) {
-  //       console.error('Error displaying notification:', error);
-  //     }
-  //   }
-  // };
-
-  const lazyLoad = event => {
-    const menuTop = event.target.scrollTop;
-    const menuHeight = event.target.clientHeight;
-    const itemHeight = event.target.children[0]
-      ? event.target.children[0].offsetHeight
-      : 0;
-    const totalItemsHeight =
-      (readNotifications.length + unreadNotifications.length) * itemHeight;
-    const currPage = page ? page.current_page : 1;
-    const totalPages = page ? page.total_pages : 1;
-    if (menuTop >= totalItemsHeight - menuHeight && totalPages > currPage) {
-      !loading && dispatch(requestNotifications(currPage + 1));
-    }
-  };
-
-  // 🔄 Normalize .read based on read_at
-  const normalizeNotification = n => ({
-    ...n,
-    read: !!n.read_at,
-  });
-
-  useEffect(() => {
-    const rawNotifications = props.app.notifications.data || [];
-
-    // Apply manual updates if present
-    const mergedNotifications = rawNotifications.map(n => {
-      const override = manuallyUpdatedNotifications.current[n.id];
-      return normalizeNotification(override || n);
-    });
-
-    const read = mergedNotifications.filter(n => n.read);
-    const unread = mergedNotifications.filter(n => !n.read);
-
-    setAllNotifications(mergedNotifications);
-    setReadNotifications(read);
-    setUnreadNotifications(unread);
-
-    //Show unread count in the bell
-    setUnreaded_total(unread.length);
-
-    if (unread.length > prevUnreadTotal) {
-      setAnimateBell(true);
-      setTimeout(() => setAnimateBell(false), 2000);
-    }
-
-    setPrevUnreadTotal(unread.length);
-  }, [props.app.notifications.data]);
-
-  const handleToggleReadStatus = notify => {
-    const wasUnread = !notify.read_at;
-
-    const updatedNotify = {
-      ...notify,
-      read: wasUnread,
-      read_at: wasUnread ? new Date().toISOString() : null,
-    };
-
-    manuallyUpdatedNotifications.current[notify.id] = updatedNotify;
-
-    const updatedAll = allNotifications.map(n =>
-      n.id === notify.id ? updatedNotify : n,
-    );
-
-    const read = updatedAll.filter(n => n.read);
-    const unread = updatedAll.filter(n => !n.read);
-
-    setAllNotifications(updatedAll);
-    setReadNotifications(read);
-    setUnreadNotifications(unread);
-    setUnreaded_total(unread.length);
-
-    setAnimateBell(true);
-    setTimeout(() => setAnimateBell(false), 1000);
-
-    dispatch(requestNotificationsSaga(notify.id, wasUnread));
-  };
-
-  const getTabNotifications = () => {
-    switch (activeTab) {
-      case 'unread':
-        return unreadNotifications;
-      case 'read':
-        return readNotifications;
-      default:
-        return allNotifications;
-    }
-  };
-
-  useEffect(() => {
-    if (!props.app.notifications.data.length && !loading) {
-      dispatch(requestNotifications());
-    }
-  }, []);
-
-  const handleLoadMore = () => {
-    const currentVisible = visibleCount;
-    const nextVisible = currentVisible + 5;
-    const newlyAdded = getTabNotifications()
-      .slice(currentVisible, nextVisible)
-      .map(n => n.id);
-
-    setAnimatedIds(newlyAdded);
-    setVisibleCount(nextVisible);
-  };
-  const handleShowLess = () => {
-    setVisibleCount(5);
-    setAnimatedIds([]);
-  };
 
   return (
     <>
@@ -216,15 +199,15 @@ const Notification = props => {
         >
           <DropdownToggle nav>
             <i
-              className={`fa-solid fa-bell d-table-cell ${
-                animateBell ? 'bell-animated' : ''
-              }`}
+              className={
+                'fa-solid fa-bell d-table-cell ' +
+                (animateBell ? 'bell-animated' : '')
+              }
             >
-              {unreaded_total > 0 && (
-                <span className="count">{unreaded_total}</span>
-              )}
+              {unreadTotal > 0 && <span className="count">{unreadTotal}</span>}
             </i>
           </DropdownToggle>
+
           <DropdownMenu
             right
             onScroll={lazyLoad}
@@ -239,15 +222,18 @@ const Notification = props => {
             >
               {['all', 'unread', 'read'].map(tab => (
                 <button
-                  className={`notification-tab-btn ${
-                    activeTab === tab ? 'active' : ''
-                  }`}
+                  key={tab}
+                  className={
+                    'notification-tab-btn ' +
+                    (activeTab === tab ? 'active' : '')
+                  }
                   onClick={() => setActiveTab(tab)}
                 >
                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
                 </button>
               ))}
             </div>
+
             <TabContent activeTab={activeTab}>
               <TabPane tabId={activeTab}>
                 {getTabNotifications().length === 0 ? (
@@ -277,39 +263,33 @@ const Notification = props => {
                       return (
                         <div
                           key={notify.id}
-                          className={`notification-item ${
-                            isUnread ? 'unread' : 'read'
-                          } ${
-                            animatedIds.includes(notify.id)
-                              ? 'animated-entry'
-                              : ''
-                          }`}
+                          className={
+                            'notification-item ' +
+                            (isUnread ? 'unread' : 'read') +
+                            (animatedIds.indexOf(notify.id) !== -1
+                              ? ' animated-entry'
+                              : '')
+                          }
                         >
-                          <div>
-                            <Link
-                              to={notify.data.url}
-                              style={{
-                                color: '#007bff',
-                                fontWeight: 'bold',
-                                textDecoration: 'none',
-                              }}
-                            >
-                              {parsed.libraryName
-                                ? `Borrowing #${parsed.libraryName}`
-                                : notify.data.title}
-                            </Link>
-                            <div style={{ fontSize: '13px', color: '#333' }}>
-                              <strong>Status:</strong>{' '}
-                              {parsed.libraryStatus || 'N/A'}
+                          <div className="notification-row">
+                            <div className="notification-text">
+                              <Link
+                                to={notify.data.url}
+                                className="notification-title"
+                              >
+                                {parsed.libraryName
+                                  ? 'Borrowing #' + parsed.libraryName
+                                  : notify.data.title}
+                              </Link>
                             </div>
-                            <div style={{ fontSize: '13px', color: '#333' }}>
-                              <strong>Description:</strong> {parsed.description}
-                            </div>
+
                             <button
-                              className={`notification-action-btn ${
-                                isUnread ? 'unread' : 'read'
-                              }`}
+                              className={
+                                'notification-action-btn ' +
+                                (isUnread ? 'unread' : 'read')
+                              }
                               onClick={() => handleToggleReadStatus(notify)}
+                              disabled={pendingIds.has(notify.id)}
                             >
                               <i
                                 className={
@@ -328,6 +308,7 @@ const Notification = props => {
                 )}
               </TabPane>
             </TabContent>
+
             <div className="notification-footer-button">
               {visibleCount < getTabNotifications().length ? (
                 <Button
@@ -355,34 +336,10 @@ const Notification = props => {
               </Link>
             </div>
 
-            <Loader show={loading} />
+            {/* <Loader show={loading} /> */}
           </DropdownMenu>
         </Dropdown>
       </Nav>
-
-      {/* <Modal
-        isOpen={showPermissionModal}
-        toggle={() => setShowPermissionModal(false)}
-      >
-        <ModalHeader toggle={() => setShowPermissionModal(false)}>
-          Enable Notifications
-        </ModalHeader>
-        <ModalBody>
-          To stay updated with the latest notifications, please enable browser
-          notifications.
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleRequestPermission}>
-            Enable Notifications
-          </Button>
-          <Button
-            color="secondary"
-            onClick={() => setShowPermissionModal(false)}
-          >
-            Cancel
-          </Button>
-        </ModalFooter>
-      </Modal> */}
     </>
   );
 };
