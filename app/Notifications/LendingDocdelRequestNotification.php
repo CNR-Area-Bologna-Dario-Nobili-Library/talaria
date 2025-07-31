@@ -28,7 +28,7 @@ class LendingDocdelRequestNotification extends BaseNotification
         $lid=$this->object->id;
        return [      
                'title'=>"Lending #$lid status changed",   
-               'message'=>'Request status:'.$this->object->lending_status,
+               //'message'=>'Request status:'.$this->object->lending_status,
                'url'=>"/library/$lib/lending/$lid",
                'object_type'=>get_class($this->object),
                'object_id'=>$this->object->id              

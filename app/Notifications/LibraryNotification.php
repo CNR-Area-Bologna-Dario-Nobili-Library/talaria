@@ -34,7 +34,7 @@ class LibraryNotification extends BaseNotification
         $lib=$this->object->id;        
        return [      
                'title'=>"Library #$lib status changed",   
-               'message'=>'Status:'.$this->object->status,
+               //'message'=>'Status:'.$this->object->status,
                'url'=>"/library/$lib",
                'object_type'=>get_class($this->object),
                'object_id'=>$this->object->id              
