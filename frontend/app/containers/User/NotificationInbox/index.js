@@ -218,13 +218,14 @@ function NotificationInbox(props) {
     const { data } = notification;
     const libraryName = extractLibraryName(data.title);
     let libraryStatus = '';
-    let description = JSON.stringify(data); // ✅ Always show the full message as description
+    let description = '';
+    //let description = JSON.stringify(data); // Always show the full message as description
 
-    // ✅ Extract status like "Request status:requested"
-    const statusMatch = data.message.match(/status[:\s]*([a-zA-Z0-9_-]+)/i);
-    if (statusMatch) {
-      libraryStatus = statusMatch[1];
-    }
+    // Extract status like "Request status:requested"
+    // const statusMatch = data.message.match(/status[:\s]*([a-zA-Z0-9_-]+)/i);
+    // if (statusMatch) {
+    //   libraryStatus = statusMatch[1];
+    // }
 
     return { libraryName, libraryStatus, description };
   }

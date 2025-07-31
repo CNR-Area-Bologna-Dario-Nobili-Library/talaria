@@ -34,7 +34,7 @@ class InstitutionNotification extends BaseNotification
         $ist=$this->object->id;        
        return [      
                'title'=>"Institution #$ist status changed",   
-               'message'=>'Status:'.$this->object->status,
+               //'message'=>'Status:'.$this->object->status,
                'url'=>"/institution/$ist",
                'object_type'=>get_class($this->object),
                'object_id'=>$this->object->id              

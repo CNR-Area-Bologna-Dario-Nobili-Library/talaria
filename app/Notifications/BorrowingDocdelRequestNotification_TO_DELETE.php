@@ -37,7 +37,7 @@ class BorrowingDocdelRequestNotification extends BaseNotification
         $bid=$this->object->id;
        return [      
                'title'=>"Borrowing #$bid status changed",   
-               'message'=>'Request status:'.$this->object->borrowing_status,
+               //'message'=>'Request status:'.$this->object->borrowing_status,
                'url'=>"/library/$lib/borrowing/$bid",
                'object_type'=>get_class($this->object),
                'object_id'=>$this->object->id              
