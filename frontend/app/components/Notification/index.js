@@ -273,14 +273,11 @@ const Notification = props => {
                         >
                           <div className="notification-row">
                             <div className="notification-text">
-                              <Link
-                                to={notify.data.url}
-                                className="notification-title"
-                              >
+                              <a href={notify.data.url} className="notification-title">
                                 {parsed.libraryName
                                   ? 'Borrowing #' + parsed.libraryName
                                   : notify.data.title}
-                              </Link>
+                              </a>
                             </div>
 
                             <button
