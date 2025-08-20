@@ -138,7 +138,15 @@ const InstitutionTypesList = (props) => {
                         </div>
                     </div>
                     <div className="select-counter">
-                        <FormattedMessage {...messages.InstitutionTypeSelected} /> {selectedInstitutionTypes.length} di {data.length} 
+                        {intl.formatMessage(
+                            {
+                                id: 'app.components.Pagination.selected',
+                            },
+                            {
+                                ACTUAL: selectedInstitutionTypes.length,
+                                TOTAL: data.length,
+                            },
+                        )}
                     </div>
                 </Row>}
                 <Loader show={loading}>

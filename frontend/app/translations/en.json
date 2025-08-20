@@ -277,6 +277,7 @@
   "app.components.LibrariesList.LibrarySelected": "Selected",
   "app.components.Pagination.itemsPerPageDropdown": "Show rows",
   "app.components.Pagination.of": "of",
+  "app.components.Pagination.selected": "Selected {ACTUAL} of {TOTAL}",
   "app.containers.InstitutionsListPage.header": "Institutions",
   "app.containers.InstitutionsListPage.createNew": "New institution",
   "app.containers.InstitutionsListPage.edit": "Edit",

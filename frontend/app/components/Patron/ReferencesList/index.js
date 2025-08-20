@@ -216,7 +216,15 @@ const ReferencesList = (props) => {
                         </div>
                     </div>
                     <div className="select-counter">
-                        <FormattedMessage {...messages.ReferenceSelected} /> {selectedReferences.length} di {data.length} 
+                        {intl.formatMessage(
+                            {
+                                id: 'app.components.Pagination.selected',
+                            },
+                            {
+                                ACTUAL: selectedReferences.length,
+                                TOTAL: data.length,
+                            },
+                        )}
                     </div>
                 </Row>
                 <Loader show={loading}>

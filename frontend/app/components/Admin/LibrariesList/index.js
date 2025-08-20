@@ -112,8 +112,16 @@ const LibrariesList = (props) => {
                             </Button>}
                         </div>
                     </div>
-                    <div className="select-counter">                        
-                        <FormattedMessage {...messages.LibrarySelected} /> {selectedLibraries.length} di {data.length} 
+                    <div className="select-counter">
+                        {intl.formatMessage(
+                            {
+                                id: 'app.components.Pagination.selected',
+                            },
+                            {
+                                ACTUAL: selectedLibraries.length,
+                                TOTAL: data.length,
+                            },
+                        )}                        
                     </div>                    
                 </Row>}
                 <Loader show={loading}>

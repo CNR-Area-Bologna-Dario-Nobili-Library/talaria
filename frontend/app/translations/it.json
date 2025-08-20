@@ -277,6 +277,7 @@
   "app.components.LibrariesList.LibrarySelected": "Selezionate",
   "app.components.Pagination.itemsPerPageDropdown": "Mostra righe",
   "app.components.Pagination.of": "di",
+  "app.components.Pagination.selected": "Selezionate {ACTUAL} di {TOTAL}",
   "app.containers.InstitutionsListPage.header": "Istituzioni",
   "app.containers.InstitutionsListPage.createNew": "Nuova istituzione",
   "app.containers.InstitutionsListPage.edit": "Modifica",
@@ -837,7 +838,7 @@
   "app.stats.export.header": "Export dati",
   "app.stats.export.description": "È possibile esportare tutte le richieste fatte e ricevute in formato CSV.",
   "app.stats.export.file": "Esporta dati in formato CSV",
-  "app.stats.countries.header": "Distribuzione delle richieste per nazione",  
+  "app.stats.countries.header": "Distribuzione delle richieste per nazione",
   "app.stats.countries.description": "La tabella mostra le richieste soddisfatte che sono state inviate o fornite alle altre biblioteche suddivise per nazione di appartenenza.",
   "app.stats.country.providing_to": "Fornite",
   "app.stats.country.requesting_from": "Richieste"

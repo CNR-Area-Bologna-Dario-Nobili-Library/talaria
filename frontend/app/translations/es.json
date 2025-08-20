@@ -277,6 +277,7 @@
   "app.components.LibrariesList.LibrarySelected": "Seleccionado",
   "app.components.Pagination.itemsPerPageDropdown": "Mostrar filas",
   "app.components.Pagination.of": "de",
+  "app.components.Pagination.selected": "Seleccionado {ACTUAL} de {TOTAL}",
   "app.containers.InstitutionsListPage.header": "Instituciones",
   "app.containers.InstitutionsListPage.createNew": "Nueva Institución",
   "app.containers.InstitutionsListPage.edit": "Editar",

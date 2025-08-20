@@ -220,7 +220,15 @@ const BorrowingsList = (props) => {
                         </div>
                     </div>
                     <div className="select-counter">
-                        <FormattedMessage {...messages.BorrowingSelected} /> {selectedRequests.length} di {data.length} 
+                        {intl.formatMessage(
+                            {
+                                id: 'app.components.Pagination.selected',
+                            },
+                            {
+                                ACTUAL: selectedRequests.length,
+                                TOTAL: data.length,
+                            },
+                        )}
                     </div>
                 </Row>
                 <Loader show={loading}>

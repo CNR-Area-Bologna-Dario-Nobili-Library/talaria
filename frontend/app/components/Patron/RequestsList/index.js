@@ -173,7 +173,15 @@ const RequestsList = (props) => {
                         </div>
                     </div>
                     <div className="select-counter">
-                    {intl.formatMessage({id:'app.components.RequestsList.RequestSelected'})} {selectedRequests.length} di {data.length} 
+                        {intl.formatMessage(
+                            {
+                                id: 'app.components.Pagination.selected',
+                            },
+                            {
+                                ACTUAL: selectedRequests.length,
+                                TOTAL: data.length,
+                            },
+                        )}
                     </div>
                 </Row>
                 <Loader show={loading}>
