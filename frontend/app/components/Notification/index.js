@@ -273,10 +273,15 @@ const Notification = props => {
                         >
                           <div className="notification-row">
                             <div className="notification-text">
-                              <a href={notify.data.url} className="notification-title">
-                                {parsed.libraryName
-                                  ? 'Borrowing #' + parsed.libraryName
-                                  : notify.data.title}
+                              <a
+                                href={
+                                  (notify && notify.data && notify.data.url) ||
+                                  '#'
+                                }
+                                className="notification-title"
+                              >
+                                {(notify && notify.data && notify.data.title) ||
+                                  ''}
                               </a>
                             </div>
 
