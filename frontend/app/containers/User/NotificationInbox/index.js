@@ -534,10 +534,10 @@ function NotificationInbox(props) {
               <strong>Description:</strong>{' '}
               {parseNotification(selectedNotification).libraryName}
             </p>
-            <p>
+            {/* <p>
               <strong>Status:</strong>{' '}
               {parseNotification(selectedNotification).libraryStatus}
-            </p>
+            </p> */}
             <p>
               <strong>Date:</strong>{' '}
               {parseDate(selectedNotification.created_at).toLocaleDateString()}{' '}
