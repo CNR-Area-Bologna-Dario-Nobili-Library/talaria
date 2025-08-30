@@ -97,15 +97,14 @@ function NotificationInbox(props) {
   const filteredNotifications = notifications
     .map(n => ({
       ...n,
-      read: !!n.read_at, // ✅ make sure this is always injected
+      read: !!n.read_at, // make sure this is always injected
     }))
     .filter(notification => {
       const parsed = parseNotification(notification);
 
       // text filter
-      const searchFilter =
-        parsed.libraryName.toLowerCase().includes(filter) ||
-        parsed.description.toLowerCase().includes(filter);
+      const needle = filter.trim().toLowerCase();
+      const searchFilter = (parsed.notificationDescription || '').toLowerCase().includes(needle);
 
       // status filter
       let statusFilter = true;
@@ -115,7 +114,7 @@ function NotificationInbox(props) {
         statusFilter = notification.read;
       }
 
-      console.log('🧪 Current Tab Filter:', filterStatus);
+      console.log('Current Tab Filter:', filterStatus);
       // date range
       let dateFilter = true;
       const createdDate = parseDate(notification.created_at);
@@ -215,19 +214,14 @@ function NotificationInbox(props) {
    * Parse notification data to get libraryName, libraryStatus, description.
    */
   function parseNotification(notification) {
-    const { data } = notification;
-    const libraryName = extractLibraryName(data.title);
-    let libraryStatus = '';
-    let description = '';
-    //let description = JSON.stringify(data); // Always show the full message as description
+    const data = (notification && notification.data) ? notification.data : {};
+    const title = (data && data.title) ? String(data.title) : '';
 
-    // Extract status like "Request status:requested"
-    // const statusMatch = data.message.match(/status[:\s]*([a-zA-Z0-9_-]+)/i);
-    // if (statusMatch) {
-    //   libraryStatus = statusMatch[1];
-    // }
+    const libraryName = extractLibraryName(title);         // keep if 
+    const libraryStatus = (data && data.status) ? String(data.status) : '';
+    const notificationDescription = title;                
 
-    return { libraryName, libraryStatus, description };
+    return { libraryName, libraryStatus, notificationDescription };
   }
 
   /**
@@ -240,6 +234,12 @@ function NotificationInbox(props) {
     }
     return new Date(dateStr);
   }
+
+  // derive from the array
+  const unreadCount = Array.isArray(notifications)
+  ? notifications.filter(n => !n.read_at).length
+  : 0;
+
 
   return (
     <div className="container mt-4">
@@ -264,7 +264,7 @@ function NotificationInbox(props) {
                 <input
                   type="text"
                   className="form-control ps-5 py-2 shadow-sm border rounded-3 border-secondary"
-                  placeholder="Library or description"
+                  placeholder="Description"
                   value={filter}
                   onChange={e => setFilter(e.target.value.toLowerCase())}
                 />
@@ -332,7 +332,7 @@ function NotificationInbox(props) {
               <button
                 className="btn btn-outline-primary px-4 py-2 shadow-sm rounded-3 ms-3"
                 onClick={handleMarkAllAsRead}
-                disabled={unreaded_total === 0}
+                disabled={unreadCount === 0}
               >
                 <i className="bi bi-check2-square me-2" />
                 Mark All as Read
