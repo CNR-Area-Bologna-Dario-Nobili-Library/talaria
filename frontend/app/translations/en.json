@@ -710,6 +710,7 @@
   "app.components.HeaderBar.accountant": "Accountant",
   "app.components.HeaderBar.Patron": "Patron",
   "app.components.HeaderBar.Dashboard": "???User dashboard",
+  "app.components.HeaderBar.NotificationInbox": "Notification Inbox",
   "app.components.HeaderBar.AdminDashboard": "Admin Panel",
   "app.components.HeaderBar.ManagerDashboard": "Manager Panel",
   "app.components.HeaderBar.AccountantDashboard": "Payment Panel",
