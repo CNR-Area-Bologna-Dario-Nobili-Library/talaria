@@ -20,6 +20,9 @@ import makeSelectApp from 'containers/App/selectors';
 import { Loader } from 'components';
 import { Link } from 'react-router-dom';
 import './style.scss';
+import { useIntl, FormattedMessage } from 'react-intl';
+import messages from './messages';
+
 
 const Notification = props => {
   const { dispatch } = props;
@@ -41,6 +44,7 @@ const Notification = props => {
   const [prevUnreadTotal, setPrevUnreadTotal] = useState(0);
 
   const toggleDropdown = () => setDropdownOpen(prev => !prev);
+  const intl = useIntl();
 
   const normalizeNotification = n => ({
     ...n,
@@ -187,6 +191,12 @@ const Notification = props => {
     const libraryName = extractLibraryName(data.title);
     return { libraryName, libraryStatus: '', description: '' };
   }
+  // build this before return()
+  const tabs = [
+    { key: 'all', label: intl.formatMessage(messages.tabAll) },
+    { key: 'unread', label: intl.formatMessage(messages.tabUnread) },
+    { key: 'read', label: intl.formatMessage(messages.tabRead) },
+  ];
 
   return (
     <>
@@ -220,16 +230,17 @@ const Notification = props => {
                 padding: '8px 10px',
               }}
             >
-              {['all', 'unread', 'read'].map(tab => (
+
+              {tabs.map(tab => (
                 <button
-                  key={tab}
+                  key={tab.key}
                   className={
                     'notification-tab-btn ' +
-                    (activeTab === tab ? 'active' : '')
+                    (activeTab === tab.key ? 'active' : '')
                   }
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => setActiveTab(tab.key)}
                 >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  {tab.label}{' '}
                 </button>
               ))}
             </div>
@@ -246,11 +257,13 @@ const Notification = props => {
                   >
                     <i className="bi bi-bell-slash fs-3" />
                     <p className="mt-2 mb-0 fw-semibold">
-                      {activeTab === 'unread'
-                        ? 'No New Notifications'
-                        : activeTab === 'read'
-                        ? 'No Read Notifications'
-                        : 'No Notifications'}
+                      {activeTab === 'unread' ? (
+                        <FormattedMessage {...messages.emptyUnread} />
+                      ) : activeTab === 'read' ? (
+                        <FormattedMessage {...messages.emptyRead} />
+                      ) : (
+                        <FormattedMessage {...messages.emptyAll} />
+                      )}
                     </p>
                   </div>
                 ) : (
@@ -301,7 +314,11 @@ const Notification = props => {
                                 }
                                 style={{ fontSize: '1rem' }}
                               />{' '}
-                              {isUnread ? 'Mark as Read' : 'Mark as Unread'}
+                              {isUnread ? (
+                                <FormattedMessage {...messages.markAsRead} />
+                              ) : (
+                                <FormattedMessage {...messages.markAsUnread} />
+                              )}
                             </button>
                           </div>
                         </div>
@@ -318,7 +335,7 @@ const Notification = props => {
                   size="sm"
                   onClick={handleLoadMore}
                 >
-                  Load More
+                  <FormattedMessage {...messages.loadMore} />
                 </Button>
               ) : getTabNotifications().length > 5 ? (
                 <Button
@@ -326,7 +343,7 @@ const Notification = props => {
                   size="sm"
                   onClick={handleShowLess}
                 >
-                  Show Less
+                  <FormattedMessage {...messages.showLess} />
                 </Button>
               ) : null}
             </div>
@@ -334,7 +351,9 @@ const Notification = props => {
             <div className="notification-footer-link">
               <Link to="/user/notifications" className="go-to-inbox-link">
                 <i className="bi bi-inbox" />
-                <span>Go to Notification Inbox</span>
+                <span>
+                  <FormattedMessage {...messages.goToInbox} />
+                </span>
               </Link>
             </div>
 

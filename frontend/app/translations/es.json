@@ -316,6 +316,20 @@
   "app.components.Notification.header": "Notificaciones",
   "app.components.Notification.mark_all_as_read": "Marcar todo como leído",
   "app.components.Notification.mark_notification_as_read": "?Mark notification as read",
+  "app.components.Notification.tabAll": "???All",
+  "app.components.Notification.tabUnread": "???Unread",
+  "app.components.Notification.tabRead": "???Read",
+  "app.components.Notification.emptyUnread": "???No New Notifications",
+  "app.components.Notification.emptyRead": "???No Read Notifications",
+  "app.components.Notification.emptyAll": "???No Notifications",
+  "app.components.Notification.markAsRead": "???Mark as Read",
+  "app.components.Notification.markAsUnread": "???Mark as Unread",
+  "app.components.Notification.markAllAsRead": "???Mark all as read",
+  "app.components.Notification.markNotificationAsRead": "???Mark notification as read",
+  "app.components.Notification.loadMore": "???Load More",
+  "app.components.Notification.showLess": "???Show Less",
+  "app.components.Notification.goToInbox": "???Go to Notification Inbox",
+
 
   "app.components.LendingsList.LendingSelected":"Seleccionado",
 
