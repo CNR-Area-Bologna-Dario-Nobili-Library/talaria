@@ -129,7 +129,9 @@ const statusInfo = (req) => {
                     {req.request_note}
                 </UncontrolledTooltip>                                
             </div>}                     
-        </span>}        
+        </span>}
+        {req.cancel_request_date && <span className="status-date"><i className="fa-solid fa-xmark"></i><i className="fa-solid fa-question"></i> {formatDateTime(req.cancel_request_date)}</span>}
+        {req.cancel_date && <span className="status-date"><i className="fa-solid fa-xmark"></i> {formatDateTime(req.cancel_date)}</span>}        
         {/*(req.borrowing_status=="fulfilled"||req.borrowing_status=="notReceived" ||
          req.borrowing_status=="documentReady"||req.borrowing_status=="documentNotReady" ||
          req.borrowing_status=="notDeliveredToUser"||req.borrowing_status=="notDeliveredToUserDirect") &&*/
@@ -156,9 +158,7 @@ const statusInfo = (req) => {
             {req.borrowing_status=="documentReady" && req.ready_date && <span className="status-date"><i className="fa-solid fa-circle-check"></i> {formatDateTime(req.ready_date)} </span>}
             {req.borrowing_status=="documentNotReady" && req.ready_date && <span className="status-date"><i className="fa-solid fa-xmark-circle"></i> {formatDateTime(req.ready_date)} </span>}            
         </>
-        }              
-        {req.cancel_request_date && <span className="status-date"><i className="fa-solid fa-xmark"></i><i className="fa-solid fa-question"></i> {formatDateTime(req.cancel_request_date)}</span>}
-        {req.cancel_date && <span className="status-date"><i className="fa-solid fa-xmark"></i> {formatDateTime(req.cancel_date)}</span>}
+        }                      
        
         {req.forward==1 && req.forward_date && 
             <span className="status-date"><i className="fa-solid fa-rotate-right"></i> {formatDateTime(req.forward_date)}</span>            
@@ -202,11 +202,11 @@ export const canArchive=(data) => {
     return !isArchived(data) && 
     ( 
         (
-            isPatronRequest(data) && (data.borrowing_status=="canceled" || data.borrowing_status=="canceledDirect") 
+            (isPatronRequest(data) && (data.borrowing_status=="canceled" || data.borrowing_status=="canceledDirect"))            
         )
         ||
         (
-            !isPatronRequest(data) && 
+            (!isPatronRequest(data) ||(isCanceledByPatron(data) && data.borrowing_status!="cancelRequested") ) && 
             (
                 data.borrowing_status=="canceled"|| data.borrowing_status=="notReceived" || 
                 (data.borrowing_status=="documentReady" && isTrashed(data)) ||
@@ -232,11 +232,11 @@ export const canDelete=(data) => {
 
 export const canCancel=(data) => {
     return (
-        data.borrowing_status=="requested" && !isPatronRequest(data) 
+        data.borrowing_status=="requested" && !isCanceledByPatron(data) //!isPatronRequest(data) 
         )
 }
 
-//OK
+
 export const canForward=(data)=>{
    /*return (data.patrondocdelrequest && data.patrondocdelrequest.data.user 
      && ( data.borrowing_status!="requested" && data.borrowing_status!="newrequest" && data.borrowing_status!="canceledDirect" && data.borrowing_status!="canceled")
@@ -244,7 +244,8 @@ export const canForward=(data)=>{
      ||
      (!data.patrondocdelrequest && canArchive(data)
      )      */
-     return ( (!isArchived(data) && (data.borrowing_status=="notReceived" || data.borrowing_status=='canceled') || (data.borrowing_status=="documentNotReady")) || (canArchive(data) && isTrashed(data) ) );
+     //OLD return ( (!isArchived(data) && (data.borrowing_status=="notReceived" || data.borrowing_status=='canceled') || (data.borrowing_status=="documentNotReady")) || (canArchive(data) && isTrashed(data) ) );          
+     return  (!isCanceledByPatron(data) && !isArchived(data) && (data.borrowing_status=="notReceived" || data.borrowing_status=='canceled' || (data.borrowing_status=="documentNotReady")) || (!isArchived(data) && isTrashed(data) ) );
             
 }
 
@@ -261,12 +262,16 @@ export const canSavedAsNotReceived=(data) => {
 }
 
 export const canTrash=(data) => {
-    return !isArchived(data) && !isTrashed(data) && data.borrowing_status=="documentReady" && ( !(isFile(data)||isURL(data)) || ( (isFile(data)||isURL(data)) && hasBeenDownloaded(data) ) )    
+    return !isArchived(data) && !isTrashed(data) && data.borrowing_status=="documentReady" && !isCanceledByPatron(data) && ( !(isFile(data)||isURL(data)) || ( (isFile(data)||isURL(data)) && hasBeenDownloaded(data) ) )    
 }
 
 //means "document downloaded/or accessed by url"
 export const canSavedAsDownloaded=(data) => {
     return (!isTrashed(data) && data.borrowing_status=="documentReady" && (isFile(data)||isURL(data)) && !hasBeenDownloaded(data));
+}
+
+export const isCanceledByPatron=(data) => {
+    return (isPatronRequest(data) && data.patrondocdelrequest.data.status=="canceled")
 }
  
 export const isArchived=(data) => {
@@ -314,15 +319,15 @@ export const canPatronReqDirectManaged=(data)=> {
 }
 
 export const canFulfillToPatron=(data)=> {
-    return isPatronRequest(data) && 
+    return isPatronRequest(data) && !isCanceledByPatron(data) &&
         (
-            (data.borrowing_status=="documentReady" && (isFile(data)||isURL(data)) && hasBeenDownloaded(data))||
+            (data.borrowing_status=="documentReady" && (isFile(data)||isURL(data)) && (hasBeenDownloaded(data) && !isTrashed(data)) )||
             (!isFile(data) && !isURL(data) && data.borrowing_status=="documentReady")
         )    
 }
 
 export const canUnfillToPatron=(data)=> {
-    return (isPatronRequest(data) && (data.borrowing_status=="documentNotReady" || data.borrowing_status=="notReceived"));
+    return (isPatronRequest(data) && !isCanceledByPatron(data) && (data.borrowing_status=="documentNotReady" || data.borrowing_status=="notReceived"||isTrashed(data)));
 }
 
 
@@ -431,7 +436,7 @@ export const BorrowingRequestIcons = (props) => {
                 {/*casi di evasione/inevasione a patron DOPO DD*/}
                 {canFulfillToPatron(data) &&  <Link className="btn btn-icon" title={intl.formatMessage({id: "app.requests.icon.fulfillToPatron"})} to={requesturl(reqPath,data.id,'deliver')}><i className="fa-solid fa-truck text-success"></i></Link>}                                                
                 {canUnfillToPatron(data) && <Link className="btn btn-icon" title={intl.formatMessage({id: "app.requests.icon.cannotFulfillToPatron"})} to={requesturl(reqPath,data.id,'deliver')}>
-                <span className="fa-stack"><i className="fa-solid fa-truck fa-stack-1x text-warning"></i><i className="fa-solid fa-ban fa-stack-2x"></i></span>
+                    <span className="fa-stack"><i className="fa-solid fa-truck fa-stack-1x text-warning"></i><i className="fa-solid fa-ban fa-stack-2x"></i></span>
                 </Link>}                                
                 
                 {/*casi di evasione/inevasione SENZA patron DOPO DD*/}
