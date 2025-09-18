@@ -691,7 +691,7 @@
   "app.components.HeaderBar.AccountantDashboard": "Pagamenti",
   "app.components.SignupForm.header": "Registrati",
   "app.components.SignupForm.subtitle": "Crea un profilo",
-  "app.components.SignupForm.forgotPassword": "Hai dimenticato la passowrd?",
+  "app.components.SignupForm.forgotPassword": "Hai dimenticato la password?",
   "app.components.CustomForm.select": "Seleziona",
   "app.components.ForgotPasswordForm.submitFormButton": "Richiedi una nuova password",
   "app.components.ForgotPasswordForm.intro": "Inserisci il tuo in indirizzo email. Ti manderemo una email con un link per reimpostare la tua password",
