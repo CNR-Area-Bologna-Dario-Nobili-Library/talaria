@@ -19,6 +19,9 @@ import {
   DropdownItem,
 } from 'reactstrap';
 
+import { useIntl, FormattedMessage } from 'react-intl';
+import messages from './messages'; 
+
 function NotificationInbox(props) {
   const { dispatch, notifications, unreaded_total, loading } = props;
 
@@ -38,6 +41,7 @@ function NotificationInbox(props) {
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
+  const intl = useIntl();
 
   useEffect(() => {
     dispatch(requestNotifications());
@@ -80,10 +84,10 @@ function NotificationInbox(props) {
    * The label shown on the dropdown button based on filterStatus
    */
   const getStatusLabel = () => {
-    if (filterStatus === 'all') return 'All';
-    if (filterStatus === 'new') return 'New (Unread)';
-    if (filterStatus === 'read') return 'Read';
-    return 'Status';
+    if (filterStatus === 'all') return intl.formatMessage(messages.statusAll);
+    if (filterStatus === 'new') return intl.formatMessage(messages.statusNew);
+    if (filterStatus === 'read') return intl.formatMessage(messages.statusRead);
+    return intl.formatMessage(messages.statusLabel);
   };
 
   const normalizeNotification = n => ({
@@ -97,15 +101,14 @@ function NotificationInbox(props) {
   const filteredNotifications = notifications
     .map(n => ({
       ...n,
-      read: !!n.read_at, // ✅ make sure this is always injected
+      read: !!n.read_at, // make sure this is always injected
     }))
     .filter(notification => {
       const parsed = parseNotification(notification);
 
       // text filter
-      const searchFilter =
-        parsed.libraryName.toLowerCase().includes(filter) ||
-        parsed.description.toLowerCase().includes(filter);
+      const needle = filter.trim().toLowerCase();
+      const searchFilter = (parsed.notificationDescription || '').toLowerCase().includes(needle);
 
       // status filter
       let statusFilter = true;
@@ -115,7 +118,7 @@ function NotificationInbox(props) {
         statusFilter = notification.read;
       }
 
-      console.log('🧪 Current Tab Filter:', filterStatus);
+      console.log('Current Tab Filter:', filterStatus);
       // date range
       let dateFilter = true;
       const createdDate = parseDate(notification.created_at);
@@ -215,19 +218,14 @@ function NotificationInbox(props) {
    * Parse notification data to get libraryName, libraryStatus, description.
    */
   function parseNotification(notification) {
-    const { data } = notification;
-    const libraryName = extractLibraryName(data.title);
-    let libraryStatus = '';
-    let description = '';
-    //let description = JSON.stringify(data); // Always show the full message as description
+    const data = (notification && notification.data) ? notification.data : {};
+    const title = (data && data.title) ? String(data.title) : '';
 
-    // Extract status like "Request status:requested"
-    // const statusMatch = data.message.match(/status[:\s]*([a-zA-Z0-9_-]+)/i);
-    // if (statusMatch) {
-    //   libraryStatus = statusMatch[1];
-    // }
+    const libraryName = extractLibraryName(title);         // keep if 
+    const libraryStatus = (data && data.status) ? String(data.status) : '';
+    const notificationDescription = title;                
 
-    return { libraryName, libraryStatus, description };
+    return { libraryName, libraryStatus, notificationDescription };
   }
 
   /**
@@ -241,9 +239,15 @@ function NotificationInbox(props) {
     return new Date(dateStr);
   }
 
+  // derive from the array
+  const unreadCount = Array.isArray(notifications)
+  ? notifications.filter(n => !n.read_at).length
+  : 0;
+
+
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Notifications</h2>
+      <h2 className="mb-4"><FormattedMessage {...messages.header} /></h2>
 
       {/* FILTERS CARD */}
       {/* 🔍 Modern Filter Box */}
@@ -255,7 +259,7 @@ function NotificationInbox(props) {
             {/* 🔍 Search */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-                Search Notifications
+              <FormattedMessage {...messages.searchLabel} />
               </label>
               <div className="position-relative">
                 <span className="position-absolute top-50 start-0 translate-middle-y ps-3 text-muted">
@@ -264,7 +268,7 @@ function NotificationInbox(props) {
                 <input
                   type="text"
                   className="form-control ps-5 py-2 shadow-sm border rounded-3 border-secondary"
-                  placeholder="Library or description"
+                  placeholder={intl.formatMessage(messages.searchPlaceholderDescription)}
                   value={filter}
                   onChange={e => setFilter(e.target.value.toLowerCase())}
                 />
@@ -273,23 +277,23 @@ function NotificationInbox(props) {
 
             {/* Status */}
             <div className="col-lg-3 col-md-6">
-              <label className="form-label fw-semibold text-dark">Status</label>
+              <label className="form-label fw-semibold text-dark"><FormattedMessage {...messages.statusLabel} /></label>
               <br />
               <select
                 className="form-select py-2 shadow-sm border rounded-3 border-secondary"
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
               >
-                <option value="all">All</option>
-                <option value="new">New (Unread)</option>
-                <option value="read">Read</option>
+                <option value="all">{intl.formatMessage(messages.statusAll)}</option>
+                <option value="new">{intl.formatMessage(messages.statusNew)}</option>
+                <option value="read">{intl.formatMessage(messages.statusRead)}</option>
               </select>
             </div>
 
             {/* Start Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-                Start Date
+              <FormattedMessage {...messages.startDateLabel} />
               </label>
               <input
                 type="date"
@@ -302,7 +306,7 @@ function NotificationInbox(props) {
             {/* End Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-                End Date
+              <FormattedMessage {...messages.endDateLabel} />
               </label>
               <input
                 type="date"
@@ -326,16 +330,16 @@ function NotificationInbox(props) {
                 }}
               >
                 <i className="bi bi-arrow-counterclockwise me-2" />
-                Reset Filters
+                <FormattedMessage {...messages.resetFilters} />
               </button>
 
               <button
                 className="btn btn-outline-primary px-4 py-2 shadow-sm rounded-3 ms-3"
                 onClick={handleMarkAllAsRead}
-                disabled={unreaded_total === 0}
+                disabled={unreadCount === 0}
               >
                 <i className="bi bi-check2-square me-2" />
-                Mark All as Read
+                <FormattedMessage {...messages.markAllAsRead} />
               </button>
             </div>
           </div>
@@ -348,7 +352,7 @@ function NotificationInbox(props) {
           <thead className="table-dark">
             <tr>
               <th style={{ width: '50px' }} />
-              <th style={{ width: '50px' }}>#</th>
+              <th style={{ width: '50px' }}><FormattedMessage {...messages.thIndex} /></th>
               <th
                 style={{ width: '150px', cursor: 'pointer' }}
                 onClick={() => handleSort('created_at')}
@@ -378,17 +382,17 @@ function NotificationInbox(props) {
                     {filterStatus === 'new' ? (
                       <>
                         <i className="bi bi-bell-slash fs-4" />
-                        <div className="mt-2">No New Notifications 😊</div>
+                        <div className="mt-2"> <FormattedMessage {...messages.emptyNew} /> 😊</div>
                       </>
                     ) : filterStatus === 'read' ? (
                       <>
                         <i className="bi bi-inbox fs-4" />
-                        <div className="mt-2">No Read Notifications</div>
+                        <div className="mt-2"><FormattedMessage {...messages.emptyRead} /></div>
                       </>
                     ) : (
                       <>
                         <i className="bi bi-info-circle fs-4" />
-                        <div className="mt-2">No Notifications Found</div>
+                        <div className="mt-2"><FormattedMessage {...messages.emptyAll} /></div>
                       </>
                     )}
                   </div>
@@ -429,7 +433,7 @@ function NotificationInbox(props) {
                     <td>
                       {parsed.libraryName}
                       {!notification.read && (
-                        <span className="badge bg-info ms-2">New</span>
+                        <span className="badge bg-info ms-2"> <FormattedMessage {...messages.badgeNew} /></span>
                       )}
                     </td>
                     <td className="text-center">
@@ -438,7 +442,7 @@ function NotificationInbox(props) {
                         <button
                           className="btn btn-outline-info px-1 py-2 fs-2"
                           onClick={() => handleViewDetails(notification)}
-                          title="View Details"
+                          title={intl.formatMessage(messages.viewDetailsTitle)}
                         >
                           <span style={{ fontSize: '1.5rem' }}>🔎</span>
                         </button>
@@ -464,8 +468,8 @@ function NotificationInbox(props) {
                           }}
                           title={
                             notification.read
-                              ? 'Mark as Unread'
-                              : 'Mark as Read'
+                            ? intl.formatMessage(messages.markAsUnreadTitle)
+                            : intl.formatMessage(messages.markAsReadTitle)
                           }
                         >
                           <span style={{ fontSize: '1.5rem' }}>
@@ -503,10 +507,13 @@ function NotificationInbox(props) {
             setCurrentPage(currentPage === 1 ? totalPages : currentPage - 1)
           }
         >
-          Previous
+          <FormattedMessage {...messages.previous} />
         </button>
         <span className="fw-bold fs-5">
-          Page {currentPage} of {totalPages}
+        {intl.formatMessage(messages.pageOf, {
+            current: currentPage,
+            total: totalPages,
+          })}
         </span>
         <button
           className="btn btn-primary"
@@ -515,7 +522,7 @@ function NotificationInbox(props) {
             setCurrentPage(currentPage === totalPages ? 1 : currentPage + 1)
           }
         >
-          Next
+          <FormattedMessage {...messages.next} />
         </button>
       </div>
 
@@ -527,24 +534,24 @@ function NotificationInbox(props) {
           centered
         >
           <ModalHeader toggle={() => setModalOpen(false)}>
-            Notification Details
+          <FormattedMessage {...messages.detailsTitle} />
           </ModalHeader>
           <ModalBody>
             <p>
-              <strong>Description:</strong>{' '}
+            <strong><FormattedMessage {...messages.descriptionLabel} /></strong>{' '}
               {parseNotification(selectedNotification).libraryName}
             </p>
-            <p>
+            {/* <p>
               <strong>Status:</strong>{' '}
               {parseNotification(selectedNotification).libraryStatus}
-            </p>
+            </p> */}
             <p>
-              <strong>Date:</strong>{' '}
+            <strong><FormattedMessage {...messages.dateLabel} /></strong>{' '}
               {parseDate(selectedNotification.created_at).toLocaleDateString()}{' '}
               {parseDate(selectedNotification.created_at).toLocaleTimeString()}
             </p>
             <p>
-              <strong>Visit Link:</strong>{' '}
+            <strong><FormattedMessage {...messages.visitLinkLabel} /></strong>{' '}
               <a
                 href={
                   selectedNotification && selectedNotification.data
@@ -555,7 +562,7 @@ function NotificationInbox(props) {
                 rel="noopener noreferrer"
                 className="text-primary text-decoration-underline"
               >
-                Open Request Detail
+                <FormattedMessage {...messages.openRequestDetail} />
               </a>
             </p>
           </ModalBody>
@@ -565,7 +572,7 @@ function NotificationInbox(props) {
               className="btn btn-secondary"
               onClick={() => setModalOpen(false)}
             >
-              Close
+              <FormattedMessage {...messages.close} />
             </button>
           </ModalFooter>
         </Modal>
@@ -578,17 +585,17 @@ function NotificationInbox(props) {
         centered
       >
         <ModalHeader toggle={() => setShowDeleteModal(false)}>
-          Confirm Deletion
+        <FormattedMessage {...messages.confirmDeleteTitle} />
         </ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this notification?
+        <FormattedMessage {...messages.confirmDeleteMessage} />
         </ModalBody>
         <ModalFooter>
           <button
             className="btn btn-secondary"
             onClick={() => setShowDeleteModal(false)}
           >
-            Cancel
+            <FormattedMessage {...messages.cancel} />
           </button>
           <button
             className="btn btn-danger"
@@ -598,7 +605,7 @@ function NotificationInbox(props) {
               setTimeout(() => dispatch(requestNotifications()), 500);
             }}
           >
-            Delete
+              <FormattedMessage {...messages.delete} />
           </button>
         </ModalFooter>
       </Modal>
