@@ -330,6 +330,7 @@
   "app.components.Notification.showLess": "???Show Less",
   "app.components.Notification.goToInbox": "???Go to Notification Inbox",
 
+  "app.components.NotificationInbox.header": "???Notifications",
   "app.containers.NotificationInbox.searchLabel": "???Search Notifications",
   "app.containers.NotificationInbox.searchPlaceholderDescription": "???Description",
   "app.containers.NotificationInbox.statusLabel": "???Status",

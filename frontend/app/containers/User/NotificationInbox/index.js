@@ -357,7 +357,7 @@ function NotificationInbox(props) {
                 style={{ width: '150px', cursor: 'pointer' }}
                 onClick={() => handleSort('created_at')}
               >
-                Date{' '}
+                <FormattedMessage {...messages.thDate}/>
                 {sortColumn === 'created_at' &&
                   (sortOrder === 'asc' ? '↑' : '↓')}
               </th>
@@ -365,12 +365,12 @@ function NotificationInbox(props) {
                 style={{ width: '150px', cursor: 'pointer' }}
                 onClick={() => handleSort('libraryName')}
               >
-                Notification Detail{' '}
+               <FormattedMessage {...messages.thDetail}/>
                 {sortColumn === 'libraryName' &&
                   (sortOrder === 'asc' ? '↑' : '↓')}
               </th>
               <th style={{ width: '200px' }} className="text-center">
-                Actions
+                <FormattedMessage {...messages.thActions}/>
               </th>
             </tr>
           </thead>
@@ -484,7 +484,7 @@ function NotificationInbox(props) {
                             setNotificationToDelete(notification);
                             setShowDeleteModal(true);
                           }}
-                          title="Delete"
+                          title={intl.formatMessage(messages.delete)}
                         >
                           <span style={{ fontSize: '1.5rem' }}>🗑</span>
                         </button>
