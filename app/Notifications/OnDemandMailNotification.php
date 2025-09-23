@@ -8,7 +8,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 
-class OnDemandMailNotification extends BaseNotification
+//OnDemandMailNotification is a mandatory notification that can be sent to any user that is not already in the system and we've just his email address, so no notification will be saved on DB
+class OnDemandMailNotification extends MandatoryNotification
 {
     use Queueable;
 

@@ -16,18 +16,18 @@
     <br/>        
     @isset($reference_authors)
         @if ($reference_material_type != 1)  
-            <b>@lang('globals.app.references.authors')</b>: {{$reference_authors}} 
+            <b>@lang('globals.app.references.authors'):</b> {{$reference_authors}} 
         @endif 
     @endisset 
     @isset($reference_part_authors)
         @if ($reference_material_type === 1 || $reference_material_type === 2)  
             @if ($reference_material_type === 1) 
-                <b>@lang('globals.app.references.authors')</b>:{{$reference_part_authors}}  
+                <b>@lang('globals.app.references.authors'):</b> {{$reference_part_authors}}  
             @else 
-                <b>@lang('globals.app.references.part_authors')</b>:{{$reference_part_authors}} 
+                <b>@lang('globals.app.references.part_authors'):</b> {{$reference_part_authors}} 
             @endif             
         @endif 
     @endisset 
     <br/>                     
-    <b>@lang('globals.app.references.pubyear')</b>: {{ $reference_pubyear}}        
+    <b>@lang('globals.app.references.pubyear'):</b> {{ $reference_pubyear}}        
 @endsection

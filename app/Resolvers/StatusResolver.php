@@ -141,7 +141,8 @@ class StatusResolver
      */
     public function changeStatus($newStatus,$others=null,$userCheck=true)
     {
-       
+        Log::info("StatusRes: CLASS:".class_basename($this->model)." Status:".$newStatus);
+        
         if($newStatus === $this->status)
             return $this->model->getStatus();
         /*
@@ -189,7 +190,7 @@ class StatusResolver
 
     public function jobs() {
         //executing jobs   
-
+        Log::info("StatusRes JOBS");
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); 
         if($this->flow->has('jobs'))
         {                      
@@ -197,15 +198,16 @@ class StatusResolver
                 $jobclass::dispatchNow($this->model);                
             }
         }
+        Log::info("Status resolver jobs exit");  
     }
 
     public function notify()
-    {              
-        Log::info("Status resolver NOTIFY:");  
+    {                     
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); /*[$this->model->status()->first()->status]*/
-        $collection = new Collection(); //collection of array object [user, notificationClass] that has to receive the notification (of the class specified)
+        $collection = new Collection(); //collection of array object [user, notificationClass] that has to receive the notification (of the class specified) and it expects users of the form [user_id,email] because they come from "userwithpermissions.. " (i.e. from "operators") 
         if($this->flow->has('notify'))
         {
+             Log::info("Status resolver NOTIFY:");  
             foreach ($this->flow->get('notify') as $entity=>$methodarr) {
                 
                     switch ($entity){
@@ -225,13 +227,27 @@ class StatusResolver
                             foreach($methodslist as $entry) {   //entry = [method,NotifyClass]
                                                 
                                 $method=$entry[0];
-                                $users=$this->model->$method();
+                                $users=$this->model->$method();  //returns a Collection of User object
+                                Log::info("method: ".$method);
+
+                                if (is_object($users) && $users instanceof User) //is just a single User
+                                {
+                                    $u=$users; //get the user
+                                    $users=new Collection();  //rewrite $users as new empty Collection
+                                    
+                                    $myu=array("user_id"=>$u->id,"email"=>$u->email);
+
+                                    $users->add($myu);
+
+                                    Log::info("user singolo");
+                                }   
+
                                 $classname="App\\Notifications\\".$entry[1];       
                                                                 
-                                if(class_exists($classname) && $users && $users->count())
+                                if(class_exists($classname) && $users && $users->count()>0)
                                 {
                                         foreach ($users as $u) {
-                                            $collection->push([$u,$classname]);
+                                            $collection->push([$u,$classname]);                                            
                                         }
                                 }
                             }
@@ -249,6 +265,7 @@ class StatusResolver
                     }              
             }    
 
+            //Notify to users (get distinct users by filtering email address ad notification class!)
             if($collection && $collection->count()>0)
             {      
 
@@ -270,6 +287,7 @@ class StatusResolver
                     $bn=new $noti($this->model);      
                 
                     $u=User::findOrFail($item["user_id"]);
+                    Log::info("notify to User: ".$u->email);
                     $u->notify($bn);                              
                 }   
                                                                                       
@@ -278,6 +296,7 @@ class StatusResolver
 
             }
         }
+         Log::info("Status resolver notify exit");  
         //return false;
     }
 

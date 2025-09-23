@@ -2,6 +2,7 @@
 
 namespace App\Notifications\DDILL;
 
+use App\Models\Requests\BorrowingDocdelRequest;
 use App\Notifications\BaseMailMessage;
 use App\Notifications\BaseNotification;
 use Illuminate\Bus\Queueable;
@@ -24,9 +25,9 @@ class RequestNotification extends BaseNotification
         $this->object=$model;      //model is a Borrowing/LendingDocdelRequest  
         
         $request=$this->object;
-        $blib=$this->object->borrowingLibrary;
+        $blib=$this->object->borrowinglibrary;
         
-        $llib=$this->object->lendingLibrary;
+        $llib=$this->object->lendinglibrary;
         
         $this->addTitleIdentifier($request->id); //prepend title with # ID -         
 
@@ -66,6 +67,52 @@ class RequestNotification extends BaseNotification
                 $this->extraDataArr["lending_library_country"]=$lcountry->name;
         }
 
+        
+        if($this->object instanceof BorrowingDocdelRequest)
+        {
+            //if is a Patron Request
+            $pdr=$this->object->patrondocdelrequest;
+            if(isset($pdr))
+            {
+ 
+               
+                $patronrequestArray=$pdr->toArray();
+                foreach($patronrequestArray as $k=>$v) {
+                    if( isset($v) && !empty($v) )
+                        $this->extraDataArr["patron_request_".$k]=$v;
+                }     
+
+                if (isset($pdr->delivery_id))
+                {
+                    $delivery=$pdr->delivery;
+
+                    $deliveryArray=$delivery->toArray();
+                    foreach($deliveryArray as $k=>$v) {
+                        if( isset($v) && !empty($v) )
+                            $this->extraDataArr["delivery_".$k]=$v;
+                    } 
+
+                    $dcountry=$delivery->country;
+                    if(isset($dcountry))
+                        $this->extraDataArr["delivery_country"]=$dcountry->name;   
+
+                }
+                    
+
+
+                $patron=$pdr->patron;
+                if(isset($patron))
+                {
+                    $pArray=$patron->toArray();
+                    foreach($pArray as $k=>$v) {
+                        if( isset($v) && !empty($v) )
+                            $this->extraDataArr["user_".$k]=$v;
+                    }        
+                }
+            }
+        }
+
+        //DD request
         $requestArray=$request->toArray();
         foreach($requestArray as $k=>$v) {
             if( isset($v) && !empty($v) )

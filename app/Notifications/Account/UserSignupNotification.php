@@ -21,9 +21,12 @@ class UserSignupNotification extends MandatoryNotification
         $this->object=$model;
         $this->url=config('app.frontend_url').'/login';       
         
-        //Define mail data
-        $this->extraDataArr=['name'=>$this->object->name,'surname'=>$this->object->surname,'email'=>$this->object->email];        
-        
+        //User data
+        $userArray=$this->object->toArray();
+        foreach($userArray as $k=>$v) {
+            if( isset($v) && !empty($v) )
+                $this->extraDataArr["user_".$k]=$v;
+        }                                        
     }
 
     /**

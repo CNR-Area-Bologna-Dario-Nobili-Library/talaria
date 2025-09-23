@@ -1,6 +1,10 @@
 <?php namespace App\Models\Requests;
 
 use App\Models\BaseObserver;
+use App\Models\Users\User;
+use App\Notifications\DDILL\PatronBorrowingRequestNewNotification;
+use App\Notifications\DDILL\PatronRequestNewNotification;
+use App\Notifications\DDILL\PatronRequestRequestedNotification;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -42,15 +46,36 @@ class PatronDocdelRequestObserver extends BaseObserver
             'borrowing_library_id'=>$model->borrowing_library_id,            
          ]);
          if($br->save())
-         {            
-             $pdr=PatronDocdelRequest::find($model->id);
-            // OLD CODE
-            /* $n=new BorrowingDocdelRequestNotification($br);
+         {  
+            // Notify...          
+            $pdr=PatronDocdelRequest::find($model->id);           
             
-            foreach ($pdr->libraryOperators() as $op)    
-              $op->notify($n);           
-            */
-            //TODO: notify to borrow from status resolver
+            //only for just "requested" 
+            if($pdr->status=="requested")
+            {
+                $bn=new PatronBorrowingRequestNewNotification($pdr);
+                                                        
+                //Notify to library manager+users manager        
+                $lib=$pdr->library;
+                $operators=array();
+                $operators+=$lib->manageOperators()->toArray();
+                $operators+=$lib->usersOperators()->toArray();
+                
+                //unique operators
+                $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+                //Notify ...
+                foreach ($operatorsID as $item) {
+                    $u=User::findOrFail($item);                 
+                    $u->notify($bn);            
+                }    
+                
+                        
+                //Notify to patron
+                $user= $u=User::findOrFail($pdr->patron->id);            
+                $pnwr=new PatronRequestRequestedNotification($pdr); 
+                $user->notify($pnwr);
+            }
          }
 
                      

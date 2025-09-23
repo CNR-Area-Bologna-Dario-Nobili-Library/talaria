@@ -21,8 +21,20 @@ class UserRegistersNewLibraryNotification extends MandatoryNotification
         $this->object=$model;
         $this->url=config('app.frontend_url').'/library/'.$this->object->id;       //go to library dashboard
         
-        //Define mail data
-        $this->extraDataArr=['name'=>$this->object->name,'address'=>$this->object->address,'ill_email'=>$this->object->ill_email];        
+        //Library data
+        $blibArray=$this->object->toArray();
+        foreach($blibArray as $k=>$v) {
+            if( isset($v) && !empty($v) )
+                $this->extraDataArr["borrowing_library_".$k]=$v;
+        }
+
+        $binst=$this->object->institution;
+        $bcountry=$this->object->country;
+
+        if(isset($binst))
+            $this->extraDataArr["borrowing_library_institution"]=$binst->name;
+        if(isset($bcountry))
+            $this->extraDataArr["borrowing_library_country"]=$bcountry->name;           
         
     }
 }

@@ -1,6 +1,6 @@
 @extends('mail.notification.custom_layout')
 @include('mail.notification.block_library_user_data') 
-@include('mail.notification.block_library_data') 
+@include('mail.notification.block_borrowing_library_data') 
 
 @section('content')    
     <p>
@@ -8,7 +8,7 @@
     </p>
 
     <p>
-    @yield('library_data')
+    @yield('borrowing_library_data')
     <br/><br/>
     @yield('library_user_data')
 

@@ -6,6 +6,7 @@ $globalTrans=[
     'user_data_header'=>'User detail',
     'reference_data_header'=>'Reference detail',
     'request_data_header'=>'Request detail',
+    'delivery_data_header'=>'Pickup point detail', 
     'borrowing_library_data_header'=>'Borrowing library',
     'lending_library_data_header'=>'Lending library',
     'request_link'=>'Click here to open the request',

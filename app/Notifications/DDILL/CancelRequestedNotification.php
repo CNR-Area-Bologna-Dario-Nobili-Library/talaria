@@ -2,6 +2,8 @@
 
 namespace App\Notifications\DDILL;
 
+use App\Models\Requests\DocdelRequest;
+use App\Models\Requests\LendingDocdelRequest;
 use Illuminate\Bus\Queueable;
 
 
@@ -14,11 +16,13 @@ class CancelRequestedNotification extends RequestNotification
      *
      * @return void
      */
-    public function __construct($model)
-    {                
-        parent::__construct($model);
+    public function __construct($model)    
+    {                       
+        //note: we have to convert BorrowingDocdelRequest to LendingDocdelRequest in order to send only "lending request fields"  
+        $lr=LendingDocdelRequest::findOrFail($model->id);
+        parent::__construct($lr);
 
-        $this->url=config('app.frontend_url').'/library/'.$this->object->lendingLibrary->id.'/lending/'.$this->object->id;  
+        $this->url=config('app.frontend_url').'/library/'.$this->object->library->id.'/lending/'.$this->object->id;  
             
     }    
 }

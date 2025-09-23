@@ -25,27 +25,21 @@ class PatronAskJoinLibraryAwaitsApprovalNotification extends BaseNotification
         
         $lib=$model->library;        
                                      
-        if(isset($lib))
-        {
-            $libArray=$lib->toArray();
-            foreach($libArray as $k=>$v) {
-                if( isset($v) && !empty($v) )
-                    $this->extraDataArr["library_".$k]=$v;
-            }   
-            
-            $linst=$lib->institution;        
-            $lcountry=$lib->country;
-
-            if(isset($linst))
-                $this->extraDataArr["library_institution"]=$linst->name;
-
-            if(isset($lcountry))
-                $this->extraDataArr["library_country"]=$lcountry->name;
+         //Library data
+        $blibArray=$lib->toArray();
+        foreach($blibArray as $k=>$v) {
+            if( isset($v) && !empty($v) )
+                $this->extraDataArr["borrowing_library_".$k]=$v;
         }
-                          
 
+        $binst=$lib->institution;
+        $bcountry=$lib->country;
 
-        
+        if(isset($binst))
+            $this->extraDataArr["borrowing_library_institution"]=$binst->name;
+        if(isset($bcountry))
+            $this->extraDataArr["borrowing_library_country"]=$bcountry->name;      
+                                  
         //Patron Join Request data
         $this->extraDataArr+=['department'=>$model->department?$model->department->name:'',
                                 'title'=>$model->title?$model->title->name:'', 

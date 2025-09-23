@@ -79,7 +79,7 @@ class BaseNotification extends Notification
         $this->title=$this->title.trans("notification.".class_basename(get_class($this))."_title",[],$lang);    
 
        $myobj= [      
-               'title'=>$this->title?$this->title:'',                  
+               'title'=>$this->title?$this->title:'',              
                'url'=>$this->url?$this->url:'',
         ];
 

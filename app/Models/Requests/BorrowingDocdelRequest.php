@@ -123,20 +123,21 @@ class BorrowingDocdelRequest extends DocdelRequest
         return parent::borrowinglibrary();
     }        
 
-    public function deskLibraryOperators() {
-        $blib=$this->borrowinglibrary;        
-        if($blib)
-            return $blib->operators("deliver");
-    }
-
     public function operator()
     {        
         return $this->belongsTo('App\Models\Users\User', 'operator_id');
     }
 
+     //this return a realtionship
     public function patron() {
         if($this->patrondocdelrequest)
-            return $this->patrondocdelrequest->user;
+            return $this->patrondocdelrequest->patron;
+    }
+ 
+    //this return a User Object
+    public function patronUser() {
+        if($this->patrondocdelrequest)
+            return $this->patrondocdelrequest->patronUser();
     }
 
     //called only from patron!
@@ -152,7 +153,7 @@ class BorrowingDocdelRequest extends DocdelRequest
                 $this->changeStatus("canceledDirect",$other);
             
             else if($this->borrowing_status=="requested" /*&& any lending status*/ ) //may have already accepted/not the request
-                $this->changeStatus("cancelRequested",$other);                               
+                $this->changeStatus("cancelRequested",$other);          //send cancel request to lender                     
         }
     }
     //used only by changeStatus
@@ -257,7 +258,7 @@ class BorrowingDocdelRequest extends DocdelRequest
                         $newstatus="canceledDirect";                        
                         return $this->changeStatus($newstatus,$others);                     
                     } 
-                    else if($this->lendingLibrary && $this->lending_status!="requestReceived" && $this->borrowing_status!="cancelRequested") //cancel with lender
+                    else if($this->lendinglibrary && $this->lending_status!="requestReceived" && $this->borrowing_status!="cancelRequested") //cancel with lender
                     {                          
                         $newstatus="cancelRequested";                                                                            
                         return $this->changeStatus($newstatus,$others);                     

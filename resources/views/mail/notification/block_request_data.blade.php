@@ -1,24 +1,20 @@
 @include('mail.notification.block_reference_data') 
+@include('mail.notification.block_delivery_data') 
+@include('mail.notification.block_user_data') 
+@include('mail.notification.block_borrowing_library_data') 
+@include('mail.notification.block_lending_library_data') 
 
 @section('request')
-    @isset($borrowing_library_name)
-    <h3 class="library_data">@lang('globals.borrowing_library_data_header')</h3>     
-    <b>@lang('globals.app.libraries.name'):</b> {{$borrowing_library_name}} <br/>
-     @isset($borrowing_library_country)<b>@lang('globals.app.global.country'):</b> {{$borrowing_library_country}} <br/>@endisset
-     @isset($borrowing_library_institution)<b>@lang('globals.app.libraries.institution_id'):</b> {{$borrowing_library_institution}} <br/>@endisset
-     @isset($borrowing_library_ill_email) <b>@lang('globals.app.libraries.ill_email'):</b> {{$borrowing_library_ill_email}} <br/> @endisset
-     @isset($borrowing_library_ill_phone) <b>@lang('globals.app.libraries.ill_phone'):</b> {{$borrowing_library_ill_phone}} <br/> @endisset   
-    @endisset
+    @yield('borrowing_library_data')
 
-    @isset($lending_library_name)
-    <h3 class="library_data">@lang('globals.lending_library_data_header')</h3>   
-    <b>@lang('globals.app.libraries.name'):</b> {{$lending_library_name}} <br/>
-     @isset($lending_library_country)<b>@lang('globals.app.global.country'):</b> {{$lending_library_country}} <br/>@endisset
-     @isset($lending_library_institution)<b>@lang('globals.app.libraries.institution_id'):</b> {{$lending_library_institution}} <br/>@endisset
-     @isset($lending_library_ill_email)<b>@lang('globals.app.libraries.ill_email'):</b> {{$lending_library_ill_email}} <br/>@endisset
-     @isset($lending_library_ill_phone)<b>@lang('globals.app.libraries.ill_phone'):</b> {{$lending_library_ill_phone}} <br/>    @endisset
-    @endisset
- 
+    @yield('lending_library_data')
+
+    {{-- user will be included only when notification is sent to borrowing library --}}
+    @yield('user_data')
+
+    {{-- delivery desk will be included when notification is sent to borrowing library --}}
+    @yield('delivery_data')
+
     @isset($request_id)
     <h3 class="request_data">@lang('globals.request_data_header')</h3>
     <b>@lang('globals.app.global.id'):</b> {{$request_id}} <br/>
@@ -42,6 +38,7 @@
     @endisset
 
     @yield('reference')
+
 @endsection
 
 @section('request_link')

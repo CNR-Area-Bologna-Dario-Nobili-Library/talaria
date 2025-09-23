@@ -1,3 +1,4 @@
+@isset($abilities)
 <div class="permissionsBlock">
     <ul>
     @foreach (explode (',',$abilities) as $perm)
@@ -5,3 +6,4 @@
     @endforeach
     </ul>
 </div>
+@endisset

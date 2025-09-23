@@ -50,18 +50,7 @@ class PatronUpdateBorrowing implements ShouldQueue
                                 $borrddr=$this->patronddrequest->docdelrequests->sortByDesc('created_at')->first();                
                                 if($borrddr) 
                                 {
-                                    $borrddr->userAskCancel();                                    
-                                    // OLD CODE 
-                                    /*$n=new BorrowingDocdelRequestNotification($borrddr);
-
-                                    $lib=$this->patronddrequest->library;
-                                    //get all borrowing/lending/.. operators
-                                    $oper= $lib->operators("borrow");
-            
-                                    foreach ($oper as $op)    
-                                      $op->notify($n);    */
-
-                                    //TODO: notify to borrow from status resolver
+                                    $borrddr->userAskCancel();                                                                        
                                 }
                             }
                             break;

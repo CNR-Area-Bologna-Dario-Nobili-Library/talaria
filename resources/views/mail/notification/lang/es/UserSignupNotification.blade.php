@@ -1,18 +1,12 @@
 @extends('mail.notification.custom_layout')
+@include('mail.notification.block_user_data') 
 
 @section('content')    
     <p> 
-        Welcome {{$name}} {{$surname}} in our  community!
+        Welcome {{$user_name}} {{$user_surname}} in our  community!
     </p>
 
-    <p>
-    <h3>Registration data</h3>
-
-    <b>Name:</b> {{$name}} <br/>
-    <b>Surname:</b> {{$surname}}<br/>
-    <b>Email:</b> {{$email}}<br/>
-
-    </p>
+    @yield('user_data');
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">

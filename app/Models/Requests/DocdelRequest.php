@@ -84,7 +84,13 @@ class DocdelRequest extends BaseModel
     public function borrowingLibraryBorrowingOperators() {
         $blib=$this->borrowinglibrary;        
         if($blib)
-            return $blib->operators("borrow");
+            return $blib->borrowingOperators();
+    }
+
+    public function borrowingLibraryDeliverOperators() {
+        $blib=$this->borrowinglibrary;        
+        if($blib)
+            return $blib->deliverOperators();
     }
 
     public function borrowingLibraryManageOperators() {
@@ -96,7 +102,7 @@ class DocdelRequest extends BaseModel
     public function lendingLibraryLendingOperators() {
         $llib=$this->lendinglibrary;        
         if($llib)
-            return $llib->operators("lend");
+            return $llib->lendingOperators();
     }
 
     public function lendingLibraryManageOperators() {
