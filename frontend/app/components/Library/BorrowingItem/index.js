@@ -226,7 +226,8 @@ export const hasParentRequest=(data) => {
 
 export const canDelete=(data) => {
     return (
-        (data.borrowing_status=="newrequest" && !isPatronRequest(data) && !hasParentRequest(data))
+        //23/09/25 abbiamo deciso di visualizzare il bottone x eliminare anche per le rich utente
+        (data.borrowing_status=="newrequest" && !isPatronRequest(data) /*&& !hasParentRequest(data)*/)
     );    
 }
 
@@ -444,8 +445,12 @@ export const BorrowingRequestIcons = (props) => {
 
                 {/*casi di archiviazione come inevasione SENZA patron DIRETTA dopo diversi forward/inevasioni dd
                 sembra un caso di "DIRETTA" ma solo perchè è una nuova richiesta ma di fatto è collegata alle altre
-                x cui il dd c'e' stato!*/}
-                {!isPatronRequest(data) && hasParentRequest(data) && !isArchived(data) && canRequest(data) && askArchiveRequestAsNotReceived && <a className="btn btn-icon" title={intl.formatMessage({id: "app.requests.icon.archiveNotReceived"})} onClick={()=>askArchiveRequestAsNotReceived()}><i className="fa-solid fa-hard-drive text-warning"></i></a>} 
+                x cui il dd c'e' stato!
+                //23/09/25 abbiamo deciso di visualizzare il bottone x eliminare la rich
+                */}
+                {
+                    /*!isPatronRequest(data) && hasParentRequest(data) && !isArchived(data) && canRequest(data) && askArchiveRequestAsNotReceived && <a className="btn btn-icon" title={intl.formatMessage({id: "app.requests.icon.archiveNotReceived"})} onClick={()=>askArchiveRequestAsNotReceived()}><i className="fa-solid fa-hard-drive text-warning"></i></a>
+                */}
         </div>
     )
 }
