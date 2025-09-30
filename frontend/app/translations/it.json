@@ -523,7 +523,7 @@
   "app.requests.deliveredToDeskMessage": "Inviata al desk con successo",
   "app.requests.willSupplyMessage": "Richiesta accettata",
   "app.requests.acceptCancelMessage": "Vuoi accettare la richiesta di cancellazione?",
-  "app.requests.reiterated": "Inoltrata",
+  "app.requests.reiterated": "Reiterata",
   "app.requests.notReceivedButFulfilledByLender": "Non ricevuto ma evaso dal fornitore",
   "app.requests.inProgress": "In corso",
   "app.requests.patronDirectRequest": "Richiesta diretta all'utente",
