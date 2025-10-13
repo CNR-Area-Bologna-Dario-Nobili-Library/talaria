@@ -90,4 +90,41 @@ class BaseNotification extends Notification
 
        return $myobj;  
     }    
+    // helper for realtime/events
+    public function toRealtimePayload(?\App\Models\Users\User $viewer = null): array
+    {
+        
+        $viewer    = $viewer ?: \Illuminate\Support\Facades\Auth::user();
+        $lang      = $viewer ? $viewer->preferredLocale() : app()->getLocale();
+
+        // Actor (who triggered it)
+        $actorUser = \Illuminate\Support\Facades\Auth::user();
+
+        $prefix = is_string($this->title) ? $this->title : '';
+        $key    = 'notification.' . class_basename(static::class) . '_title';
+        $label  = trans($key, [], $lang);
+        if ($label === $key) $label = 'Notification';
+
+        $fullTitle = trim($prefix . $label);
+
+        $payload = [
+            'title'       => $fullTitle,
+            'url'         => $this->url ?? null,
+            // IMPORTANT: actor here, not viewer
+            'notifier_id' => optional($actorUser)->id,
+        ];
+
+        if ($this->object) {
+            $payload['object'] = [
+                'object_type' => get_class($this->object),
+                'object_id'   => (int) $this->object->id,
+            ];
+        }
+
+        if (!empty($this->extraDataArr)) {
+            $payload['extra'] = $this->extraDataArr;
+        }
+
+        return $payload;
+    }
 }

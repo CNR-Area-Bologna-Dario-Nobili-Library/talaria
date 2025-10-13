@@ -5,7 +5,7 @@ namespace App\Resolvers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
-use \App\Models\Users\User;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Notifications\BaseNotification;
@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Support\Facades\Log;
 
+use App\Events\AppNotificationEvent;
+use App\Support\RealtimeBroadcaster;
 /**
  * Created by PhpStorm.
  * User: halphass
@@ -288,8 +290,8 @@ class StatusResolver
                 
                     $u=User::findOrFail($item["user_id"]);
                     Log::info("notify to User: ".$u->email);
-                    $u->notify($bn);                              
-                }   
+                    $u->notify($bn);                
+                    RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                }   
                                                                                       
                 //});
 

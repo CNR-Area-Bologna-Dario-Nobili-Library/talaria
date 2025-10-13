@@ -8,6 +8,7 @@ use App\Notifications\DDILL\PatronRequestRequestedNotification;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\RealtimeBroadcaster; 
 
 
 class PatronDocdelRequestObserver extends BaseObserver
@@ -68,6 +69,7 @@ class PatronDocdelRequestObserver extends BaseObserver
                 foreach ($operatorsID as $item) {
                     $u=User::findOrFail($item);                 
                     $u->notify($bn);            
+                    RealtimeBroadcaster::fromNotification($pdr, $u, $bn);
                 }    
                 
                         
@@ -75,6 +77,7 @@ class PatronDocdelRequestObserver extends BaseObserver
                 $user= $u=User::findOrFail($pdr->patron->id);            
                 $pnwr=new PatronRequestRequestedNotification($pdr); 
                 $user->notify($pnwr);
+                RealtimeBroadcaster::fromNotification($pdr, $user, $pnwr);
             }
          }
 

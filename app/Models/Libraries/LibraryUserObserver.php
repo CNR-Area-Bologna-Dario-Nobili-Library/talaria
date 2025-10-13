@@ -7,7 +7,7 @@ use App\Notifications\Library\PatronAskJoinLibraryNotification;
 use App\Notifications\Library\PatronDisabledByLibraryNotification;
 use App\Notifications\Library\PatronEnabledByLibraryNotification;
 use App\Notifications\Library\PatronDeletedByLibraryNotification;
-
+use App\Support\RealtimeBroadcaster;
 use \Auth;
 
 
@@ -52,11 +52,13 @@ class LibraryUserObserver extends BaseObserver
         foreach ($operatorsID as $item) {
             $u=User::findOrFail($item);                 
             $u->notify($pn);            
+            RealtimeBroadcaster::fromNotification($model, $u, $pn);             
         }    
                 
         //Notify to patron
         $pnwr=new PatronAskJoinLibraryAwaitsApprovalNotification($model);
         $user->notify($pnwr);
+        RealtimeBroadcaster::fromNotification($model, $user, $pnwr);
 
                          
         return parent::creating($model);
@@ -121,6 +123,7 @@ class LibraryUserObserver extends BaseObserver
                     //Notify to patron                                                
                     $ln=new PatronDisabledByLibraryNotification($model);                    
                     $u->notify($ln);
+                    RealtimeBroadcaster::fromNotification($model, $u, $ln);
                 }
                 //lo sto abilitando
                 else if($model->status==config("constants.libraryuser_status.enabled"))
@@ -141,6 +144,7 @@ class LibraryUserObserver extends BaseObserver
                     //Notify to patron                                                
                     $ln=new PatronEnabledByLibraryNotification($model);                    
                     $u->notify($ln);
+                    RealtimeBroadcaster::fromNotification($model, $u, $ln);
                 }
 
             }
@@ -163,6 +167,7 @@ class LibraryUserObserver extends BaseObserver
         //Notify to patron                                                
         $ln=new PatronDeletedByLibraryNotification($model);                    
         $u->notify($ln);
+        RealtimeBroadcaster::fromNotification($model, $u, $ln);
         
     }
 
