@@ -88,6 +88,7 @@
     "intl-relativeformat": "^6.4.3",
     "invariant": "2.2.4",
     "ip": "1.1.5",
+    "laravel-echo": "^1.11.3",
     "large-file-downloader": "^2.0.3",
     "leaflet": "1.7.1",
     "lodash": "^4.17.21",
@@ -118,6 +119,7 @@
     "sanitize.css": "8.0.0",
     "sass-loader": "^8.0.2",
     "simple-line-icons": "^2.5.5",
+    "socket.io-client": "^2.4.0",
     "styled-components": "4.2.0"
   },
   "devDependencies": {

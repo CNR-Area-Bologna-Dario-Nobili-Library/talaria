@@ -1,4 +1,3 @@
-
 {
     "authHost": "https://talaria.local",
     "host": "0.0.0.0",
@@ -13,7 +12,7 @@
     "database": "redis",
     "databaseConfig": {
       "redis": {
-        "host": "127.0.0.1",
+        "host": "redis",
         "port": "6379",
         "password": null,
         "keyPrefix": "talaria_database_"
@@ -23,7 +22,6 @@
     "apiOriginAllow": {
       "allowCors": true,
       "allowOrigin": "*",
-      "allowMethods": "GET, POST",
-      "allowHeaders": "Origin, Content-Type, Authorization, X-Requested-With, Accept"
-    }
+      "allowMethods": "GET, POST, OPTIONS",
+      "allowHeaders": "Origin, Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN, X-Socket-Id"  }
   }
