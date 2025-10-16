@@ -23,16 +23,16 @@ export const generateOpenURL = (reference) => {
             url+="&rft.date="+reference.pubyear;                
 
         if(reference.doi)
-            url+="&rft_id="+encodeURIComponent("info:doi/"+reference.doi); 
+            url+="&rft_id[]="+encodeURIComponent("info:doi/"+reference.doi); 
         
         if(reference.pmid)
-            url+="&rft_id="+encodeURIComponent("info:pmid/"+parseInt(reference.pmid,10));
+            url+="&rft_id[]="+encodeURIComponent("info:pmid/"+parseInt(reference.pmid,10));
         
         if(reference.issn)
             url+="&rft.issn="+reference.issn;   
 
         if(reference.isbn)
-            url+="&rft.ibsn="+reference.isbn;       
+            url+="&rft.isbn="+reference.isbn;       
 
         if(reference.sid)
             url+="&rfr_id="+encodeURIComponent("info:sid/"+reference.sid);      
