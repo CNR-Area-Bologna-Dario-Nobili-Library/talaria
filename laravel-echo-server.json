@@ -15,8 +15,8 @@
         "host": "redis",
         "port": "6379",
         "password": null,
-        "keyPrefix": "talaria_database_"
-
+        "keyPrefix": "talaria_database_",
+        "db": 2 
       }
     },
     "apiOriginAllow": {
