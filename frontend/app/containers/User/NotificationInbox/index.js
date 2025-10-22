@@ -65,8 +65,10 @@ function NotificationInbox(props) {
    * Mark all as read
    */
   const handleMarkAllAsRead = () => {
-    dispatch(updateNotificationsAsRead());
-  };
+       dispatch(updateNotificationsAsRead());
+       // Update bell badge after Mark All As Read
+       setTimeout(() => dispatch(requestNotifications()), 300);
+      };    
 
   /**
    * Sorting
