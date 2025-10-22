@@ -71,6 +71,14 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
   const me = getCurrentUserIdFromProps(props);
 
+
+  // Pull missed notifications right after login (or initial load if already logged in)
+  useEffect(() => {
+  if (me) {
+      dispatch(requestNotifications());
+    }
+  }, [me, dispatch]);
+  
   // ADDED: helper to safely leave channels (logout/unmount)
   const leaveAll = () => {
     try {
@@ -130,6 +138,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
     function onAppNotification(e) {
       if (!me) return;
+
       log(TAG, '📡 Event received:', e);
       
       if (!e || !e.notification) {
@@ -211,6 +220,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       try { chAppNotif.stopListening('.app.notification', onAppNotification); } catch (e) {}
       leaveAll();
     };
+  
   }, [dispatch, me]);
 
   return null;
