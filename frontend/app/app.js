@@ -39,7 +39,7 @@ import configureStore from './configureStore';
 import { translationMessages } from './i18n';
 import { initializeReactGA } from './ga';
 // import CookieBar from "../../frontend/app/components/CookieBar";
-import AppRealtimeListener from 'components/realtime/AppRealtimeListener'; // adjust path if no alias
+import AppRealtimeListener from './components/realtime/AppRealtimeListener'; // adjust path if no alias
 import AppNotificationListener from './components/realtime/AppNotificationListener';
 import './utils/echo'; // ✅ Initialize Echo here
 

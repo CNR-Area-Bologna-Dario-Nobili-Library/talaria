@@ -166,6 +166,7 @@ const AppNotificationListener = (props) => {
       lastRealtimeMsRef.current = Date.now();
     }
 
+    //NOTE: the "dot" before event name is required
     channel.listen('.app.notification', onEvent);
     if (typeof window !== 'undefined') window.__APP_NOTIF_ACTIVE = true;
 
