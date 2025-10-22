@@ -69,6 +69,17 @@ function log() { try { console.log.apply(console, arguments); } catch (e) {} }
 const AppRealtimeListener = function AppRealtimeListener(props) {
   var dispatch = props.dispatch;
 
+  const me = getCurrentUserIdFromProps(props);
+
+  // ADDED: helper to safely leave channels (logout/unmount)
+  const leaveAll = () => {
+    try {
+      var echo = (typeof window !== 'undefined' && window.Echo) ? window.Echo : null;
+      if (!echo) return;
+      try { echo.leave('app-notifications'); } catch {}
+    } catch {}
+  };
+
   useEffect(function () {
     log(TAG, 'mount');
 
@@ -77,8 +88,10 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       log(TAG, 'Echo not ready, bail');
       return;
     }
-    if (typeof window !== 'undefined' && window.__APP_RTL_ACTIVE) {
-      log(TAG, 'already active, bail');
+
+    if (!me) {
+      log(TAG, 'No user -> unsubscribing & skipping listener attach');
+      leaveAll();
       return;
     }
 
@@ -116,6 +129,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
     }
 
     function onAppNotification(e) {
+      if (!me) return;
       log(TAG, '📡 Event received:', e);
       
       if (!e || !e.notification) {
@@ -124,7 +138,6 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       }
 
       var n = e.notification;
-      var me = getCurrentUserIdFromProps(props);
       var actorId = pickNum(n, ['notifier_id']);
       var targetId = pickNum(n, ['target_user_id']);
 
@@ -170,7 +183,6 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         tMyLib = setTimeout(function () { refreshMyLibraries(); }, 300);
       }
 
-      //!!!!Note: This method can also be applied to refresh admin panels and their associated components"!!!!
 
       // If target is me (and actor is not me) -> also refresh my libraries (for side panel)
       if (me && targetId === me && actorId !== me && !isPatronDashboardPath(pathname)) {
@@ -187,10 +199,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
     chAppNotif.listen('.app.notification', onAppNotification);
 
-    if (typeof window !== 'undefined') window.__APP_RTL_ACTIVE = true;
     log(TAG, '✅ listener attached');
 
-    // cleanup
     return function () {
       log(TAG, 'cleanup');
       clearTimeout(tLender);
@@ -199,14 +209,9 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       clearTimeout(tMyLib);
 
       try { chAppNotif.stopListening('.app.notification', onAppNotification); } catch (e) {}
-      try {
-        if (echo.leaveChannel) echo.leaveChannel('app-notifications');
-        else echo.leave('app-notifications');
-      } catch (e) {}
-
-      if (typeof window !== 'undefined') window.__APP_RTL_ACTIVE = false;
+      leaveAll();
     };
-  }, [dispatch]);
+  }, [dispatch, me]);
 
   return null;
 };
