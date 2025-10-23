@@ -23,12 +23,13 @@ class AutomaticDeleteUploadedFiles implements ShouldQueue
         //
     }
 
-    private function deleteFileFromArchivedRequests() {        
-        //<1 days ago archived request
-        $requests=BorrowingDocdelRequest::where('archived','=','1')
-        ->whereRaw("DATEDIFF(now(),archived_date) <= 1")->get();        
+     private function deleteFileFromArchivedRequests() {        
+        //<1 days ago archived request with file and not patron request
+        $requests=BorrowingDocdelRequest::where('patron_docdel_request_id','=',null)->where('archived','=','1')->whereNotNull('filehash')->whereRaw("DATEDIFF(now(),archived_date) <= 1")->get();        
         foreach($requests as $req)
             $req->deleteFile();
+
+        //TODO: delete patronrequest archived
     }
 
     /**

@@ -100,7 +100,7 @@ class DocdelRequest extends BaseModel
     } 
 
     public function deleteFile() {
-        if (File::exists(storage_path().'/app/public/'.$this->filehash)) {
+        if ($this->filehash && File::exists(storage_path().'/app/public/'.$this->filehash)) {
             File::delete(storage_path().'/app/public/'.$this->filehash);
         }
 
