@@ -1,16 +1,12 @@
 // frontend/app/components/realtime/AppRealtimeListener.js
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import {
-  requestBorrowingsList,
-  requestLendingsList,
-  requestUsersList,
-} from '../../containers/Library/actions';
+import { requestBorrowingsList, requestLendingsList,} from '../../containers/Library/actions';
 import { requestNotifications } from 'containers/App/actions';
 import { requestMyLibraries } from '../../containers/Patron/actions';
 
 function getPathname() {
-  return (typeof window !== 'undefined' && window.location) ? window.location.pathname : '';
+  return typeof window !== 'undefined' && window.location ? window.location.pathname : '';
 }
 
 function getLibraryIdFromPath(pathname) {
@@ -18,219 +14,238 @@ function getLibraryIdFromPath(pathname) {
   return m ? String(parseInt(m[1], 10)) : null;
 }
 
-function isPatronAdminPath(pathname) {
-  var segments = ['users', 'patrons', 'members', 'registrations', 'requests', 'approvals', 'pending'];
-  for (var i = 0; i < segments.length; i++) {
-    if (pathname.indexOf('/' + segments[i]) !== -1) return true;
-  }
-  return false;
-}
-
 function isPatronDashboardPath(pathname) {
-  return pathname.indexOf('/user/dashboard') !== -1 || 
-         pathname.indexOf('/patron/dashboard') !== -1 ||
-         pathname.indexOf('/patron/my-libraries') !== -1;
+  return ( pathname.indexOf('/user/dashboard') !== -1 ||  pathname.indexOf('/patron/dashboard') !== -1 || pathname.indexOf('/patron/my-libraries') !== -1 );
 }
 
 function getCurrentUserIdFromProps(props) {
-  var id =
-    (props && props.auth && props.auth.user && props.auth.user.id) ||
-    (props && props.app  && props.app.auth  && props.app.auth.user && props.app.auth.user.id) ||
-    (typeof window !== 'undefined' && window.App && window.App.user && window.App.user.id) ||
-    (typeof window !== 'undefined' && window.__APP_USER_ID) ||
-    0;
+  var id = (props && props.auth && props.auth.user && props.auth.user.id) ||(props && props.app &&  props.app.auth && props.app.auth.user && props.app.auth.user.id) || (typeof window !== 'undefined' && window.App && window.App.user && window.App.user.id) || (typeof window !== 'undefined' && window.__APP_USER_ID) ||  0;
   id = Number(id);
   return isNaN(id) ? 0 : id;
 }
 
-function pickNum(obj, keys) {
-  for (var i = 0; i < keys.length; i++) {
-    var k = keys[i];
-    if (obj && obj[k] != null) {
-      var n = Number(obj[k]);
-      if (!isNaN(n)) return n;
-    }
-  }
-  return null;
-}
-
 function debounce(fn, wait) {
   var t = null;
-  return function () {
+  return function() {
     clearTimeout(t);
-    var ctx = this; var args = arguments;
-    t = setTimeout(function () { fn.apply(ctx, args); }, wait);
+    var ctx = this;
+    var args = arguments;
+    t = setTimeout(function() {
+      fn.apply(ctx, args);
+    }, wait);
   };
 }
 
 var TAG = '[RTL]';
-function log() { try { console.log.apply(console, arguments); } catch (e) {} }
+function log() {
+  try {
+    console.log.apply(console, arguments);
+  } catch (e) {}
+}
 
 const AppRealtimeListener = function AppRealtimeListener(props) {
   var dispatch = props.dispatch;
 
   const me = getCurrentUserIdFromProps(props);
 
-
-  // Pull missed notifications right after login (or initial load if already logged in)
+  // On login, load any notifications might have missed.
   useEffect(() => {
-  if (me) {
+    if (me) {
       dispatch(requestNotifications());
     }
   }, [me, dispatch]);
-  
-  // ADDED: helper to safely leave channels (logout/unmount)
+
+  // Safely leave channels on logout or when the component unmounts
   const leaveAll = () => {
     try {
-      var echo = (typeof window !== 'undefined' && window.Echo) ? window.Echo : null;
+      var echo =
+        typeof window !== 'undefined' && window.Echo ? window.Echo : null;
       if (!echo) return;
-      try { echo.leave('app-notifications'); } catch {}
+      try {
+        echo.leave('app-notifications');
+      } catch {}
     } catch {}
   };
 
-  useEffect(function () {
-    log(TAG, 'mount');
+  useEffect(
+    function() {
+      log(TAG, 'mount');
 
-    var echo = (typeof window !== 'undefined') ? window.Echo : null;
-    if (!echo || typeof echo.channel !== 'function') {
-      log(TAG, 'Echo not ready, bail');
-      return;
-    }
-
-    if (!me) {
-      log(TAG, 'No user -> unsubscribing & skipping listener attach');
-      leaveAll();
-      return;
-    }
-
-    var chAppNotif = echo.channel('app-notifications');
-
-    // Only one timer per action type
-    var tLender = null;
-    var tBorrow = null;
-    var tUsers  = null;
-    var tMyLib  = null;
-
-    var debouncedBell = debounce(function () {
-      log(TAG, '🔔 Refreshing notification bell');
-      dispatch(requestNotifications());
-    }, 200);
-
-    function refreshLender(libId) {
-      log(TAG, '📤 Dispatching requestLendingsList for lib', libId);
-      dispatch(requestLendingsList(libId, null, null, { _ts: Date.now() }));
-    }
-    
-    function refreshBorrower(libId, isArchive) {
-      log(TAG, '📥 Dispatching requestBorrowingsList for lib', libId, 'archive:', isArchive);
-      dispatch(requestBorrowingsList(libId, null, null, { archived: isArchive ? 1 : 0, _ts: Date.now() }));
-    }
-    
-    function refreshUsers(libId) {
-      log(TAG, '👥 Dispatching requestUsersList for lib', libId);
-      dispatch(requestUsersList(libId, null, null, { _ts: Date.now() }));
-    }
-    
-    function refreshMyLibraries() {
-      log(TAG, '📚 Dispatching requestMyLibraries');
-      dispatch(requestMyLibraries());
-    }
-
-    function onAppNotification(e) {
-      if (!me) return;
-
-      log(TAG, '📡 Event received:', e);
-      
-      if (!e || !e.notification) {
-        log(TAG, '⚠️ missing notification object');
+      var echo = typeof window !== 'undefined' ? window.Echo : null;
+      if (!echo || typeof echo.channel !== 'function') {
+        log(TAG, 'Echo not ready, bail');
         return;
       }
 
-      var n = e.notification;
-      var actorId = pickNum(n, ['notifier_id']);
-      var targetId = pickNum(n, ['target_user_id']);
-
-      log(TAG, '📦 Notification:', { me: me, actorId: actorId, targetId: targetId });
-
-      // 1) Always ring bell
-      debouncedBell();
-
-      // 2) Get current page info
-      var pathname = getPathname();
-      var libId = getLibraryIdFromPath(pathname);
-
-      log(TAG, '📍 Current page:', { pathname: pathname, libId: libId });
-
-      // 3) Dispatch based on URL - ONE refresh per type
-      
-      // If on borrowing page -> refresh borrowing list
-      if (pathname.indexOf('/borrowing') !== -1 && libId) {
-        var isArchive = pathname.indexOf('/archive') !== -1;
-        log(TAG, '✅ On borrowing page, refreshing list');
-        clearTimeout(tBorrow);
-        tBorrow = setTimeout(function () { refreshBorrower(libId, isArchive); }, 300);
+      if (!me) {
+        log(TAG, 'No user -> unsubscribing & skipping listener attach');
+        leaveAll();
+        return;
       }
 
-      // If on lending page -> refresh lending list
-      if ((pathname.indexOf('/lending') !== -1 || pathname.indexOf('/to-deliver') !== -1) && libId) {
-        log(TAG, '✅ On lending page, refreshing list');
+      var chAppNotif = echo.channel('app-notifications');
+
+      // One timer per action type
+      var tLender = null;
+      var tBorrow = null;
+      var tMyLib = null;
+
+      var debouncedBell = debounce(function() {
+        log(TAG, 'Refreshing notification bell');
+        dispatch(requestNotifications());
+      }, 200);
+
+      function refreshLender(libId) {
+        log(TAG, 'Dispatching requestLendingsList for lib', libId);
+        dispatch(requestLendingsList(libId, null, null, { _ts: Date.now() }));
+      }
+
+      function refreshBorrower(libId, isArchive) {
+        log(TAG, 'Dispatching requestBorrowingsList for lib', libId, 'archive:', isArchive,);
+        dispatch(
+          requestBorrowingsList(libId, null, null, {
+            archived: isArchive ? 1 : 0,
+            _ts: Date.now(),
+          }),
+        );
+      }
+
+      function refreshMyLibraries() {
+        log(TAG, 'Dispatching requestMyLibraries');
+        dispatch(requestMyLibraries());
+      }
+
+      function onAppNotification(e) {
+        if (!me) return;
+
+        log(TAG, 'Event received:', e);
+
+        if (!e || !e.notification) {
+          log(TAG, 'missing notification object');
+          return;
+        }
+
+        var n = e.notification;
+
+        log(TAG, 'Full notification object:', JSON.stringify(n));
+
+        // Extract library IDs from notification.extra
+        var borrowingLibId = n && n.extra && n.extra.borrowing_library_id ? String(n.extra.borrowing_library_id) : null;
+        var lendingLibId = n && n.extra && n.extra.lending_library_id ? String(n.extra.lending_library_id) : null;
+
+        log(TAG, 'Extracted IDs - borrowingLibId:', borrowingLibId, 'lendingLibId:', lendingLibId, );
+
+        // Always ring bell
+        debouncedBell();
+
+        // Get current page info (TARGET user's page)
+        var pathname = getPathname();
+        var targetCurrentLibId = getLibraryIdFromPath(pathname);
+
+        log(TAG, 'Current page:', { pathname: pathname, targetCurrentLibId: targetCurrentLibId,});
+        log(TAG, 'Starting scenario checks...');
+
+        // SCENARIO 1 Only refresh wgen Actor update on lending -> refresh borrowing on the target side 
+        var s1_hasBorrowing = pathname.indexOf('/borrowing') !== -1;
+        var s1_notRequest = !pathname.match(/\/borrowing\/\d+\/request/);
+        var s1_noLending = pathname.indexOf('/lending') === -1;
+        var s1_noToDeliver = pathname.indexOf('/to-deliver') === -1;
+        var s1_hasLibId = !!targetCurrentLibId;
+        var s1_correctLibrary = borrowingLibId && targetCurrentLibId === borrowingLibId;
+        log(TAG,'SCENARIO 1 CHECK: /borrowing?',s1_hasBorrowing, '!request?', s1_notRequest, '!lending?', s1_noLending, '!to-deliver?', s1_noToDeliver, 'libId?', s1_hasLibId,   'correctLib (borrowing)?',  s1_correctLibrary, );
+        if (s1_hasBorrowing && s1_notRequest && s1_noLending && s1_noToDeliver && s1_hasLibId && s1_correctLibrary) {
+          log(TAG, 'SCENARIO 1 MATCHED: Refreshing borrowing list for lib', targetCurrentLibId,);
+          clearTimeout(tBorrow);
+          tBorrow = setTimeout(function() {
+            refreshBorrower(targetCurrentLibId, false);
+          }, 300);
+          return; 
+        }
+        log(TAG, 'SCENARIO 1 SKIPPED');
+
+
+        // SCENARIO 2: Only refresh if the notification's lending_library_id matches target's library
+        var s2_hasLending = pathname.indexOf('/lending') !== -1 || pathname.indexOf('/to-deliver') !== -1;
+        var s2_noBorrowing = pathname.indexOf('/borrowing') === -1;
+        var s2_hasLibId = !!targetCurrentLibId;
+        var s2_correctLibrary = lendingLibId && targetCurrentLibId === lendingLibId;
+        log(TAG, 'SCENARIO 2 CHECK: /lending or /to-deliver?',s2_hasLending, '!borrowing?', s2_noBorrowing, 'libId?', s2_hasLibId, 'correctLib (lending)?', s2_correctLibrary, );
+        if (s2_hasLending && s2_noBorrowing && s2_hasLibId && s2_correctLibrary) {
+          log(TAG, 'SCENARIO 2 MATCHED: Refreshing lending list for lib',targetCurrentLibId,);
+          clearTimeout(tLender);
+          tLender = setTimeout(function() {
+            refreshLender(targetCurrentLibId);
+          }, 300);
+          return;
+        }
+        log(TAG, 'SCENARIO 2 SKIPPED');
+
+        // Scenario 3: https://talaria.local/library/XXX/borrowing/YYY/request -> refresh target user lending list
+        log(TAG, 'SCENARIO 3 CHECK: Testing path:', pathname);
+        var actorLibIdMatch = pathname.match(/\/library\/(\d+)\/borrowing\/\d+\/request/,);
+        log(TAG, 'SCENARIO 3: actorLibIdMatch:', actorLibIdMatch);
+        if (actorLibIdMatch) {
+          var actorLibId = String(parseInt(actorLibIdMatch[1], 10));
+          var s3_regexMatch = !!pathname.match(/\/library\/\d+\/borrowing\/\d+\/request(?:\/|$)/,);
+          var s3_hasTargetLibId = !!targetCurrentLibId;
+          var s3_differentLibs = targetCurrentLibId !== actorLibId;
+          log(TAG,'SCENARIO 3: actorLibId=', actorLibId, 'targetLibId=', targetCurrentLibId, 'regexMatch?',s3_regexMatch, 'hasTargetLibId?', s3_hasTargetLibId, 'differentLibs?',  s3_differentLibs,  );
+          // Only refresh if we're in a DIFFERENT library (cross-library scenario)
+          if (s3_regexMatch && s3_hasTargetLibId && s3_differentLibs) {
+            log( TAG, 'SCENARIO 3 MATCHED: On borrowing request in lib',  actorLibId, '-> refresh borrowing in lib', targetCurrentLibId, );
+            clearTimeout(tBorrow);
+            tBorrow = setTimeout(function() {
+              refreshBorrower(targetCurrentLibId, false);
+            }, 300);
+            return;
+          } else {
+            log(TAG, 'SCENARIO 3 CONDITION FAILED: regexMatch=', s3_regexMatch,'hasTargetLibId=', s3_hasTargetLibId,  'differentLibs=', s3_differentLibs,);
+          }
+        } else {
+          log(TAG, 'SCENARIO 3 NO MATCH: Not a borrowing request page');
+        }
+        log(TAG, 'SCENARIO 3 SKIPPED');
+
+
+        // SCENARIO 4: User on patron admin page -> ONLY refresh my libraries panel
+        // Scenario: https://talaria.local/patron/my-libraries -> refresh my libraries
+        if (isPatronDashboardPath(pathname)) {
+          log(TAG, 'SCENARIO 4 MATCHED: On patron dashboard, ONLY refresh my libraries',);
+          clearTimeout(tMyLib);
+          tMyLib = setTimeout(function() {
+            refreshMyLibraries();
+          }, 300);
+          return;
+        }
+        log(TAG, 'SCENARIO 4 SKIPPED');
+        // No matching scenario - do nothing
+        log(TAG, 'No matching scenario, skipping refresh');
+      }
+
+      chAppNotif.listen('.app.notification', onAppNotification);
+
+      log(TAG, 'listener attached');
+
+      return function() {
+        log(TAG, 'cleanup');
         clearTimeout(tLender);
-        tLender = setTimeout(function () { refreshLender(libId); }, 300);
-      }
-
-      // If on patron admin page -> refresh users list
-      if (isPatronAdminPath(pathname) && libId) {
-        log(TAG, '✅ On patron admin page, refreshing users list');
-        clearTimeout(tUsers);
-        tUsers = setTimeout(function () { refreshUsers(libId); }, 300);
-      }
-
-      // If on patron dashboard -> refresh my libraries
-      if (isPatronDashboardPath(pathname)) {
-        log(TAG, '✅ On patron dashboard, refreshing my libraries');
+        clearTimeout(tBorrow);
         clearTimeout(tMyLib);
-        tMyLib = setTimeout(function () { refreshMyLibraries(); }, 300);
-      }
 
-
-      // If target is me (and actor is not me) -> also refresh my libraries (for side panel)
-      if (me && targetId === me && actorId !== me && !isPatronDashboardPath(pathname)) {
-        log(TAG, '✅ Target is me, refreshing my libraries panel');
-        clearTimeout(tMyLib);
-        tMyLib = setTimeout(function () { refreshMyLibraries(); }, 300);
-      }
-
-      // Custom DOM event
-      try { 
-        window.dispatchEvent(new CustomEvent('dd:notification', { detail: { notification: n } })); 
-      } catch (err) {}
-    }
-
-    chAppNotif.listen('.app.notification', onAppNotification);
-
-    log(TAG, '✅ listener attached');
-
-    return function () {
-      log(TAG, 'cleanup');
-      clearTimeout(tLender);
-      clearTimeout(tBorrow);
-      clearTimeout(tUsers);
-      clearTimeout(tMyLib);
-
-      try { chAppNotif.stopListening('.app.notification', onAppNotification); } catch (e) {}
-      leaveAll();
-    };
-  
-  }, [dispatch, me]);
+        try {
+          chAppNotif.stopListening('.app.notification', onAppNotification);
+        } catch (e) {}
+        leaveAll();
+      };
+    },
+    [dispatch, me],
+  );
 
   return null;
 };
 
-const mapStateToProps = function (state) {
-  return {
-    app:  state && state.app  ? state.app  : {},
-    auth: state && state.auth ? state.auth : {},
-  };
+const mapStateToProps = function(state) {
+  return { app: state && state.app ? state.app : {},  auth: state && state.auth ? state.auth : {}, };
 };
 
 export default connect(mapStateToProps)(AppRealtimeListener);
