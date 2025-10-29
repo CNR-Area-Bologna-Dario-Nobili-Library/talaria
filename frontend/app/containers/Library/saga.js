@@ -648,12 +648,14 @@ export function* findUpdateOABorrowingSaga(action) {
     }
     try {
       const request = yield call(getOA, options);
-      if(/*request.found &&*/ request.url)
+      console.log("FINDUPDATEBORROWINGOA_SAGA - REQUEST:", request);
+      if(request && request.results && request.results[0] && request.results[0].open_access.is_oa && request.results[0].open_access.oa_url)
       {
-        console.log("TROVATO OA!:",request.url)    
+        const oa_url = request.results[0].open_access.oa_url;
+        console.log("TROVATO OA!:",oa_url)    
         //yield call(() => toast.success("Versione OA trovata!"))
         yield put(requestFindUpdateOABorrowingReferenceSuccess(action.id));
-        yield call(requestUpdateBorrowingSaga, {id: action.id,borrowing_library_id:action.borrowing_library_id, borrowing: {reference: {id: action.reference_id, oa_link: request.url} }, message:action.foundMessage,filter:action.filter })
+        yield call(requestUpdateBorrowingSaga, {id: action.id,borrowing_library_id:action.borrowing_library_id, borrowing: {reference: {id: action.reference_id, oa_link: oa_url} }, message:action.foundMessage,filter:action.filter })
       }
       else {
         console.log("NON TROVATO");
