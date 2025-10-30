@@ -17,9 +17,10 @@ import confirm from "reactstrap-confirm";
 import SectionTitle from 'components/SectionTitle';
 import {useIntl} from 'react-intl';
 import ErrorMsg from '../../../components/ErrorMsg';
-import {parseOpenURL,parsePubmedReference} from '../../../utils/openurl';
+import {parseOpenURL} from '../../../utils/openurl';
 import makeSelectReference, { isReferenceLoading } from '../../Reference/selectors';
 import {requestGetReference,requestFindReferenceById} from '../../Reference/actions';
+import { parseFromOpenAlex } from '../../../utils/apiExternal';
 
 /* TODO 
    - find per ISBN ...
@@ -56,7 +57,7 @@ const ReferencesPage = (props) => {
         {
             if(byPubmed)
             {
-                //get pmid from url and call OAbutton API to get metadata from pmid
+                //get pmid from url and call OpenAlex API to get metadata from pmid
                 let id=(new URLSearchParams(queryString)).get("id").replace('pmid:','');
                 dispatch(requestFindReferenceById(id));                
             }        
@@ -85,7 +86,7 @@ const ReferencesPage = (props) => {
             
             //parsePubmed data
             console.log("PARSING PUBMED",reference)
-            let pubmedref=parsePubmedReference(reference)
+            let pubmedref=parseFromOpenAlex(reference)
             setRefData({...pubmedref})       
         }
         else 

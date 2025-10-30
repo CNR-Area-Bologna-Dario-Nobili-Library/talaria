@@ -35,7 +35,7 @@ export const generateOpenURL = (reference) => {
 
         if(reference.issn_l)
             url+="&rft.issn_l="+reference.issn_l;
-        
+
         if(reference.isbn)
             url+="&rft.isbn="+reference.isbn;       
 
@@ -111,8 +111,8 @@ export const generateOpenURL = (reference) => {
 //     return text;
 // }
 
+//! Not used anymore
 export const parsePubmedReference = (reference) => {
-    // console.log("parsePubmedReference",reference)
     let newref={}
     newref['material_type']=1; 
     Object.keys(reference).map ( (k)=>{
@@ -151,7 +151,6 @@ export const parsePubmedReference = (reference) => {
                     newref["part_authors"]=parseAuthors(v);  break;     
         }
     })
-    console.log("parsePubmedReference",newref)
     return newref;
 }
 
