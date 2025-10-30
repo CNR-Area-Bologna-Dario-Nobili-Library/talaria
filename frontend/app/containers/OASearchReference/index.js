@@ -10,7 +10,7 @@ import makeSelectOASearchReference, {
 
 import OASearchReferenceForm from '../../components/OASearchReferenceForm';
 import { set } from 'lodash';
-import { parseAuthors } from '../../utils/openurl';
+import { parseFromOpenAlex } from '../../utils/apiExternal';
 
 const OASearchReference = props => {
   const {
@@ -40,7 +40,6 @@ const OASearchReference = props => {
     if (onStartSearch) onStartSearch();
 
     setFound(null);
-    console.log("GIOCOCONFOUND settato a null", found);
 
     let data = {};
 
@@ -78,191 +77,6 @@ const OASearchReference = props => {
       console.log('OASEARCHREFERENCE TODO SEARCH BY ISBN:', data.isbn);
       //dispatch(requestFindISBN(data.isbn))...
     }
-  };
-
-  const parseFromOAButton = reference => {
-    console.log('OASEARCHREFERENCE parseFromOAButton', reference.metadata);
-
-    let obj = {};
-
-    if (reference.metadata && Object.keys(reference.metadata).length > 2) {
-      let metadata = reference.metadata;
-
-      //default:
-      let pubtype = 1;
-
-      //NOTA: le api di OpenAccessButton gestiscono solo articoli!
-      //Specifica metadati: https://dev.api.cottagelabs.com/service/oab/metadata/keys
-
-      console.log(
-        'OASEARCHREFERENCE parsefromoabutton provo a capire il tipo di pubblicazione',
-      );
-
-      if (metadata.crossref_type) {
-        console.log(
-          'OASEARCHREFERENCE parsefromoabutton crossref_type:',
-          metadata.crossref_type,
-        );
-        let tystr = metadata.crossref_type.toString().toLowerCase();
-        if (tystr.includes('journal')) pubtype = 1;
-        else if (tystr.includes('book')) pubtype = 2;
-        /*else if(tystr.includes('thesis'))
-              pubtype=3; */
-      } else {
-        console.log(
-          'OASEARCHREFERENCE parsefromoabutton no crossref_type',
-          metadata.journal,
-          metadata.book,
-          metadata.isbn,
-        );
-        //try to guess from fields
-        if (metadata.journal) pubtype = 1;
-        else if (metadata.isbn || metadata.book) pubtype = 2;
-      }
-
-      obj = {
-        pub_title:
-          pubtype == 1
-            ? metadata.journal
-            : metadata.title
-            ? metadata.title
-            : '',
-        part_title: pubtype == 1 ? metadata.title : '',
-        authors:
-          (!pubtype || pubtype != 1) && metadata.author
-            ? parseAuthors(metadata.author)
-            : '',
-        part_authors:
-          pubtype == 1 && metadata.author ? parseAuthors(metadata.author) : '',
-        abstract: metadata.abstract ? metadata.abstract : '',
-        pubyear: metadata.year,
-        volume: metadata.volume ? metadata.volume : '',
-        issue: metadata.issue ? metadata.issue : '',
-        pages: metadata.pages
-          ? metadata.pages
-          : metadata.page
-          ? metadata.page
-          : '',
-        material_type: pubtype,
-        issn: metadata.issn ? String(metadata.issn) : '',
-        isbn: metadata.isbn ? metadata.isbn : '',
-        publisher: metadata.publisher ? metadata.publisher : '',
-        publishing_place: '',
-        doi: metadata.doi ? metadata.doi : '',
-        pmid: metadata.pmid ? metadata.pmid : '',
-        oa_link: reference.url /*&& Object.keys(reference.metadata).length>0 &&*/
-          ? reference.url
-          : null,
-      };
-    }
-
-    console.log('OASEARCHREFERENCE parseFromOAButton', obj);
-    return obj;
-  };
-
-  /**
-   * Determine publication type
-   * @param {Object} reference 
-   * @returns Publication type
-   */
-  const determinePubType = reference => {
-    // Default publication type to article (1)
-    let pubtype = 1;
-
-    // If crossref-type contains one of these words, then it is a book (2)
-    const bookWords = ['book', 'report', 'series', 'monograph', 'proceedings', 'standard'];
-    if (bookWords.some(word => reference.type_crossref.includes(word))) {
-      pubtype = 2;
-    }
-
-    // If the reference type is a dissertation, set pubtype to thesis (3)
-    if (reference.type_crossref.includes('dissertation')) {
-      pubtype = 3;
-    }
-
-    return pubtype;
-  }
-
-  /**
- * OpenAlex API returns inverted index for abstract so we need to decode it
- * @param {Array} invertedIndex 
- * @returns Abstract decoded from the inverted index
- */
-  const decodeInvertedIndex = invertedIndex => {
-    if (!invertedIndex || Object.keys(invertedIndex).length === 0) {
-    return '';
-    }
-
-    // Find max position to determine array size
-    let maxPosition = 0;
-    Object.values(invertedIndex).forEach(positions => {
-    const max = Math.max(...positions);
-    if (max > maxPosition) {
-        maxPosition = max;
-    }
-    });
-
-    // Array to hold words at their position
-    const wordsArray = new Array(maxPosition + 1);
-
-    // Place each word at its position
-    Object.entries(invertedIndex).forEach(([word, positions]) => {
-    positions.forEach(position => {
-        wordsArray[position] = word;
-    });
-    });
-
-    // Join words into a string
-    return wordsArray.join(' ');
-  }
-
-  const parseFromOpenAlex = oareference => {
-    // Take the first result
-    const reference = oareference.results[0];
-    let obj = {};
-
-    // Determine publication type
-    const pubtype = determinePubType(reference);
-    
-    const location = reference.primary_location;
-    const bib = reference.biblio;
-
-    // pubTitle is the name of the journal if pubtype is 1 OR the book title if pubtype is 2
-    const pubTitle = pubtype === 1 || pubtype === 2 ? location && location.source && location.source.display_name : reference.title;
-
-    // partTitle is the article title only if pubtype is 1 OR is the book chapter title if pubtype is 2
-    const partTitle = pubtype === 1 || pubtype === 2 && reference.title ? reference.title : '';
-
-    const trimmedDoi = reference.ids.doi ? reference.ids.doi.replace('https://doi.org/', '') : '';
-    const trimmedPmid = reference.ids.pmid ? reference.ids.pmid.replace('https://pubmed.ncbi.nlm.nih.gov/', '') : '';
-
-    console.log('PARSEAUTHORS', parseAuthors(reference.authorships));
-
-    obj = {
-      pub_title: pubTitle,
-      part_title: partTitle,
-      authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships) : '',
-      part_authors: pubtype === 1 || pubtype === 2 && reference.authorships ? parseAuthors(reference.authorships) : '',
-      abstract: reference.abstract_inverted_index ? decodeInvertedIndex(reference.abstract_inverted_index) : '',
-      pubyear: reference.publication_year,
-      volume: bib.volume ? bib.volume : '',
-      issue: bib.issue ? bib.issue : '',
-      pages: bib.first_page && reference.biblio.last_page ? reference.biblio.first_page + ( reference.biblio.first_page !== reference.biblio.last_page ? '-' + reference.biblio.last_page : '' ) : '',
-      material_type: pubtype,
-      issn: location && location.source && location.source.issn ? location.source.issn[0] : '', // Take the first ISSN
-      issn_l: location && location.source && location.source.issn_l ? location.source.issn_l : '',
-      isbn: '',
-      publisher: location && location.source && location.source.host_organization_name ? location.source.host_organization_name : '',
-      publishing_place: '',
-      doi: trimmedDoi,
-      pmid: trimmedPmid,
-      oa_link: reference.open_access.is_oa && reference.open_access.oa_url ? reference.open_access.oa_url : null,
-      // sid: "OpenAlex",
-    };
-
-    console.log('OGGETTONE', obj);
-
-    return obj
   };
 
   /*Parsing da PUBMED

@@ -12,7 +12,7 @@ const FIND_ISBN_SERVICE_URL=process.env.FIND_ISBN_SERVICE_URL
 
 const FIND_ISSN_ACNP_URL=process.env.FIND_ISSN_ACNP_URL
 
-//Get PMID Metadata using OpenAccessButton API
+//Get PMID Metadata using OpenAlex API
 export const getOAReferenceByID = (options) => {
   const id=options.id
   return request(`${OPENALEX_API_URL}/works?filter=pmid:${id}`,  {method: 'get'})
@@ -43,6 +43,7 @@ export const getOA = (options) => {
 };
 
 //Metadata using Pubmed API and PMID
+//! Not used
 export const getPubmedReferenceByPMID = (options) => {
     const pmid=options.pmid
     //return request(`${PMID_API_URL}?db=pubmed&retmax=1&retmode=json&tool=my_tool&email=my_email@example.com&id=${pmid}`,  {method: 'get'})
@@ -99,4 +100,150 @@ export const getFindISBN = (options) => {
       }; 
     console.log("getFindISBN results",result);  
     return result;
+};
+
+export const parseAuthors = (authors) => {
+  if (!authors || !Array.isArray(authors)) {
+      return '';
+  }
+
+  const MAX_LENGTH = 100;
+  const ET_AL = ' et al.';
+
+  // Get authors display name
+  const validAuthors = authors
+      .map(a => a.author && a.author.display_name ? a.author.display_name : '')
+
+  // If all authors fit, return them all
+  const allAuthors = validAuthors.join(', ');
+  if (allAuthors.length <= MAX_LENGTH) {
+      return allAuthors;
+  }
+
+  // Otherwise, add authors one by one until we hit the limit
+  let result = '';
+  for (let i = 0; i < validAuthors.length; i += 1) {
+      const authorToAdd = i === 0 ? validAuthors[i] : ', ' + validAuthors[i];
+      const potentialResult = result + authorToAdd + ET_AL;
+
+      if (potentialResult.length > MAX_LENGTH) {
+          // Can't fit this author. Use previous result with "et al."
+          return result + ET_AL;
+      }
+
+      result += authorToAdd;
+  }
+
+  // Fallback
+  return result + ET_AL;
+}
+
+/**
+ * Determine publication type
+ * @param {Object} reference 
+ * @returns Publication type
+ */
+const determinePubType = reference => {
+  // Default publication type to article (1)
+  let pubtype = 1;
+
+  // If crossref-type contains one of these words, then it is a book (2)
+  const bookWords = ['book', 'report', 'series', 'monograph', 'proceedings', 'standard'];
+  if (bookWords.some(word => reference.type_crossref.includes(word))) {
+    pubtype = 2;
+  }
+
+  // If the reference type is a dissertation, set pubtype to thesis (3)
+  if (reference.type_crossref.includes('dissertation')) {
+    pubtype = 3;
+  }
+
+  return pubtype;
+}
+
+/**
+ * OpenAlex API returns inverted index for abstract so we need to decode it
+ * @param {Array} invertedIndex 
+ * @returns Abstract decoded from the inverted index
+ */
+const decodeInvertedIndex = invertedIndex => {
+  if (!invertedIndex || Object.keys(invertedIndex).length === 0) {
+  return '';
+  }
+
+  // Find max position to determine array size
+  let maxPosition = 0;
+  Object.values(invertedIndex).forEach(positions => {
+  const max = Math.max(...positions);
+  if (max > maxPosition) {
+      maxPosition = max;
+  }
+  });
+
+  // Array to hold words at their position
+  const wordsArray = new Array(maxPosition + 1);
+
+  // Place each word at its position
+  Object.entries(invertedIndex).forEach(([word, positions]) => {
+  positions.forEach(position => {
+      wordsArray[position] = word;
+  });
+  });
+
+  // Join words into a string
+  return wordsArray.join(' ');
+}
+
+export const parseFromOpenAlex = oareference => {
+  // If there are no results, return null
+  if (!oareference || !oareference.results || oareference.results.length === 0) {
+    return null;
+  }
+
+  // Take the first result
+  const reference = oareference.results[0];
+  let obj = {};
+
+  // Determine publication type
+  const pubtype = determinePubType(reference);
+  
+  const location = reference.primary_location;
+  const bib = reference.biblio;
+
+  // pubTitle is the name of the journal if pubtype is 1 OR the book title if pubtype is 2
+  const pubTitle = pubtype === 1 || pubtype === 2 ? location && location.source && location.source.display_name : reference.title;
+
+  // partTitle is the article title only if pubtype is 1 OR is the book chapter title if pubtype is 2
+  const partTitle = pubtype === 1 || pubtype === 2 && reference.title ? reference.title : '';
+
+  const trimmedDoi = reference.ids.doi ? reference.ids.doi.replace('https://doi.org/', '') : '';
+  const trimmedPmid = reference.ids.pmid ? reference.ids.pmid.replace('https://pubmed.ncbi.nlm.nih.gov/', '') : '';
+
+  console.log('PARSEAUTHORS', parseAuthors(reference.authorships));
+
+  obj = {
+    pub_title: pubTitle,
+    part_title: partTitle,
+    authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships) : '',
+    part_authors: pubtype === 1 || pubtype === 2 && reference.authorships ? parseAuthors(reference.authorships) : '',
+    abstract: reference.abstract_inverted_index ? decodeInvertedIndex(reference.abstract_inverted_index) : '',
+    pubyear: reference.publication_year,
+    volume: bib.volume ? bib.volume : '',
+    issue: bib.issue ? bib.issue : '',
+    pages: bib.first_page && reference.biblio.last_page ? reference.biblio.first_page + ( reference.biblio.first_page !== reference.biblio.last_page ? '-' + reference.biblio.last_page : '' ) : '',
+    material_type: pubtype,
+    issn: location && location.source && location.source.issn ? location.source.issn[0] : '', // Take the first ISSN
+    issn_l: location && location.source && location.source.issn_l ? location.source.issn_l : '',
+    isbn: '',
+    publisher: location && location.source && location.source.host_organization_name ? location.source.host_organization_name : '',
+    publishing_place: '',
+    doi: trimmedDoi,
+    pmid: trimmedPmid,
+    oa_link: reference.open_access.is_oa && reference.open_access.oa_url ? reference.open_access.oa_url : null,
+    // sid: "OpenAlex",
+  };
+
+  console.log('OGGETTONE', obj);
+
+  return obj
 };

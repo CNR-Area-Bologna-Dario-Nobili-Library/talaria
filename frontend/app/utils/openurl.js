@@ -1,3 +1,5 @@
+import { parseAuthors } from './apiExternal';
+
 //NOTE: some filds we have in reference don't exists in standard Openurl (like issn-l, oa_link..)!
 //so my are not imported correctly in new reference! 
 export const generateOpenURL = (reference) => {
@@ -109,44 +111,8 @@ export const generateOpenURL = (reference) => {
 //     return text;
 // }
 
-export const parseAuthors = (authors) => {
-    if (!authors || !Array.isArray(authors)) {
-        return '';
-    }
-
-    const MAX_LENGTH = 100;
-    const ET_AL = ' et al.';
-
-    // Get authors display name
-    const validAuthors = authors
-        .map(a => a.author && a.author.display_name ? a.author.display_name : '')
-
-    // If all authors fit, return them all
-    const allAuthors = validAuthors.join(', ');
-    if (allAuthors.length <= MAX_LENGTH) {
-        return allAuthors;
-    }
-
-    // Otherwise, add authors one by one until we hit the limit
-    let result = '';
-    for (let i = 0; i < validAuthors.length; i += 1) {
-        const authorToAdd = i === 0 ? validAuthors[i] : ', ' + validAuthors[i];
-        const potentialResult = result + authorToAdd + ET_AL;
-
-        if (potentialResult.length > MAX_LENGTH) {
-            // Can't fit this author. Use previous result with "et al."
-            return result + ET_AL;
-        }
-
-        result += authorToAdd;
-    }
-
-    // Fallback
-    return result + ET_AL;
-}
-
-
 export const parsePubmedReference = (reference) => {
+    // console.log("parsePubmedReference",reference)
     let newref={}
     newref['material_type']=1; 
     Object.keys(reference).map ( (k)=>{
@@ -185,6 +151,7 @@ export const parsePubmedReference = (reference) => {
                     newref["part_authors"]=parseAuthors(v);  break;     
         }
     })
+    console.log("parsePubmedReference",newref)
     return newref;
 }
 
