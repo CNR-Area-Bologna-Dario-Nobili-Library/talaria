@@ -12,8 +12,13 @@ const FIND_ISBN_SERVICE_URL=process.env.FIND_ISBN_SERVICE_URL
 
 const FIND_ISSN_ACNP_URL=process.env.FIND_ISSN_ACNP_URL
 
+//Get PMID Metadata using OpenAccessButton API
+export const getOAReferenceByID = (options) => {
+  const id=options.id
+  return request(`${OPENALEX_API_URL}/works?filter=pmid:${id}`,  {method: 'get'})
+}
 
-
+//Find OA and get metadata by DOI/PMID/Title
 export const getOA = (options) => {
   console.log("API GETOA - OPENALEX:", options.refData);
   
