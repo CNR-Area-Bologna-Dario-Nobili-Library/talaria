@@ -8,7 +8,7 @@ export const generateOpenURL = (reference) => {
         url+="?url_ver=Z39.88-2004&ctx_ver=Z39.88-2004&url_ctx_fmt="+encodeURIComponent("info:ofi/fmt:kev:mtx:ctx");         
         
         if(reference.abstract)
-            url+="&abstract="+encodeURIComponent(reference.abstract);      
+            url+="&rft.abstract="+encodeURIComponent(reference.abstract);
 
         if(reference.issue)
             url+="&rft.issue="+reference.issue;    
@@ -23,16 +23,16 @@ export const generateOpenURL = (reference) => {
             url+="&rft.date="+reference.pubyear;                
 
         if(reference.doi)
-            url+="&rft_id="+encodeURIComponent("info:doi/"+reference.doi); 
+            url+="&rft_id[]="+encodeURIComponent("info:doi/"+reference.doi); 
         
         if(reference.pmid)
-            url+="&rft_id="+encodeURIComponent("info:pmid/"+parseInt(reference.pmid,10));
+            url+="&rft_id[]="+encodeURIComponent("info:pmid/"+parseInt(reference.pmid,10));
         
         if(reference.issn)
             url+="&rft.issn="+reference.issn;   
 
         if(reference.isbn)
-            url+="&rft.ibsn="+reference.isbn;       
+            url+="&rft.isbn="+reference.isbn;       
 
         if(reference.sid)
             url+="&rfr_id="+encodeURIComponent("info:sid/"+reference.sid);      
@@ -45,16 +45,16 @@ export const generateOpenURL = (reference) => {
         
         if(reference.part_authors) 
         {
-            let i=0;
+            // let i=0;
             reference.part_authors.split(',').map ( au=>{
-                if(i==0)
-                {
-                    let first=au.split(' ');
-                    url+="&rft.aufirst="+encodeURIComponent(first[0])
-                    url+="&rft.aulast="+encodeURIComponent(first[1]);
-                }
-                url+="&rft.au="+encodeURIComponent(au.trim())
-                i++
+                // if(i==0)
+                // {
+                //     let first=au.split(' ');
+                //     url+="&rft.aufirst="+encodeURIComponent(first[0])
+                //     url+="&rft.aulast="+encodeURIComponent(first[1]);
+                // }
+                url+="&rft.au[]="+encodeURIComponent(au.trim())
+                // i++
             })
         } 
         
@@ -71,7 +71,7 @@ export const generateOpenURL = (reference) => {
         }
         if(reference.material_type==2) //book
         {
-            url+="&rft_val_fmt=".urlencode("info:ofi/fmt:kev:mtx:book");    
+            url+="&rft_val_fmt="+encodeURIComponent("info:ofi/fmt:kev:mtx:book");    
             if(reference.pub_title!="")
             { 
                 url+="&rft.btitle="+encodeURIComponent(reference.pub_title);
@@ -87,24 +87,60 @@ export const generateOpenURL = (reference) => {
     return url;
 }
 
-export const parseAuthors = (authors)=> {
-    let text="";
+// export const parseAuthors = (authors)=> {
+//     let text="";
   
-    authors.map( a => { 
-        let str=(a.family && a.given)?a.given+" "+a.family:
-        (a.firstName && a.lastName)?a.firstName+" "+a.lastName:
-        a.fullName?a.fullName:
-        a.name?a.name:''
+//     authors.map( a => { 
+//         let str=(a.family && a.given)?a.given+" "+a.family:
+//         (a.firstName && a.lastName)?a.firstName+" "+a.lastName:
+//         a.fullName?a.fullName:
+//         a.name?a.name:''
   
-        if(str)
-        {
-            text+=(text!='')?", ":''
-            text+=str;
+//         if(str)
+//         {
+//             text+=(text!='')?", ":''
+//             text+=str;
+//         }
+//     })
+  
+//     return text;
+// }
+
+export const parseAuthors = (authors) => {
+    if (!authors || !Array.isArray(authors)) {
+        return '';
+    }
+
+    const MAX_LENGTH = 100;
+    const ET_AL = ' et al.';
+
+    // Get authors display name
+    const validAuthors = authors
+        .map(a => a.author && a.author.display_name ? a.author.display_name : '')
+
+    // If all authors fit, return them all
+    const allAuthors = validAuthors.join(', ');
+    if (allAuthors.length <= MAX_LENGTH) {
+        return allAuthors;
+    }
+
+    // Otherwise, add authors one by one until we hit the limit
+    let result = '';
+    for (let i = 0; i < validAuthors.length; i += 1) {
+        const authorToAdd = i === 0 ? validAuthors[i] : ', ' + validAuthors[i];
+        const potentialResult = result + authorToAdd + ET_AL;
+
+        if (potentialResult.length > MAX_LENGTH) {
+            // Can't fit this author. Use previous result with "et al."
+            return result + ET_AL;
         }
-    })
-  
-    return text;
-  }
+
+        result += authorToAdd;
+    }
+
+    // Fallback
+    return result + ET_AL;
+}
 
 
 export const parsePubmedReference = (reference) => {
@@ -148,12 +184,14 @@ export const parsePubmedReference = (reference) => {
     })
     return newref;
 }
- 
-export const parseOpenURL = (params) => {    
 
+// We support only OpenURL standard ANSI/NISO Z39.88-2004 in ContextObject (KEV) format
+// https://www.niso.org/publications/z3988-2004-r2010
+export const parseOpenURL = (params) => {    
+    console.log("Openurl->params",params);
     const queryString = require('query-string');
     const queryArr = queryString.parse(params,{arrayFormat:'bracket'});
-    console.log("Openurl->params",queryArr);
+    console.log("Openurl->queryArr",queryArr);
 
     let ref={}
 
@@ -195,6 +233,9 @@ export const parseOpenURL = (params) => {
                 case 'rft.issn':
                     ref["issn"]=v;
                     break;
+                case 'rft.issn_l':
+                    ref["issn_l"]=v;
+                    break;
                 case 'rft.volume':
                     ref["volume"]=v;
                     break;    
@@ -207,8 +248,12 @@ export const parseOpenURL = (params) => {
                 case 'rft.place':
                     ref["publishing_place"]=v;
                     break;    
-                case 'rft.au': 
-                    ref["part_authors"]=v.toString();                   
+                case 'rft.au':
+                    if (Array.isArray(v)) {
+                        ref["part_authors"] = v.join(",");
+                    } else {
+                        ref["part_authors"]=v.toString();                   
+                    }
                     break;  
                 case 'rft_id':  //can be multiple value (so array not string)
                 
@@ -231,10 +276,27 @@ export const parseOpenURL = (params) => {
                             }          
                         })                             
 
-                    break;                                         
+                    break;
+                case 'rfr_id':
+                    if (v.startsWith('info:sid/'))
+                    {
+                        let v_tmp=v.substring(9);
+                        if (v_tmp.startsWith('www.')) {
+                            v_tmp=v_tmp.substring(4);
+                        };
+                        ref["sid"]=v_tmp;
+                    }
+                    break;
+                case 'rft.abstract':
+                    ref["abstract"]=v;
+                    break;
+                default:
+                    console.log("Openurl->params->default",k,v);
             }
 
         })
-    } 
+    }
+
+    console.log("Openurl->ref",ref);
     return ref;
 }

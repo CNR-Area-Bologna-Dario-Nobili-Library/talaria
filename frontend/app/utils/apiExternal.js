@@ -2,7 +2,7 @@ import request from "./request";
 
 const PMID_API_URL=process.env.PMID_API_URL
                     
-const OPENACCESSBUTTON_API_URL=process.env.OPENACCESSBUTTON_API_URL
+const OPENALEX_API_URL=process.env.OPENALEX_API_URL
 
 const OPENSTREETMAP_API_URL=process.env.OPENSTREETMAP_API_URL
 
@@ -14,30 +14,27 @@ const FIND_ISSN_ACNP_URL=process.env.FIND_ISSN_ACNP_URL
 
 
 
-
-//Get PMID Metadata using OpenAccessButton API
-export const getOAReferenceByID = (options) => {
-    const id=options.id
-    return request(`${OPENACCESSBUTTON_API_URL}/find?pmid=${id}`,  {method: 'get'})
-};
-
-//Find OA and get metadata by DOI/PMID/Title
 export const getOA = (options) => {
-    console.log("API GETOA:",options.refData)
-    let query=options.refData.title?'id='+options.refData.title:''; //3
+  console.log("API GETOA - OPENALEX:", options.refData);
+  
+  let filter = '';
+  
+  if (options.refData.doi) {
+    filter = `doi:${options.refData.doi}`;
+  } else if (options.refData.pmid) {
+    console.log("API GETOA - OPENALEX - PMID:", options.refData.pmid);
+    filter = `pmid:${options.refData.pmid}`;
+  } else if (options.refData.title) {
+    filter = `title.search:${options.refData.title}`;
+  }
+  
+  console.log("API GETOA - OPENALEX - FILTER:", filter);
+  console.log("API GETOA - OPENALEX - URL:", `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`);
 
-    if(options.refData.pmid) //2
-    {      
-      if(options.refData.pmid.toLowerCase().startsWith('pmc'))
-        query='id='+options.refData.pmid; 
-      else 
-        query='pmid='+options.refData.pmid;
-
-    }
-    if(options.refData.doi) query='id='+options.refData.doi; //1
-    
-
-    return request(`${OPENACCESSBUTTON_API_URL}/find?${query}`,  {method: 'get'})
+  return request(
+    `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`,
+    { method: 'get' }
+  );
 };
 
 //Metadata using Pubmed API and PMID
