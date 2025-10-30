@@ -32,7 +32,7 @@ export const getOA = (options) => {
   console.log("API GETOA - OPENALEX - URL:", `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`);
 
   return request(
-    `https://api.openalex.org/works?filter=${encodeURIComponent(filter)}`,
+    `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`,
     { method: 'get' }
   );
 };
