@@ -31,6 +31,9 @@ export const generateOpenURL = (reference) => {
         if(reference.issn)
             url+="&rft.issn="+reference.issn;   
 
+        if(reference.issn_l)
+            url+="&rft.issn_l="+reference.issn_l;
+        
         if(reference.isbn)
             url+="&rft.isbn="+reference.isbn;       
 
