@@ -102,12 +102,11 @@ export const getFindISBN = (options) => {
     return result;
 };
 
-export const parseAuthors = (authors) => {
+export const parseAuthors = (authors, maxChars) => {
   if (!authors || !Array.isArray(authors)) {
       return '';
   }
 
-  const MAX_LENGTH = 100;
   const ET_AL = ' et al.';
 
   // Get authors display name
@@ -116,7 +115,7 @@ export const parseAuthors = (authors) => {
 
   // If all authors fit, return them all
   const allAuthors = validAuthors.join(', ');
-  if (allAuthors.length <= MAX_LENGTH) {
+  if (allAuthors.length <= maxChars) {
       return allAuthors;
   }
 
@@ -126,7 +125,7 @@ export const parseAuthors = (authors) => {
       const authorToAdd = i === 0 ? validAuthors[i] : ', ' + validAuthors[i];
       const potentialResult = result + authorToAdd + ET_AL;
 
-      if (potentialResult.length > MAX_LENGTH) {
+      if (potentialResult.length > maxChars) {
           // Can't fit this author. Use previous result with "et al."
           return result + ET_AL;
       }
@@ -224,8 +223,8 @@ export const parseFromOpenAlex = oareference => {
   obj = {
     pub_title: pubTitle,
     part_title: partTitle,
-    authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships) : '',
-    part_authors: pubtype === 1 || pubtype === 2 && reference.authorships ? parseAuthors(reference.authorships) : '',
+    authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships, 100) : '',
+    part_authors: pubtype === 1 || pubtype === 2 && reference.authorships ? parseAuthors(reference.authorships, 200) : '',
     abstract: reference.abstract_inverted_index ? decodeInvertedIndex(reference.abstract_inverted_index) : '',
     pubyear: reference.publication_year,
     volume: bib.volume ? bib.volume : '',
