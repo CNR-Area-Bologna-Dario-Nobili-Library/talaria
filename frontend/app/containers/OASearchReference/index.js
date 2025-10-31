@@ -46,8 +46,9 @@ const OASearchReference = props => {
     //try DOI
     let doi = query.match(/\b((10\.\d{4,9}\/[-._;()/:A-Z0-9a-z]+))/);
     if (doi != null) {
-      console.log('OASEARCHREFERENCE DOI MATCH!', doi[0]);
-      data.doi = doi[0];
+      const lowerDoi = doi[0].toLowerCase();
+      console.log('OASEARCHREFERENCE DOI MATCH!', lowerDoi);
+      data.doi = lowerDoi;
       //dispatch(requestFindReferenceByDOI(doi[0]))
     } else {
       //else try ISBN ...
