@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { REQUEST_GET_NOTIFICATION_LIST, MARK_ALL_AS_READ } from './constants';
-import { MARK_NOTIFICATION_AS_READ, DELETE_NOTIFICATION } from './constants';
+import { MARK_NOTIFICATION_AS_READ, DELETE_NOTIFICATION, DELETE_NOTIFICATIONS_BULK } from './constants';
 import {
   requestNotificationsSuccess,
   requestSuccess,
@@ -11,7 +11,9 @@ import {
   getNotifications,
   updateNotificationsAsRead,
   markNotificationAsRead,
-  deleteNotification
+  deleteNotification,
+  deleteAllNotifications,
+  deleteNotificationsBulk,
 } from 'utils/api';
 
 export function* requestNotificationsSaga(action = {}) {
@@ -77,9 +79,34 @@ export function* deleteNotificationSaga({ id }) {
   }
 }
 
+export function* deleteAllNotificationsSaga() {
+  try {
+    yield call(deleteAllNotifications);
+    yield put(requestSuccess());
+    // Clear local state and refresh
+    yield put({ type: REQUEST_GET_NOTIFICATION_LIST });
+  } catch (e) {
+    yield put(requestError(e.message));
+  }
+}
+
+export function* deleteNotificationsBulkSaga({ ids }) {
+  try {
+    if (!ids || !ids.length) {
+      throw new Error('No notifications selected.');
+    }
+    yield call(deleteNotificationsBulk, ids); // ✅ Correct function name
+    yield put(requestSuccess());
+    yield put({ type: REQUEST_GET_NOTIFICATION_LIST });
+  } catch (e) {
+    yield put(requestError(e.message));
+  }
+}
+
 export default function* appSaga() {
   yield takeLatest(REQUEST_GET_NOTIFICATION_LIST, requestNotificationsSaga);
   yield takeLatest(MARK_ALL_AS_READ, updateNotificationsAsReadSaga);
   yield takeLatest(MARK_NOTIFICATION_AS_READ, markNotificationAsReadSaga);
   yield takeLatest(DELETE_NOTIFICATION, deleteNotificationSaga); 
+  yield takeLatest(DELETE_NOTIFICATIONS_BULK, deleteNotificationsBulkSaga);
 }

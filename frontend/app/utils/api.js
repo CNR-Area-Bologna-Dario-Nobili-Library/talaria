@@ -149,6 +149,12 @@ export const deleteNotification = (id, options = {}) => {
   options = {...getOption(options),method: 'DELETE'};
   return request(`${BASE_URL}/api/v1/notifications/${id}`, options);
 };
+
+export const deleteNotificationsBulk = (ids, options = {}) => {
+  options = getOption({ ...options, method: 'DELETE', body: { ids } });
+  return request(`${BASE_URL}/api/v1/notifications/bulk`, options);
+};
+
 export const verifySms = (options) => {
   options = getOption(options);
   return request(`${BASE_URL}/oauth/verify/`, options)

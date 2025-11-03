@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   requestNotifications,
@@ -6,39 +6,35 @@ import {
   clearNotifications,
   markNotificationAsRead,
   deleteNotificationAction,
+  deleteNotificationsBulkAction,
 } from '../../App/actions';
 
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import { useIntl, FormattedMessage } from 'react-intl';
-import messages from './messages'; 
+import messages from './messages';
 
 function NotificationInbox(props) {
   const { dispatch, notifications, unreaded_total, loading } = props;
 
   const [selectedNotifications, setSelectedNotifications] = useState([]);
-  const [filter, setFilter] = useState(''); // text filter
-  const [filterStatus, setFilterStatus] = useState('all'); // "all", "new", "read"
-  const [filterStartDate, setFilterStartDate] = useState(''); // date range start
-  const [filterEndDate, setFilterEndDate] = useState(''); // date range end
+  const selectAllRef = useRef(null);
+  const [filter, setFilter] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
 
-  const [sortColumn, setSortColumn] = useState('created_at'); // default sort
+  const [sortColumn, setSortColumn] = useState('created_at');
   const [sortOrder, setSortOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [notificationsPerPage] = useState(10);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState(null);
+  const [deleteMode, setDeleteMode] = useState('single'); // 'single' or 'bulk'
 
-  // Modal state
+  // NEW: Track if user wants to select ALL across all pages
+  const [selectAllPages, setSelectAllPages] = useState(false);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const intl = useIntl();
@@ -50,29 +46,27 @@ function NotificationInbox(props) {
     };
   }, [dispatch]);
 
-  /**
-   * Toggle selection of a notification (checkbox)
-   */
+  // Reset selectAllPages when filters change
+  useEffect(() => {
+    setSelectAllPages(false);
+    setSelectedNotifications([]);
+  }, [filter, filterStatus, filterStartDate, filterEndDate]);
+
   const handleToggleSelect = id => {
     setSelectedNotifications(prev =>
       prev.includes(id)
         ? prev.filter(notificationId => notificationId !== id)
         : [...prev, id],
     );
+    //Deselect "all pages" if user manually changes selection
+    setSelectAllPages(false);
   };
 
-  /**
-   * Mark all as read
-   */
   const handleMarkAllAsRead = () => {
-       dispatch(updateNotificationsAsRead());
-       // Update bell badge after Mark All As Read
-       setTimeout(() => dispatch(requestNotifications()), 300);
-      };    
+    dispatch(updateNotificationsAsRead());
+    setTimeout(() => dispatch(requestNotifications()), 300);
+  };
 
-  /**
-   * Sorting
-   */
   const handleSort = column => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
@@ -82,9 +76,6 @@ function NotificationInbox(props) {
     }
   };
 
-  /**
-   * The label shown on the dropdown button based on filterStatus
-   */
   const getStatusLabel = () => {
     if (filterStatus === 'all') return intl.formatMessage(messages.statusAll);
     if (filterStatus === 'new') return intl.formatMessage(messages.statusNew);
@@ -103,16 +94,16 @@ function NotificationInbox(props) {
   const filteredNotifications = notifications
     .map(n => ({
       ...n,
-      read: !!n.read_at, // make sure this is always injected
+      read: !!n.read_at,
     }))
     .filter(notification => {
       const parsed = parseNotification(notification);
 
-      // text filter
       const needle = filter.trim().toLowerCase();
-      const searchFilter = (parsed.notificationDescription || '').toLowerCase().includes(needle);
+      const searchFilter = (parsed.notificationDescription || '')
+        .toLowerCase()
+        .includes(needle);
 
-      // status filter
       let statusFilter = true;
       if (filterStatus === 'new') {
         statusFilter = !notification.read;
@@ -120,8 +111,6 @@ function NotificationInbox(props) {
         statusFilter = notification.read;
       }
 
-      console.log('Current Tab Filter:', filterStatus);
-      // date range
       let dateFilter = true;
       const createdDate = parseDate(notification.created_at);
       if (filterStartDate) {
@@ -194,9 +183,6 @@ function NotificationInbox(props) {
     setModalOpen(true);
   };
 
-  /**
-   * Extract a library name from the title.
-   */
   function extractLibraryName(title) {
     if (title.toLowerCase().startsWith('library')) {
       const hashIndex = title.indexOf('#');
@@ -220,20 +206,16 @@ function NotificationInbox(props) {
    * Parse notification data to get libraryName, libraryStatus, description.
    */
   function parseNotification(notification) {
-    const data = (notification && notification.data) ? notification.data : {};
-    const title = (data && data.title) ? String(data.title) : '';
+    const data = notification && notification.data ? notification.data : {};
+    const title = data && data.title ? String(data.title) : '';
 
-    const libraryName = extractLibraryName(title);         // keep if 
-    const libraryStatus = (data && data.status) ? String(data.status) : '';
-    const notificationDescription = title;                
+    const libraryName = extractLibraryName(title);
+    const libraryStatus = data && data.status ? String(data.status) : '';
+    const notificationDescription = title;
 
     return { libraryName, libraryStatus, notificationDescription };
   }
 
-  /**
-   * parseDate:
-   * Converts "YYYY-MM-DD HH:MM:SS" => "YYYY-MM-DDTHH:MM:SS" => Date object
-   */
   function parseDate(dateStr) {
     if (dateStr && !dateStr.includes('T')) {
       return new Date(dateStr.replace(' ', 'T'));
@@ -241,27 +223,83 @@ function NotificationInbox(props) {
     return new Date(dateStr);
   }
 
-  // derive from the array
   const unreadCount = Array.isArray(notifications)
-  ? notifications.filter(n => !n.read_at).length
-  : 0;
+    ? notifications.filter(n => !n.read_at).length
+    : 0;
 
+  // Indeterminate state for header checkbox
+  useEffect(() => {
+    if (!selectAllRef.current) return;
+    const pageIds = paginatedNotifications.map(n => n.id);
+    const selectedOnPage = selectedNotifications.filter(id =>
+      pageIds.includes(id),
+    );
+
+    if (selectAllPages) {
+      selectAllRef.current.indeterminate = false;
+    } else {
+      selectAllRef.current.indeterminate =
+        selectedOnPage.length > 0 && selectedOnPage.length < pageIds.length;
+    }
+  }, [selectedNotifications, paginatedNotifications, selectAllPages]);
+
+  // Toggle select all on current page
+  const handleToggleSelectAllOnPage = () => {
+    const pageIds = paginatedNotifications.map(n => n.id);
+    const allOnPageSelected = pageIds.every(id =>
+      selectedNotifications.includes(id),
+    );
+
+    if (allOnPageSelected) {
+      setSelectedNotifications(prev =>
+        prev.filter(id => !pageIds.includes(id)),
+      );
+      setSelectAllPages(false);
+    } else {
+      setSelectedNotifications(prev =>
+        Array.from(new Set([...prev, ...pageIds])),
+      );
+    }
+  };
+
+  // Select all notifications across all pages
+  const handleSelectAllPages = () => {
+    const allIds = sortedNotifications.map(n => n.id);
+    setSelectedNotifications(allIds);
+    setSelectAllPages(true);
+  };
+
+  // Clear all selections
+  const handleClearSelection = () => {
+    setSelectedNotifications([]);
+    setSelectAllPages(false);
+  };
+
+  // Check if all on current page are selected
+  const pageIds = paginatedNotifications.map(n => n.id);
+  const allOnPageSelected =
+    pageIds.length > 0 &&
+    pageIds.every(id => selectedNotifications.includes(id));
+  const showSelectAllBanner =
+    allOnPageSelected &&
+    !selectAllPages &&
+    sortedNotifications.length > notificationsPerPage;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4"><FormattedMessage {...messages.header} /></h2>
+      <h2 className="mb-4">
+        <FormattedMessage {...messages.header} />
+      </h2>
 
       {/* FILTERS CARD */}
-      {/* 🔍 Modern Filter Box */}
-      {/* 🔍 Ultra-Clean, Priority-Enforced Filter Box */}
       <div className="card shadow-sm border-0 mb-4">
         <div className="card-body">
           {/* Filters Row */}
           <div className="row gy-3 gx-4">
-            {/* 🔍 Search */}
+            {/* Search */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-              <FormattedMessage {...messages.searchLabel} />
+                <FormattedMessage {...messages.searchLabel} />
               </label>
               <div className="position-relative">
                 <span className="position-absolute top-50 start-0 translate-middle-y ps-3 text-muted">
@@ -270,7 +308,9 @@ function NotificationInbox(props) {
                 <input
                   type="text"
                   className="form-control ps-5 py-2 shadow-sm border rounded-3 border-secondary"
-                  placeholder={intl.formatMessage(messages.searchPlaceholderDescription)}
+                  placeholder={intl.formatMessage(
+                    messages.searchPlaceholderDescription,
+                  )}
                   value={filter}
                   onChange={e => setFilter(e.target.value.toLowerCase())}
                 />
@@ -279,23 +319,31 @@ function NotificationInbox(props) {
 
             {/* Status */}
             <div className="col-lg-3 col-md-6">
-              <label className="form-label fw-semibold text-dark"><FormattedMessage {...messages.statusLabel} /></label>
+              <label className="form-label fw-semibold text-dark">
+                <FormattedMessage {...messages.statusLabel} />
+              </label>
               <br />
               <select
                 className="form-select py-2 shadow-sm border rounded-3 border-secondary"
                 value={filterStatus}
                 onChange={e => setFilterStatus(e.target.value)}
               >
-                <option value="all">{intl.formatMessage(messages.statusAll)}</option>
-                <option value="new">{intl.formatMessage(messages.statusNew)}</option>
-                <option value="read">{intl.formatMessage(messages.statusRead)}</option>
+                <option value="all">
+                  {intl.formatMessage(messages.statusAll)}
+                </option>
+                <option value="new">
+                  {intl.formatMessage(messages.statusNew)}
+                </option>
+                <option value="read">
+                  {intl.formatMessage(messages.statusRead)}
+                </option>
               </select>
             </div>
 
             {/* Start Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-              <FormattedMessage {...messages.startDateLabel} />
+                <FormattedMessage {...messages.startDateLabel} />
               </label>
               <input
                 type="date"
@@ -308,7 +356,7 @@ function NotificationInbox(props) {
             {/* End Date */}
             <div className="col-lg-3 col-md-6">
               <label className="form-label fw-semibold text-dark">
-              <FormattedMessage {...messages.endDateLabel} />
+                <FormattedMessage {...messages.endDateLabel} />
               </label>
               <input
                 type="date"
@@ -343,23 +391,134 @@ function NotificationInbox(props) {
                 <i className="bi bi-check2-square me-2" />
                 <FormattedMessage {...messages.markAllAsRead} />
               </button>
+
+              {/* Delete Selected */}
+              <button
+                className="btn btn-danger px-4 py-2 shadow-sm rounded-3 ms-3"
+                onClick={() => {
+                  if (selectedNotifications.length === 0) {
+                    alert(
+                      <FormattedMessage
+                        {...messages.selectNotificationsMessage}
+                      />,
+                    );
+                    return;
+                  }
+
+                  // Open modal for bulk delete
+                  setDeleteMode('bulk');
+                  setShowDeleteModal(true);
+                }}
+                disabled={selectedNotifications.length === 0}
+                title={
+                  <FormattedMessage {...messages.deleteNotificationSelected} />
+                }
+              >
+                <i className="bi bi-trash-fill me-2" />
+                {<FormattedMessage {...messages.deleteNotificationSelected} />}
+                {selectedNotifications.length > 0 &&
+                  ` (${
+                    selectAllPages
+                      ? sortedNotifications.length
+                      : selectedNotifications.length
+                  })`}
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* SELECT ALL 
+        Because the default message contains rendered numerical data, 
+        defaultMessage: `All ***${pageIds.length}*** notifications 
+        on this page are selected.`,},
+       
+        we need to find a fix or remove the numbers
+      */}
+      {showSelectAllBanner && (
+        <div
+          className="alert alert-info d-flex justify-content-between align-items-center mb-3"
+          role="alert"
+        >
+          <span>
+            <i className="bi bi-info-circle me-2" />
+            {<FormattedMessage {...messages.allOnPageSelected} />}
+          </span>
+          <button
+            className="btn btn-sm btn-primary"
+            onClick={handleSelectAllPages}
+          >
+            {<FormattedMessage {...messages.selectAllPages} />}
+
+            {/* STILL CHECKING TO POPULATE NUMBERS IN MESSAGES 
+            {intl.formatMessage(
+              messages.selectAllPages || {
+                id: 'app.notifications.selectAllPages',
+                defaultMessage: `Select all ${
+                  sortedNotifications.length
+                } notifications`,
+              },
+            )} */}
+          </button>
+        </div>
+      )}
+
+      {/* ALL PAGES SELECTED BANNER */}
+      {selectAllPages && (
+        <div
+          className="alert alert-success d-flex justify-content-between align-items-center mb-3"
+          role="alert"
+        >
+          <span>
+            <i className="bi bi-check-circle me-2" />
+            {/* STILL CHECKING TO POPULATE NUMBERS IN MESSAGES 
+            {intl.formatMessage(
+              messages.allPagesSelected || {
+                id: 'app.notifications.allPagesSelected',
+                defaultMessage: `All ${
+                  sortedNotifications.length
+                } notifications are selected.`,
+              },
+            )} */}
+            {<FormattedMessage {...messages.selectAllPages} />}
+          </span>
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            onClick={handleClearSelection}
+          >
+            {<FormattedMessage {...messages.clearSelection} />}
+          </button>
+        </div>
+      )}
 
       {/* TABLE */}
       <div className="table-responsive">
         <table className="table table-striped table-hover align-middle">
           <thead className="table-dark">
             <tr>
-              <th style={{ width: '50px' }} />
-              <th style={{ width: '50px' }}><FormattedMessage {...messages.thIndex} /></th>
+              <th style={{ width: '50px' }}>
+                <input
+                  type="checkbox"
+                  ref={selectAllRef}
+                  onChange={handleToggleSelectAllOnPage}
+                  checked={
+                    paginatedNotifications.length > 0 &&
+                    (selectAllPages ||
+                      paginatedNotifications.every(n =>
+                        selectedNotifications.includes(n.id),
+                      ))
+                  }
+                  /*aria-label="Select all on this page"*/
+                />
+              </th>
+              <th style={{ width: '50px' }}>
+                <FormattedMessage {...messages.thIndex} />
+              </th>
               <th
                 style={{ width: '150px', cursor: 'pointer' }}
                 onClick={() => handleSort('created_at')}
               >
-                <FormattedMessage {...messages.thDate}/>
+                <FormattedMessage {...messages.thDate} />
                 {sortColumn === 'created_at' &&
                   (sortOrder === 'asc' ? '↑' : '↓')}
               </th>
@@ -367,12 +526,12 @@ function NotificationInbox(props) {
                 style={{ width: '150px', cursor: 'pointer' }}
                 onClick={() => handleSort('libraryName')}
               >
-               <FormattedMessage {...messages.thDetail}/>
+                <FormattedMessage {...messages.thDetail} />
                 {sortColumn === 'libraryName' &&
                   (sortOrder === 'asc' ? '↑' : '↓')}
               </th>
               <th style={{ width: '200px' }} className="text-center">
-                <FormattedMessage {...messages.thActions}/>
+                <FormattedMessage {...messages.thActions} />
               </th>
             </tr>
           </thead>
@@ -384,17 +543,24 @@ function NotificationInbox(props) {
                     {filterStatus === 'new' ? (
                       <>
                         <i className="bi bi-bell-slash fs-4" />
-                        <div className="mt-2"> <FormattedMessage {...messages.emptyNew} /> 😊</div>
+                        <div className="mt-2">
+                          {' '}
+                          <FormattedMessage {...messages.emptyNew} /> 😊
+                        </div>
                       </>
                     ) : filterStatus === 'read' ? (
                       <>
                         <i className="bi bi-inbox fs-4" />
-                        <div className="mt-2"><FormattedMessage {...messages.emptyRead} /></div>
+                        <div className="mt-2">
+                          <FormattedMessage {...messages.emptyRead} />
+                        </div>
                       </>
                     ) : (
                       <>
                         <i className="bi bi-info-circle fs-4" />
-                        <div className="mt-2"><FormattedMessage {...messages.emptyAll} /></div>
+                        <div className="mt-2">
+                          <FormattedMessage {...messages.emptyAll} />
+                        </div>
                       </>
                     )}
                   </div>
@@ -435,7 +601,10 @@ function NotificationInbox(props) {
                     <td>
                       {parsed.libraryName}
                       {!notification.read && (
-                        <span className="badge bg-info ms-2"> <FormattedMessage {...messages.badgeNew} /></span>
+                        <span className="badge bg-info ms-2">
+                          {' '}
+                          <FormattedMessage {...messages.badgeNew} />
+                        </span>
                       )}
                     </td>
                     <td className="text-center">
@@ -470,8 +639,8 @@ function NotificationInbox(props) {
                           }}
                           title={
                             notification.read
-                            ? intl.formatMessage(messages.markAsUnreadTitle)
-                            : intl.formatMessage(messages.markAsReadTitle)
+                              ? intl.formatMessage(messages.markAsUnreadTitle)
+                              : intl.formatMessage(messages.markAsReadTitle)
                           }
                         >
                           <span style={{ fontSize: '1.5rem' }}>
@@ -484,6 +653,7 @@ function NotificationInbox(props) {
                           className="btn btn-outline-danger px-1 py-2 fs-5"
                           onClick={() => {
                             setNotificationToDelete(notification);
+                            setDeleteMode('single');
                             setShowDeleteModal(true);
                           }}
                           title={intl.formatMessage(messages.delete)}
@@ -512,7 +682,7 @@ function NotificationInbox(props) {
           <FormattedMessage {...messages.previous} />
         </button>
         <span className="fw-bold fs-5">
-        {intl.formatMessage(messages.pageOf, {
+          {intl.formatMessage(messages.pageOf, {
             current: currentPage,
             total: totalPages,
           })}
@@ -529,88 +699,61 @@ function NotificationInbox(props) {
       </div>
 
       {/* MODAL Popup */}
-      {selectedNotification && (
+
+      <>
+        {/* UNIFIED DELETE CONFIRMATION MODAL FOR ONE/ALL NOTICATION */}
         <Modal
-          isOpen={modalOpen}
-          toggle={() => setModalOpen(!modalOpen)}
+          isOpen={showDeleteModal}
+          toggle={() => setShowDeleteModal(false)}
           centered
         >
-          <ModalHeader toggle={() => setModalOpen(false)}>
-          <FormattedMessage {...messages.detailsTitle} />
+          <ModalHeader toggle={() => setShowDeleteModal(false)}>
+            <FormattedMessage {...messages.confirmDeleteTitle} />
           </ModalHeader>
           <ModalBody>
-            <p>
-            <strong><FormattedMessage {...messages.descriptionLabel} /></strong>{' '}
-              {parseNotification(selectedNotification).libraryName}
-            </p>
-            {/* <p>
-              <strong>Status:</strong>{' '}
-              {parseNotification(selectedNotification).libraryStatus}
-            </p> */}
-            <p>
-            <strong><FormattedMessage {...messages.dateLabel} /></strong>{' '}
-              {parseDate(selectedNotification.created_at).toLocaleDateString()}{' '}
-              {parseDate(selectedNotification.created_at).toLocaleTimeString()}
-            </p>
-            <p>
-            <strong><FormattedMessage {...messages.visitLinkLabel} /></strong>{' '}
-              <a
-                href={
-                  selectedNotification && selectedNotification.data
-                    ? selectedNotification.data.url
-                    : '#'
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary text-decoration-underline"
-              >
-                <FormattedMessage {...messages.openRequestDetail} />
-              </a>
-            </p>
+            {deleteMode === 'single' ? (
+              <FormattedMessage {...messages.confirmDeleteMessage} />
+            ) : (
+              <FormattedMessage
+                {...messages.confirmDeleteBulkMessage}
+                values={{
+                  count: selectAllPages
+                    ? sortedNotifications.length
+                    : selectedNotifications.length,
+                }}
+              />
+            )}
           </ModalBody>
-
           <ModalFooter>
             <button
               className="btn btn-secondary"
-              onClick={() => setModalOpen(false)}
+              onClick={() => setShowDeleteModal(false)}
             >
-              <FormattedMessage {...messages.close} />
+              <FormattedMessage {...messages.cancel} />
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                if (deleteMode === 'single') {
+                  // Delete single notification
+                  dispatch(deleteNotificationAction(notificationToDelete.id));
+                } else {
+                  // Delete multiple notifications
+                  dispatch(
+                    deleteNotificationsBulkAction(selectedNotifications),
+                  );
+                  setSelectedNotifications([]);
+                  setSelectAllPages(false);
+                }
+                setShowDeleteModal(false);
+                setTimeout(() => dispatch(requestNotifications()), 500);
+              }}
+            >
+              <FormattedMessage {...messages.delete} />
             </button>
           </ModalFooter>
         </Modal>
-      )}
-
-      {/* DELETE CONFIRMATION MODAL */}
-      <Modal
-        isOpen={showDeleteModal}
-        toggle={() => setShowDeleteModal(false)}
-        centered
-      >
-        <ModalHeader toggle={() => setShowDeleteModal(false)}>
-        <FormattedMessage {...messages.confirmDeleteTitle} />
-        </ModalHeader>
-        <ModalBody>
-        <FormattedMessage {...messages.confirmDeleteMessage} />
-        </ModalBody>
-        <ModalFooter>
-          <button
-            className="btn btn-secondary"
-            onClick={() => setShowDeleteModal(false)}
-          >
-            <FormattedMessage {...messages.cancel} />
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => {
-              dispatch(deleteNotificationAction(notificationToDelete.id));
-              setShowDeleteModal(false);
-              setTimeout(() => dispatch(requestNotifications()), 500);
-            }}
-          >
-              <FormattedMessage {...messages.delete} />
-          </button>
-        </ModalFooter>
-      </Modal>
+      </>
     </div>
   );
 }

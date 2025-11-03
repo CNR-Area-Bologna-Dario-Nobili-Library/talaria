@@ -365,6 +365,13 @@
   "app.containers.NotificationInbox.confirmDeleteMessage": "Sicuro di voler eliminare questa notifica?",
   "app.containers.NotificationInbox.cancel": "Annulla",
   "app.containers.NotificationInbox.delete": "Elimina",
+  "app.containers.NotificationInbox.allOnPageSelected": "???All notifications {pageIds.length} on this page are selected.",
+  "app.containers.NotificationInbox.selectAllPages": "???Select all {sortedNotifications.length} notifications",
+  "app.containers.NotificationInbox.allPagesSelected": "???All notifications are selected.",
+  "app.containers.NotificationInbox.clearSelection": "???Clear selection",
+  "app.containers.NotificationInbox.confirmDeleteBulkMessage": "???Are you sure you want to delete {count} selected notification(s)? This action cannot be undone.",
+  "app.containers.NotificationInbox.selectNotificationsMessage": "???Please select notifications to delete..",
+  "app.containers.NotificationInbox.deleteNotificationSelected": "???Delete selected",
   
   "app.components.LendingsList.LendingSelected":"Selezionati",
 

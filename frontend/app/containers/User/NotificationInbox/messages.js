@@ -169,4 +169,37 @@ export default defineMessages({
     id: `${scope}.delete`,
     defaultMessage: 'Delete',
   },
+
+  allOnPageSelected: {
+    id: `${scope}.allOnPageSelected`,
+    //defaultMessage: 'All notifications {pageIds.length} on this page are selected.',
+    defaultMessage: 'All notifications on this page are selected.',
+  },
+  selectAllPages: {
+    id: `${scope}.selectAllPages`,
+    //defaultMessage: 'Select all {sortedNotifications.length} notifications',
+    defaultMessage: 'Select all notifications',
+  },
+  allPagesSelected: {
+    id: `${scope}.allPagesSelected`,
+    defaultMessage: 'All notifications are selected.',
+  },
+  clearSelection: {
+    id: `${scope}.clearSelection`,
+    defaultMessage: 'Clear selection',
+  },
+  confirmDeleteBulkMessage: {
+    id: `${scope}.confirmDeleteBulkMessage`,
+    defaultMessage: 'Are you sure you want to delete {count} selected notification(s)? This action cannot be undone.',
+  },
+
+  selectNotificationsMessage: {
+    id: `${scope}.selectNotificationsMessage`,
+    defaultMessage: 'Please select notifications to delete..',
+  },
+
+  deleteNotificationSelected : {
+    id: `${scope}.deleteNotificationSelected`,
+    defaultMessage: 'Delete selected',
+  },
 });

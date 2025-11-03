@@ -165,4 +165,45 @@ class NotificationController extends ApiController
         ]);
     }
 
+     /**
+     * Delete all notifications for the authenticated user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyMany(Request $request)
+    {
+        \Log::info('User requested bulk delete of notifications');
+        \Log::info('User requested bulk delete of notifications', [
+            'user_id' => auth()->id(),
+            'ids' => $request->input('ids'),
+        ]);
+
+        $validated = $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'string', // notifications table uses string UUIDs by default
+        ]);
+
+        $user = \Auth::user();
+
+        // Only delete notifications that belong to the authenticated user
+        $query = $user->notifications()->whereIn('id', $validated['ids']);
+
+        $count = (clone $query)->count();
+
+        // Hard delete (to match your destroy())
+        $query->forceDelete();
+
+        \Log::info('User bulk deleted notifications', [
+            'user_id' => auth()->id(),
+            'deleted_count' => $count,
+        ]);
+
+        return response()->json([
+            'message' => 'Selected notifications deleted successfully',
+            'deleted_count' => $count,
+            'deleted_ids' => $validated['ids'],
+        ]);
+    }
+
 }
