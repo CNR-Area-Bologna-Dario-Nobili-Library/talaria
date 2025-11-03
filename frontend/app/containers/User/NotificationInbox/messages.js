@@ -180,6 +180,12 @@ export default defineMessages({
     //defaultMessage: 'Select all {sortedNotifications.length} notifications',
     defaultMessage: 'Select all notifications',
   },
+
+  selectedAllPages: {
+    id: `${scope}.selectedAllPages`,
+    defaultMessage: 'All notifications in all pages are selected',
+  },
+
   allPagesSelected: {
     id: `${scope}.allPagesSelected`,
     defaultMessage: 'All notifications are selected.',

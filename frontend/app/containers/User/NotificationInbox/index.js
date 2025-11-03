@@ -480,10 +480,10 @@ function NotificationInbox(props) {
                 } notifications are selected.`,
               },
             )} */}
-            {<FormattedMessage {...messages.selectAllPages} />}
+            {<FormattedMessage {...messages.selectedAllPages} />}
           </span>
           <button
-            className="btn btn-sm btn-outline-secondary"
+            className="btn btn-sm btn-danger"
             onClick={handleClearSelection}
           >
             {<FormattedMessage {...messages.clearSelection} />}
