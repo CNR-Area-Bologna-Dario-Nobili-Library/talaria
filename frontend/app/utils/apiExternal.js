@@ -102,7 +102,13 @@ export const getFindISBN = (options) => {
     return result;
 };
 
-export const parseAuthors = (authors, maxChars) => {
+/**
+ * Truncate list of authors to maxChars (default 100 chars) and add 'et al.'
+ * @param {Array} authors Array of authors
+ * @param {number} maxChars Number of chars
+ * @returns 
+ */
+export const parseAuthors = (authors, maxChars = 100) => {
   if (!authors || !Array.isArray(authors)) {
       return '';
   }
@@ -223,7 +229,7 @@ export const parseFromOpenAlex = oareference => {
   obj = {
     pub_title: pubTitle,
     part_title: partTitle,
-    authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships, 100) : '',
+    authors: pubtype === 3 && reference.authorships ? parseAuthors(reference.authorships) : '',
     part_authors: pubtype === 1 || pubtype === 2 && reference.authorships ? parseAuthors(reference.authorships, 200) : '',
     abstract: reference.abstract_inverted_index ? decodeInvertedIndex(reference.abstract_inverted_index) : '',
     pubyear: reference.publication_year,
