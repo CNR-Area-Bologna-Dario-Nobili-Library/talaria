@@ -68,6 +68,11 @@ const OASearchReference = props => {
       }
     }
     if (data.pmid == null && data.doi == null && data.isbn == null) {
+      // Check if there is a title
+      if (!query || query.trim().length === 0) {
+        return null;
+      }
+
       //base search by exact title: remove all commas and add quotes for exact title
       data.title = `"${query.replace(/,/g, '')}"`;
     }
