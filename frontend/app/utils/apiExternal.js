@@ -4,6 +4,8 @@ const PMID_API_URL=process.env.PMID_API_URL
                     
 const OPENALEX_API_URL=process.env.OPENALEX_API_URL
 
+const TECH_SUPPORT_EMAIL=process.env.TECH_SUPPORT_EMAIL
+
 const OPENSTREETMAP_API_URL=process.env.OPENSTREETMAP_API_URL
 
 const FIND_ISSN_SERVICE_URL=process.env.FIND_ISSN_SERVICE_URL
@@ -34,10 +36,10 @@ export const getOA = (options) => {
   }
   
   console.log("API GETOA - OPENALEX - FILTER:", filter);
-  console.log("API GETOA - OPENALEX - URL:", `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`);
+  console.log("API GETOA - OPENALEX - URL:", `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}&mailto=${TECH_SUPPORT_EMAIL}`);
 
   return request(
-    `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}`,
+    `${OPENALEX_API_URL}/works?filter=${encodeURIComponent(filter)}&mailto=${TECH_SUPPORT_EMAIL}`,
     { method: 'get' }
   );
 };
