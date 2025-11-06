@@ -151,17 +151,28 @@ export const parseAuthors = (authors, maxChars = 100) => {
  * @returns Publication type
  */
 const determinePubType = reference => {
+  if (!reference || !reference.type) {
+    return null;
+  }
+  
   // Default publication type to article (1)
-  let pubtype = 1;
+  let pubtype = null;
 
-  // If crossref-type contains one of these words, then it is a book (2)
-  const bookWords = ['book', 'report', 'series', 'monograph', 'proceedings', 'standard'];
-  if (bookWords.some(word => reference.type_crossref.includes(word))) {
+  // const crossref_articleWords = ['journal', 'peer-review'];
+  const articleWords = ['article', 'dataset', 'review', 'preprint', 'letter', 'editorial', 'erratum', 'supplementary-materials', 'retraction'];
+  if (articleWords.some(word => reference.type.includes(word))) {
+    pubtype = 1;
+  }
+  
+  // If type contains one of these words, then it is a book (2)
+  // const crossref_bookWords = ['book', 'report', 'series', 'monograph', 'proceedings', 'standard'];
+  const bookWords = ['book', 'reference-entry', 'report', 'standard'];
+  if (bookWords.some(word => reference.type.includes(word))) {
     pubtype = 2;
   }
 
   // If the reference type is a dissertation, set pubtype to thesis (3)
-  if (reference.type_crossref.includes('dissertation')) {
+  if (reference.type.includes('dissertation')) {
     pubtype = 3;
   }
 
