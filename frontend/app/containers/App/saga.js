@@ -56,6 +56,10 @@ export function* markNotificationAsReadSaga({ id, setToRead }) {
   };
 
   try {
+    if (typeof window !== 'undefined') {
+      window.__SUPPRESS_NOTIF_TOAST = true;
+    }
+
     yield call(markNotificationAsRead, id, options);
 
     yield put({

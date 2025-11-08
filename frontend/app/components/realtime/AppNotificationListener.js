@@ -74,6 +74,7 @@ function normalizeEvtKey(e) {
  * @returns {boolean} True if toast was shown, false if already seen
  */
 function showToastOnce(toastId, title, url, seenRef) {
+  if (toastSuppressed()) return false; 
   if (!toastId) toastId = 'msg|' + String(title) + '|' + String(url || '');
   if (seenRef.current[toastId]) return false;
   if (toast.isActive && toast.isActive(toastId)) return false;
@@ -107,6 +108,13 @@ function resolveUserId(props) {
     }
   } catch (e) {}
   return 0;
+}
+
+function toastSuppressed() {
+  if (typeof window === 'undefined') return false;
+  if (window.__SUPPRESS_NOTIF_TOAST) return true;
+  const until = window.__SUPPRESS_NOTIF_TOAST_UNTIL || 0;
+  return Date.now() < until;
 }
 
 /**
@@ -157,11 +165,13 @@ const AppNotificationListener = (props) => {
       // Only target user
       if (eventData.target_user_id == null || Number(eventData.target_user_id) !== currentUserId) return;
 
+      if (toastSuppressed()) return;
+
       var title = (eventData.item && String(eventData.item).trim()) || 'Notification';
       var key = normalizeEvtKey(eventData);
       var url = eventData.url || '';
 
-      // ✅ ONLY SHOW TOAST - AppRealtimeListener handles list refreshes!
+      // ONLY SHOW TOAST - AppRealtimeListener handles list refreshes!
       showToastOnce(key, title, url, seenRef);
       lastRealtimeMsRef.current = Date.now();
     }
@@ -193,6 +203,8 @@ const AppNotificationListener = (props) => {
 
     if (Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS) return;
 
+    if (toastSuppressed()) return;
+    
     var latest = null;
     for (var i = 0; i < list.length; i++) {
       var n = list[i];
