@@ -229,12 +229,26 @@ export const parseFromOpenAlex = oareference => {
   const bib = reference.biblio;
 
   // pubTitle is the name of the journal if pubtype is 1 OR the book title if pubtype is 2
-  const pubTitle = pubtype === 1 || pubtype === 2 ? location && location.source && location.source.display_name : reference.title;
+  let pubTitle;
+  if (pubtype === 1 || pubtype === 2) {
+    // Use location.raw_source_name for journal or book
+    if (location && location.raw_source_name) {
+      pubTitle = location.raw_source_name;
+    } else if (location && location.source && location.source.display_name) { // Use location.source.display_name if location.raw_source_name is not available
+      pubTitle = location.source.display_name;
+    }
+  } else {
+    // Use reference title for other types
+    pubTitle = reference.title;
+  }
 
   // partTitle is the article title only if pubtype is 1 OR is the book chapter title if pubtype is 2
   const partTitle = pubtype === 1 || pubtype === 2 && reference.title ? reference.title : '';
 
-  const trimmedDoi = reference.ids.doi ? reference.ids.doi.replace('https://doi.org/', '') : '';
+  // Search for doi in reference.doi, if there is none, search for doi in reference.ids.doi
+  const objDOI = reference.doi || (reference.ids && reference.ids.doi) || null;
+  const trimmedDoi = objDOI ? objDOI.replace('https://doi.org/', '') : '';
+
   const trimmedPmid = reference.ids.pmid ? reference.ids.pmid.replace('https://pubmed.ncbi.nlm.nih.gov/', '') : '';
 
   console.log('PARSEAUTHORS', parseAuthors(reference.authorships));
