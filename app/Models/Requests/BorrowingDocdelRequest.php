@@ -316,6 +316,7 @@ class BorrowingDocdelRequest extends DocdelRequest
                             $others=array_merge($others,[
                                 'lending_library_id'=>null,
                                 'all_lender'=>0,
+                                'orphaned'=>0,
                                 'lending_status'=>null, 
                                 'request_date'=>null,                                
                                 'request_note'=>'',                                
