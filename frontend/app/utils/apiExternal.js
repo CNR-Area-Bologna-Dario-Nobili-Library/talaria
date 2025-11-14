@@ -272,7 +272,7 @@ export const parseFromOpenAlex = oareference => {
     doi: trimmedDoi,
     pmid: trimmedPmid,
     oa_link: reference.open_access.is_oa && reference.open_access.oa_url ? reference.open_access.oa_url : null,
-    // sid: "OpenAlex",
+    sid: "openalex.org",
   };
 
   console.log('OGGETTONE', obj);
