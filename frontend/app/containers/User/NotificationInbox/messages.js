@@ -170,8 +170,8 @@ export default defineMessages({
     defaultMessage: 'Delete',
   },
 
-  allOnPageSelected: {
-    id: `${scope}.allOnPageSelected`,
+  allpageGridSelected: {
+    id: `${scope}.allpageGridSelected`,
     //defaultMessage: 'All notifications {pageIds.length} on this page are selected.',
     defaultMessage: 'All notifications on this page are selected.',
   },

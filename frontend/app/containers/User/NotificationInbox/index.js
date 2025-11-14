@@ -442,7 +442,7 @@ function NotificationInbox(props) {
         >
           <span>
             <i className="bi bi-info-circle me-2" />
-            {<FormattedMessage {...messages.allOnPageSelected} />}
+            {<FormattedMessage {...messages.allpageGridSelected} />}
           </span>
           <button
             className="btn btn-sm btn-primary"
