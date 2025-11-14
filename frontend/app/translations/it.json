@@ -767,7 +767,7 @@
   "app.components.HeaderBar.accountant": "Accountant",
   "app.components.HeaderBar.Patron": "Patron",
   "app.components.HeaderBar.Dashboard": "Dashboard",
-  "app.components.HeaderBar.NotificationInbox": "Notification Inbox",
+  "app.components.HeaderBar.NotificationInbox": "???Notification Inbox",
   "app.components.HeaderBar.AdminDashboard": "Admin",
   "app.components.HeaderBar.ManagerDashboard": "Gestionale",
   "app.components.HeaderBar.AccountantDashboard": "Pagamenti",
