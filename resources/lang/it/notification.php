@@ -22,6 +22,7 @@ return [
     'RequestDeliveredToDeskNotification_title'=>'E\' stato ricevuto dal desk',
     'RequestNotDeliveredToDeskNotification_title'=>'Non è stato ricevuto dal desk',
     'CancelRequestedNotification_title'=>'richiesta di annullamento',
+    'RequestCanceledNotification_title'=>'E\' stata cancellata',
     'CancelAcceptedNotification_title'=>'Annullamento accettato',
     'LibraryOperatorInvitationNotification_title'=>'Una biblioteca ti invita come operatore',
     'LibraryOperatorInvitationNewUserNotification_title'=>'Una biblioteca ti invita come operatore',

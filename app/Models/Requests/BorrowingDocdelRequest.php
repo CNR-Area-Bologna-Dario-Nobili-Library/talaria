@@ -13,8 +13,10 @@ use Carbon\Carbon;
 use Auth;
 use App\Resolvers\StatusResolver;
 use App\Models\Libraries\Library;
-
-
+use App\Models\Users\User;
+use App\Notifications\DDILL\RequestCanceledNotification;
+use App\Support\RealtimeBroadcaster;
+use Illuminate\Support\Facades\Log;
 
 class BorrowingDocdelRequest extends DocdelRequest
 {
@@ -274,11 +276,33 @@ class BorrowingDocdelRequest extends DocdelRequest
                             $others=array_merge($others,['lending_archived'=>1,'lending_status'=>'canceledAccepted']);
                             return $this->changeStatus($newstatus,$others);                                             
                         }
-                        else //borrow vuole cancellare=>reset richiesta come nuova (caso 6a)
+                        else //borrow vuole cancellare la nuova richiesta (inviata al lender ma mai accettato) (caso 6a)
                         {
+                            //Notify to lending library manager+lending operators   before resetting request                                
+                       
+                            $cancelNotification=new RequestCanceledNotification($this);
+                            
+                            
+                            $operators=array();
+                            $operators+=$this->lendingLibraryLendingOperators()->toArray();
+                            $operators+=$this->lendingLibraryManageOperators()->toArray();
+                            
+                            //unique operators
+                            $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+                            //Notify ...
+                            foreach ($operatorsID as $item) {
+                                $lu=User::findOrFail($item);                 
+                                $lu->notify($cancelNotification);            
+                                RealtimeBroadcaster::fromNotification($this, $lu, $cancelNotification);          
+                            }    
+
+
+
+                            //reset della richiesta come nuova (senza lender)
                             $newstatus="newrequest";  
                             $others=array_merge($others,[                                
-                                'lending_library_id'=>null,
+                                'lending_library_id'=>null, 
                                 'all_lender'=>0,
                                 'lending_status'=>null, 
                                 'request_date'=>null,                                

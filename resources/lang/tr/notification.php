@@ -22,6 +22,7 @@ return [
     'RequestDeliveredToDeskNotification_title'=>'???Has been delivered to desk',
     'RequestNotDeliveredToDeskNotification_title'=>'???Has not been delivered to desk',
     'CancelRequestedNotification_title'=>'???cancel request',
+    'RequestCanceledNotification_title'=>'???Has been deleted',
     'CancelAcceptedNotification_title'=>'???Has been canceled',
     'LibraryOperatorInvitationNotification_title'=>'???A library is inviting you as operator',
     'LibraryOperatorInvitationNewUserNotification_title'=>'???A library is inviting you as operator',

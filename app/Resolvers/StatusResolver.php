@@ -289,7 +289,7 @@ class StatusResolver
                     $bn=new $noti($this->model);      
                 
                     $u=User::findOrFail($item["user_id"]);
-                    Log::info("notify to User: ".$u->email);
+                    Log::info("notify to User: ".$u->user_service_email);
                     $u->notify($bn);                
                     RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                }   
                                                                                       
