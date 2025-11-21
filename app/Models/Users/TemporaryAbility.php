@@ -12,7 +12,7 @@ use App\Notifications\BaseMailMessage;
 use App\Notifications\Library\LibraryOperatorInvitationNotification;
 use App\Notifications\Library\LibraryOperatorInvitationNewUserNotification;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
-
+use App\Support\RealtimeBroadcaster;
 class TemporaryAbility extends BaseModel
 {
     protected $table = 'temporary_abilities';
@@ -114,14 +114,19 @@ class TemporaryAbility extends BaseModel
         //Create notification email template for invitation ... 
         if(isset($u) && $u->id>0)
         { 
-            $u->notify(new LibraryOperatorInvitationNotification($this));
+            // create the notification instance first
+            $notification = new LibraryOperatorInvitationNotification($this);
+            $u->notify($notification);
+            RealtimeBroadcaster::fromNotification($this, $u, $notification);
+
             
         }
         else //if no existing user 
         if (isset($this->user_email))
         {          
+            //$notification = new LibraryOperatorInvitationNewUserNotification($this);
             //send email using on-demand notifications...
-            FacadesNotification::route('mail', $this->user_email)->notify(new LibraryOperatorInvitationNewUserNotification($this));
+            FacadesNotification::route('mail', $this->user_email)->notify($notification);
         }
     }
 }
