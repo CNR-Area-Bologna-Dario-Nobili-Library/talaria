@@ -178,10 +178,10 @@ function NotificationInbox(props) {
   /**
    * View details in modal
    */
-  const handleViewDetails = notification => {
-    setSelectedNotification(notification);
-    setModalOpen(true);
-  };
+  // const handleViewDetails = notification => {
+  //   setSelectedNotification(notification);
+  //   setModalOpen(true);
+  // };
 
   function extractLibraryName(title) {
     if (title.toLowerCase().startsWith('library')) {
@@ -610,13 +610,13 @@ function NotificationInbox(props) {
                     <td className="text-center">
                       <div className="d-flex justify-content-center align-items-center gap-0">
                         {/* View */}
-                        <button
+                        {/* <button
                           className="btn btn-outline-info px-1 py-2 fs-2"
                           onClick={() => handleViewDetails(notification)}
                           title={intl.formatMessage(messages.viewDetailsTitle)}
                         >
                           <span style={{ fontSize: '1.5rem' }}>🔎</span>
-                        </button>
+                        </button> */}
 
                         {/* Toggle Read */}
                         <button
