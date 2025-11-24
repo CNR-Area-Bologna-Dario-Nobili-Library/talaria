@@ -46,6 +46,7 @@ function log() {
 const AppRealtimeListener = function AppRealtimeListener(props) {
   var dispatch = props.dispatch;
 
+
   const me = getCurrentUserIdFromProps(props);
 
   // On login, load any notifications might have missed.
@@ -133,6 +134,23 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         var borrowingLibId = n && n.extra && n.extra.borrowing_library_id ? String(n.extra.borrowing_library_id) : null;
         var lendingLibId = n && n.extra && n.extra.lending_library_id ? String(n.extra.lending_library_id) : null;
 
+        // Cancel Request, refresh lending panel list
+        if (!borrowingLibId && !lendingLibId && n && n.url) {
+          var hintedLibId = getLibraryIdFromPath(n.url);
+          if (hintedLibId) {
+            var u = String(n.url);
+            if (u.indexOf('/lending') !== -1 || u.indexOf('/to-deliver') !== -1) {
+              lendingLibId = hintedLibId;
+            } else if (u.indexOf('/borrowing') !== -1) {
+              borrowingLibId = hintedLibId;
+            }
+            log(TAG, 'Fallback IDs from notification url:', {
+              hintedLibId,
+              borrowingLibId,
+              lendingLibId,
+            });
+          }
+        }
         log(TAG, 'Extracted IDs - borrowingLibId:', borrowingLibId, 'lendingLibId:', lendingLibId, );
 
         // Always ring bell
