@@ -20,7 +20,7 @@ class RealtimeBroadcaster
 
         $payload['notifier_id'] = optional(Auth::user())->id;
         $payload['target_user_id'] = optional($notifiable)->id;
-        $payload['request_id'] = $payload['request_id'] ?? $model->id ?? null;
+        $payload['request_id'] = $payload['request_id'] ?? null;
         $payload['timestamp'] = $payload['timestamp'] ?? now()->toIso8601String();
 
         // Single unified broadcast - NO instanceof checks needed
