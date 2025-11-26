@@ -113,8 +113,7 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     changeStatusLendingRequest,
     getLendingsList,
     changeLendingArchivedRequest,
-    requestApplyTagsToLendingRequests,
-    acceptallLenderLendingRequest,
+    requestApplyTagsToLendingRequests,    
     getLendingRequest,
     getLibraryDeliveriesOptionList,
     getLibraryDeliveries,
@@ -767,6 +766,7 @@ export function* requestChangeLendingArchivedSaga(action) {
   }
 }*/
 
+/*not used
 export function* requestAcceptAllLenderLendingSaga(action) {
   const options = {
     method: 'put',
@@ -782,6 +782,7 @@ export function* requestAcceptAllLenderLendingSaga(action) {
     yield put(requestError(e.message));
   }
 }
+ */
 
 export function* requestLibraryDesksOptionListSaga(action) {  
   const options = {
@@ -1151,7 +1152,7 @@ export default function* librarySaga() {
   yield takeLatest(REQUEST_CHANGE_STATUS_DELIVERY,requestChangeStatusDeliverySaga);
   //yield takeLatest(REQUEST_CHANGE_LENDING_ARCHIVED,requestChangeLendingArchivedSaga);
 
-  yield takeLatest(REQUEST_ACCEPT_ALLLENDER, requestAcceptAllLenderLendingSaga)
+  //yield takeLatest(REQUEST_ACCEPT_ALLLENDER, requestAcceptAllLenderLendingSaga)
 
   yield takeLatest(REQUEST_LIBRARYSUBJECT_OPTIONLIST, requestLibrarySubjectOptionListSaga);
   yield takeLatest(REQUEST_GET_COUNTRIES_OPTIONLIST, requestGetCountriesOptionListSaga);

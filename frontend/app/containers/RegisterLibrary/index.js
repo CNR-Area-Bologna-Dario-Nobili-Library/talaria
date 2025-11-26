@@ -19,7 +19,6 @@ import {institutionsOptionListSelector,
     placesSelector, 
     libraryProjectsOptionListSelector,
     identifierTypesOptionListSelector} from './selectors';
-import { acceptallLenderLendingRequest } from '../../utils/api';
 
 const ILL_REQUEST_PAYMENT=(process.env.ILL_REQUEST_PAYMENT && process.env.ILL_REQUEST_PAYMENT=="true")?true:false;
 const LIBRARY_DIFFERENT_PROFILES = (process.env.LIBRARY_DIFFERENT_PROFILES && process.env.LIBRARY_DIFFERENT_PROFILES=="true")?true:false;

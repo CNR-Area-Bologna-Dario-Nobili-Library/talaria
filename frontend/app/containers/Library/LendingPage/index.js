@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import makeSelectLibrary, {isLibraryLoading} from '../selectors';
-import {requestLendingsList,requestLibraryTagsOptionList,requestApplyLendingTagsToDDRequests, requestRemoveDDLendingRequestTag, requestChangeStatusLending, requestAcceptAllLenderLending} from '../actions'
+import {requestLendingsList,requestLibraryTagsOptionList,requestApplyLendingTagsToDDRequests, requestRemoveDDLendingRequestTag, requestChangeStatusLending} from '../actions'
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -49,10 +49,13 @@ const LendingPage = (props) => {
         }
         else
             dispatch(requestChangeStatusLending(data.id, match.params.library_id, 'willSupply',"",intl.formatMessage({id:'app.requests.willSupply'}),""))
-    }
-        
+    } 
+
+    //NOTE 27/11/2025: this function was transformed to be the same as a normale "will supply" in order to generate correct notifications   
     const UpdateLendingAcceptRequest = (data) => {
-       dispatch(requestAcceptAllLenderLending(data.id,match.params.library_id, data.lending_status,intl.formatMessage({id:'app.requests.willSupply'}),""))
+       //OLD: dispatch(requestAcceptAllLenderLending(data.id,match.params.library_id, data.lending_status,intl.formatMessage({id:'app.requests.willSupply'}),""))
+       let extra={'all_lender':0,'lending_library_id':match.params.library_id}; //force lending library id because in "willsupply" status change this will not be set
+       dispatch(requestChangeStatusLending(data.id, match.params.library_id, 'willSupply',extra,intl.formatMessage({id:'app.requests.willSupply'}),""))
     }
     
     async function removeTagFromDDRequest (id,tagId, filter) {        
