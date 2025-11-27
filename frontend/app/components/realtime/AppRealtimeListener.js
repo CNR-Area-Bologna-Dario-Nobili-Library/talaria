@@ -1,9 +1,10 @@
 // frontend/app/components/realtime/AppRealtimeListener.js
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { requestBorrowingsList, requestLendingsList,} from '../../containers/Library/actions';
+import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators } from '../../containers/Library/actions';
 import { requestNotifications } from 'containers/App/actions';
 import { requestMyLibraries } from '../../containers/Patron/actions';
+import { requestPermissions } from '../../containers/Auth/AuthProvider/actions'; // ⬅️ NEW
 
 function getPathname() {
   return typeof window !== 'undefined' && window.location ? window.location.pathname : '';
@@ -90,6 +91,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       var tLender = null;
       var tBorrow = null;
       var tMyLib = null;
+      var tOperators = null; // for operators/permissions refresh
 
       var debouncedBell = debounce(function() {
         log(TAG, 'Refreshing notification bell');
@@ -116,19 +118,64 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         dispatch(requestMyLibraries());
       }
 
+      function refreshPermissions() {
+        log(TAG, 'Dispatching requestPermissions (realtime)');
+        dispatch(requestPermissions());
+      }
+
+      function refreshPendingOperators(libId) {
+        log(TAG, 'Dispatching requestGetLibraryPendingOperators for lib', libId);
+        dispatch(requestGetLibraryPendingOperators(libId));
+      }
+      
       function onAppNotification(e) {
         if (!me) return;
 
         log(TAG, 'Event received:', e);
 
-        if (!e || !e.notification) {
-          log(TAG, 'missing notification object');
+        // Accept both { notification: {...} } and plain {...}
+        var n = e && (e.notification || e);
+        if (!n) {
+          log(TAG, 'missing notification object (no notification/e payload)');
           return;
         }
 
-        var n = e.notification;
-
         log(TAG, 'Full notification object:', JSON.stringify(n));
+
+
+
+        // ---- Operator-related flags ----
+        // Adjust these checks to match your real payload
+        var notifType = (n && n.type) ? String(n.type) : '';
+        var isOperatorNotif =
+          notifType.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
+          (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id));
+
+        
+        var operatorLibId =
+          (n && n.extra && n.extra.library_id != null)
+            ? String(n.extra.library_id)
+            : null;
+
+        if (!operatorLibId && n && n.url) {
+          // Fallback: extract /library/:id/ from URL
+          operatorLibId = getLibraryIdFromPath(n.url);
+        }
+
+        // If this notification for operators actions (invite/approve/etc.),
+        // the dashboard reflects changes even if the user was on a
+        if (isOperatorNotif) {
+          log(TAG, 'Operator-related notification received — scheduling permissions/my-libraries refresh');
+          clearTimeout(tOperators);
+          tOperators = setTimeout(function() {
+            // Refresh permissions (updates user abilities/roles)
+            refreshPermissions();
+            // Also refresh my libraries in case operator membership changed
+            refreshMyLibraries();
+          }, 300);
+        }
+
+
 
         // Extract library IDs from notification.extra
         var borrowingLibId = n && n.extra && n.extra.borrowing_library_id ? String(n.extra.borrowing_library_id) : null;
@@ -163,24 +210,6 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         log(TAG, 'Current page:', { pathname: pathname, targetCurrentLibId: targetCurrentLibId,});
         log(TAG, 'Starting scenario checks...');
 
-        // SCENARIO 1 Only refresh wgen Actor update on lending -> refresh borrowing on the target side 
-        // var s1_hasBorrowing = pathname.indexOf('/borrowing') !== -1;
-        // var s1_notRequest = !pathname.match(/\/borrowing\/\d+\/request/);
-        // var s1_noLending = pathname.indexOf('/lending') === -1;
-        // var s1_noToDeliver = pathname.indexOf('/to-deliver') === -1;
-        // var s1_hasLibId = !!targetCurrentLibId;
-        // var s1_correctLibrary = borrowingLibId && targetCurrentLibId === borrowingLibId;
-        // log(TAG,'SCENARIO 1 CHECK: /borrowing?',s1_hasBorrowing, '!request?', s1_notRequest, '!lending?', s1_noLending, '!to-deliver?', s1_noToDeliver, 'libId?', s1_hasLibId,   'correctLib (borrowing)?',  s1_correctLibrary, );
-        // if (s1_hasBorrowing && s1_notRequest && s1_noLending && s1_noToDeliver && s1_hasLibId && s1_correctLibrary) {
-        //   log(TAG, 'SCENARIO 1 MATCHED: Refreshing borrowing list for lib', targetCurrentLibId,);
-        //   clearTimeout(tBorrow);
-        //   tBorrow = setTimeout(function() {
-        //     refreshBorrower(targetCurrentLibId, false);
-        //   }, 300);
-        //   return; 
-        // }
-        // log(TAG, 'SCENARIO 1 SKIPPED');
-
         // SCENARIO 1: Only refresh when on the BORROWING LIST page
         // e.g. /library/25/borrowing or /library/25/borrowing/
         var s1_isBorrowingList = /\/library\/\d+\/borrowing\/?$/.test(pathname);
@@ -203,24 +232,6 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         log(TAG, 'SCENARIO 1 SKIPPED');
 
 
-        // SCENARIO 2: Only refresh if the notification's lending_library_id matches target's library
-        // var s2_hasLending = pathname.indexOf('/lending') !== -1 || pathname.indexOf('/to-deliver') !== -1;
-        // var s2_noBorrowing = pathname.indexOf('/borrowing') === -1;
-        // var s2_hasLibId = !!targetCurrentLibId;
-        // var s2_correctLibrary = lendingLibId && targetCurrentLibId === lendingLibId;
-        // log(TAG, 'SCENARIO 2 CHECK: /lending or /to-deliver?',s2_hasLending, '!borrowing?', s2_noBorrowing, 'libId?', s2_hasLibId, 'correctLib (lending)?', s2_correctLibrary, );
-        // if (s2_hasLending && s2_noBorrowing && s2_hasLibId && s2_correctLibrary) {
-        //   log(TAG, 'SCENARIO 2 MATCHED: Refreshing lending list for lib',targetCurrentLibId,);
-        //   clearTimeout(tLender);
-        //   tLender = setTimeout(function() {
-        //     refreshLender(targetCurrentLibId);
-        //   }, 300);
-        //   return;
-        // }
-        // log(TAG, 'SCENARIO 2 SKIPPED');
-        // SCENARIO 2: Only refresh when on the LENDING / TO-DELIVER LIST page
-        // e.g. /library/25/lending or /library/25/lending/
-        //      /library/25/to-deliver or /library/25/to-deliver/
         var s2_isLendingList =
         /\/library\/\d+\/lending\/?$/.test(pathname) ||
         /\/library\/\d+\/to-deliver\/?$/.test(pathname);
@@ -276,11 +287,48 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           clearTimeout(tMyLib);
           tMyLib = setTimeout(function() {
             refreshMyLibraries();
+            refreshPermissions();
           }, 300);
           return;
         }
         log(TAG, 'SCENARIO 4 SKIPPED');
-        // No matching scenario - do nothing
+
+      // SCENARIO 5: User on manage/operators/pending -> refresh permissions (operator panel)
+        var s5_isOperatorsPending =
+        /\/library\/\d+\/manage\/operators\/pending\/?$/.test(pathname);
+
+        var s5_hasLibId = !!targetCurrentLibId;
+        // If backend gives operatorLibId, require it to match; otherwise accept any lib
+        var s5_correctLibrary = operatorLibId ? (targetCurrentLibId === operatorLibId) : true;
+
+        log(TAG, 'SCENARIO 5 CHECK (operators pending):', {
+        s5_isOperatorsPending: s5_isOperatorsPending,
+        s5_hasLibId: s5_hasLibId,
+        s5_correctLibrary: s5_correctLibrary,
+        operatorLibId: operatorLibId,
+        });
+
+        if (s5_isOperatorsPending && s5_hasLibId && s5_correctLibrary) {
+          log(TAG, 'SCENARIO 5 MATCHED: On operators pending page -> refreshPendingOperators() + refreshPermissions() (double refresh)');
+        
+          clearTimeout(tOperators);
+          tOperators = setTimeout(function () {
+            // First refresh – gets quick updates
+            refreshPendingOperators(targetCurrentLibId);
+            refreshPermissions();
+        
+            // Second refresh – safety refresh after backend jobs settle
+            setTimeout(function () {
+              log(TAG, 'SCENARIO 5: second delayed refresh (pending operators + permissions)');
+              refreshPendingOperators(targetCurrentLibId);
+              refreshPermissions();
+            }, 800); // you can tune this to 600–1200ms if needed
+          }, 400); // initial delay before first refresh
+        
+          return;
+        }
+        log(TAG, 'SCENARIO 5 SKIPPED');
+         // No matching scenario - do nothing
         log(TAG, 'No matching scenario, skipping refresh');
       }
 
@@ -293,6 +341,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         clearTimeout(tLender);
         clearTimeout(tBorrow);
         clearTimeout(tMyLib);
+        clearTimeout(tOperators); // NEW
 
         try {
           chAppNotif.stopListening('.app.notification', onAppNotification);
