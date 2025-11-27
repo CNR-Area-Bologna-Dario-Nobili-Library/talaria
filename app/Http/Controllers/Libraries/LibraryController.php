@@ -20,6 +20,7 @@ use App\Models\Users\TemporaryAbilityTransformer;
 use App\Models\Users\User;
 use App\Models\Users\UserLightTransformer;
 use App\Models\Users\UserTransformer;
+use App\Notifications\Operators\OperatorDeleteNotification;
 use App\Notifications\Library\LibraryOperatorInvitationDeleteNotification;
 use App\Notifications\Library\LibraryOperatorUpdatePermissionsNotification;
 use App\Notifications\Library\NewLibraryHasBeenRegisteredNotification;
@@ -146,12 +147,12 @@ class LibraryController extends ApiController
                 $user->disallow($luabil->name,$lib);        
             }
 
-           //create a temp object with user and library
+           //create a temp object with user and entity
             $obj=new stdClass();
             $obj->id=null;
             $obj->user=$user;
-            $obj->library=$lib; //create a temp object with user and library
-            $notification = new LibraryOperatorInvitationDeleteNotification($obj);
+            $obj->entity=$lib; //create a temp object with user and emtity
+            $notification = new OperatorDeleteNotification($obj);
 
             //notify to user
             $user->notify($notification);
@@ -269,21 +270,27 @@ class LibraryController extends ApiController
             $tempPerm->forceDelete();                           
        }
 
-       $user=$tempPerm->user;
+       //Notify user if invitation was pending
+       if($tempPerm->status==config("constants.temporary_ability_status.waiting"))
+       {
+            $user=$tempPerm->user;
 
-       //create a temp object with user and library
-       $obj=new stdClass();
-       $obj->id=null;
-       $obj->user=$user;
-       $obj->library=$lib; 
-       $notification = new LibraryOperatorInvitationDeleteNotification($obj);
+            //create a temp object with user and library
+            $obj=new stdClass();
+            $obj->id=null;
+            $obj->user=$user;
+            $obj->library=$lib; 
+            $obj->abilities=$tempPerm->abilities; 
+            $notification = new LibraryOperatorInvitationDeleteNotification($obj);
 
-       //notify to user
-       $user->notify($notification);
-       RealtimeBroadcaster::fromNotification($this, $user, $notification);
-
-       $temp_abilities =$lib->pending_operators(); 
+            //notify to user
+            $user->notify($notification);
+            RealtimeBroadcaster::fromNotification($this, $user, $notification);            
+       }
+       //else if invitation was rejected no need to notify user       
          
+       $temp_abilities =$lib->pending_operators(); 
+
        return $this->response->collection($temp_abilities, new TemporaryAbilityTransformer())->morph();             
      }
 

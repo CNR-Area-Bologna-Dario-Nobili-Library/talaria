@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Notifications\Library;
+namespace App\Notifications\Operators;
 
 use App\Notifications\MandatoryNotification;
 use Illuminate\Bus\Queueable;
 
-class LibraryOperatorInvitationDeleteNotification extends MandatoryNotification
+class OperatorDeleteNotification extends MandatoryNotification
 {
     use Queueable;
     
@@ -14,7 +14,7 @@ class LibraryOperatorInvitationDeleteNotification extends MandatoryNotification
      *
      * @return void
      */
-    //NOTE: model is $obj=["user"=>$user,"library"=>$lib]; 
+    //NOTE: model is $obj=["user"=>$user,"entity"=>(library/institution/project/consortium...)]; 
     public function __construct($model)
     {                
         parent::__construct();
@@ -23,12 +23,11 @@ class LibraryOperatorInvitationDeleteNotification extends MandatoryNotification
         
    
         $user=$this->object->user;
-        $library=$this->object->library;
+        $entity=$this->object->entity;
 
         $this->extraDataArr=[
             'name'=>$user->name,'surname'=>$user->surname,'email'=>$user->email,             
-            'lib_name'=>$library->name,'address'=>$library->address,'ill_email'=>$library->ill_email,          
-            'abilities'=>$this->object->abilities                
+            'entity_name'=>$entity->name,                       
         ];
     }
 }
