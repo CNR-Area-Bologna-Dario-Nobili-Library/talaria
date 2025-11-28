@@ -145,11 +145,16 @@ class TemporaryAbility extends BaseModel
     public function notifyToEntityUserAccepted() {
         $entity=$this->getEntity();
         if($entity!=null) {
-            
-            $notification = new OperatorAcceptedInvitationNotification($this);                      
+
+            $notification = new OperatorAcceptedInvitationNotification($this);
 
             foreach ($entity->manageOperators() as $item) {
-                $u=User::findOrFail($item["user_id"]);                 
+                // Skip notifying the user who accepted the invitation
+                if ($item["user_id"] == $this->user_id) {
+                    continue;
+                }
+
+                $u=User::findOrFail($item["user_id"]);
                 $u->notify($notification);
                 RealtimeBroadcaster::fromNotification($this, $u, $notification);
             }
@@ -160,11 +165,16 @@ class TemporaryAbility extends BaseModel
     public function notifyToEntityUserRejected() {
         $entity=$this->getEntity();
         if($entity!=null) {
-            
-            $notification = new OperatorRejectedInvitationNotification($this);                      
+
+            $notification = new OperatorRejectedInvitationNotification($this);
 
             foreach ($entity->manageOperators() as $item) {
-                $u=User::findOrFail($item["user_id"]);                 
+                // Skip notifying the user who rejected the invitation
+                if ($item["user_id"] == $this->user_id) {
+                    continue;
+                }
+
+                $u=User::findOrFail($item["user_id"]);
                 $u->notify($notification);
                 RealtimeBroadcaster::fromNotification($this, $u, $notification);
             }
