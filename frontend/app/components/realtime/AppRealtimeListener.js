@@ -1,7 +1,7 @@
 // frontend/app/components/realtime/AppRealtimeListener.js
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators } from '../../containers/Library/actions';
+import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators, requestGetLibraryOperators } from '../../containers/Library/actions';
 import { requestNotifications } from 'containers/App/actions';
 import { requestMyLibraries } from '../../containers/Patron/actions';
 import { requestPermissions } from '../../containers/Auth/AuthProvider/actions'; // ⬅️ NEW
@@ -92,6 +92,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       var tBorrow = null;
       var tMyLib = null;
       var tOperators = null; // for operators/permissions refresh
+      var tOperatorsPending = null; // pending operators panel list refresh
+      var tOperatorsList = null; // manage/operators panel list refresh
 
       var debouncedBell = debounce(function() {
         log(TAG, 'Refreshing notification bell');
@@ -126,6 +128,10 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       function refreshPendingOperators(libId) {
         log(TAG, 'Dispatching requestGetLibraryPendingOperators for lib', libId);
         dispatch(requestGetLibraryPendingOperators(libId));
+      }
+      function refreshOperatorsList(libId) {
+        log(TAG, 'Dispatching requestGetLibraryOperators for lib', libId);
+        dispatch(requestGetLibraryOperators(libId));
       }
       
       function onAppNotification(e) {
@@ -311,19 +317,52 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         if (s5_isOperatorsPending && s5_hasLibId && s5_correctLibrary) {
           log(TAG, 'SCENARIO 5 MATCHED: On operators pending page -> refreshPendingOperators() + refreshPermissions() (double refresh)');
         
-          clearTimeout(tOperators);
+          clearTimeout(tOperatorsPending);
       // SCENARIO 5: single delayed refresh (pending operators)
-        if (tOperators) {
-          clearTimeout(tOperators);
+        if (tOperatorsPending) {
+          clearTimeout(tOperatorsPending);
         }
 
-        tOperators = setTimeout(function () {
+        tOperatorsPending = setTimeout(function () {
           log(TAG, 'SCENARIO 5: single delayed refresh (pending operators)');
           refreshPendingOperators(targetCurrentLibId);
         }, 400);
           return;
         }
         log(TAG, 'SCENARIO 5 SKIPPED');
+
+      
+        // SCENARIO 6: User on manage/operators -> refresh operators list panel
+        var s6_isOperatorsMain =
+        /\/library\/\d+\/manage\/operators\/?$/.test(pathname) &&
+        pathname.indexOf('/manage/operators/pending') === -1 &&
+        pathname.indexOf('/manage/operators/new') === -1;
+
+        var s6_hasLibId = !!targetCurrentLibId;
+        var s6_correctLibrary = operatorLibId ? (targetCurrentLibId === operatorLibId) : true;
+
+        log(TAG, 'SCENARIO 6 CHECK (operators main):', {
+          s6_isOperatorsMain: s6_isOperatorsMain,
+          s6_hasLibId: s6_hasLibId,
+          s6_correctLibrary: s6_correctLibrary,
+          operatorLibId: operatorLibId,
+        });
+
+        if (s6_isOperatorsMain && s6_hasLibId && s6_correctLibrary) {
+        log(TAG, 'SCENARIO 6 MATCHED: On operators page -> refreshOperatorsList() + refreshPermissions()');
+
+        if (tOperatorsList) {
+          clearTimeout(tOperatorsList);
+        }
+
+        tOperatorsList = setTimeout(function () {
+          log(TAG, 'SCENARIO 6: delayed refresh (operators list)');
+          refreshOperatorsList(targetCurrentLibId);
+          refreshPermissions();
+        }, 400);
+        return;
+        }
+        log(TAG, 'SCENARIO 6 SKIPPED');
          // No matching scenario - do nothing
         log(TAG, 'No matching scenario, skipping refresh');
       }
@@ -337,7 +376,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         clearTimeout(tLender);
         clearTimeout(tBorrow);
         clearTimeout(tMyLib);
-        clearTimeout(tOperators); // NEW
+        clearTimeout(tOperatorsPending);
+        clearTimeout(tOperatorsList);
 
         try {
           chAppNotif.stopListening('.app.notification', onAppNotification);
