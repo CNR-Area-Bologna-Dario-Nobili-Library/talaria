@@ -312,19 +312,15 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           log(TAG, 'SCENARIO 5 MATCHED: On operators pending page -> refreshPendingOperators() + refreshPermissions() (double refresh)');
         
           clearTimeout(tOperators);
-          tOperators = setTimeout(function () {
-            // First refresh – gets quick updates
-            refreshPendingOperators(targetCurrentLibId);
-            refreshPermissions();
-        
-            // Second refresh – safety refresh after backend jobs settle
-            setTimeout(function () {
-              log(TAG, 'SCENARIO 5: second delayed refresh (pending operators + permissions)');
-              refreshPendingOperators(targetCurrentLibId);
-              refreshPermissions();
-            }, 800); // you can tune this to 600–1200ms if needed
-          }, 400); // initial delay before first refresh
-        
+      // SCENARIO 5: single delayed refresh (pending operators)
+        if (tOperators) {
+          clearTimeout(tOperators);
+        }
+
+        tOperators = setTimeout(function () {
+          log(TAG, 'SCENARIO 5: single delayed refresh (pending operators)');
+          refreshPendingOperators(targetCurrentLibId);
+        }, 400);
           return;
         }
         log(TAG, 'SCENARIO 5 SKIPPED');
