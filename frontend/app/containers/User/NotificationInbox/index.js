@@ -745,6 +745,8 @@ function NotificationInbox(props) {
                   setSelectedNotifications([]);
                   setSelectAllPages(false);
                 }
+                // Reset to page 1 after deletion
+                setCurrentPage(1);
                 setShowDeleteModal(false);
                 setTimeout(() => dispatch(requestNotifications()), 500);
               }}
