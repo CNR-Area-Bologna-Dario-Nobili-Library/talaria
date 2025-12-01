@@ -51,6 +51,7 @@ class AutomaticCleanDDRequests implements ShouldQueue
         }
     }
 
+    /* 20/11/25 NON piu usate 
     private function archiveAsNotReceivedNewForwardedRequests() {        
         $reqborrowings=BorrowingDocdelRequest::where('borrowing_status','=','newrequest')
         ->where('docdel_request_parent_id','<>','null')
@@ -75,7 +76,7 @@ class AutomaticCleanDDRequests implements ShouldQueue
             //change to notReceived & archived with reason "NotAvailableForILL"         
             $borr->changeStatus("documentReady",['archived'=>1,'fulfill_date'=>Carbon::now(),'notfulfill_type'=>config("constants.borrowingdocdelrequest_notfulfill_type.NotAvailableForILL"),'lending_status'=>null,'all_lender'=>0,'lending_library_id'=>null]);                
         }
-    }
+    }*/
     
 
     /**
@@ -89,7 +90,7 @@ class AutomaticCleanDDRequests implements ShouldQueue
     {
         $this->updateCanceledRequests();
         $this->resetNotAcceptedRequests();
-        $this->archiveAsNotReceivedNewForwardedRequests();
-        $this->archiveAsReceivedRequests();
+        //$this->archiveAsNotReceivedNewForwardedRequests();
+        //$this->archiveAsReceivedRequests();
     }
 }
