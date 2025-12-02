@@ -8,6 +8,7 @@ use App\Models\References\Reference;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use App\Resolvers\StatusResolver;
+use Illuminate\Database\Eloquent\Collection;
 
 /*NOTA: la patronReq è necessaria
 altrimenti non posso reinoltrare le richDD
@@ -88,9 +89,23 @@ class PatronDocdelRequest extends BaseModel
         return $this->owner();
     }
 
+    public function lastDocdelRequest() {
+        return $this->docdelrequests->sortByDesc('created_at')->first();
+    }
+
     public function docdelrequests()
     {
         return $this->hasMany(BorrowingDocdelRequest::class,'patron_docdel_request_id','id');
+    }
+    
+    //this return a relationship
+    public function patron() {
+        return $this->belongsTo('App\Models\Users\User', 'created_by');  
+    }
+
+    //this return a User Object
+    public function patronUser() {
+        return $this->belongsTo('App\Models\Users\User', 'created_by')->first();
     }
     
     public function library()
@@ -98,11 +113,28 @@ class PatronDocdelRequest extends BaseModel
         return $this->belongsTo(Library::class,'borrowing_library_id');
     }
     
-    public function libraryOperators() {
-        $lib=$this->library;
-        //get all borrowing/lending/.. operators
-        return $lib->operators("borrow");
+    public function libraryBorrowingOperators() {
+        $blib=$this->library;        
+        if($blib)
+            return $blib->borrowingOperators();
+    }
 
+    public function libraryManageOperators() {
+        $blib=$this->library;        
+        if($blib)
+            return $blib->manageOperators();
+    }
+
+    public function libraryUsersOperators() {
+        $blib=$this->library;        
+        if($blib)
+            return $blib->usersOperators();
+    }
+
+    public function libraryDeliverOperators() {
+        $blib=$this->library;        
+        if($blib)
+            return $blib->deliverOperators();
     }
 
     public function delivery()
@@ -181,6 +213,7 @@ class PatronDocdelRequest extends BaseModel
             case "costAccepted": 
             case "costNotAccepted": $others=array_merge($others,['answer_cost_date'=>Carbon::now()]); break;
             
+            //it will change to this directly from borrowingdocedelrequest without using PDF->changeStatus
             case "readyToDelivery": $others=array_merge($others,['delivery_ready_date'=>Carbon::now()]); break;
             
             case 'received': 
@@ -190,6 +223,5 @@ class PatronDocdelRequest extends BaseModel
         $sr->changeStatus($newstatus,$others);
         return $this;
     }
-
 
 }

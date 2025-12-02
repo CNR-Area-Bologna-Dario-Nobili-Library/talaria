@@ -1,0 +1,70 @@
+.notification-inbox {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .notification-inbox h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .notification-inbox ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .notification-inbox li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .notification-inbox li.read {
+    background: #e0e0e0;
+  }
+  
+  .notification-inbox li.unread {
+    background: #fff;
+  }
+  
+  .notification-inbox li:last-child {
+    border-bottom: none;
+  }
+  
+  .notification-inbox button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .notification-inbox button[disabled] {
+    background: #ddd;
+    cursor: not-allowed;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.6);
+    }
+    70% {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+  }
+  
+  .pulse-hover {
+    animation: pulse 1s ease-out infinite;
+  }
+  

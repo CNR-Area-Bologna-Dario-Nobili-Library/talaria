@@ -95,16 +95,115 @@ class NotificationController extends ApiController
 
     public function markAllAsRead(Request $request)
     {
-        if( !empty($this->validate) )
+        \Log::info('User wants to mark all as read');
+    
+        if (!empty($this->validate))
+            $this->validate($request, $this->validate);
+    
+        $notifications = \Auth::user()->unreadNotifications;
+    
+        if ($notifications->count()) {
+            $notifications->markAsRead(); // ✅ persist read status
+        }
+    
+        return $this->response->array([]);
+    }
+    
+
+    public function markAllAsUnread(Request $request)
+    {
+        if (!empty($this->validate))
             $this->validate($request, $this->validate);
 
-        $notifications = \Auth::user()->unreadNotifications;
+        $notifications = \Auth::user()->notifications()->whereNotNull('read_at')->get();
 
-        if($notifications->count() && !is_null($notifications->markAsRead()))
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.update_failed'));
+        foreach ($notifications as $notification) {
+            $notification->read_at = null;
+            $notification->save();
+        }
 
         return $this->response->array([]);
+    }
 
+    public function markNotificationAsRead($id)
+    {
+        $notification = \Auth::user()->notifications()->where('id', $id)->firstOrFail();
+
+        \Log::info('User updated notification', ['user_id' => auth()->id(), 'notification_id' => $id]);
+
+
+        if ($notification->read_at === null) {
+            $notification->read_at = now();
+            $notification->save();
+        }
+        else
+        {
+            $notification->read_at = null;
+            $notification->save();
+        }
+
+        return response()->json([
+            'message' => 'Notification marked as read',
+            'id' => $notification->id,
+        ]);
+    }
+    public function destroy(Request $request, $id)
+    {
+        $notification = \Auth::user()->notifications()->where('id', $id)->firstOrFail();
+
+        //\Log::info('User deleted notification', [
+        //    'user_id' => auth()->id(),
+        //    'notification_id' => $id,
+        //]);
+
+        $notification->forceDelete(); // Hard delete
+        //$notification->delete(); // soft delete, need to do migration
+
+        return response()->json([
+            'message' => 'Notification deleted',
+            'id' => $id,
+        ]);
+    }
+
+     /**
+     * Delete all notifications for the authenticated user
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyMany(Request $request)
+    {
+        \Log::info('User requested bulk delete of notifications');
+        \Log::info('User requested bulk delete of notifications', [
+            'user_id' => auth()->id(),
+            'ids' => $request->input('ids'),
+        ]);
+
+        $validated = $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'string', // notifications table uses string UUIDs by default
+        ]);
+
+        $user = \Auth::user();
+
+        // Only delete notifications that belong to the authenticated user
+        $query = $user->notifications()->whereIn('id', $validated['ids']);
+
+        $count = (clone $query)->count();
+
+        // Hard delete (to match your destroy())
+        $query->forceDelete();
+
+        \Log::info('User bulk deleted notifications', [
+            'user_id' => auth()->id(),
+            'deleted_count' => $count,
+        ]);
+
+        return response()->json([
+            'message' => 'Selected notifications deleted successfully',
+            'deleted_count' => $count,
+            'deleted_ids' => $validated['ids'],
+        ]);
     }
 
 }

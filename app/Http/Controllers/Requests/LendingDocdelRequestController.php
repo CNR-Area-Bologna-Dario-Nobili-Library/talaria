@@ -108,6 +108,7 @@ class LendingDocdelRequestController extends ApiController
             return $this->response->noContent();
     }
 
+    /*not used
     public function acceptallLenderLending(Request $request,$id)
     { 
         $lib = $request->get('lending_library_id');   
@@ -125,6 +126,7 @@ class LendingDocdelRequestController extends ApiController
         
         return $this->response->item($model, new $this->transformer())->morph();         
     }
+    */
 
     //override update()
     public function update(Request $request, $id)

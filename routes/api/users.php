@@ -56,7 +56,19 @@ Route::group([
     'middleware' => ['api','auth:api',],
     'as' => 'api.v1.notifications.',
 ], function () {
-    Route::get('', 'NotificationController@index')->name('index');
-    Route::put('mark_all_as_read', 'NotificationController@markAllAsRead')->name('mark_all_as_read');
-    Route::get('{id}', 'NotificationController@show')->name('show');
+     // GET routes
+     Route::get('', 'NotificationController@index')->name('index');
+    
+     // PUT routes
+     Route::put('mark_all_as_read', 'NotificationController@markAllAsRead')->name('mark_all_as_read');
+     Route::put('mark_all_as_unread', 'NotificationController@markAllAsUnread')->name('mark_all_as_unread');
+     Route::put('mark_notification_as_read/{id}', 'NotificationController@markNotificationAsRead')->name('mark_notification_as_read');
+     
+     // DELETE routes - SPECIFIC FIRST, then PARAMETERIZED
+     Route::delete('bulk', 'NotificationController@destroyMany')->name('bulk_delete');
+     Route::delete('delete_all', 'NotificationController@deleteAll')->name('delete_all');
+     Route::delete('{id}', 'NotificationController@destroy')->name('delete_notification');
+     
+     // GET parameterized route LAST
+     Route::get('{id}', 'NotificationController@show')->name('show');
 });

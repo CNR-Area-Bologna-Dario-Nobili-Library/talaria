@@ -1,6 +1,13 @@
 <?php namespace App\Models\Libraries;
 
 use App\Models\BaseObserver;
+use App\Models\Users\User;
+use App\Notifications\Library\PatronAskJoinLibraryAwaitsApprovalNotification;
+use App\Notifications\Library\PatronAskJoinLibraryNotification;
+use App\Notifications\Library\PatronDisabledByLibraryNotification;
+use App\Notifications\Library\PatronEnabledByLibraryNotification;
+use App\Notifications\Library\PatronDeletedByLibraryNotification;
+use App\Support\RealtimeBroadcaster;
 use \Auth;
 
 
@@ -27,6 +34,32 @@ class LibraryUserObserver extends BaseObserver
     {         
         //ogni nuova rich va messa in attesa
         $model->status=config("constants.libraryuser_status.pending");
+
+        $user=User::findOrFail($model->user->id);
+        $pn=new PatronAskJoinLibraryNotification($model); 
+        
+
+        //Notify to library manager+users manager        
+        $lib=$model->library;
+        $operators=array();
+        $operators+=$lib->manageOperators()->toArray();
+        $operators+=$lib->usersOperators()->toArray();
+        
+        //unique operators
+        $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+        //Notify ...
+        foreach ($operatorsID as $item) {
+            $u=User::findOrFail($item);                 
+            $u->notify($pn);            
+            RealtimeBroadcaster::fromNotification($model, $u, $pn);             
+        }    
+                
+        //Notify to patron
+        $pnwr=new PatronAskJoinLibraryAwaitsApprovalNotification($model);
+        $user->notify($pnwr);
+        RealtimeBroadcaster::fromNotification($model, $user, $pnwr);
+
                          
         return parent::creating($model);
          
@@ -83,6 +116,14 @@ class LibraryUserObserver extends BaseObserver
                         $u->retract('patron');
                     */
                     /* 2. send mail+notify to user to let him know it was disabled */
+
+                    
+                    $u=$model->user;
+                    
+                    //Notify to patron                                                
+                    $ln=new PatronDisabledByLibraryNotification($model);                    
+                    $u->notify($ln);
+                    RealtimeBroadcaster::fromNotification($model, $u, $ln);
                 }
                 //lo sto abilitando
                 else if($model->status==config("constants.libraryuser_status.enabled"))
@@ -97,6 +138,13 @@ class LibraryUserObserver extends BaseObserver
                         $u->assign('patron');
                     */
                     /*2. send mail+notify to user to let him know it was enabled */
+
+                    $u=$model->user;
+                    
+                    //Notify to patron                                                
+                    $ln=new PatronEnabledByLibraryNotification($model);                    
+                    $u->notify($ln);
+                    RealtimeBroadcaster::fromNotification($model, $u, $ln);
                 }
 
             }
@@ -113,7 +161,14 @@ class LibraryUserObserver extends BaseObserver
 
     public function deleting($model)
     {
-        return parent::deleting($model);
+        parent::deleting($model);
+        
+        $u=$model->user;                    
+        //Notify to patron                                                
+        $ln=new PatronDeletedByLibraryNotification($model);                    
+        $u->notify($ln);
+        RealtimeBroadcaster::fromNotification($model, $u, $ln);
+        
     }
 
     public function restoring($model)

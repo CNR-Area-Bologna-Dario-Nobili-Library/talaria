@@ -180,6 +180,21 @@ services:
      - "traefik.frontend.rule=Host:${FRONTEND_DOMAIN};PathPrefix:/"
      - "traefik.docker.network=proxy"
   
+  laravel-echo-server:
+    build:
+      context: ./docker/echo        
+      dockerfile: Dockerfile-appleM1
+    working_dir: /app
+    ports:
+      - "6001:6001"
+    depends_on:
+      - redis
+    restart: always
+    volumes:
+      - ./laravel-echo-server.json:/app/laravel-echo-server.json:ro
+      - "${SSL_CERT_PATH}:/app/ssl/talaria.local.pem:ro"
+      - "${SSL_KEY_PATH}:/app/ssl/talaria.local-key.pem:ro"
+    
   elasticsearch:
     build:
       context: ./docker/elasticsearch
@@ -284,7 +299,6 @@ services:
 volumes:
   esdata2:
     driver: local
-
 
 
 #   shibboleth:

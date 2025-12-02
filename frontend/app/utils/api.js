@@ -129,6 +129,12 @@ export const getNotification = (options) => {
   return request(`${BASE_URL}/api/v1/notifications/${id}?setToRead=${setToRead}`, options)
 };
 
+export function markNotificationAsRead(id, options) {
+  
+  options = getOption(options);
+  return request(`${BASE_URL}/api/v1/notifications/mark_notification_as_read/${id}`, options);
+}
+
 export const updateNotificationsAsRead = (options) => {
   options = getOption(options);
   return request(`${BASE_URL}/api/v1/notifications/mark_all_as_read`, options)
@@ -137,6 +143,16 @@ export const updateNotificationsAsRead = (options) => {
 export const getPermissions = (options) => {
   options = getOption(options);
   return request(`${BASE_URL}/api/v1/auth/permissions`, options)
+};
+
+export const deleteNotification = (id, options = {}) => {
+  options = {...getOption(options),method: 'DELETE'};
+  return request(`${BASE_URL}/api/v1/notifications/${id}`, options);
+};
+
+export const deleteNotificationsBulk = (ids, options = {}) => {
+  options = getOption({ ...options, method: 'DELETE', body: { ids } });
+  return request(`${BASE_URL}/api/v1/notifications/bulk`, options);
 };
 
 export const verifySms = (options) => {
@@ -603,11 +619,13 @@ export const changeStatusLendingRequest = (options) => {
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/lendings/${options.id}/changelendingarchived`, options)
   };
   
+  /*not used 
   export const acceptallLenderLendingRequest = (options) => {
   options = getOption(options);
   const library_id = options.lending_library_id
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/lendings/${options.id}/acceptallLenderLending`, options)
   };
+  */
 
   //UploadFile
   export const fileuploadRequest = (options) => {

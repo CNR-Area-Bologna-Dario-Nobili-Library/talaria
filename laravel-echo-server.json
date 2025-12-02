@@ -1,0 +1,28 @@
+{
+    "authHost": "https://talaria.local",
+    "host": null,
+    "port": "6001",
+    "protocol": "https",
+    "sslCertPath": "./ssl/talaria.local.pem",
+    "sslKeyPath": "./ssl/talaria.local-key.pem",
+    "verifyAuthServer": false,
+    "subscribers": {
+      "http": true,
+      "redis": true
+    },
+    "database": "redis",
+    "databaseConfig": {
+      "redis": {
+        "host": "redis",
+        "port": "6379",
+        "password": null,
+        "keyPrefix": "talaria_database_",
+        "db": 2 
+      }
+    },
+    "apiOriginAllow": {
+      "allowCors": true,
+      "allowOrigin": "*",
+      "allowMethods": "GET, POST, OPTIONS",
+      "allowHeaders": "Origin, Content-Type, Authorization, X-Requested-With, Accept, X-CSRF-TOKEN, X-Socket-Id"  }
+  }

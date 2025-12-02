@@ -31,19 +31,7 @@ export const fields = {
         name: 'user_mat',
         width: "col-md-12",
         order: 5, 
-    },
-    user_service_phone: { 
-        type: "text",
-        name: 'user_service_phone',
-        width: "col-md-12",
-        order: 6, 
-    },
-    user_service_email: { 
-        type: "email",
-        name: 'user_service_email',
-        width: "col-md-12",
-        order: 7, 
-    },
+    },    
     status: {
         type: "custom-select",
         name: "status",

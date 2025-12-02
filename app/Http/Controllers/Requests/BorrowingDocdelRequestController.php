@@ -12,7 +12,6 @@ use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\BorrowingDocdelRequestNotification;
 
 class BorrowingDocdelRequestController extends ApiController
 {
@@ -239,14 +238,13 @@ class BorrowingDocdelRequestController extends ApiController
                 $newReq->docdel_request_parent_id=$model->id;
                             
                 if($newReq->save())
-                {                         
-                    $n=new BorrowingDocdelRequestNotification($newReq);
+                {     
+                   //NO NEED TO NOTIFY to borrow operators                     
+                   /* $n=new BorrowingDocdelRequestNotification($newReq);
                     
-                    foreach ($newReq->borrowingLibraryOperators() as $op)    
-                    {
-                        $u=User::findOrFail($op["user_id"]);
-                        $u->notify($n); 
-                    }                               
+                    foreach ($newReq->borrowingLibraryBorrowingOperators() as $op)    
+                    $op->notify($n);           
+                    */
                 } 
     
                 return $this->response->item($newReq, new $this->transformer())->setMeta($newReq->getInternalMessages())->morph();

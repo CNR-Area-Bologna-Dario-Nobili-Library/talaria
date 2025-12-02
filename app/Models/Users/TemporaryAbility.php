@@ -8,7 +8,13 @@ use App\Models\Institutions\Institution;
 use App\Models\Libraries\Library;
 use App\Models\Projects\Project;
 use App\Models\Users\User;
-
+use App\Notifications\BaseMailMessage;
+use App\Notifications\Library\LibraryOperatorInvitationNotification;
+use App\Notifications\Library\LibraryOperatorInvitationNewUserNotification;
+use App\Notifications\Operators\OperatorAcceptedInvitationNotification;
+use App\Notifications\Operators\OperatorRejectedInvitationNotification;
+use Illuminate\Support\Facades\Notification as FacadesNotification;
+use App\Support\RealtimeBroadcaster;
 class TemporaryAbility extends BaseModel
 {
     protected $table = 'temporary_abilities';
@@ -101,6 +107,78 @@ class TemporaryAbility extends BaseModel
         if($etype!=null) {
             $this->entity_id=$entityID;
             $this->entity_type=$etype;
+        }
+    }
+
+    public function getEntity() {
+        switch($this->entity_type) {
+            case 'App\\Models\\Libraries\\Library': return $this->library; break;
+            case 'App\\Models\\Institutions\\Institution': return $this->institution; break;
+            case 'App\\Models\\Projects\\Project': return $this->project; break;
+            case 'App\\Models\\Institutions\\Consortium': return $this->consortium; break;
+        }
+        return null;
+    }
+
+    public function notifyToUser() {        
+        $u=$this->user;
+        
+        //Create notification email template for invitation ... 
+        if(isset($u) && $u->id>0)
+        { 
+            // create the notification instance first
+            $notification = new LibraryOperatorInvitationNotification($this);
+            $u->notify($notification);
+            RealtimeBroadcaster::fromNotification($this, $u, $notification);
+
+            
+        }
+        else //if no existing user 
+        if (isset($this->user_email))
+        {          
+            $notification = new LibraryOperatorInvitationNewUserNotification($this);
+            //send just email using on-demand notifications...
+            FacadesNotification::route('mail', $this->user_email)->notify($notification);
+        }
+    }
+
+    public function notifyToEntityUserAccepted() {
+        $entity=$this->getEntity();
+        if($entity!=null) {
+
+            $notification = new OperatorAcceptedInvitationNotification($this);
+
+            foreach ($entity->manageOperators() as $item) {
+                // Skip notifying the user who accepted the invitation
+                if ($item["user_id"] == $this->user_id) {
+                    continue;
+                }
+
+                $u=User::findOrFail($item["user_id"]);
+                $u->notify($notification);
+                RealtimeBroadcaster::fromNotification($this, $u, $notification);
+            }
+
+        }
+    }
+
+    public function notifyToEntityUserRejected() {
+        $entity=$this->getEntity();
+        if($entity!=null) {
+
+            $notification = new OperatorRejectedInvitationNotification($this);
+
+            foreach ($entity->manageOperators() as $item) {
+                // Skip notifying the user who rejected the invitation
+                if ($item["user_id"] == $this->user_id) {
+                    continue;
+                }
+
+                $u=User::findOrFail($item["user_id"]);
+                $u->notify($notification);
+                RealtimeBroadcaster::fromNotification($this, $u, $notification);
+            }
+
         }
     }
 }

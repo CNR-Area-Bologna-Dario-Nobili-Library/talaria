@@ -40,8 +40,6 @@ const MyLibraryPage = props => {
     title_id: '',
     user_referent: '',
     user_mat: '',
-    user_service_phone: '',
-    user_service_email: '',
   });
   const [libraryId, setLibraryId] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
@@ -156,8 +154,6 @@ const MyLibraryPage = props => {
           title_id: libraryToEdit.title_id || '',
           user_referent: libraryToEdit.user_referent || '',
           user_mat: libraryToEdit.user_mat || '',
-          user_service_phone: libraryToEdit.user_service_phone || '',
-          user_service_email: libraryToEdit.user_service_email || '',
         });
 
         setSelectedValue({
@@ -208,8 +204,6 @@ const MyLibraryPage = props => {
           title_id: '',
           user_referent: '',
           user_mat: '',
-          user_service_phone: '',
-          user_service_email: '',
         });
 
         setIsFormInitialized(true);
@@ -261,15 +255,7 @@ const MyLibraryPage = props => {
     setErrorMessage('');
 
     if (isSubmitting) return;
-
-    if (
-      !formData.user_service_email ||
-      formData.user_service_email.trim() === ''
-    ) {
-      setErrorMessage('Email address cannot be empty');
-      return;
-    }
-
+   
     setIsSubmitting(true);
 
     try {
@@ -314,7 +300,7 @@ const MyLibraryPage = props => {
         error.response.data.errors
       ) {
         setErrorMessage(
-          error.response.data.errors.user_service_email[0] || 'Error occurred',
+          'Error occurred',
         );
       } else {
         setErrorMessage('An unexpected error occurred.');

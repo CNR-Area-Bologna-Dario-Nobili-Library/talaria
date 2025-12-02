@@ -8,7 +8,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Requests\PatronDocdelRequest;
-use App\Notifications\BorrowingDocdelRequestNotification;
 
 class PatronUpdateBorrowing implements ShouldQueue
 {
@@ -51,16 +50,7 @@ class PatronUpdateBorrowing implements ShouldQueue
                                 $borrddr=$this->patronddrequest->docdelrequests->sortByDesc('created_at')->first();                
                                 if($borrddr) 
                                 {
-                                    $borrddr->userAskCancel();
-                                    
-                                    /*$n=new BorrowingDocdelRequestNotification($borrddr);
-
-                                    $lib=$this->patronddrequest->library;
-                                    //get all borrowing/lending/.. operators
-                                    $oper= $lib->operators("borrow");
-            
-                                    foreach ($oper as $op)    
-                                      $op->notify($n);    */
+                                    $borrddr->userAskCancel();                                                                        
                                 }
                             }
                             break;

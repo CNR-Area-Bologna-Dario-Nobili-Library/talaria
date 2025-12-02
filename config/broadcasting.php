@@ -16,6 +16,7 @@ return [
     */
 
     'default' => env('BROADCAST_DRIVER', 'null'),
+    /*'default' => env('BROADCAST_DRIVER', 'redis'),*/
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +44,11 @@ return [
 
         'redis' => [
             'driver' => 'redis',
-            'connection' => 'default',
+            'connection' => 'broadcast',
+            // 'options' => [
+            //     // Add any additional options if needed
+            //     'prefix' => env('REDIS_PREFIX', 'laravel_database_'),
+            // ],
         ],
 
         'log' => [

@@ -172,7 +172,35 @@ services:
      - "traefik.enable=true"
      - "traefik.frontend.rule=Host:${FRONTEND_DOMAIN};PathPrefix:/"
      - "traefik.docker.network=proxy"
+  
+  
+  #laravel-echo-server:
+  #  image: node:18-alpine
+  #  working_dir: /app
+  #  #command: sh -c "npm exec laravel-echo-server start --force"
+  #  command: sh -c "npm i -g laravel-echo-server@1.6.3 && laravel-echo-server start --force"
+  #  ports:
+  #    - "6001:6001"
+  #  depends_on:
+  #    - redis
+  #  restart: always
+  #  volumes:
+  #    - ./:/app          # includes laravel-echo-server.json
+  #    - ./ssl:/app/ssl   # where your certs live
 
+  laravel-echo-server:
+    build:
+      context: ./docker/echo        
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - "6001:6001"
+    depends_on:
+      - redis
+    restart: always
+    volumes:
+      - ./laravel-echo-server.json:/app/laravel-echo-server.json:ro
+      - ./ssl:/app/ssl:ro
 
   elasticsearch:
     build:

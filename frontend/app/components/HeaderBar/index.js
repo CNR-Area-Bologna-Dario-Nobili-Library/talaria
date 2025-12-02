@@ -170,6 +170,11 @@ function HeaderBar(props) {
                             </NavLink>
                           </Row>
                           <Row className="item">
+                            <NavLink to="/user/notifications" activeClassName="current">
+                              <span><FormattedMessage {...messages.NotificationInbox} /></span>
+                            </NavLink>
+                          </Row>
+                          <Row className="item">
                             <NavLink to="/user/user-profile" activeClassName="current">
                               <span><FormattedMessage {...messages.EditProfile} /></span>  
                             </NavLink>

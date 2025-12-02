@@ -22,8 +22,11 @@ class UserBase extends Authenticatable implements HasLocalePreference
         RolesAbilitiesPermissionsTrait,
         ModelTrait;
 
-    public function updatePassword($password) {
-        return self::where('id', $this->id)->update(['password'=> \Hash::make($password)]);
+    public function updatePassword($password) {        
+        $ret=self::where('id', $this->id)->update(['password'=> \Hash::make($password)]);
+        if($ret==1) //$ret=num righe modificate
+            $this->sendPasswordChangeNotification();
+
     }
 
     //used by Notification to know language to translate notification text

@@ -26,7 +26,7 @@ Route::group([
     Route::put('{library}/lendings/{id}', 'LendingDocdelRequestController@update')->name('update');
     Route::post('{library}/lendings', 'LendingDocdelRequestController@store')->name('create');
     Route::put('{library}/lendings/{id}/changestatus', 'LendingDocdelRequestController@changeStatus')->name('changeStatus');
-    Route::put('{library}/lendings/{id}/acceptallLenderLending', 'LendingDocdelRequestController@acceptallLenderLending')->name('acceptallLenderLending');
+    //Route::put('{library}/lendings/{id}/acceptallLenderLending', 'LendingDocdelRequestController@acceptallLenderLending')->name('acceptallLenderLending');
     Route::delete('{library}/requests/{ddrequest}/tags/{tag}', 'DocdelRequestTagController@delete')->name('delete'); //hard delete       
 });
 

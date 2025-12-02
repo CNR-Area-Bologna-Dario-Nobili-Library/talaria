@@ -29,6 +29,10 @@ export default defineMessages({
     id: `${scope}.Dashboard`,
     defaultMessage: 'Dashboard',
   },
+  NotificationInbox: {
+    id: `${scope}.NotificationInbox`,
+    defaultMessage: 'Notification Inbox',
+  },
   ChangePassword: {
     id: `${scope}.ChangePassword`,
     defaultMessage: 'Change Password',

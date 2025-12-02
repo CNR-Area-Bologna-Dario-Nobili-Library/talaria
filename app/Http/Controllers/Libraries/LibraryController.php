@@ -20,7 +20,14 @@ use App\Models\Users\TemporaryAbilityTransformer;
 use App\Models\Users\User;
 use App\Models\Users\UserLightTransformer;
 use App\Models\Users\UserTransformer;
+use App\Notifications\Operators\OperatorDeleteNotification;
+use App\Notifications\Library\LibraryOperatorInvitationDeleteNotification;
+use App\Notifications\Library\LibraryOperatorUpdatePermissionsNotification;
+use App\Notifications\Library\NewLibraryHasBeenRegisteredNotification;
+use App\Notifications\Library\UserRegistersNewLibraryNotification;
+use App\Support\RealtimeBroadcaster;
 use Illuminate\Support\Facades\Auth;
+use stdClass;
 use Whoops\Util\TemplateHelper;
 
 //use Illuminate\Support\Facades\Auth;
@@ -99,7 +106,20 @@ class LibraryController extends ApiController
 
                 //adding new permissions specified in the params 
                 foreach($newperms as $newabil)
-                    $user->allow($newabil,$lib);                        
+                    $user->allow($newabil,$lib);       
+                                   
+                //create a temp object with user and library
+                $obj=new stdClass();
+                $obj->id=null;
+                $obj->user=$user;
+                $obj->library=$lib; 
+                $obj->abilities=$request->input("permissions");
+                $notification = new LibraryOperatorUpdatePermissionsNotification($obj);
+
+                //notify to user
+                $user->notify($notification);
+                RealtimeBroadcaster::fromNotification($this, $user, $notification);
+
 
             }
             //return updated list
@@ -126,6 +146,17 @@ class LibraryController extends ApiController
             {
                 $user->disallow($luabil->name,$lib);        
             }
+
+           //create a temp object with user and entity
+            $obj=new stdClass();
+            $obj->id=null;
+            $obj->user=$user;
+            $obj->entity=$lib; //create a temp object with user and emtity
+            $notification = new OperatorDeleteNotification($obj);
+
+            //notify to user
+            $user->notify($notification);
+            RealtimeBroadcaster::fromNotification($this, $user, $notification);
 
             //return updated list
             return $lib->operators();        
@@ -192,7 +223,8 @@ class LibraryController extends ApiController
         $tempPerm->setEntity("library",$id);
         $tempPerm->save();    
         
-        //TODO: SEND EMAIL to user
+        //SEND notification to user (existing or not)
+        $tempPerm->notifyToUser();
         
         return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
         
@@ -238,8 +270,27 @@ class LibraryController extends ApiController
             $tempPerm->forceDelete();                           
        }
 
-       $temp_abilities =$lib->pending_operators(); 
+       //Notify user if invitation was pending
+       if($tempPerm->status==config("constants.temporary_ability_status.waiting"))
+       {
+            $user=$tempPerm->user;
+
+            //create a temp object with user and library
+            $obj=new stdClass();
+            $obj->id=null;
+            $obj->user=$user;
+            $obj->library=$lib; 
+            $obj->abilities=$tempPerm->abilities; 
+            $notification = new LibraryOperatorInvitationDeleteNotification($obj);
+
+            //notify to user
+            $user->notify($notification);
+            RealtimeBroadcaster::fromNotification($this, $user, $notification);            
+       }
+       //else if invitation was rejected no need to notify user       
          
+       $temp_abilities =$lib->pending_operators(); 
+
        return $this->response->collection($temp_abilities, new TemporaryAbilityTransformer())->morph();             
      }
 
@@ -469,6 +520,15 @@ class LibraryController extends ApiController
 
         //Fire events
         event($model->getTable() . '.stored', $model);
+
+        //Notify to library manager
+        $request->user()->notify(new UserRegistersNewLibraryNotification($model));
+
+        //notify to all comm managers
+        $commmanagers = Helper::getUsersWithRole('manager'); //find all users that has "manager" role
+        foreach ($commmanagers as $comman) {
+            $comman->notify(new NewLibraryHasBeenRegisteredNotification($model));
+        }
 
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
     }

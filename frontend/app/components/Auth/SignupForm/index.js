@@ -21,6 +21,7 @@ import './style.scss';
 
 function SignupForm(props) {
   
+  const intl = useIntl();
 
   console.log("SignupForm",props)
   const [formData,setFormData] = React.useState({
@@ -30,8 +31,9 @@ function SignupForm(props) {
     confirm_password: "",
     privacy_policy_accepted: "",
     recaptcha: '',
+    preflang: intl.locale,  //set UI language
   });
-  const intl = useIntl();
+
   const [password, setPassword] = React.useState('');
   const [passwordError, setPasswordError] = React.useState('');
   const [validPassword, setvalidPassword] = React.useState(false);
@@ -101,13 +103,15 @@ function SignupForm(props) {
 
   const submitChange = (e) =>{
     setformSubmitted(true)
-    e.preventDefault();
+    e.preventDefault(); 
+        
     const form = e.target;
     form.classList.add('was-validated');
     if (form.checkValidity() === false) {
       console.log("Dont Send Form")
     } else {
       console.log('Sending Form Sign up')
+      console.log(formData);
       props.googleReCaptchaProps.executeRecaptcha('Signup').then(token => {
         props.signup({ ...formData, recaptcha: token })
       }).catch(error => {

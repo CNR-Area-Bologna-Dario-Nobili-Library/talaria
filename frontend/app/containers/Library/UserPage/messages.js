@@ -26,15 +26,7 @@ export default defineMessages({
   user_mat:{
     id: `${scope}.user_mat`,
     defaultMessage: 'Matricola',
-  },
-  user_service_phone:{
-    id: `${scope}.user_service_phone`,
-    defaultMessage: 'Service phone',
-  },
-  user_service_email:{
-    id: `${scope}.user_service_email`,
-    defaultMessage: 'Service email',
-  },
+  },  
   status: {
     id: 'app.global.status',
     defaultMessage: 'Status',

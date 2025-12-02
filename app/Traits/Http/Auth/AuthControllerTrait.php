@@ -195,6 +195,8 @@ trait AuthControllerTrait
                         
                         foreach($abils as $abil)
                             $userToApply->allow($abil,$entity);
+
+                        $tempPerm->notifyToEntityUserAccepted();
                         
                         //remove from DB (we've to use forceDeleting cause by default softdelete is enabled to all models)
                         $tempPerm->forceDelete();
@@ -203,8 +205,11 @@ trait AuthControllerTrait
                     else if ($newstatus==config("constants.temporary_ability_status.waiting")|| $newstatus==config("constants.temporary_ability_status.rejected"))
                     {
                         //status update (in case of rejected/waiting)
-                        $tempPerm->fill(["status"=>$newstatus]);
+                        $tempPerm->fill(["status"=>$newstatus]);                        
                         $tempPerm->save();
+
+                        if($tempPerm->status==config("constants.temporary_ability_status.rejected"))                            
+                            $tempPerm->notifyToEntityUserRejected();                        
                     }
                     
                     return $tempPerm;               

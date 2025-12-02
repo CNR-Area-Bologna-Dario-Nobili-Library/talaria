@@ -371,8 +371,24 @@ class Library extends BaseModel
         else return TemporaryAbility::byLibrary($this->id)->get();        
     }
 
+    public function deliverOperators() {
+        return $this->operators("deliver");
+    }
+
+    public function borrowingOperators() {
+        return $this->operators("borrow");
+    }
+
+    public function lendingOperators() {
+        return $this->operators("lend");
+    }
+
     public function manageOperators() {
         return $this->operators("manage");
+    }
+
+    public function usersOperators() {
+        return $this->operators("manage-users");
     }
 
     public function changeStatus($newstatus,$others=[]) {

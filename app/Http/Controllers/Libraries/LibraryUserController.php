@@ -11,6 +11,7 @@ use App\Http\Controllers\ApiController;
 use App\Models\Libraries\LibraryUserTransformer;
 use App\Models\Libraries\LibraryUser;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LibraryUserController extends ApiController
 {
@@ -50,14 +51,15 @@ class LibraryUserController extends ApiController
 
     public function store(Request $request)
     {
+        Log::info("User joins ....");
         if( !empty($this->validate) )
             $this->validate($request, $this->validate);
 
         $model = $this->talaria->store($this->model, $request);
 
-        if($this->broadcast && config('apitalaria.broadcast'))
-            broadcast(new ApiStoreBroadcast($model, $model->getTable(), $request->input('include')));
-
+        //if($this->broadcast && config('apitalaria.broadcast'))
+        //    broadcast(new ApiStoreBroadcast($model, $model->getTable(), $request->input('include')));
+                
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();;
     }
 
@@ -66,11 +68,11 @@ class LibraryUserController extends ApiController
         if(!empty($this->validate) )
             $this->validate($request, $this->validate);
 
-        $id = $request->route()->parameters['library_user'];
-        $model = $this->talaria->update($this->model, $request, $id);
+        $luid = $request->route()->parameters['library_user'];        
+        $model = $this->talaria->update($this->model, $request, $luid);
 
-        if($this->broadcast && config('apitalaria.broadcast'))
-            broadcast(new ApiUpdateBroadcast($model, $model->getTable(), $request->input('include')));
+        //if($this->broadcast && config('apitalaria.broadcast'))
+        //    broadcast(new ApiUpdateBroadcast($model, $model->getTable(), $request->input('include')));
 
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();;
     }
@@ -122,6 +124,8 @@ class LibraryUserController extends ApiController
 
         if($this->broadcast && config('apitalaria.broadcast'))
             broadcast(new ApiDeleteBroadcast($model->id, $model->getTable()));
+
+        //TODO: notify patron for that?
 
         return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
     }

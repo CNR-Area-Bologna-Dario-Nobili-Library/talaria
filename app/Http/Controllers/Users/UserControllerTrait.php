@@ -4,6 +4,7 @@ use App\Models\Users\AbilitiesTransformer;
 use App\Models\Users\AllPermissionsAndRolesTransformer;
 use App\Models\Users\RolesTransformer;
 use App\Models\Users\User;
+use App\Notifications\Account\UserSignupNotification;
 use App\Traits\ApiTrait;
 use Event;
 use Illuminate\Http\Request;
@@ -63,6 +64,10 @@ trait UserControllerTrait
                 }
 
             }
+
+            $n=new UserSignupNotification($model);
+            $model->notify($n);
+            
 
             return $model;
         });

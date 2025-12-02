@@ -150,9 +150,7 @@ const libraryReducer = (state = initialState, action) =>
               title_id: data.title_id,
               title_name: data.title? data.title.data.name:'',
               user_referent: data.user_referent,
-              user_mat: data.user_mat,
-              user_service_phone: data.user_service_phone,
-              user_service_email: data.user_service_email,
+              user_mat: data.user_mat,              
             }
         })
         draft.usersList.pagination = action.result.meta.pagination

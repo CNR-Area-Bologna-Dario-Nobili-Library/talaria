@@ -46,19 +46,7 @@ export const fields = {
         name: 'user_mat',
         width: "col-md-12",
         order: 6, 
-    },
-    user_service_phone: { 
-        type: "text",
-        name: 'user_service_phone',
-        width: "col-md-12",
-        order: 8, 
-    },
-    user_service_email: { 
-        type: "email",
-        name: 'user_service_email',
-        width: "col-md-12",
-        order: 9, 
-    },
+    },    
 }
 
 export const fieldsIsNew = { 
@@ -108,16 +96,6 @@ export const fieldsIsNew = {
     user_mat: { 
         type: "text",
         name: 'user_mat',
-        width: "col-md-12",
-    },
-    user_service_phone: { 
-        type: "text",
-        name: 'user_service_phone',
-        width: "col-md-12",
-    },
-    user_service_email: { 
-        type: "email",
-        name: 'user_service_email',
         width: "col-md-12",
     },
 }

@@ -31,7 +31,6 @@ import {
   libraryProjectsOptionListSelector,
   identifierTypesOptionListSelector,
 } from './selectors';
-import { acceptallLenderLendingRequest } from '../../utils/api';
 
 const ILL_REQUEST_PAYMENT =
   process.env.ILL_REQUEST_PAYMENT && process.env.ILL_REQUEST_PAYMENT == 'true'

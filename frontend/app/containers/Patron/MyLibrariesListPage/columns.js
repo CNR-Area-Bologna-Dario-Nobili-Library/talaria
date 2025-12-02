@@ -44,18 +44,6 @@ export const columns = [
         type: 'string'
     },
     { 
-        label: 'app.containers.MyLibrariesListPage.user_service_phone', 
-        name: 'user_service_phone',
-        col: 1,
-        type: 'string'
-    },
-    { 
-        label: 'app.containers.MyLibrariesListPage.user_service_email', 
-        name: 'user_service_email',
-        col: 1,
-        type: 'string'
-    },
-    { 
         label: 'app.global.created_at', 
         name: 'created_at',
         col: 1,

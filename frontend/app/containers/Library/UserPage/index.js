@@ -55,9 +55,7 @@ function UserPage(props) {
             department_id: user.department_id,
             title_id: user.title_id,
             user_referent: user.user_referent,
-            user_mat:user.user_mat,
-            user_service_phone:user.user_service_phone,
-            user_service_email:user.user_service_email
+            user_mat:user.user_mat,            
           }}
           // qui si carica la lista della option list. Se vuoi una lista che venga dal back.
           // E nei fields.js in options: del campo metti lo stesso nome della prop quindi department_id

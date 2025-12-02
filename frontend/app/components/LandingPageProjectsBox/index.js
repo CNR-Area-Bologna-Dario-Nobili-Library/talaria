@@ -8,10 +8,10 @@ import {formatDateTime} from '../../utils/dates';
 import {permissionBadgeClass} from '../../utils/utilityFunctions.js'
 
 const LandingPageProjectsBox = (props) => {
-    const {auth,title,intro,match,history,canCollapse,collapsed}=props
-
-    let intl=useIntl();
-
+    const {auth,title,match,history,canCollapse,collapsed}=props
+    
+    const intl=useIntl();
+    
     const statusClass = status => {
         switch (status) {
           case 0:

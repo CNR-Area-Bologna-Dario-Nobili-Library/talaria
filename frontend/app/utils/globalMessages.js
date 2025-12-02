@@ -73,6 +73,14 @@ export default defineMessages({
     id: `${scope}.lon`,
     defaultMessage: 'Longitude',
   },
+  user_service_email:{
+    id: `${scope}.user_service_email`,
+    defaultMessage: 'Service email',
+  },
+  service_email:{
+    id: `${scope}.service_email`,
+    defaultMessage: 'Notification email',
+  },
   preflang: {
     id: `${scope}.preflang`,
     defaultMessage: 'Preferred Language',

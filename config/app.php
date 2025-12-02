@@ -14,7 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'frontend_domain' => env('APP_URL', 'talaria.local'),
+    'frontend_domain' => env('FRONTEND_DOMAIN', 'talaria.local'),
+    'frontend_url'=>'https://'.env('FRONTEND_DOMAIN', 'talaria.local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,7 +56,7 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
-    'asset_url' => env('ASSET_URL', null),
+    'asset_url' => env('APP_URL', null), //env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
@@ -81,8 +82,7 @@ return [
     |
     */
 
-    'locale' => 'en',
-
+    'locale' => env('SYSTEM_DEFAULT_LANGUAGE', 'en'),
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale

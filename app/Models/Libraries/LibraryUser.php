@@ -29,8 +29,6 @@ class LibraryUser extends BaseModel
         'status',
         'user_referent',
         'user_mat',
-        'user_service_phone',
-        'user_service_email',
         'preferred',
         'label'
     ];

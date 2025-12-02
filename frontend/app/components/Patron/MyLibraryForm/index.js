@@ -318,36 +318,7 @@ const MyLibraryForm = props => {
                   onChange={handleInputChange}
                   className="form-control"
                 />
-              </div>
-
-              <div className="form-group mb-3">
-                <label htmlFor="user_service_phone">
-                  {intl.formatMessage(messages.user_service_phone)}
-                </label>
-                <input
-                  type="text"
-                  id="user_service_phone"
-                  name="user_service_phone"
-                  value={formData.user_service_phone}
-                  onChange={handleInputChange}
-                  className="form-control"
-                />
-              </div>
-
-              <div className="form-group mb-3">
-                <label htmlFor="user_service_email">
-                  {intl.formatMessage(messages.user_service_email)}
-                </label>
-                <input
-                  type="email"
-                  id="user_service_email"
-                  name="user_service_email"
-                  value={formData.user_service_email}
-                  onChange={handleInputChange}
-                  className="form-control"
-                  required
-                />
-              </div>
+              </div>             
             </div>
           </div>
         </fieldset>
