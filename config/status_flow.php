@@ -358,28 +358,36 @@ return [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled"),config("constants.library_status.renewing")],                            
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledNotification'], 
+                                'Model'=> [
+                                    ['manageOperators', 'Library\\LibraryHasBeenDisabledNotification'], 
+                                ]
                             ], 
                         ],
                         config("constants.library_status.disabled_bad") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled")],
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseBadBehaviourNotification'], 
+                                'Model'=>[
+                                    ['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseBadBehaviourNotification'], 
+                                ]
                             ], 
                         ],
                         config("constants.library_status.disabled_subscription_expired") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.disabled"),config("constants.library_status.renewing")],
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'], 
+                                'Model'=>[
+                                    ['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'], 
+                                ]
                             ], 
                         ],
                         config("constants.library_status.disabled_didntpaid") => [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled")],
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseDidntPaidNotification'], 
+                                'Model'=>[
+                                    ['manageOperators', 'Library\\LibraryHasBeenDisabledBecauseDidntPaidNotification'], 
+                                ]
                             ], 
                         ],
                         //new
@@ -393,7 +401,9 @@ return [
                             'next_statuses'  =>  [config("constants.library_status.disabled"), config("constants.library_status.disabled_bad"), config("constants.library_status.disabled_didntpaid"),config("constants.library_status.renewing")],
                             'constraints'   =>  ["canBeEnabled"], 
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasBeenEnabledNotification'], 
+                                'Model'=>[
+                                    ['manageOperators', 'Library\\LibraryHasBeenEnabledNotification'], 
+                                ]
                             ],                             
                         ],
                         //renewing
@@ -401,7 +411,9 @@ return [
                             'role'  =>  ['super-admin','manager'],
                             'next_statuses'  =>  [config("constants.library_status.enabled"),config("constants.library_status.disabled"),config("constants.library_status.disabled_subscription_expired")],
                             'notify' => [
-                                'Model'=>['manageOperators', 'Library\\LibraryHasToRenewSubscriptionNotification'], 
+                                'Model'=>[
+                                    ['manageOperators', 'Library\\LibraryHasToRenewSubscriptionNotification'], 
+                                ]
                             ], 
                         ],
                 ],
