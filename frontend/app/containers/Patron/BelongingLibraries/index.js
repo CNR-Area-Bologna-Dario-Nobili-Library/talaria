@@ -29,7 +29,7 @@ const BelongingLibraries = ({
       case 0:
         return 'disabled';
       case 1:
-        return 'enabled';
+        return 'success';
       case 2:
         return 'pending';
       default:
