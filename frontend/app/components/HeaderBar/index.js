@@ -197,9 +197,9 @@ function HeaderBar(props) {
                 </DropdownMenu>
               </UncontrolledDropdown>
             </Nav>
-            {/*DISABLED NOTIFICATION (NOT FULLY IMPLEMENTED 
+            {
              isLogged && <Notification /> 
-             */}
+            }
             {<LanguageSelectionDropDown changeLang={props.changeLang} /> }
           </div>
           </div>
