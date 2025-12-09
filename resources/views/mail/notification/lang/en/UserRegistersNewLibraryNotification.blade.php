@@ -10,7 +10,7 @@
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click qui to go to dashboard
+           Click here to go to dashboard
         </a>
     </div>    
 @endsection
