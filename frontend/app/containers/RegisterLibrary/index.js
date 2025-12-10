@@ -299,6 +299,7 @@ const RegisterLibrary = props => {
 
   // Cambia Step
   const onChangeStep = (formData, newStep) => {
+    setIsSubmitting(false); 
     if (data.project_id && data.project_id.length > 0) {
       arrprojectName.length = 0;
       data.project_id.forEach(projectid => {
@@ -328,6 +329,7 @@ const RegisterLibrary = props => {
   };
 
   const onBackPressed = (field_name, value, newList) => {
+    setIsSubmitting(false);
     itemsreport.length = 0;
     setSortingcount(0);
     setData({ ...data, backbuttonPressed: true });
@@ -703,14 +705,25 @@ const RegisterLibrary = props => {
                   }
                 }
                 console.log('before submitting ' + JSON.stringify(data));
-                dispatch(
-                  requestPostPublicLibrary(
-                    data,
-                    intl.formatMessage(wizardMessages.createMessage),
-                  ),
-                ).catch(() => {
-                  setIsSubmitting(false); // Re-enable the button on failure
-                });
+
+               try {
+                  const result = dispatch(
+                    requestPostPublicLibrary(
+                      data,
+                      intl.formatMessage(wizardMessages.createMessage),
+                    ),
+                  );
+                  // Only attach catch if it's a valid promise
+                  if (result && typeof result.catch === 'function') {
+                    result.catch(() => {
+                      setIsSubmitting(false);
+                    });
+                  }
+                } catch (e) {
+                   console.error("Dispatch failed", e);
+                   setIsSubmitting(false); 
+                }
+
               }}
             >
               {intl.formatMessage(globalMessages.submit)}
