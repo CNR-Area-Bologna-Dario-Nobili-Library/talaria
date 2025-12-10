@@ -57,7 +57,7 @@ return [
     'url' => env('APP_URL', 'http://localhost'),
 
      /* This is used by asset() in blade template */
-    'asset_url' => env('APP_URL', null), //env('ASSET_URL', null),
+    'asset_url' => env('API_URL', null), //env('ASSET_URL', null),
 
     /*
     |--------------------------------------------------------------------------
