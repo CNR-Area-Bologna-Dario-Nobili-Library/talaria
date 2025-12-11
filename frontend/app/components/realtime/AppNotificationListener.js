@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import makeSelectApp from 'containers/App/selectors';
 import { loadNotifications } from 'containers/App/actions';
 import 'react-toastify/dist/ReactToastify.css';
@@ -230,7 +230,8 @@ const AppNotificationListener = (props) => {
     props.app && props.app.notifications && props.app.notifications.data
   ]);
 
-  return <ToastContainer position="top-right" autoClose={2000} />;
+  // ToastContainer is rendered once via components/Toaster in app.js
+  return null;
 };
 
 const mapStateToProps = createStructuredSelector({
