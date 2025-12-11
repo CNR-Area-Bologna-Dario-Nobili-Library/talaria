@@ -183,25 +183,7 @@ function NotificationInbox(props) {
   //   setModalOpen(true);
   // };
 
-  function extractLibraryName(title) {
-    if (title.toLowerCase().startsWith('library')) {
-      const hashIndex = title.indexOf('#');
-      if (hashIndex !== -1) {
-        const substringAfterHash = title.substring(hashIndex + 1);
-        const match = substringAfterHash.match(/(\S+)/);
-        if (match && match[1]) {
-          return match[1];
-        }
-      } else {
-        const parts = title.split(' ');
-        if (parts.length >= 2) {
-          return parts[1];
-        }
-      }
-    }
-    return title;
-  }
-
+ 
   /**
    * Parse notification data to get libraryName, libraryStatus, description.
    */
@@ -209,11 +191,11 @@ function NotificationInbox(props) {
     const data = notification && notification.data ? notification.data : {};
     const title = data && data.title ? String(data.title) : '';
 
-    const libraryName = extractLibraryName(title);
+    const libraryName = title;
     const libraryStatus = data && data.status ? String(data.status) : '';
-    const notificationDescription = title;
+    //const notificationDescription = title;
 
-    return { libraryName, libraryStatus, notificationDescription };
+    return { libraryName, libraryStatus };
   }
 
   function parseDate(dateStr) {
