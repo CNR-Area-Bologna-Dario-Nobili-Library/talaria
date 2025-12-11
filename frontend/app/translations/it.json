@@ -321,7 +321,7 @@
   "app.components.Notification.showLess": "Visualizza meno",
   "app.components.Notification.goToInbox": "Vai alla lista",
 
-  "app.components.NotificationInbox.header": "Notifiche",
+  "app.containers.NotificationInbox.header": "Notifiche",
   "app.containers.NotificationInbox.searchLabel": "Cerca notifiche",
   "app.containers.NotificationInbox.searchPlaceholderDescription": "Descrizione",
   "app.containers.NotificationInbox.statusLabel": "Stato",
