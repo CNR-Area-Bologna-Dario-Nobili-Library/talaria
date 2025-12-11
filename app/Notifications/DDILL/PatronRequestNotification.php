@@ -26,7 +26,7 @@ class PatronRequestNotification extends BaseNotification
         $request=$this->object;
         $blib=$this->object->library;
         
-        $this->url=config('app.frontend_url').'/patron/'.$request->Library->id.'/requests/';   
+        $this->url=config('app.frontend_url').'/patron/requests/';   
                
         $this->addTitleIdentifier($request->id); //prepend title with # Patron Req. ID -         
 
