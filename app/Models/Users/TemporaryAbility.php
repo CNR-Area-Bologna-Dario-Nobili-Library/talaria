@@ -9,12 +9,15 @@ use App\Models\Libraries\Library;
 use App\Models\Projects\Project;
 use App\Models\Users\User;
 use App\Notifications\BaseMailMessage;
+use App\Notifications\Library\LibraryOperatorInvitationDeleteNotification;
 use App\Notifications\Library\LibraryOperatorInvitationNotification;
 use App\Notifications\Library\LibraryOperatorInvitationNewUserNotification;
 use App\Notifications\Operators\OperatorAcceptedInvitationNotification;
 use App\Notifications\Operators\OperatorRejectedInvitationNotification;
 use Illuminate\Support\Facades\Notification as FacadesNotification;
 use App\Support\RealtimeBroadcaster;
+use stdClass;
+
 class TemporaryAbility extends BaseModel
 {
     protected $table = 'temporary_abilities';
@@ -37,7 +40,7 @@ class TemporaryAbility extends BaseModel
     ];
 
     public function user()
-    {        
+    {                
             return $this->belongsTo(User::class,'user_id');
     }
 
@@ -120,7 +123,7 @@ class TemporaryAbility extends BaseModel
         return null;
     }
 
-    public function notifyToUser() {        
+    public function notifyInvitationToUser() {        
         $u=$this->user;
         
         //Create notification email template for invitation ... 
@@ -137,9 +140,44 @@ class TemporaryAbility extends BaseModel
         if (isset($this->user_email))
         {          
             $notification = new LibraryOperatorInvitationNewUserNotification($this);
-            //send just email using on-demand notifications...
+            //send just email using on-demand notifications because user doesn't exists...
             FacadesNotification::route('mail', $this->user_email)->notify($notification);
         }
+    }
+
+     public function notifyInvitationDeleteToUser() {        
+        $u=$this->user;
+
+        //Notify user if invitation was pending
+        if($this->status==config("constants.temporary_ability_status.waiting"))
+        {                  
+            if(isset($u) && $u->id>0)
+            {         
+                //notify to user
+                $notification = new LibraryOperatorInvitationDeleteNotification($this);
+                $u->notify($notification);
+                RealtimeBroadcaster::fromNotification($this, $u, $notification);            
+            
+            }
+            else //if no existing user 
+            if (isset($this->user_email))
+            {                      
+                //create a temp object with user and library                    
+                $obj=new stdClass();
+                $user=array("name"=>$this->user_name,"surname"=>$this->user_surname,"email"=>$this->user_email);                                            
+                $obj->id=null;          
+                $obj->library=$this->library(); 
+                $obj->abilities=$this->abilities; 
+                $obj->user=$user;
+
+
+                $notification = new LibraryOperatorInvitationDeleteNotification($obj);
+                //send just email using on-demand notifications because user doesn't exists...
+                FacadesNotification::route('mail', $this->user_email)->notify($notification);
+            }            
+
+        }
+        
     }
 
     public function notifyToEntityUserAccepted() {

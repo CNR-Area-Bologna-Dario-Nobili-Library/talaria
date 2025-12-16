@@ -1,6 +1,7 @@
 <?php namespace App\Models\Users;
 
 use App\Models\BaseObserver;
+use App\Notifications\Library\LibraryOperatorInvitationDeleteNotification;
 use \Auth;
 use Str;
 
@@ -31,4 +32,10 @@ class TemporaryAbilityObserver extends BaseObserver
         $model->status=config("constants.temporary_ability_status.waiting");        
         return parent::creating($model); 
     }   
+
+
+    //Because we've to delete the model we have to send notification before deleting the model so we use forceDeleting!
+    public function forceDeleting ($model){
+        $model->notifyInvitationDeleteToUser();
+    }
 }
