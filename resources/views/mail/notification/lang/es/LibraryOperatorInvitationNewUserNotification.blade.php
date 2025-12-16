@@ -8,7 +8,7 @@
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent
 
-        It seams that you have not an account on the system, so you've to signup first!
+        It seems that you have not an account on the system, so you've to signup first!
     </p>
 
     <div class="buttonBlock">
