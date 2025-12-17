@@ -646,28 +646,29 @@ export function* findUpdateOASaga(action) {
     };
     try {
       const request = yield call(getOA, options);
-      if (/*request.found &&*/ request.url) {
-        console.log('TROVATO OA!:', request.url);
+      const reference = request && request.results && request.results[0];
+      if (/*request.found &&*/ reference.open_access && reference.open_access.is_oa && reference.open_access.oa_url) {
+        console.log('FINDUPDATEOA_SAGA TROVATO OA!:', reference.open_access.oa_url);
         //yield call(() => toast.success("Versione OA trovata!"))
         yield put(requestFindUpdateOASuccess(action.id));
         yield call(requestUpdateReferenceSaga, {
           id: action.id,
-          request: { oa_link: request.url },
+          request: { oa_link: reference.open_access.oa_url },
           message: action.foundMessage,
         });
       } else {
-        console.log('NON TROVATO');
+        console.log('FINDUPDATEOA_SAGA NON TROVATO');
         yield put(requestFindUpdateOAFail(action.id));
         yield call(() => toast.error(action.notfoundMessage));
       }
     } catch (e) {
-      console.log('OA FIND AND UPDATE ERROR', e);
+      console.log('FINDUPDATEOA_SAGA OA FIND AND UPDATE ERROR', e);
       yield put(requestError(e.message));
       yield put(requestFindUpdateOAFail(action.id));
       yield call(() => toast.error(action.notfoundMessage));
     }
   } else {
-    console.log('NON TROVATO-title mancante');
+    console.log('FINDUPDATEOA_SAGA NON TROVATO-title mancante');
     yield put(requestFindUpdateOAFail(action.id));
     yield call(() => toast.error(action.notfoundMessage));
   }
