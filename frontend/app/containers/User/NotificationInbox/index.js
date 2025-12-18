@@ -25,7 +25,8 @@ function NotificationInbox(props) {
   const [filterEndDate, setFilterEndDate] = useState('');
 
   const [sortColumn, setSortColumn] = useState('created_at');
-  const [sortOrder, setSortOrder] = useState('asc');
+  // Default: latest notifications first
+  const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const [notificationsPerPage] = useState(10);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
