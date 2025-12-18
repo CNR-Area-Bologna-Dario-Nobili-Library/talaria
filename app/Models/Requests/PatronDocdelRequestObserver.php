@@ -86,6 +86,9 @@ class PatronDocdelRequestObserver extends BaseObserver
 
     public function saving($model)
     {        
+        if ($model->isDirty('archived'))
+            $model->archived_date = Carbon::now();
+        
         return parent::saving($model);
     }
 
