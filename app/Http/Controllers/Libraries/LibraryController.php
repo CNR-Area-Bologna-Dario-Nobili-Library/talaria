@@ -265,10 +265,9 @@ class LibraryController extends ApiController
         $this->authorize($lib);    //can manage library (i'm the lib manager)
                 
         $tempPerm=TemporaryAbility::findOrFail($pendingid);
-              
-        if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library       
-                $tempPerm->forceDelete();       //forceDelete will notify in the TemporaryAbilityObserver                   
-       
+        if($tempPerm->library && $tempPerm->library->id==$id){ //temporary operator is for my library       
+                $tempPerm->delete();       //delete event will notify in the TemporaryAbilityObserver                   
+        }
               
        $temp_abilities =$lib->pending_operators(); 
 

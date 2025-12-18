@@ -34,8 +34,14 @@ class TemporaryAbilityObserver extends BaseObserver
     }   
 
 
-    //Because we've to delete the model we have to send notification before deleting the model so we use forceDeleting!
-    public function forceDeleting ($model){
+    //Because we've to delete the model we have to send notification before deleting the model so we use deleting event!
+    public function deleting ($model){        
         $model->notifyInvitationDeleteToUser();
+        return parent::deleting($model);
     }
+
+     public function deleted ($model){        
+        return parent::deleted($model);
+    }
+
 }

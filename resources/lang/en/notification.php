@@ -26,6 +26,7 @@ return [
     'CancelAcceptedNotification_title'=>'Has been canceled',
     'LibraryOperatorInvitationNotification_title'=>'A library is inviting you as operator',
     'LibraryOperatorInvitationDeleteNotification_title'=>'A library has removed some of yours operator permissions',
+    'LibraryOperatorInvitationDeleteNewUserNotification_title'=>'A library has removed some of yours operator permissions',
     'LibraryOperatorUpdatePermissionsNotification_title'=>'A library updated your operator permissions',
     'OperatorDeleteNotification_title'=>'Your operator permissions have been removed',
     'OperatorAcceptedInvitationNotification_title'=>'Invitation accepted by operator',

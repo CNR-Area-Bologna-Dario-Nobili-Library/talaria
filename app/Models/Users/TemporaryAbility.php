@@ -9,6 +9,7 @@ use App\Models\Libraries\Library;
 use App\Models\Projects\Project;
 use App\Models\Users\User;
 use App\Notifications\BaseMailMessage;
+use App\Notifications\Library\LibraryOperatorInvitationDeleteNewUserNotification;
 use App\Notifications\Library\LibraryOperatorInvitationDeleteNotification;
 use App\Notifications\Library\LibraryOperatorInvitationNotification;
 use App\Notifications\Library\LibraryOperatorInvitationNewUserNotification;
@@ -148,6 +149,7 @@ class TemporaryAbility extends BaseModel
      public function notifyInvitationDeleteToUser() {        
         $u=$this->user;
 
+       
         //Notify user if invitation was pending
         if($this->status==config("constants.temporary_ability_status.waiting"))
         {                  
@@ -164,14 +166,19 @@ class TemporaryAbility extends BaseModel
             {                      
                 //create a temp object with user and library                    
                 $obj=new stdClass();
-                $user=array("name"=>$this->user_name,"surname"=>$this->user_surname,"email"=>$this->user_email);                                            
+                $user=new stdClass();
+                    $user->name=$this->user_name;
+                    $user->surname=$this->user_surname;
+                    $user->email=$this->user_email;
+                    $user->id=null;  
+
                 $obj->id=null;          
-                $obj->library=$this->library(); 
+                $obj->library=$this->library; 
                 $obj->abilities=$this->abilities; 
                 $obj->user=$user;
 
 
-                $notification = new LibraryOperatorInvitationDeleteNotification($obj);
+                $notification = new LibraryOperatorInvitationDeleteNewUserNotification($obj);
                 //send just email using on-demand notifications because user doesn't exists...
                 FacadesNotification::route('mail', $this->user_email)->notify($notification);
             }            
