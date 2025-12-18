@@ -224,7 +224,7 @@ class LibraryController extends ApiController
         $tempPerm->save();    
         
         //SEND notification to user (existing or not)
-        $tempPerm->notifyToUser();
+        $tempPerm->notifyInvitationToUser();
         
         return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
         
@@ -263,32 +263,12 @@ class LibraryController extends ApiController
         $lib=$this->model->findOrFail($id);
          
         $this->authorize($lib);    //can manage library (i'm the lib manager)
-        
-       $tempPerm=TemporaryAbility::findOrFail($pendingid);
-       if($tempPerm->library && $tempPerm->library->id==$id) //temporary operator is for my library       
-       {            
-            $tempPerm->forceDelete();                           
-       }
-
-       //Notify user if invitation was pending
-       if($tempPerm->status==config("constants.temporary_ability_status.waiting"))
-       {
-            $user=$tempPerm->user;
-
-            //create a temp object with user and library
-            $obj=new stdClass();
-            $obj->id=null;
-            $obj->user=$user;
-            $obj->library=$lib; 
-            $obj->abilities=$tempPerm->abilities; 
-            $notification = new LibraryOperatorInvitationDeleteNotification($obj);
-
-            //notify to user
-            $user->notify($notification);
-            RealtimeBroadcaster::fromNotification($this, $user, $notification);            
-       }
-       //else if invitation was rejected no need to notify user       
-         
+                
+        $tempPerm=TemporaryAbility::findOrFail($pendingid);
+        if($tempPerm->library && $tempPerm->library->id==$id){ //temporary operator is for my library       
+                $tempPerm->delete();       //delete event will notify in the TemporaryAbilityObserver                   
+        }
+              
        $temp_abilities =$lib->pending_operators(); 
 
        return $this->response->collection($temp_abilities, new TemporaryAbilityTransformer())->morph();             

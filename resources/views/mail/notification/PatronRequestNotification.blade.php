@@ -35,14 +35,12 @@
     @yield('reference')
 
 
-    @section('request_link')
-        @isset($notification_url)
-            @component('mail.notification.custom_button', ['url' => $notification_url])
-            @lang('globals.request_link')
-            @endcomponent    
-        @endisset
-    @endsection
-
+    @isset($notification_url)
+        @component('mail.notification.custom_button', ['url' => $notification_url])
+        @lang('globals.request_link')
+        @endcomponent    
+    @endisset
+   
 
 
 @endsection

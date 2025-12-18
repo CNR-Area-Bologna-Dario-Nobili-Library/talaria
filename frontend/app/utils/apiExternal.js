@@ -253,6 +253,15 @@ export const parseFromOpenAlex = oareference => {
 
   console.log('PARSEAUTHORS', parseAuthors(reference.authorships));
 
+  /**
+   * IMPORTANT NOTE REGARDING SID
+   * SID is set to "openalex.org" ONLY when data is retrieved from OpenAlex, that means that the user has to input a DOI, PMID, or Title and the data is from 
+   * OpenAlex.
+   * 
+   * When data is inputted manually, no SID is set.
+   * When data comes from openurl, SID is set only if it's included in the openurl.
+   * When the user clicks on "Search OA", the SID is not overridden to "openalex.org" even if the OA check is made with OpenAlex.
+   * */
   obj = {
     pub_title: pubTitle,
     part_title: partTitle,
@@ -272,7 +281,7 @@ export const parseFromOpenAlex = oareference => {
     doi: trimmedDoi,
     pmid: trimmedPmid,
     oa_link: reference.open_access.is_oa && reference.open_access.oa_url ? reference.open_access.oa_url : null,
-    // sid: "openalex.org",
+    sid: "openalex.org",
   };
 
   console.log('OGGETTONE', obj);
