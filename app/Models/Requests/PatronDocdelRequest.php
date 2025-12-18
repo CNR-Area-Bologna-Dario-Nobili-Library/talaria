@@ -8,7 +8,7 @@ use App\Models\References\Reference;
 use App\Models\Users\User;
 use Carbon\Carbon;
 use App\Resolvers\StatusResolver;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\File;
 
 /*NOTA: la patronReq è necessaria
 altrimenti non posso reinoltrare le richDD
@@ -222,6 +222,13 @@ class PatronDocdelRequest extends BaseModel
 
         $sr->changeStatus($newstatus,$others);
         return $this;
+    }
+
+    public function deleteFile() {
+        if ($this->filehash && File::exists(storage_path().'/app/public/'.$this->filehash)) {
+            File::delete(storage_path().'/app/public/'.$this->filehash);
+        }
+
     }
 
 }
