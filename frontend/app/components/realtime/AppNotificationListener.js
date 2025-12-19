@@ -182,14 +182,13 @@ const AppNotificationListener = (props) => {
       var key = normalizeEvtKey(eventData);
       var url = eventData.url || '';
 
-      // Skip already-read notifications (e.g., stale RT replay after login)
       var isRead =
         eventData.read === true ||
         eventData.read === 1 ||
         !!eventData.read_at ||
         !!eventData.readed;
       if (!isRead) {
-        // ONLY SHOW TOAST - AppRealtimeListener handles list refreshes!
+        // ONLY SHOW TOAST in app
         showToastOnce(key, title, url, seenRef);
       }
       lastRealtimeMsRef.current = Date.now();
