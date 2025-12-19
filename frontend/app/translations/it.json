@@ -358,7 +358,7 @@
   "app.containers.NotificationInbox.cancel": "Annulla",
   "app.containers.NotificationInbox.delete": "Elimina",
   "app.containers.NotificationInbox.allpageGridSelected": "Tutte le notifiche di questa pagina sono selezionate.",
-  "app.containers.NotificationInbox.selectAllPages": "Seleziona tutte let notificatifiche",
+  "app.containers.NotificationInbox.selectAllPages": "Seleziona tutte le notifiche",
   "app.containers.NotificationInbox.selectedAllPages": "Tutte le notifiche di tutte le pagine sono selezionate",
   "app.containers.NotificationInbox.allPagesSelected": "Tutte le notifiche sono selezionate.",
   "app.containers.NotificationInbox.clearSelection": "Pulisci la selezione",
