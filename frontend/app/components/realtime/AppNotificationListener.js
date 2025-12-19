@@ -12,7 +12,6 @@ const SEEN_STORAGE_KEY = 'notif_seen_v1';
 // Cooldown period to prevent duplicate toasts
 const REALTIME_LIST_COOLDOWN_MS = 1500;
 
-
 /**
  * Load previously seen notification IDs from session storage
  * @returns {Object} Map of seen notification IDs
@@ -62,7 +61,8 @@ function normalizeEvtKey(e) {
   var tgt = (e && e.target_user_id != null) ? String(e.target_user_id) : 'na';
   var req = (e && e.request_id != null) ? String(e.request_id) : 'na';
   var url = (e && e.url) ? String(e.url) : '';
-  return 'evt|' + req + '|' + tgt + '|' + title + '|' + url;
+  var ts = (e && e.timestamp) ? String(e.timestamp) : (e && e.created_at) ? String(e.created_at) : '';
+  return 'evt|' + req + '|' + tgt + '|' + title + '|' + url + '|' + ts;
 }
 
 /**
@@ -134,6 +134,7 @@ function toastSuppressed() {
 const AppNotificationListener = (props) => {
   const seenRef = useRef({});
   const lastRealtimeMsRef = useRef(0);
+  const lastUnreadCount = useRef(0);
 
   useEffect(function () {
     seenRef.current = loadSeen();
@@ -160,10 +161,20 @@ const AppNotificationListener = (props) => {
 
       const eventData = e.notification || e;
 
-      // Suppress for actor
-      if (eventData.notifier_id != null && Number(eventData.notifier_id) === currentUserId) return;
-      // Only target user
-      if (eventData.target_user_id == null || Number(eventData.target_user_id) !== currentUserId) return;
+      var targetUserId =
+        eventData.target_user_id != null ? Number(eventData.target_user_id) : null;
+      var notifierId =
+        eventData.notifier_id != null ? Number(eventData.notifier_id) : null;
+
+      // Only react to events explicitly targeted to the current user
+      if (targetUserId == null || targetUserId !== currentUserId) return;
+
+      // If the actor and target are the same (operators acting as patrons),
+      // still show the toast so users see their own patron requests in realtime.
+      // var isSelfTriggered = notifierId != null && notifierId === currentUserId;
+      // if (isSelfTriggered) {
+      //   // no-op: previously suppressed, now allowed so operators see immediate feedback
+      // }
 
       if (toastSuppressed()) return;
 
@@ -199,11 +210,28 @@ const AppNotificationListener = (props) => {
       app.notifications && Array.isArray(app.notifications.data)
         ? app.notifications.data
         : [];
-    if (!list.length) return;
+    if (!list.length) {
+      lastUnreadCount.current = 0;
+      return;
+    }
 
-    if (Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS) return;
+    // Detect if bell count increased (new unread landed)
+    var unreadTotal =
+      app.notifications && app.notifications.unreaded_total != null
+        ? Number(app.notifications.unreaded_total) || 0
+        : list.filter(function(n) { return n && (n.read_at == null || n.read === false); }).length;
+    var unreadIncreased = unreadTotal > (lastUnreadCount.current || 0);
 
-    if (toastSuppressed()) return;
+    // If nothing new and we just handled a realtime event, skip to avoid dupes
+    if (!unreadIncreased && Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS) {
+      lastUnreadCount.current = unreadTotal;
+      return;
+    }
+
+    if (toastSuppressed()) {
+      lastUnreadCount.current = unreadTotal;
+      return;
+    }
     
     var latest = null;
     for (var i = 0; i < list.length; i++) {
@@ -226,6 +254,9 @@ const AppNotificationListener = (props) => {
     var url = latest.data && latest.data.url;
 
     showToastOnce(idKey, message, url, seenRef);
+
+    // Remember last unread count after attempting toast
+    lastUnreadCount.current = unreadTotal;
   }, [
     props.app && props.app.notifications && props.app.notifications.data
   ]);
