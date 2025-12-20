@@ -145,6 +145,17 @@ const CustomForm = (props) => {
         props.RetrievePositionData && props.RetrievePositionData(field_name, value);
     }
 
+    // Sync coordinates coming from outside (e.g. browser geolocation) even when user already typed values
+    useEffect(() => {
+        if (!props.requestData) return;
+
+        setFormData(prev => ({
+            ...prev,
+            ...(props.requestData.lat !== undefined ? { lat: props.requestData.lat } : {}),
+            ...(props.requestData.lon !== undefined ? { lon: props.requestData.lon } : {}),
+        }));
+    }, [props.requestData]);
+
     useEffect ( ()=>{
         (props.requestData && props.requestData!==null && props.requestData['identifiers']!==undefined) ?  setdbList(props.requestData['identifiers'].data) : setdbList(null)
     },[props.requestData])

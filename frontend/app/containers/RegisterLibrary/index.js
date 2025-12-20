@@ -70,37 +70,47 @@ const RegisterLibrary = props => {
   let [buttonStopPressed, setbuttonStopPressed] = useState(false);
   const [arrprojectName, setarrProjectName] = useState([]);
   const [printStatus, setPrintStatus] = useState(false);
-  const [disabled, setdisabled] = useState(false);
+  const [disabled, setdisabled] = useState(0); // track button presses
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [itemsreport, setItemsreport] = useState([]);
   const [sortingcount, setSortingcount] = useState(0);
+  const [lastGeoCoords, setLastGeoCoords] = useState(null);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
       setStatus(intl.formatMessage(wizardMessages.geolocationNotSupported));
     } else {
       setStatus(intl.formatMessage(wizardMessages.locatingLibraryLocation));
-      if (lng === null) {
-        fields.geolocation_spinner.hidden = false;
-        fields.library_coordinates.label = intl.formatMessage(
-          wizardMessages.stopEnterManually,
-        );
-        fields.library_coordinates.color = 'orange';
-      }
+      // Always show spinner while fetching fresh coordinates
+      fields.geolocation_spinner.hidden = false;
+      fields.library_coordinates.label = intl.formatMessage(
+        wizardMessages.stopEnterManually,
+      );
+      fields.library_coordinates.color = 'orange';
       navigator.geolocation.getCurrentPosition(
         position => {
+          setLastGeoCoords({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
           setLat(position.coords.latitude);
           setLng(position.coords.longitude);
-          setData({
-            ...data,
+          setData(prevData => ({
+            ...prevData,
             lon: position.coords.longitude,
             ['order_lon']: 2,
             lat: position.coords.latitude,
             ['order_lat']: 3,
-          });
+          }));
+          fields.library_coordinates_Validity.hidden =
+            validateLongitude(position.coords.longitude) &&
+            validateLatitude(position.coords.latitude);
+          fields.geolocation_spinner.hidden = true;
+          setStatus(null);
         },
         () => {
           setStatus(intl.formatMessage(wizardMessages.unableRetriveLocation));
+          fields.geolocation_spinner.hidden = true;
         },
       );
     }
@@ -114,54 +124,64 @@ const RegisterLibrary = props => {
   }, [lng]);
 
   const GetBrowserCoordinates = ev => {
-    setdisabled(disabled + 1);
+    // If we already fetched coordinates once, just restore them without another fetch or spinner
+    if (lastGeoCoords) {
+      setLat(lastGeoCoords.lat);
+      setLng(lastGeoCoords.lon);
+      setData(prevData => ({
+        ...prevData,
+        lon: lastGeoCoords.lon,
+        ['order_lon']: 2,
+        lat: lastGeoCoords.lat,
+        ['order_lat']: 3,
+      }));
+      fields.geolocation_spinner.hidden = true;
+      setStatus(null);
+      return;
+    }
+
+    // First-time fetch
+    setdisabled(prev => prev + 1);
   };
 
-  const validateCoordinates = coordinates => {
-    const trimmedCoordinates = coordinates.replace(/\s/g, ''); // Remove spaces from the input coordinates
-    const decimalRegex = /^-?\d+(\.\d+)?$/;
-    const degreesRegex = /^-?\d+°\d+'\d+''[NSEW]$/;
+  const decimalRegex = /^-?\d+(\.\d+)?$/;
+  const degreesRegex = /^-?\d+°\d+'\d+''[NSEW]$/;
 
-    if (
-      decimalRegex.test(trimmedCoordinates) ||
-      degreesRegex.test(trimmedCoordinates)
-    ) {
-      console.log(
-        'Coordinates are a decimal number OR Coordinates are in degrees format',
-      );
-      return true;
-    } else if (trimmedCoordinates.length === 0) return true;
-    else {
-      console.log('Invalid coordinates');
-      return false;
+  const validateLatitude = latValue => {
+    if (latValue === null || latValue === undefined) return true;
+    const trimmed = latValue.toString().replace(/\s/g, '');
+    if (trimmed.length === 0) return true;
+    if (!(decimalRegex.test(trimmed) || degreesRegex.test(trimmed))) return false;
+    if (decimalRegex.test(trimmed)) {
+      const num = parseFloat(trimmed);
+      return !Number.isNaN(num) && num >= -90 && num <= 90;
     }
+    // For degree format, accept regex-validated value
+    return true;
+  };
+
+  const validateLongitude = lonValue => {
+    if (lonValue === null || lonValue === undefined) return true;
+    const trimmed = lonValue.toString().replace(/\s/g, '');
+    if (trimmed.length === 0) return true;
+    if (!(decimalRegex.test(trimmed) || degreesRegex.test(trimmed))) return false;
+    if (decimalRegex.test(trimmed)) {
+      const num = parseFloat(trimmed);
+      return !Number.isNaN(num) && num >= -180 && num <= 180;
+    }
+    // For degree format, accept regex-validated value
+    return true;
   };
 
   useEffect(() => {
-    if (disabled > 0 && disabled % 2 === 0) {
-      //stop button pressed
-      fields.library_coordinates.label = intl.formatMessage(
-        wizardMessages.clicktoGetRecords,
-      );
-      setStatus(null);
-      fields.geolocation_spinner.hidden = true;
-      setLng(0);
-      setLat(0);
-    } else if (disabled > 0 && disabled % 2 !== 0) {
-      setStatus(null);
-      fields.library_coordinates.label = intl.formatMessage(
-        wizardMessages.stopEnterManually,
-      );
-      setLng(0);
-      setLat(0);
-      getLocation();
-      fields.geolocation_spinner.hidden = false;
+    if (disabled <= 0) return;
 
-      if (lng === null && lat === null) {
-        setLng(0);
-        setLat(0);
-      }
-    }
+    // Each click triggers a fresh geolocation fetch and updates UI accordingly
+    setStatus(null);
+    fields.library_coordinates.label = intl.formatMessage(
+      wizardMessages.stopEnterManually,
+    );
+    getLocation();
   }, [disabled]);
 
   // Fai le chiamate per le option list
@@ -425,9 +445,8 @@ const RegisterLibrary = props => {
         [field_name]: value,
         ['order_' + field_name]: order,
       };
-      let lonIsValid = newData.lon ? validateCoordinates(newData.lon) : true;
-      let latIsValid = newData.lat ? validateCoordinates(newData.lat) : true;
-
+      const lonIsValid = validateLongitude(newData.lon);
+      const latIsValid = validateLatitude(newData.lat);
       fields.library_coordinates_Validity.hidden = lonIsValid && latIsValid;
       setData(newData);
     }
