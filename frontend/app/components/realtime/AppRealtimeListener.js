@@ -157,7 +157,17 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           notifType.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
           (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id));
 
-        
+        // Patron library membership notifications (Enabled, Disabled, Deleted)
+        var isPatronLibraryStatusNotif =
+          (n && n.title && (
+            n.title.indexOf('PatronEnabledByLibrary') !== -1 ||
+            n.title.indexOf('PatronDisabledByLibrary') !== -1 ||
+            n.title.indexOf('PatronDeletedByLibrary') !== -1
+          )) ||
+          (n && n.url && n.url.indexOf('/patron/my-libraries') !== -1) ||
+          (n && n.object && n.object.object_type && n.object.object_type.indexOf('LibraryUser') !== -1);
+
+
         var operatorLibId =
           (n && n.extra && n.extra.library_id != null)
             ? String(n.extra.library_id)
@@ -168,15 +178,15 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           operatorLibId = getLibraryIdFromPath(n.url);
         }
 
-        // If this notification for operators actions (invite/approve/etc.),
-        // the dashboard reflects changes even if the user was on a
-        if (isOperatorNotif) {
-          log(TAG, 'Operator-related notification received — scheduling permissions/my-libraries refresh');
+        // If this notification for operators actions (invite/approve/etc.) OR patron library membership changes,
+        // refresh permissions and my-libraries
+        if (isOperatorNotif || isPatronLibraryStatusNotif) {
+          log(TAG, 'Operator or patron library membership notification received — scheduling permissions/my-libraries refresh');
           clearTimeout(tOperators);
           tOperators = setTimeout(function() {
             // Refresh permissions (updates user abilities/roles)
             refreshPermissions();
-            // Also refresh my libraries in case operator membership changed
+            // Also refresh my libraries in case operator membership or patron status changed
             refreshMyLibraries();
           }, 300);
         }
