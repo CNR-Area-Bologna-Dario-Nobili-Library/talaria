@@ -26,10 +26,8 @@ class RealtimeBroadcaster
         // Single unified broadcast - NO instanceof checks needed
         Log::info('🔔 Broadcasting unified notification', [
             'type' => $payload['type'] ?? 'generic',
-            'target_user' => $notifiable->id ?? null,
-            'payload' => $payload
-        ]);
-
+            'target_user' => $notifiable->id ?? null            
+        ]);        
         // Only one event needed!
         event(new AppNotificationEvent($payload));
     }
