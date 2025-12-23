@@ -278,26 +278,37 @@ class BorrowingDocdelRequest extends DocdelRequest
                         }
                         else //borrow vuole cancellare la nuova richiesta (inviata al lender ma mai accettato) (caso 6a)
                         {
-                            //Notify to lending library manager+lending operators   before resetting request                                
+                            //Notify to lending library manager+lending operators   before resetting request                          
                        
                             $cancelNotification=new RequestCanceledNotification($this);
                             
-                            
-                            $operators=array();
-                            $operators+=$this->lendingLibraryLendingOperators()->toArray();
-                            $operators+=$this->lendingLibraryManageOperators()->toArray();
-                            
-                            //unique operators
-                            $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+                            if($this->lendinglibrary() && $this->all_lender==0) //(will notify only to the specific lender, not to ALL))  
+                            {
+                                //find who to be notified
+                                
+                                $operators=array();
+                                $lloperators=$this->lendingLibraryLendingOperators();
+                                if($lloperators && $lloperators->count()>0)
+                                    $operators+=$lloperators->toArray();
 
-                            //Notify ...
-                            foreach ($operatorsID as $item) {
-                                $lu=User::findOrFail($item);                 
-                                $lu->notify($cancelNotification);            
-                                RealtimeBroadcaster::fromNotification($this, $lu, $cancelNotification);          
-                            }    
+                                $manoperators=$this->lendingLibraryManageOperators();
+                                if($manoperators && $manoperators->count()>0)
+                                    $operators+=$manoperators->toArray();                            
+                                
+                                //unique operators
+                                if($operators && sizeof($operators)>0)
+                                {
+                                    $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
 
-
+                                    //Notify ...
+                                    if($operatorsID && sizeof($operatorsID)>0)
+                                        foreach ($operatorsID as $item) {
+                                            $lu=User::findOrFail($item);                 
+                                            $lu->notify($cancelNotification);            
+                                            RealtimeBroadcaster::fromNotification($this, $lu, $cancelNotification);          
+                                        }
+                                }
+                            }                                
 
                             //reset della richiesta come nuova (senza lender)
                             $newstatus="newrequest";  
