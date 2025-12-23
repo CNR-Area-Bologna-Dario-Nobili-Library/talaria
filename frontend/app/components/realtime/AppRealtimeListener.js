@@ -169,9 +169,15 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         // ---- Operator-related flags ----
         // Adjust these checks to match your real payload
         var notifType = (n && n.type) ? String(n.type) : '';
+        var notifTypeLower = notifType.toLowerCase(); // normalize so Laravel class names with capital "Operator" match
         var isOperatorNotif =
-          notifType.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
+          notifTypeLower.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
           (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id));
+        // Library status changes (enabled / disabled / deleted etc.)
+        var isLibraryStatusNotif =
+          (n && n.object && n.object.object_type && String(n.object.object_type).toLowerCase().indexOf('library') !== -1) ||
+          (n && n.extra && (n.extra.library_id != null || n.extra.borrowing_library_id != null || n.extra.lending_library_id != null)) ||
+          (n && n.url && n.url.indexOf('/library/') !== -1);
 
         // Patron library membership notifications (Enabled, Disabled, Deleted)
         var isPatronLibraryStatusNotif =
@@ -204,8 +210,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
         // If this notification for operators actions (invite/approve/etc.) OR patron library membership changes,
         // refresh permissions and my-libraries
-        if (isOperatorNotif || isPatronLibraryStatusNotif) {
-          log(TAG, 'Operator or patron library membership notification received — scheduling permissions/my-libraries refresh');
+        if (isOperatorNotif || isPatronLibraryStatusNotif || isLibraryStatusNotif) {
+          log(TAG, 'Operator/patron/library status notification received — scheduling permissions/my-libraries refresh');
           clearTimeout(tOperators);
           tOperators = setTimeout(function() {
             // Refresh permissions (updates user abilities/roles)
