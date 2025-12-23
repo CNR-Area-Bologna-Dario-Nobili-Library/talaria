@@ -1,9 +1,9 @@
 // frontend/app/components/realtime/AppRealtimeListener.js
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators, requestGetLibraryOperators } from '../../containers/Library/actions';
+import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators, requestGetLibraryOperators, requestUsersList } from '../../containers/Library/actions';
 import { requestNotifications } from 'containers/App/actions';
-import { requestMyLibraries } from '../../containers/Patron/actions';
+import { requestMyLibraries, requestRequestsList } from '../../containers/Patron/actions';
 import { requestPermissions } from '../../containers/Auth/AuthProvider/actions'; // ⬅️ NEW
 
 function getPathname() {
@@ -17,6 +17,10 @@ function getLibraryIdFromPath(pathname) {
 
 function isPatronDashboardPath(pathname) {
   return ( pathname.indexOf('/user/dashboard') !== -1 ||  pathname.indexOf('/patron/dashboard') !== -1 || pathname.indexOf('/patron/my-libraries') !== -1 );
+}
+
+function isPatronRequestsPath(pathname) {
+  return pathname.indexOf('/patron/requests') !== -1;
 }
 
 function getCurrentUserIdFromProps(props) {
@@ -94,6 +98,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
       var tOperators = null; // for operators/permissions refresh
       var tOperatorsPending = null; // pending operators panel list refresh
       var tOperatorsList = null; // manage/operators panel list refresh
+      var tPatronRequests = null; // patron requests list refresh
+      var tPatronsList = null; // library patrons list refresh
 
       var debouncedBell = debounce(function() {
         log(TAG, 'Refreshing notification bell');
@@ -133,6 +139,16 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         log(TAG, 'Dispatching requestGetLibraryOperators for lib', libId);
         dispatch(requestGetLibraryOperators(libId));
       }
+
+      function refreshPatronRequests(isArchive) {
+        log(TAG, 'Dispatching requestRequestsList, archive:', isArchive);
+        dispatch(requestRequestsList(null, null, { archived: isArchive ? 1 : 0 }));
+      }
+
+      function refreshPatronsList(libId) {
+        log(TAG, 'Dispatching requestUsersList for lib', libId);
+        dispatch(requestUsersList(libId));
+      }
       
       function onAppNotification(e) {
         if (!me) return;
@@ -157,7 +173,25 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           notifType.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
           (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id));
 
-        
+        // Patron library membership notifications (Enabled, Disabled, Deleted)
+        var isPatronLibraryStatusNotif =
+          (n && n.title && (
+            n.title.indexOf('PatronEnabledByLibrary') !== -1 ||
+            n.title.indexOf('PatronDisabledByLibrary') !== -1 ||
+            n.title.indexOf('PatronDeletedByLibrary') !== -1
+          )) ||
+          (n && n.url && n.url.indexOf('/patron/my-libraries') !== -1) ||
+          (n && n.object && n.object.object_type && n.object.object_type.indexOf('LibraryUser') !== -1);
+
+        // Patron request notifications (desk received, fulfilled, not fulfilled, etc.)
+        var isPatronRequestNotif =
+          (n && n.title && (
+            n.title.indexOf('PatronRequest') !== -1 ||
+            n.title.indexOf('PatronBorrowingRequest') !== -1
+          )) ||
+          (n && n.url && n.url.indexOf('/patron/requests') !== -1) ||
+          (n && n.object && n.object.object_type && n.object.object_type.indexOf('PatronDocdelRequest') !== -1);
+
         var operatorLibId =
           (n && n.extra && n.extra.library_id != null)
             ? String(n.extra.library_id)
@@ -168,15 +202,15 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           operatorLibId = getLibraryIdFromPath(n.url);
         }
 
-        // If this notification for operators actions (invite/approve/etc.),
-        // the dashboard reflects changes even if the user was on a
-        if (isOperatorNotif) {
-          log(TAG, 'Operator-related notification received — scheduling permissions/my-libraries refresh');
+        // If this notification for operators actions (invite/approve/etc.) OR patron library membership changes,
+        // refresh permissions and my-libraries
+        if (isOperatorNotif || isPatronLibraryStatusNotif) {
+          log(TAG, 'Operator or patron library membership notification received — scheduling permissions/my-libraries refresh');
           clearTimeout(tOperators);
           tOperators = setTimeout(function() {
             // Refresh permissions (updates user abilities/roles)
             refreshPermissions();
-            // Also refresh my libraries in case operator membership changed
+            // Also refresh my libraries in case operator membership or patron status changed
             refreshMyLibraries();
           }, 300);
         }
@@ -363,6 +397,52 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         return;
         }
         log(TAG, 'SCENARIO 6 SKIPPED');
+
+        // SCENARIO 7: User on /patron/requests page ->refresh patron requests list
+        if (isPatronRequestsPath(pathname) && isPatronRequestNotif) {
+          log(TAG, 'SCENARIO 7 MATCHED: On patron requests page and received patron request notification -> refreshPatronRequests()');
+
+          clearTimeout(tPatronRequests);
+
+          // Determine if we're on the archive page
+          var isArchivePage = pathname.indexOf('/patron/requests/archive') !== -1;
+
+          tPatronRequests = setTimeout(function () {
+            log(TAG, 'SCENARIO 7: delayed refresh (patron requests list), archive:', isArchivePage);
+            refreshPatronRequests(isArchivePage);
+          }, 300);
+          return;
+        }
+        log(TAG, 'SCENARIO 7 SKIPPED');
+
+        // SCENARIO 8: User on /library/XXX/patrons page-> refresh patrons list
+        // when a patron requests to join a library from /patron/my-libraries/new
+        var s8_isPatronsPage = /\/library\/\d+\/patrons\/?$/.test(pathname);
+        var s8_hasLibId = !!targetCurrentLibId;
+        // status (join request, enabled, disabled, deleted)
+        var s8_isPatronStatusNotif = isPatronLibraryStatusNotif ||
+          (n && n.title && n.title.indexOf('PatronAskJoinLibrary') !== -1);
+
+        log(TAG, 'SCENARIO 8 CHECK (patrons page):', {
+          s8_isPatronsPage: s8_isPatronsPage,
+          s8_hasLibId: s8_hasLibId,
+          s8_isPatronStatusNotif: s8_isPatronStatusNotif,
+          targetCurrentLibId: targetCurrentLibId,
+        });
+
+        if (s8_isPatronsPage && s8_hasLibId && s8_isPatronStatusNotif) {
+          log(TAG, 'SCENARIO 8 MATCHED: On patrons page -> refreshPatronsList()');
+
+          clearTimeout(tPatronsList);
+
+          tPatronsList = setTimeout(function () {
+            log(TAG, 'SCENARIO 8: delayed refresh (patrons list)');
+            refreshPatronsList(targetCurrentLibId);
+          }, 300);
+          return;
+        }
+        log(TAG, 'SCENARIO 8 SKIPPED');
+
          // No matching scenario - do nothing
         log(TAG, 'No matching scenario, skipping refresh');
       }
@@ -378,6 +458,8 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         clearTimeout(tMyLib);
         clearTimeout(tOperatorsPending);
         clearTimeout(tOperatorsList);
+        clearTimeout(tPatronRequests);
+        clearTimeout(tPatronsList);
 
         try {
           chAppNotif.stopListening('.app.notification', onAppNotification);
