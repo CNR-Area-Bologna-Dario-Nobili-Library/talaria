@@ -14,9 +14,11 @@ use Auth;
 use App\Resolvers\StatusResolver;
 use App\Models\Libraries\Library;
 use App\Models\Users\User;
+use App\Notifications\DDILL\PatronAskToCancelRequestNotification;
 use App\Notifications\DDILL\RequestCanceledNotification;
 use App\Support\RealtimeBroadcaster;
 use Illuminate\Support\Facades\Log;
+
 
 class BorrowingDocdelRequest extends DocdelRequest
 {
@@ -336,6 +338,45 @@ class BorrowingDocdelRequest extends DocdelRequest
                     
                 case 'canceledDirect': 
                     $others=array_merge($others,['cancel_date'=>Carbon::now(),'archived'=>1,'lending_status'=>'canceledAccepted','lending_archived'=>1]);
+
+                        //patron ha chiesto di cancellare   
+                        if($this->patrondocdelrequest && $this->user_cancel_date)
+                        {                                                                        
+                            //Notify to borrower/deliver/manager that patron ask cancel                        
+                            $patronaskcancelNotification=new PatronAskToCancelRequestNotification($this);
+                                
+                            //find who to be notified
+
+                            $operators=array();
+
+                            $boperators=$this->borrowingLibraryBorrowingOperators();
+                            if($boperators && $boperators->count()>0)
+                                $operators+=$boperators->toArray();
+
+                            $bmanoperators=$this->borrowingLibraryManageOperators();
+                            if($bmanoperators && $bmanoperators->count()>0)
+                                $operators+=$bmanoperators->toArray(); 
+                            
+                            $bdeliveroperators=$this->borrowingLibraryDeliverOperators();
+                            if($bdeliveroperators && $bdeliveroperators->count()>0)
+                                $operators+=$bdeliveroperators->toArray(); 
+                                    
+                            //unique operators
+                            if($operators && sizeof($operators)>0)
+                            {
+                                $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+                                //Notify ...
+                                if($operatorsID && sizeof($operatorsID)>0)
+                                    foreach ($operatorsID as $item) {
+                                        $lu=User::findOrFail($item);                 
+                                        $lu->notify($patronaskcancelNotification);            
+                                        RealtimeBroadcaster::fromNotification($this, $lu, $patronaskcancelNotification);          
+                                    }
+                            }                                                         
+                        }
+
+
                     break;
                 /*case 'canceledAccepted': 
                         $others=array_merge($others,['cancel_date'=>Carbon::now()]);
@@ -345,6 +386,46 @@ class BorrowingDocdelRequest extends DocdelRequest
                         'cancel_request_date'=>Carbon::now(),
                         'lending_status'=>'cancelRequested'
                     ]);
+
+                        //patron ha chiesto di cancellare   
+                        if($this->patrondocdelrequest && $this->user_cancel_date)
+                        {                                                                        
+                            //Notify to borrower/deliver/manager that patron ask cancel                        
+                            $patronaskcancelNotification=new PatronAskToCancelRequestNotification($this);
+                                
+                            //find who to be notified
+
+                            $operators=array();
+
+                            $boperators=$this->borrowingLibraryBorrowingOperators();
+                            if($boperators && $boperators->count()>0)
+                                $operators+=$boperators->toArray();
+
+                            $bmanoperators=$this->borrowingLibraryManageOperators();
+                            if($bmanoperators && $bmanoperators->count()>0)
+                                $operators+=$bmanoperators->toArray(); 
+                            
+                            $bdeliveroperators=$this->borrowingLibraryDeliverOperators();
+                            if($bdeliveroperators && $bdeliveroperators->count()>0)
+                                $operators+=$bdeliveroperators->toArray(); 
+                                    
+                            //unique operators
+                            if($operators && sizeof($operators)>0)
+                            {
+                                $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+                                //Notify ...
+                                if($operatorsID && sizeof($operatorsID)>0)
+                                    foreach ($operatorsID as $item) {
+                                        $lu=User::findOrFail($item);                 
+                                        $lu->notify($patronaskcancelNotification);            
+                                        RealtimeBroadcaster::fromNotification($this, $lu, $patronaskcancelNotification);          
+                                    }
+                            }                                                         
+                        }
+
+
+
                     break;
                 case 'newrequest': 
                         if($this->borrowing_status=="requested") {
