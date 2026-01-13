@@ -137,14 +137,17 @@ return [
                         'role'  =>  [],
                         'next_statuses'  =>  [],
                         'constraints'   =>  [],                            
-                        'notify'    =>  [
-                            'Model'=>[                                                                                                 
-                                //NOTIFY to Borrower that patron request cancel direct (req goes to archive)
+                        //'notify'    =>  [
+                        //    'Model'=>[                                                                                                 
+                                 //NOTIFY to Borrower that patron request cancel direct (req goes to archive)
+                                 /* NOTIFIED to BORROW/DELIVERY/MANAGER in BorrowingDocdelRequest->changeStatus(): we send notification only if patron request cancel otherwise no 
                                 ['borrowingLibraryManageOperators', 'DDILL\\PatronAskToCancelRequestNotification'],   //OK
                                 ['borrowingLibraryDeliverOperators', 'DDILL\\PatronAskToCancelRequestNotification'],  //OK
+                                ['borrowingLibraryBorrowingOperators', 'DDILL\\PatronAskToCancelRequestNotification'],   //OK
+                               
                                  /* NO NEED TO NOTIFY to lender because never requested to lender, and no need to notify to Patron because was already notified when PatronDDReq changed to cancel status */ 
-                            ]
-                        ],                      
+                        //    ]
+                        //],                      
                     ],
                     //NOTE on cancelRequested: i removed constraint because this status can be changed both from patron or borrower                                          
                     'cancelRequested'	=> [
@@ -153,9 +156,14 @@ return [
                         'constraints'   =>  [],  
                         'notify'    =>  [
                             'Model'=>[ 
-                                ['borrowingLibraryManageOperators', 'DDILL\\PatronAskToCancelRequestNotification'],  //this will be sent also when borrow request cancelation too
-                                ['borrowingLibraryDeliverOperators', 'DDILL\\PatronAskToCancelRequestNotification'], //this will be sent also when borrow request cancelation too                                
-                                
+                                //NOTIFY to Borrower that patron request cancel direct (req goes to archive)
+                                /* NOTIFIED to BORROW/DELIVERY/MANAGER in BorrowingDocdelRequest->changeStatus(): we send notification only if patron request cancel otherwise no
+                                /*
+                                        ['borrowingLibraryManageOperators', 'DDILL\\PatronAskToCancelRequestNotification'],  //this will be sent also when borrow request cancelation too
+                                        ['borrowingLibraryDeliverOperators', 'DDILL\\PatronAskToCancelRequestNotification'], //this will be sent also when borrow request cancelation too    
+                                        ['borrowingLibraryBorrowingOperators', 'DDILL\\PatronAskToCancelRequestNotification'],  //this will be sent also when borrow request cancelation too                         
+                                */       
+                                //NOTIFY TO LENDER        
                                 //we CAST the BorrowingDocdelRequest to LendingDocdelRequest in order to send only "lending request fields" 
                                 ['lendingLibraryManageOperators', 'DDILL\\CancelRequestedNotification'], //OK
                                 ['lendingLibraryLendingOperators', 'DDILL\\CancelRequestedNotification'] //OK
