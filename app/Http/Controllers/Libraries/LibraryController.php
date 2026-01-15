@@ -266,7 +266,11 @@ class LibraryController extends ApiController
                 
         $tempPerm=TemporaryAbility::findOrFail($pendingid);
         if($tempPerm->library && $tempPerm->library->id==$id){ //temporary operator is for my library       
-                $tempPerm->delete();       //delete event will notify in the TemporaryAbilityObserver                   
+
+                //Because we've to delete the model we have to send notification before deleting the model!
+                $tempPerm->notifyInvitationDeleteToUser();
+
+                $tempPerm->delete();                  
         }
               
        $temp_abilities =$lib->pending_operators(); 

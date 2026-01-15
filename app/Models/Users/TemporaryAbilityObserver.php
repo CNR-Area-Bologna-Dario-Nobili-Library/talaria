@@ -32,11 +32,8 @@ class TemporaryAbilityObserver extends BaseObserver
         $model->status=config("constants.temporary_ability_status.waiting");        
         return parent::creating($model); 
     }   
-
-
-    //Because we've to delete the model we have to send notification before deleting the model so we use deleting event!
-    public function deleting ($model){        
-        $model->notifyInvitationDeleteToUser();
+    
+    public function deleting ($model){                
         return parent::deleting($model);
     }
 
