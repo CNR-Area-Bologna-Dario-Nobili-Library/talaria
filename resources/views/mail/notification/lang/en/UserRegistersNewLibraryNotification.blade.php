@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-    Library has been registered but you've to wait Community Manager activation
+    The library has been successfully registered, but you must wait for activation from the community manager.
     </p>
 
     @yield('borrowing_library_data')

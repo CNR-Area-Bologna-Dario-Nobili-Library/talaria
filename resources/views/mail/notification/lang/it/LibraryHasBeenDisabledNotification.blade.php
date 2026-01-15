@@ -3,5 +3,7 @@
 @section('content')    
     <p>
     La biblioteca {{$name}} è stata disattivata. 
-    </p>    
+    </p>
+    
+    <p class="contacts">@lang('notification.comm_manager_contacts')</p>      
 @endsection

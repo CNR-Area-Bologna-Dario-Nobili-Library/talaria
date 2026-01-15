@@ -52,6 +52,8 @@
   "app.global.delete": "Elimina",
   "app.global.save": "Salva",
   "app.global.library": "Biblioteca",
+  "app.global.borrowing_library": "Biblioteca richiedente",
+  "app.global.lending_library": "Biblioteca fornitrice",
   "app.global.pickup": "Punto di consegna",
   "app.global.department": "Dipartimento/Istituto",
   "app.global.patron": "Utente",

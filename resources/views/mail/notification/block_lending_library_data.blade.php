@@ -1,6 +1,6 @@
 @section('lending_library_data')
 @isset($lending_library_name)
-    <h3 class="library_data">@lang('globals.app.global.library')</h3>          
+    <h3 class="library_data">@lang('globals.app.global.lending_library')</h3>          
     <b>@lang('globals.app.libraries.name'):</b>{{$lending_library_name}} <br/>
     @isset($lending_library_country)<b>@lang('globals.app.global.country'):</b> {{$lending_library_country}} <br/>@endisset
     @isset($lending_library_institution)<b>@lang('globals.app.libraries.institution_id'):</b> {{$lending_library_institution}} <br/>@endisset

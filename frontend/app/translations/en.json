@@ -52,6 +52,8 @@
   "app.global.edit": "Edit",
   "app.global.save": "Save",
   "app.global.library": "Library",
+  "app.global.borrowing_library": "Borrowing library",
+  "app.global.lending_library": "Lending library",
   "app.global.pickup": "Pickup point",
   "app.global.department": "Department/Institute",
   "app.global.patron": "User",

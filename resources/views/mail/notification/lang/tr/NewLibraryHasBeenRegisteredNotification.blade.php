@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-    A new library has requested registration. Please go in the admin dashboard libraries list and manage the request.
+    A new library has requested registration. Please go in the admin dashboard and manage the request from the Libraries list.
     </p>
 
     @yield('borrowing_library_data')
