@@ -32,7 +32,7 @@
   "app.global.status": "Estatus",
   "app.global.preferred": "Preferido",
   "app.global.privacy_policy_accepted": "Política de protección de datos",
-  "app.global.preflang":"Idioma preferido",
+  "app.global.preflang":"???Email and notification preferred language",
   "app.global.user_service_email": "???Service email address",
   "app.global.service_email": "???Receive email notifications",
   "app.global.userCreateSuccess": "Creado el perfil de usuario",

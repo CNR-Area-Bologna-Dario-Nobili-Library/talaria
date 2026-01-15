@@ -2,7 +2,7 @@
 
 return [    
     'contacts'=>'???For technical issues please contact our technical staff at <a href="mailto:'.config('constants.tech_support_email').'">'.config('constants.tech_support_email').'</a>',
-    'comm_manager_contacts'=>'???For any informations please contact us at <a href="mailto:'.config('constants.support_email').'">'.config('constants.support_email').'</a>',
+    'comm_manager_contacts'=>'???For any information please contact us at <a href="mailto:'.config('constants.support_email').'">'.config('constants.support_email').'</a>',
     'UserSignupNotification_title'=>'???Welcome',
     'ResetPasswordNotification_title'=>'???Password recovery',
     'PasswordChangedNotification_title'=>'???Password has been changed',
