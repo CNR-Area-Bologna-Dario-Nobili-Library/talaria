@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { push } from 'connected-react-router';
 import makeSelectApp from 'containers/App/selectors';
 import { loadNotifications } from 'containers/App/actions';
+import { TOAST_AUTOCLOSE_DURATION } from 'utils/constants';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Storage key for tracking displayed notifications in session
@@ -83,6 +84,7 @@ function showToastOnce(toastId, title, url, seenRef, dispatch) {
 
   toast.info('🔔 ' + (title || 'Notification'), {
     toastId: toastId,
+    autoClose: TOAST_AUTOCLOSE_DURATION,
     onClick: function () {
       if (url) {
         /**

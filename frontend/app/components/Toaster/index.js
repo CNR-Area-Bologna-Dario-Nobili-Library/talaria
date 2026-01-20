@@ -2,6 +2,7 @@ import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './style.scss';
+import { TOAST_AUTOCLOSE_DURATION } from 'utils/constants';
 
 const Toaster = (props) => {
     return  (
@@ -12,7 +13,7 @@ const Toaster = (props) => {
             closeOnClick={true}
             draggable={false}
             rtl={false}
-            autoClose={2000}
+            autoClose={TOAST_AUTOCLOSE_DURATION}
         />
     )
 }
