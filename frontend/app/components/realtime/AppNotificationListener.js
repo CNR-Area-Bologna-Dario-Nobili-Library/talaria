@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { toast } from 'react-toastify';
+import { push } from 'connected-react-router';
 import makeSelectApp from 'containers/App/selectors';
 import { loadNotifications } from 'containers/App/actions';
 import 'react-toastify/dist/ReactToastify.css';
@@ -71,17 +72,42 @@ function normalizeEvtKey(e) {
  * @param {string} title - Notification title/message
  * @param {string} url - Optional URL to navigate to on click
  * @param {Object} seenRef - React ref containing seen notification IDs
+ * @param {Function} dispatch - Redux dispatch function for navigation
  * @returns {boolean} True if toast was shown, false if already seen
  */
-function showToastOnce(toastId, title, url, seenRef) {
-  if (toastSuppressed()) return false; 
+function showToastOnce(toastId, title, url, seenRef, dispatch) {
+  if (toastSuppressed()) return false;
   if (!toastId) toastId = 'msg|' + String(title) + '|' + String(url || '');
   if (seenRef.current[toastId]) return false;
   if (toast.isActive && toast.isActive(toastId)) return false;
 
   toast.info('🔔 ' + (title || 'Notification'), {
     toastId: toastId,
-    onClick: function () { if (url) window.location.assign(url); },
+    onClick: function () {
+      if (url) {
+        /**
+ * Converts absolute URLs from the backend into relative paths to prevent React Router from incorrectly appending the full URL to the current path.
+ * <Link> component navigates correctly in this case
+ */
+        var relativePath = url;
+        try {
+          if (url.indexOf('http') === 0 || url.indexOf('://') !== -1) {
+            var urlObj = new URL(url);
+            relativePath = urlObj.pathname + urlObj.search + urlObj.hash;
+          }
+        } catch (e) {
+          // If URL parsing fails, use original URL as fallback
+        }
+
+        // Use React Router navigation (no page reload)
+        // Fallback to window.location if dispatch not available
+        if (dispatch) {
+          dispatch(push(relativePath));
+        } else {
+          window.location.assign(url);
+        }
+      }
+    },
   });
   seenRef.current[toastId] = true;
   saveSeen(seenRef.current);
@@ -189,7 +215,7 @@ const AppNotificationListener = (props) => {
         !!eventData.readed;
       if (!isRead) {
         // ONLY SHOW TOAST in app
-        showToastOnce(key, title, url, seenRef);
+        showToastOnce(key, title, url, seenRef, props.dispatch);
       }
       lastRealtimeMsRef.current = Date.now();
     }
@@ -260,7 +286,7 @@ const AppNotificationListener = (props) => {
       'Notification';
     var url = latest.data && latest.data.url;
 
-    showToastOnce(idKey, message, url, seenRef);
+    showToastOnce(idKey, message, url, seenRef, props.dispatch);
 
     // Remember last unread count after attempting toast
     lastUnreadCount.current = unreadTotal;
@@ -276,4 +302,8 @@ const mapStateToProps = createStructuredSelector({
   app: makeSelectApp(),
 });
 
-export default compose(connect(mapStateToProps))(AppNotificationListener);
+const mapDispatchToProps = (dispatch) => ({
+  dispatch,
+});
+
+export default compose(connect(mapStateToProps, mapDispatchToProps))(AppNotificationListener);

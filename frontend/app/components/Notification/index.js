@@ -273,6 +273,22 @@ const Notification = props => {
                       const parsed = parseNotification(notify);
                       const isUnread = !notify.read_at;
 
+                      /**
+ * Converts absolute URLs from the backend into relative paths to prevent React Router from incorrectly appending the full URL to the current path.
+ * <Link> component navigates correctly in this case
+ */
+                      const notificationUrl = (notify && notify.data && notify.data.url) || '#';
+                      let relativePath = notificationUrl;
+
+                      try {
+                        if (notificationUrl !== '#' && (notificationUrl.indexOf('http') === 0 || notificationUrl.indexOf('://') !== -1)) {
+                          const urlObj = new URL(notificationUrl);
+                          relativePath = urlObj.pathname + urlObj.search + urlObj.hash;
+                        }
+                      } catch (e) {
+                        // If parsing fails, use original URL as fallback
+                      }
+
                       return (
                         <div
                           key={notify.id}
@@ -286,16 +302,13 @@ const Notification = props => {
                         >
                           <div className="notification-row">
                             <div className="notification-text">
-                              <a
-                                href={
-                                  (notify && notify.data && notify.data.url) ||
-                                  '#'
-                                }
+                              <Link
+                                to={relativePath}
                                 className="notification-title"
                               >
                                 {(notify && notify.data && notify.data.title) ||
                                   ''}
-                              </a>
+                              </Link>
                             </div>
 
                             <button

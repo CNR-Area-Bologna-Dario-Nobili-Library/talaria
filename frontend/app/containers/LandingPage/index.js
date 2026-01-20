@@ -18,6 +18,7 @@ import LandingPageProjectsBox from '../../components/LandingPageProjectsBox'
 import LandingPageAdminBox from '../../components/LandingPageAdminBox'
 
 
+let hasRefreshedPermissions = false;
 
 function LandingPage(props) {
   const { auth, dispatch,  history, match } = props;
@@ -39,9 +40,20 @@ function LandingPage(props) {
     [dispatch],
   );
 
+  /**
+global variable to prevent infinite loops caused by Redux state updates triggering re-renders.
+**/
   useEffect(() => {
-   setMounted(true)
-  }, []);
+   setMounted(true);
+
+   if (!hasRefreshedPermissions) {
+     hasRefreshedPermissions = true;
+     dispatch(requestPermissions());
+     setTimeout(() => {
+       hasRefreshedPermissions = false;
+     }, 1000);
+   }
+}, []);
 
 
   useEffect(() => {
