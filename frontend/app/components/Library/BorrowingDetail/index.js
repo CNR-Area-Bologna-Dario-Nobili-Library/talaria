@@ -46,7 +46,7 @@ const BorrowingDetail = (props) => {
                 {canRequest(data) && isRequesting &&
                 <div>
                     {( (data.reference.data.material_type==1 && !data.reference.data.issn)||
-                        (data.reference.data.material_type==2 && !!data.reference.data.isbn) ) &&                    
+                        (data.reference.data.material_type==2 && !data.reference.data.isbn) ) &&                    
                     <div className="alert alert-warning" role="alert">
                         <i className="fa-solid fa-bars-progress"></i> ISSN/ISBN not filled! Please check/edit reference before continue in order to 
                         check holdings on available catalogs !
