@@ -22,7 +22,7 @@ class RequestReceivedNotification extends RequestNotification
 
         parent::__construct($lr);
 
-        $this->url=config('app.frontend_url').'/library/'.$this->object->library->id.'/lending/'.$this->object->id;  
+        $this->url=config('app.frontend_url').'/library/'.$this->object->library->id.'/lending';  
             
     }    
 }
