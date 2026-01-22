@@ -6,7 +6,7 @@
     <style>      
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-size: 18px; 
+            font-size: 14px; 
             line-height: 1.5;
             margin: 0;
             padding: 0;
@@ -56,7 +56,7 @@
 
         .header {
             color: #013A63;
-            font-size: 24px; 
+            font-size: 20px; 
             margin-bottom: 20px;
             padding:5px;
         }
@@ -108,7 +108,7 @@
 
             {{-- Footer --}}
             <div class="footer">
-                © {{ date('Y') }} {{ config('app.name') }}
+                @lang('notification.donotreply')
             </div>
         </div>
     </div>

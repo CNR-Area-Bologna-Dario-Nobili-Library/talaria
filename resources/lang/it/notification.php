@@ -3,6 +3,7 @@
 return [    
     'contacts'=>'Per problemi tecnici scrivi all\'indirizzo <a href="mailto:'.config('constants.tech_support_email').'">'.config('constants.tech_support_email').'</a>',
     'comm_manager_contacts'=>'Per qualunque informazione contattaci all\'indirizzo <a href="mailto:'.config('constants.support_email').'">'.config('constants.support_email').'</a>',
+    'donotreply'=>'Questa e-mail è stata inviata automaticamente, per favore non rispondere',
     'UserSignupNotification_title'=>'Benvenuto',
     'ResetPasswordNotification_title'=>'Recupero password',
     'PasswordChangedNotification_title'=>'La password è stata modificata',
