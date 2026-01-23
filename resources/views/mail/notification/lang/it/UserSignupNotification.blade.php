@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-        Benvenuto {{$user_name}} {{$user_surname}} nella nostra comunity! 
+        Benvenuto {{$user_name}} {{$user_surname}} nella nostra community! 
     </p>
 
     @yield('user_data')
