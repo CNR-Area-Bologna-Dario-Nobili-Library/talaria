@@ -14,6 +14,18 @@ const SEEN_STORAGE_KEY = 'notif_seen_v1';
 // Cooldown period to prevent duplicate toasts
 const REALTIME_LIST_COOLDOWN_MS = 1500;
 
+/**Get current page pathname*/
+function getCurrentPathname() {
+  return typeof window !== 'undefined' && window.location ? window.location.pathname : '';
+}
+
+/** Avoid double notification blue/green */
+function isOnLendingPage() {
+  var pathname = getCurrentPathname();
+  return pathname.indexOf('/lending') !== -1 ||
+         pathname.indexOf('/to-deliver') !== -1;
+}
+
 /**
  * Load previously seen notification IDs from session storage
  * @returns {Object} Map of seen notification IDs
@@ -197,18 +209,29 @@ const AppNotificationListener = (props) => {
       // Only react to events explicitly targeted to the current user
       if (targetUserId == null || targetUserId !== currentUserId) return;
 
-      // If the actor and target are the same (operators acting as patrons),
-      // still show the toast so users see their own patron requests in realtime.
-      // var isSelfTriggered = notifierId != null && notifierId === currentUserId;
-      // if (isSelfTriggered) {
-      //   // no-op: previously suppressed, now allowed so operators see immediate feedback
-      // }
+      // Skip borrowing/lending notifications if user is currently on that page
+      var url = eventData.url || '';
+      var isBorrowingLendingNotif =
+        url.indexOf('/lending') !== -1 ||
+        url.indexOf('/to-deliver') !== -1 ||
+        url.indexOf('/borrowing') !== -1;
+
+      // Note: We only suppress on lending page, NOT borrowing page - borrower should see notifications
+      var userOnLendingPage = isOnLendingPage();
+      if (isBorrowingLendingNotif && (notifierId === currentUserId || userOnLendingPage)) {
+
+       // Mark as seen so store list watcher won't show it either
+        var filterKey = normalizeEvtKey(eventData);
+        seenRef.current[filterKey] = true;
+        saveSeen(seenRef.current);
+        lastRealtimeMsRef.current = Date.now();
+        return;
+      }
 
       if (toastSuppressed()) return;
 
       var title = (eventData.item && String(eventData.item).trim()) || 'Notification';
       var key = normalizeEvtKey(eventData);
-      var url = eventData.url || '';
 
       var isRead =
         eventData.read === true ||
@@ -216,7 +239,6 @@ const AppNotificationListener = (props) => {
         !!eventData.read_at ||
         !!eventData.readed;
       if (!isRead) {
-        // ONLY SHOW TOAST in app
         showToastOnce(key, title, url, seenRef, props.dispatch);
       }
       lastRealtimeMsRef.current = Date.now();
@@ -267,7 +289,7 @@ const AppNotificationListener = (props) => {
       lastUnreadCount.current = unreadTotal;
       return;
     }
-    
+
     var latest = null;
     for (var i = 0; i < list.length; i++) {
       var n = list[i];
@@ -287,6 +309,18 @@ const AppNotificationListener = (props) => {
       (latest.data && (latest.data.title || latest.data.message)) ||
       'Notification';
     var url = latest.data && latest.data.url;
+
+    // Skip notifications since the user is performing actions and already sees green success toasts)
+    var isBorrowingLendingUrl = url && (
+      url.indexOf('/lending') !== -1 ||
+      url.indexOf('/to-deliver') !== -1 ||
+      url.indexOf('/borrowing') !== -1
+    );
+
+    if (isBorrowingLendingUrl && (isOnLendingPage() || Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS)) {
+      lastUnreadCount.current = unreadTotal;
+      return;
+    }
 
     showToastOnce(idKey, message, url, seenRef, props.dispatch);
 

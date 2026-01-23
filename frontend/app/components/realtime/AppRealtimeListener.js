@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { requestBorrowingsList, requestLendingsList, requestGetLibraryPendingOperators, requestGetLibraryOperators, requestUsersList } from '../../containers/Library/actions';
 import { requestNotifications } from 'containers/App/actions';
 import { requestMyLibraries, requestRequestsList } from '../../containers/Patron/actions';
-import { requestPermissions } from '../../containers/Auth/AuthProvider/actions'; // ⬅️ NEW
+import { requestPermissions } from '../../containers/Auth/AuthProvider/actions';
 
 function getPathname() {
   return typeof window !== 'undefined' && window.location ? window.location.pathname : '';
@@ -164,20 +164,30 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
         log(TAG, 'Full notification object:', JSON.stringify(n));
 
+        var targetUserId = n.target_user_id ? Number(n.target_user_id) : null;
+        if (targetUserId && targetUserId !== me) {
+          log(TAG, 'Notification not for current user (target:', targetUserId, ', me:', me, ') - skipping');
+          return;
+        }
 
 
-        // ---- Operator-related flags ----
+
         // Adjust these checks to match your real payload
         var notifType = (n && n.type) ? String(n.type) : '';
         var notifTypeLower = notifType.toLowerCase(); // normalize so Laravel class names with capital "Operator" match
+        var notifTitle = (n && n.title) ? String(n.title).toLowerCase() : '';
+        var objectType = (n && n.object && n.object.object_type) ? String(n.object.object_type).toLowerCase() : '';
         var isOperatorNotif =
           notifTypeLower.indexOf('operator') !== -1 || // e.g. "operator-request", "operator-approved", "operator-rejected"
-          (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id));
-        // Library status changes (enabled / disabled / deleted etc.)
+          notifTitle.indexOf('operator') !== -1 || // Title contains "operator" (from translated notification titles)
+          objectType.indexOf('temporaryability') !== -1 || // TemporaryAbility model = operator invitations
+          objectType.indexOf('operator') !== -1 || // Any operator-related model
+          (n && n.extra && (n.extra.temporary_ability_id || n.extra.operator_id || n.extra.abilities)) || // Has abilities = operator invitation
+          (n && n.url && n.url.indexOf('/manage/operators') !== -1); // operator invitation/management URLs
+
         var isLibraryStatusNotif =
           (n && n.object && n.object.object_type && String(n.object.object_type).toLowerCase().indexOf('library') !== -1) ||
-          (n && n.extra && (n.extra.library_id != null || n.extra.borrowing_library_id != null || n.extra.lending_library_id != null)) ||
-          (n && n.url && n.url.indexOf('/library/') !== -1);
+          (n && n.extra && n.extra.library_id != null && !n.extra.borrowing_library_id && !n.extra.lending_library_id);
 
         // Patron library membership notifications (Enabled, Disabled, Deleted)
         var isPatronLibraryStatusNotif =
@@ -208,10 +218,23 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           operatorLibId = getLibraryIdFromPath(n.url);
         }
 
+        // Check if this is a borrowing/lending notification (should NOT trigger permissions refresh)
+        var isBorrowingLendingNotif =
+          (n && n.extra && (n.extra.borrowing_library_id || n.extra.lending_library_id)) ||
+          (n && n.url && (n.url.indexOf('/borrowing') !== -1 || n.url.indexOf('/lending') !== -1 || n.url.indexOf('/to-deliver') !== -1));
+
         // If this notification for operators actions (invite/approve/etc.) OR patron library membership changes,
-        // refresh permissions and my-libraries
-        if (isOperatorNotif || isPatronLibraryStatusNotif || isLibraryStatusNotif) {
-          log(TAG, 'Operator/patron/library status notification received — scheduling permissions/my-libraries refresh');
+        // refresh permissions and my-libraries (but NOT for borrowing/lending notifications)
+        log(TAG, 'Permission refresh check:', {
+          isOperatorNotif: isOperatorNotif,
+          isPatronLibraryStatusNotif: isPatronLibraryStatusNotif,
+          isLibraryStatusNotif: isLibraryStatusNotif,
+          isBorrowingLendingNotif: isBorrowingLendingNotif,
+          willRefresh: (isOperatorNotif || isPatronLibraryStatusNotif || isLibraryStatusNotif) && !isBorrowingLendingNotif,
+        });
+
+        if ((isOperatorNotif || isPatronLibraryStatusNotif || isLibraryStatusNotif) && !isBorrowingLendingNotif) {
+          log(TAG, '✅ Operator/patron/library status notification received — scheduling permissions/my-libraries refresh NOW');
           clearTimeout(tOperators);
           tOperators = setTimeout(function() {
             // Refresh permissions (updates user abilities/roles)
@@ -263,10 +286,11 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         var s1_noToDeliver    = pathname.indexOf('/to-deliver') === -1;
         var s1_hasLibId       = !!targetCurrentLibId;
         var s1_correctLibrary = borrowingLibId && targetCurrentLibId === borrowingLibId;
+        // Check if the notification URL targets borrowing (not lending) - prevents cross-refresh
+        var notifUrl = (n && n.url) ? String(n.url) : '';
+        var s1_notifTargetsBorrowing = notifUrl.indexOf('/borrowing') !== -1 || (notifUrl.indexOf('/lending') === -1 && notifUrl.indexOf('/to-deliver') === -1);
 
-        log(TAG, 'SCENARIO 1 CHECK:', 'isBorrowingList?', s1_isBorrowingList, '!lending?', s1_noLending, '!to-deliver?', s1_noToDeliver,  'libId?',  s1_hasLibId,'correctLib (borrowing)?', s1_correctLibrary,  );
-
-        if (s1_isBorrowingList && s1_noLending && s1_noToDeliver && s1_hasLibId && s1_correctLibrary) {
+        if (s1_isBorrowingList && s1_noLending && s1_noToDeliver && s1_hasLibId && s1_correctLibrary && s1_notifTargetsBorrowing) {
           log(TAG, 'SCENARIO 1 MATCHED: Refreshing borrowing LIST for lib', targetCurrentLibId,);
           clearTimeout(tBorrow);
           tBorrow = setTimeout(function () {
@@ -285,10 +309,10 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         var s2_noBorrowing    = pathname.indexOf('/borrowing') === -1;
         var s2_hasLibId       = !!targetCurrentLibId;
         var s2_correctLibrary = lendingLibId && targetCurrentLibId === lendingLibId;
+        var s2_notifTargetsLending = notifUrl.indexOf('/lending') !== -1 || notifUrl.indexOf('/to-deliver') !== -1 || notifUrl.indexOf('/borrowing') === -1;
 
-        log(TAG,'SCENARIO 2 CHECK:', 'isLendingList?', s2_isLendingList, '!borrowing?',    s2_noBorrowing, 'libId?',         s2_hasLibId, 'correctLib (lending)?', s2_correctLibrary,);
 
-        if (s2_isLendingList && s2_noBorrowing && s2_hasLibId && s2_correctLibrary) {
+        if (s2_isLendingList && s2_noBorrowing && s2_hasLibId && s2_correctLibrary && s2_notifTargetsLending) {
         log(TAG, 'SCENARIO 2 MATCHED: Refreshing LENDING LIST for lib', targetCurrentLibId,);
         clearTimeout(tLender);
         tLender = setTimeout(function () {
@@ -299,37 +323,13 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
        log(TAG, 'SCENARIO 2 SKIPPED');
 
 
-        // Scenario 3: https://talaria.local/library/XXX/borrowing/YYY/request -> refresh target user lending list
-        log(TAG, 'SCENARIO 3 CHECK: Testing path:', pathname);
-        var actorLibIdMatch = pathname.match(/\/library\/(\d+)\/borrowing\/\d+\/request/,);
-        log(TAG, 'SCENARIO 3: actorLibIdMatch:', actorLibIdMatch);
-        if (actorLibIdMatch) {
-          var actorLibId = String(parseInt(actorLibIdMatch[1], 10));
-          var s3_regexMatch = !!pathname.match(/\/library\/\d+\/borrowing\/\d+\/request(?:\/|$)/,);
-          var s3_hasTargetLibId = !!targetCurrentLibId;
-          var s3_differentLibs = targetCurrentLibId !== actorLibId;
-          log(TAG,'SCENARIO 3: actorLibId=', actorLibId, 'targetLibId=', targetCurrentLibId, 'regexMatch?',s3_regexMatch, 'hasTargetLibId?', s3_hasTargetLibId, 'differentLibs?',  s3_differentLibs,  );
-          // Only refresh if we're in a DIFFERENT library (cross-library scenario)
-          if (s3_regexMatch && s3_hasTargetLibId && s3_differentLibs) {
-            log( TAG, 'SCENARIO 3 MATCHED: On borrowing request in lib',  actorLibId, '-> refresh borrowing in lib', targetCurrentLibId, );
-            clearTimeout(tBorrow);
-            tBorrow = setTimeout(function() {
-              refreshBorrower(targetCurrentLibId, false);
-            }, 300);
-            return;
-          } else {
-            log(TAG, 'SCENARIO 3 CONDITION FAILED: regexMatch=', s3_regexMatch,'hasTargetLibId=', s3_hasTargetLibId,  'differentLibs=', s3_differentLibs,);
-          }
-        } else {
-          log(TAG, 'SCENARIO 3 NO MATCH: Not a borrowing request page');
-        }
-        log(TAG, 'SCENARIO 3 SKIPPED');
+        // SCENARIO 4: User on patron admin page -> refresh my libraries panel
+        // Only trigger for patron-related notifications (library membership changes)
+        var s4_isPatronDashboard = isPatronDashboardPath(pathname);
+        var s4_isRelevantNotif = isPatronLibraryStatusNotif || isOperatorNotif || isLibraryStatusNotif;
 
-
-        // SCENARIO 4: User on patron admin page -> ONLY refresh my libraries panel
-        // Scenario: https://talaria.local/patron/my-libraries -> refresh my libraries
-        if (isPatronDashboardPath(pathname)) {
-          log(TAG, 'SCENARIO 4 MATCHED: On patron dashboard, ONLY refresh my libraries',);
+        if (s4_isPatronDashboard && s4_isRelevantNotif) {
+          log(TAG, 'SCENARIO 4 MATCHED: On patron dashboard, refresh my libraries',);
           clearTimeout(tMyLib);
           tMyLib = setTimeout(function() {
             refreshMyLibraries();
@@ -346,27 +346,22 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         var s5_hasLibId = !!targetCurrentLibId;
         // If backend gives operatorLibId, require it to match; otherwise accept any lib
         var s5_correctLibrary = operatorLibId ? (targetCurrentLibId === operatorLibId) : true;
+        var s5_isRelevantNotif = isOperatorNotif;
 
         log(TAG, 'SCENARIO 5 CHECK (operators pending):', {
         s5_isOperatorsPending: s5_isOperatorsPending,
         s5_hasLibId: s5_hasLibId,
         s5_correctLibrary: s5_correctLibrary,
+        s5_isRelevantNotif: s5_isRelevantNotif,
         operatorLibId: operatorLibId,
         });
 
-        if (s5_isOperatorsPending && s5_hasLibId && s5_correctLibrary) {
-          log(TAG, 'SCENARIO 5 MATCHED: On operators pending page -> refreshPendingOperators() + refreshPermissions() (double refresh)');
-        
+        if (s5_isOperatorsPending && s5_hasLibId && s5_correctLibrary && s5_isRelevantNotif) {
+          log(TAG, 'SCENARIO 5 MATCHED: On operators pending page -> refreshPendingOperators()');
           clearTimeout(tOperatorsPending);
-      // SCENARIO 5: single delayed refresh (pending operators)
-        if (tOperatorsPending) {
-          clearTimeout(tOperatorsPending);
-        }
-
-        tOperatorsPending = setTimeout(function () {
-          log(TAG, 'SCENARIO 5: single delayed refresh (pending operators)');
-          refreshPendingOperators(targetCurrentLibId);
-        }, 400);
+          tOperatorsPending = setTimeout(function () {
+            refreshPendingOperators(targetCurrentLibId);
+          }, 400);
           return;
         }
         log(TAG, 'SCENARIO 5 SKIPPED');
@@ -380,27 +375,24 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
 
         var s6_hasLibId = !!targetCurrentLibId;
         var s6_correctLibrary = operatorLibId ? (targetCurrentLibId === operatorLibId) : true;
+        var s6_isRelevantNotif = isOperatorNotif;
 
         log(TAG, 'SCENARIO 6 CHECK (operators main):', {
           s6_isOperatorsMain: s6_isOperatorsMain,
           s6_hasLibId: s6_hasLibId,
           s6_correctLibrary: s6_correctLibrary,
+          s6_isRelevantNotif: s6_isRelevantNotif,
           operatorLibId: operatorLibId,
         });
 
-        if (s6_isOperatorsMain && s6_hasLibId && s6_correctLibrary) {
-        log(TAG, 'SCENARIO 6 MATCHED: On operators page -> refreshOperatorsList() + refreshPermissions()');
-
-        if (tOperatorsList) {
+        if (s6_isOperatorsMain && s6_hasLibId && s6_correctLibrary && s6_isRelevantNotif) {
+          log(TAG, 'SCENARIO 6 MATCHED: On operators page -> refreshOperatorsList() + refreshPermissions()');
           clearTimeout(tOperatorsList);
-        }
-
-        tOperatorsList = setTimeout(function () {
-          log(TAG, 'SCENARIO 6: delayed refresh (operators list)');
-          refreshOperatorsList(targetCurrentLibId);
-          refreshPermissions();
-        }, 400);
-        return;
+          tOperatorsList = setTimeout(function () {
+            refreshOperatorsList(targetCurrentLibId);
+            refreshPermissions();
+          }, 400);
+          return;
         }
         log(TAG, 'SCENARIO 6 SKIPPED');
 
