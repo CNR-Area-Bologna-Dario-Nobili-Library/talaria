@@ -112,6 +112,8 @@ class BaseNotification extends Notification
             'url'         => $this->url ?? null,
             // IMPORTANT: actor here, not viewer
             'notifier_id' => optional($actorUser)->id,
+            // Include class name for frontend to identify notification type
+            'type'        => class_basename(static::class),
         ];
 
         if ($this->object) {

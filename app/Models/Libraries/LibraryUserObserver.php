@@ -7,6 +7,7 @@ use App\Notifications\Library\PatronAskJoinLibraryNotification;
 use App\Notifications\Library\PatronDisabledByLibraryNotification;
 use App\Notifications\Library\PatronEnabledByLibraryNotification;
 use App\Notifications\Library\PatronDeletedByLibraryNotification;
+use App\Notifications\Library\PatronCancelledJoinRequestNotification;
 use App\Support\RealtimeBroadcaster;
 use \Auth;
 
@@ -162,13 +163,37 @@ class LibraryUserObserver extends BaseObserver
     public function deleting($model)
     {
         parent::deleting($model);
-        
-        $u=$model->user;                    
-        //Notify to patron                                                
-        $ln=new PatronDeletedByLibraryNotification($model);                    
-        $u->notify($ln);
-        RealtimeBroadcaster::fromNotification($model, $u, $ln);
-        
+
+        $u = $model->user;
+        $currentUser = auth()->user();
+        $isPatronInitiated = $currentUser && $currentUser->id == $u->id;
+
+        // Notify the patron (only if library initiated the deletion)
+        if (!$isPatronInitiated) {
+            $ln = new PatronDeletedByLibraryNotification($model);
+            $u->notify($ln);
+            RealtimeBroadcaster::fromNotification($model, $u, $ln);
+        }
+
+        // Always notify library operators so their patron panel refreshes
+        $lib = $model->library;
+        $operators = array();
+        $operators += $lib->manageOperators()->toArray();
+        $operators += $lib->usersOperators()->toArray();
+
+        // unique operators
+        $operatorsID = array_unique(array_map(function($op) { return $op['user_id']; }, $operators));
+
+        $pn = new PatronCancelledJoinRequestNotification($model);
+        foreach ($operatorsID as $item) {
+            $op = User::findOrFail($item);
+            // Only store notification if patron cancelled their pending request
+            // Otherwise just broadcast for real-time panel refresh
+            if ($isPatronInitiated && $model->status == config("constants.libraryuser_status.pending")) {
+                $op->notify($pn);
+            }
+            RealtimeBroadcaster::fromNotification($model, $op, $pn);
+        }
     }
 
     public function restoring($model)

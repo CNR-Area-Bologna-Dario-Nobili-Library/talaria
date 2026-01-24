@@ -39,6 +39,7 @@ return [
     'PatronEnabledByLibraryNotification_title'=>'???Your registration request has been accepted by the library',
     'PatronDisabledByLibraryNotification_title'=>'???Your registration request has been discarded by the library',
     'PatronDeletedByLibraryNotification_title'=>'???Your registration has been deleted by the library',
+    'PatronCancelledJoinRequestNotification_title'=>'???Patron cancelled their registration request',
     'PatronBorrowingRequestNewNotification_title'=>'???New borrowing request from patron',
     'PatronRequestRequestedNotification_title'=>'???Your item request has been sent to the library',
     'PatronRequestDeskReceivedNotification_title'=>'???The item you have requested is ready for pickup at the library\'s desk',    

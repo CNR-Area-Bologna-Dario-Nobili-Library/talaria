@@ -190,6 +190,7 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
           (n && n.extra && n.extra.library_id != null && !n.extra.borrowing_library_id && !n.extra.lending_library_id);
 
         // Patron library membership notifications (Enabled, Disabled, Deleted)
+        var notifTypeField = (n && n.type) ? String(n.type) : '';
         var isPatronLibraryStatusNotif =
           (n && n.title && (
             n.title.indexOf('PatronEnabledByLibrary') !== -1 ||
@@ -197,7 +198,11 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
             n.title.indexOf('PatronDeletedByLibrary') !== -1
           )) ||
           (n && n.url && n.url.indexOf('/patron/my-libraries') !== -1) ||
-          (n && n.object && n.object.object_type && n.object.object_type.indexOf('LibraryUser') !== -1);
+          (n && n.object && n.object.object_type && n.object.object_type.indexOf('LibraryUser') !== -1) ||
+          // Check notification type field (class name from backend)
+          (notifTypeField.indexOf('PatronEnabledByLibrary') !== -1 ||
+           notifTypeField.indexOf('PatronDisabledByLibrary') !== -1 ||
+           notifTypeField.indexOf('PatronDeletedByLibrary') !== -1);
 
         // Patron request notifications (desk received, fulfilled, not fulfilled, etc.)
         var isPatronRequestNotif =
@@ -417,9 +422,12 @@ const AppRealtimeListener = function AppRealtimeListener(props) {
         // when a patron requests to join a library from /patron/my-libraries/new
         var s8_isPatronsPage = /\/library\/\d+\/patrons\/?$/.test(pathname);
         var s8_hasLibId = !!targetCurrentLibId;
-        // status (join request, enabled, disabled, deleted)
+        // status (join request, enabled, disabled, deleted, cancelled)
         var s8_isPatronStatusNotif = isPatronLibraryStatusNotif ||
-          (n && n.title && n.title.indexOf('PatronAskJoinLibrary') !== -1);
+          (n && n.title && n.title.indexOf('PatronAskJoinLibrary') !== -1) ||
+          // Check notification type field for join/cancel requests
+          (notifTypeField.indexOf('PatronAskJoinLibrary') !== -1) ||
+          (notifTypeField.indexOf('PatronCancelledJoinRequest') !== -1);
 
         log(TAG, 'SCENARIO 8 CHECK (patrons page):', {
           s8_isPatronsPage: s8_isPatronsPage,

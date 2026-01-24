@@ -39,6 +39,7 @@ return [
     'PatronEnabledByLibraryNotification_title'=>'La tua richiesta di registrazione è stata accettata dalla biblioteca',
     'PatronDisabledByLibraryNotification_title'=>'La tua richiesta di registrazione è stata rifiutata dalla biblioteca',
     'PatronDeletedByLibraryNotification_title'=>'La tua registrazione è stata eliminata dalla biblioteca',
+    'PatronCancelledJoinRequestNotification_title'=>'Un utente ha annullato la richiesta di registrazione',
     'PatronBorrowingRequestNewNotification_title'=>'Nuova richiesta di borrowing da un patron',
     'PatronRequestRequestedNotification_title'=>'La richiesta è stata inviata alla biblioteca',
     'PatronRequestDeskReceivedNotification_title'=>'L\'item richiesto è pronto per il ritiro presso il desk della biblioteca',    
