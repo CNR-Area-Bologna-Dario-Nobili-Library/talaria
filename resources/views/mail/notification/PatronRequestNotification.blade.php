@@ -1,13 +1,13 @@
 @extends('mail.notification.custom_layout')
 @include('mail.notification.block_reference_data') 
 @include('mail.notification.block_user_data') 
-@include('mail.notification.block_borrowing_library_data') 
+@include('mail.notification.block_library_data') 
 @include('mail.notification.block_delivery_data') 
 
 @section('content')                              
 
         
-    @yield('borrowing_library_data')
+    @yield('library_data')
 
     @yield('delivery_data')
  

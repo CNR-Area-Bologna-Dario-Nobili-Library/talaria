@@ -1,12 +1,12 @@
 @extends('mail.notification.custom_layout')
-@include('mail.notification.block_borrowing_library_data') 
+@include('mail.notification.block_library_data') 
 
 @section('content')    
     <p>
     The library has been successfully registered, but you must wait for activation from the community manager.
     </p>
 
-    @yield('borrowing_library_data');
+    @yield('library_data');
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
