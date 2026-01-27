@@ -41,9 +41,11 @@ use App\Policies\PatronDocdelRequestPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\TagPolicy;
 use App\Policies\BorrowingDocdelRequestPolicy;
+use App\Policies\LendingDocdelRequestPolicy;
 use App\Policies\DocdelRequestTagPolicy;
 use App\Policies\DocdelRequestPolicy;
 use App\Models\Requests\DocdelRequestTag;
+use App\Models\Requests\LendingDocdelRequest;
 use App\Models\Title;
 use App\Models\Users\TemporaryAbility;
 use App\Policies\IdentifierPolicy;
@@ -70,6 +72,7 @@ class AuthServiceProvider extends ServiceProvider
         LabelReference::class => LabelReferencePolicy::class,
         PatronDocdelRequest::class=>PatronDocdelRequestPolicy::class,
         BorrowingDocdelRequest::class=>BorrowingDocdelRequestPolicy::class,        
+        LendingDocdelRequest::class=>LendingDocdelRequestPolicy::class,
         Delivery::class => DeliveryPolicy::class,        
         Library::class => LibraryPolicy::class,
         LibraryUser::class => LibraryUserPolicy::class,

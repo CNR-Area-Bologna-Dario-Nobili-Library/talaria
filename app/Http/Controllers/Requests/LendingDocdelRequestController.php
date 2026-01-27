@@ -26,8 +26,7 @@ class LendingDocdelRequestController extends ApiController
    
     public function index(Request $request)
     { 
-         $l=\App\Models\Libraries\Library::find($request->route()->parameters['library']);
-         $libid = $request->route()->parameters['library']; 
+         $l=\App\Models\Libraries\Library::find($request->route()->parameters['library']);         
          $u=Auth::user();
 
          if($u->can('manage',$l)||$u->can('lend',$l))
@@ -90,22 +89,34 @@ class LendingDocdelRequestController extends ApiController
         return $this->response->paginator($collection, new $this->transformer())->morph();
     }
 
-    //TODO: FIX
     public function changeStatus(Request $request,$id)
-    {
-        //$this->authorize($this->model);
+    {        
         $id = $request->route()->parameters['id'];
+        $libid = $request->route()->parameters['library'];
         $model = $this->model->findOrFail($id);
-        $lib = $request->route()->parameters['library'];
+        
         $extra=$request->has("extrafields")?$request->input("extrafields"):[];
         
         if($request->input("status"))
-             $model=$model->changeStatus($request->input("status"),$extra);
+        {
+            //if a normal lending request check if it's for me or is orphan and i'm not the borrower and i have to tell "willSupply"
+            if ( $model->library && $model->library->id==$libid || ($model->all_lender==1 && $model->borrowingLibrary->id!=$libid && $request->input("status")=="willSupply") )
+            {
+                
+                if($model->library)
+                    $this->authorize($model); //check if i can manage it (only if i'm the lender)
+
+                $model=$model->changeStatus($request->input("status"),$extra);
         
-        if($model)
-            return $this->response->item($model, new $this->transformer())->morph();           
-        else //if i delete the model 
-            return $this->response->noContent();
+                if($model)
+                    return $this->response->item($model, new $this->transformer())->morph();           
+                else //if i delete the model 
+                    return $this->response->noContent();
+                
+            }
+            else $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));            
+        }
+             
     }
 
     /*not used
@@ -132,8 +143,23 @@ class LendingDocdelRequestController extends ApiController
     public function update(Request $request, $id)
     {        
         $lid = $request->route()->parameters['id'];    
-        $model = $this->talaria->update($this->model, $request, $lid);
-        return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
+
+        $libid = $request->route()->parameters['library'];
+
+        $l=\App\Models\Libraries\Library::find($libid);
+
+
+        $model = $this->model->findOrFail($lid);
+        
+        //check if i can edit this request (only if it's mine)
+        if($model->library && $model->library->id==$l->id) 
+        {  
+
+            $model = $this->talaria->update($model, $request, $lid);
+            return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
+        }
+        else $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));      
+
     }
 
 

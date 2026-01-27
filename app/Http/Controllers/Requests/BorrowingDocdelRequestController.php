@@ -178,16 +178,18 @@ class BorrowingDocdelRequestController extends ApiController
         $libid = $request->route()->parameters['library'];
 
         $l=\App\Models\Libraries\Library::find($libid);
-        $u=Auth::user();
+       
+        $id = $request->route()->parameters['id'];
 
-        if($u->can('manage',$l)||$u->can('borrow',$l)||$u->can('deliver',$l))
-        {
-            $id = $request->route()->parameters['id'];
-            $model = $this->talaria->show($this->model, $request, $id);
-    
+        $model = $this->model->findOrFail($id);
+        
+        //check if i can show this request (only if it's mine)
+        if($model->library && $model->library->id==$l->id) {        
+            $model = $this->talaria->show($model, $request, $id);            
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
         }
         else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+       
         
      }
 
@@ -214,43 +216,52 @@ class BorrowingDocdelRequestController extends ApiController
             if($request->has("trash_type")) {
                 $request->merge(["trash_type"=>$request->input("trash_type")]);
             }
-    
-            $model = $this->talaria->update($this->model, $request, $bid);
-    
-            if($request->has("reference"))
-            {    
-                
-                $reffields=$request->input("reference");
-                
-                //NOTE: this will not call Policy, and will overwrite model!!            
-                $model->reference()->update($reffields);                   
-            }
+
+
+            $model = $this->model->findOrFail($id);
             
-            if($request->has("forward") && $request->input("forward")==1)
-            {
-                //App\Jobs\BorrowingRequestCloseAndForward::dispatchNow($this->model); 
-                        
-                //"clone" current request
-                $newReq=new BorrowingDocdelRequest; //i use this instead of ::create([...]) otherwise it will not call the constructor!
-                $newReq->reference_id=$model->reference_id;
-                $newReq->borrowing_library_id=$model->borrowing_library_id;
-                $newReq->patron_docdel_request_id=$model->patron_docdel_request_id;
-                $newReq->docdel_request_parent_id=$model->id;
+            //check if i can edit this request (only if it's mine)
+            if($model->library && $model->library->id==$l->id) 
+            {        
+
+                $model = $this->talaria->update($model, $request, $bid);
                             
-                if($newReq->save())
-                {     
-                   //NO NEED TO NOTIFY to borrow operators                     
-                   /* $n=new BorrowingDocdelRequestNotification($newReq);
+                if($request->has("reference"))
+                {    
                     
-                    foreach ($newReq->borrowingLibraryBorrowingOperators() as $op)    
-                    $op->notify($n);           
-                    */
-                } 
+                    $reffields=$request->input("reference");
+                    
+                    //NOTE: this will not call Policy, and will overwrite model!!            
+                    $model->reference()->update($reffields);                   
+                }
+                
+                if($request->has("forward") && $request->input("forward")==1)
+                {
+                    //App\Jobs\BorrowingRequestCloseAndForward::dispatchNow($this->model); 
+                            
+                    //"clone" current request
+                    $newReq=new BorrowingDocdelRequest; //i use this instead of ::create([...]) otherwise it will not call the constructor!
+                    $newReq->reference_id=$model->reference_id;
+                    $newReq->borrowing_library_id=$model->borrowing_library_id;
+                    $newReq->patron_docdel_request_id=$model->patron_docdel_request_id;
+                    $newReq->docdel_request_parent_id=$model->id;
+                                
+                    if($newReq->save())
+                    {     
+                    //NO NEED TO NOTIFY to borrow operators                     
+                    /* $n=new BorrowingDocdelRequestNotification($newReq);
+                        
+                        foreach ($newReq->borrowingLibraryBorrowingOperators() as $op)    
+                        $op->notify($n);           
+                        */
+                    } 
+        
+                    return $this->response->item($newReq, new $this->transformer())->setMeta($newReq->getInternalMessages())->morph();
+                }
     
-                return $this->response->item($newReq, new $this->transformer())->setMeta($newReq->getInternalMessages())->morph();
+                return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
             }
-    
-            return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
+            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
         }
         else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
 
@@ -265,6 +276,7 @@ class BorrowingDocdelRequestController extends ApiController
         $l=\App\Models\Libraries\Library::find($request->route()->parameters['library']);
         $u=Auth::user();
 
+        //this code is to do a kind of "manual authorize" (like we did in dispatcher->update) on changeStatus  because we have to check auth depending on status becuase we've different type of operators!
         if($request->input("status") &&
             ( 
                 //stati gestibili dagli operatori di delivery
@@ -277,15 +289,21 @@ class BorrowingDocdelRequestController extends ApiController
             $id = $request->route()->parameters['id'];
             $model = $this->model->findOrFail($id);
 
-            $extra=$request->has("extrafields")?$request->input("extrafields"):[];
-            
-            if($request->input("status"))
-                $model=$model->changeStatus($request->input("status"),$extra);
-            
-            if($model)
-                return $this->response->item($model, new $this->transformer())->morph();           
-            else //if i delete the model 
-                return $this->response->noContent();
+            if($model->library && $model->library->id==$l->id) //if the borrowing request belongs to this library
+            {
+                $this->authorize($model); //check if i can manage it
+
+                $extra=$request->has("extrafields")?$request->input("extrafields"):[];
+                
+                if($request->input("status"))
+                    $model=$model->changeStatus($request->input("status"),$extra);
+                
+                if($model)
+                    return $this->response->item($model, new $this->transformer())->morph();           
+                else //if i delete the model 
+                    return $this->response->noContent();
+            }
+            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
         }
         else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
     }

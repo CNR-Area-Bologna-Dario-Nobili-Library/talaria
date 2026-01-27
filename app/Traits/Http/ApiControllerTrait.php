@@ -25,6 +25,8 @@ dove se $ability non è una stringa (ma un model ad es.), allora va a prendere i
 viene chimato app(Gate::class)->authorize("index", $this->model) ... che chiamaerà la policy ...
 
 Quindi in pratica se da controller@index chiamo authorize($model) in pratica sto chiamando authorize("index",$model)
+
+De default nel dispatcher abbiamo impostato la autorizzazione per ogni metodo (eventualmente puo' esserne fatto l'override utilizzando disableAuthorize nel singolo metodo )
 */     
 
 trait ApiControllerTrait

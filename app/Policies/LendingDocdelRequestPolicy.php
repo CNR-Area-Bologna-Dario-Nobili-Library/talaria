@@ -6,8 +6,9 @@ use App\Policies\BasePolicy;
 use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
-class BorrowingDocdelRequestPolicy extends BasePolicy
+class LendingDocdelRequestPolicy extends BasePolicy
 {
     /**
      * Create a new policy instance.
@@ -31,8 +32,12 @@ class BorrowingDocdelRequestPolicy extends BasePolicy
     }
 
     public function show(User $user, Model $model)
-    {
-        return $this->canManage($user,$model);
+    {        
+        if($model->library)              
+            return $this->canManage($user,$model);
+        else if($model->all_lender==1) //was orphan
+            return true;   
+        return false;
     }
 
 
@@ -46,10 +51,12 @@ class BorrowingDocdelRequestPolicy extends BasePolicy
         return $this->canManage($user,$model);
     }
 
+
     public function canManage(User $user, Model $model)
-    {           
-        return $user->can('manage', $model->library)||
-               $user->can('borrow', $model->library)||
-               $user->can('deliver', $model->library);                             
+    {   
+        if($model->library)        
+            return $user->can('manage', $model->library)||
+                   $user->can('lend', $model->library);                       
+        return false;            
     }
 }

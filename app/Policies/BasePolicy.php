@@ -13,6 +13,7 @@ class BasePolicy
 
     public function before($user, $ability)
     {
+        //con questa regola il super-admin e manager bypassano qualunque controllo di policy (quindi non esegue nemmeno il codice dentro alla Policy show/index .....! )
         if ($user->hasRole('super-admin')||$user->hasRole('manager')) {
             return true;
         }
