@@ -171,6 +171,7 @@ const libraryReducer = (state = initialState, action) =>
       case REQUEST_USER:
         draft.loading = true;
         draft.error = action.error;
+        draft.user = {};
         break;
       case REQUEST_USER_SUCCESS:
         draft.loading = false;
