@@ -218,7 +218,7 @@ class BorrowingDocdelRequestController extends ApiController
             }
 
 
-            $model = $this->model->findOrFail($id);
+            $model = $this->model->findOrFail($bid);
             
             //check if i can edit this request (only if it's mine)
             if($model->library && $model->library->id==$l->id) 
