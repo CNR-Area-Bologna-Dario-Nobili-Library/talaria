@@ -606,6 +606,7 @@
   "app.requests.deliveryMethod.other": "Diğer",
   "app.requests.inventoryNumber": "Envanter numarası",
   "app.requests.submitButton": "Gönder",
+  "app.requests.fulfill_type": "???Delivery method",
   "app.requests.notfulfill_type": "Karşılanmama sebebi",
   "app.requests.notfulfill_type.NotAvailableForILL": "ILL için mevcut değil",
   "app.requests.notfulfill_type.NotHeld": "Mevcut değil",

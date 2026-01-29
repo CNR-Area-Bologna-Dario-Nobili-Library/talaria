@@ -605,6 +605,7 @@
   "app.requests.deliveryMethod.other": "Other",
   "app.requests.inventoryNumber": "Inventory number",
   "app.requests.submitButton": "Submit",
+  "app.requests.fulfill_type": "Delivery method",
   "app.requests.notfulfill_type": "Reason for not fulfillment",
   "app.requests.notfulfill_type.NotAvailableForILL": "Not available for ILL",
   "app.requests.notfulfill_type.NotHeld": "Not held",

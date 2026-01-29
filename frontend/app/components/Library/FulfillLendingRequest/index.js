@@ -174,7 +174,7 @@ return (
                         }   
                         </div>
                         <div className="form-group">                        
-                            <label htmlFor="fulfill_inventorynr">{intl.formatMessage({id: "app.requests.lending_protnr"})}</label>
+                            <label htmlFor="lending_protnr">{intl.formatMessage({id: "app.requests.lending_protnr"})}</label>
                             <input type="text" className="form-control" id="lending_protnr"  onChange={handlerlendingprotnr} aria-describedby=""></input>                                                                
                         </div>
                         <div className="form-group">

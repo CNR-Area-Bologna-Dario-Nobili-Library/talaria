@@ -605,6 +605,7 @@
   "app.requests.deliveryMethod.other": "Otro",
   "app.requests.inventoryNumber": "Número de inventario",
   "app.requests.submitButton": "Entregar",
+  "app.requests.fulfill_type": "???Delivery method",
   "app.requests.notfulfill_type": "Respuesta negativa",
   "app.requests.notfulfill_type.NotAvailableForILL": "Excluido de préstamo interbibliotecario",
   "app.requests.notfulfill_type.NotHeld": "No lo tenemos",

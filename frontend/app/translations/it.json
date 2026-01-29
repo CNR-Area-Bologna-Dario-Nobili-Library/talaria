@@ -605,6 +605,7 @@
   "app.requests.deliveryMethod.other": "Altro",
   "app.requests.inventoryNumber": "Inventory number",
   "app.requests.submitButton": "Submit",
+  "app.requests.fulfill_type": "Metodo invio",
   "app.requests.notfulfill_type": "Motivo inevasione",
   "app.requests.notfulfill_type.NotAvailableForILL": "Non disponibile per il DD/ILL",
   "app.requests.notfulfill_type.NotHeld": "Rivista/volume non posseduti",
