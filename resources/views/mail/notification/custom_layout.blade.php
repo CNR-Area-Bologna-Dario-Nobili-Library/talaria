@@ -46,14 +46,6 @@
            text-decoration: underline;         
         }
 
-        .logo {
-            text-align: center; margin-bottom: 30px;
-        }
-
-        .logo img {
-            max-width: 200px;
-        }
-
         .header {
             color: #013A63;
             font-size: 20px; 
@@ -93,8 +85,8 @@
     <div class="container">
         <div class="card">
             {{-- Logo --}}
-            <div class="logo">
-                <img src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <img width="250" src="{{ asset('images/logo.png') }}" alt="{{ config('app.name') }}">
             </div>
 
             {{-- Header --}}
