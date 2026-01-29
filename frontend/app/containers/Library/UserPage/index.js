@@ -34,10 +34,13 @@ function UserPage(props) {
 
   useEffect(() => {
     dispatch(requestGetTitlesOptionList());
-    if(!isLoading && !isNew && Object.keys(user).length === 0) {
+  }, []);
+
+  useEffect(() => {
+    if(!isNew && params.id) {
       dispatch(requestUser(params.library_id, params.id))
     }
-   }, [isLoading])
+  }, [params.id])
 
   return (
 
