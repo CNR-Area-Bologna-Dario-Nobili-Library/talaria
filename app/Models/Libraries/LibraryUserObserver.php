@@ -189,7 +189,7 @@ class LibraryUserObserver extends BaseObserver
             $op = User::findOrFail($item);
             // Only store notification if patron cancelled their pending request
             // Otherwise just broadcast for real-time panel refresh
-            if ($isPatronInitiated && $model->status == config("constants.libraryuser_status.pending")) {
+            if ($isPatronInitiated && ( $model->status == config("constants.libraryuser_status.pending")|| $model->status == config("constants.libraryuser_status.enabled") )) {
                 $op->notify($pn);
             }
             RealtimeBroadcaster::fromNotification($model, $op, $pn);
