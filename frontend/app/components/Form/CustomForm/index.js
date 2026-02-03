@@ -288,18 +288,18 @@ const CustomForm = (props) => {
                                                                 ||
                                                                 field.type === 'custom-select' &&
                                                                    <>
-                                                                    <OptionList 
-                                                                        disabled={field.disabled ? field.disabled : false}
-                                                                        field={field}                                                                        
-                                                                        selectedOption={
+                                                                        <OptionList 
+                                                                            disabled={field.disabled ? field.disabled : false}
+                                                                            field={field}                                                                        
+                                                                            selectedOption={
                                                                             !formData[field.name] && // Primo caso: niente onChange da parte dell utente
                                                                             props.requestData &&     //             dati dal db tramite requestData
-                                                                            props.requestData[field.name] && //     esiste il campo specifico in requestData[field.name]
+                                                                            props.requestData[field.name] !== undefined && props.requestData[field.name] !== null && //     esiste il campo specifico in requestData[field.name]
                                                                             props[field.name] ? //                  esiste una lista da filtrare con il requestData[field.name]
                                                                             props[field.name].filter(opt => opt.value === props.requestData[field.name])[0] : // filtriamo 
                                                                             !formData[field.name] && // Secondo caso: niente onChange da parte dell utente
                                                                             props.requestData &&   //             dati dal db tramite requestData
-                                                                            props.requestData[field.name] && //   esiste il campo specifico in requestData[field.name]
+                                                                            props.requestData[field.name] !== undefined && props.requestData[field.name] !== null && //   esiste il campo specifico in requestData[field.name]
                                                                             !props[field.name] && //              NON esiste una lista da filtrare con il requestData[field.name]
                                                                             typeof field.options === 'object' ?  // Le options sono un oggeto
                                                                             field.options.filter(opt => opt.value === props.requestData[field.name])[0] : // filtriamo
