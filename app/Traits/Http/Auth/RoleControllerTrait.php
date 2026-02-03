@@ -19,7 +19,7 @@ trait RoleControllerTrait
 
                 if( !$model->perms()->attach( $perms ) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.create_relation_failed', ['name' => 'Permissions']), 'error');
+                    $model->addInternalMessage(trans('response.create_relation_failed', ['name' => 'Permissions']), 'error');
                 }
             }
 
@@ -30,7 +30,7 @@ trait RoleControllerTrait
 
                 if( !$model->users()->attach( $users ) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.create_relation_failed', ['name' => 'Users']), 'error');
+                    $model->addInternalMessage(trans('response.create_relation_failed', ['name' => 'Users']), 'error');
                 }
             }
 
@@ -51,7 +51,7 @@ trait RoleControllerTrait
                 $perms = $model->filterIds($request->input('perms'));
                 if( !$model->perms()->sync( $perms ) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Permissions']), 'error');
+                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Permissions']), 'error');
                 }
             }
 
@@ -61,7 +61,7 @@ trait RoleControllerTrait
                 $users = $model->filterIds($request->input('users'));
                 if( !$model->users()->sync( $users ) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Users']), 'error');
+                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Users']), 'error');
                 }
             }
 

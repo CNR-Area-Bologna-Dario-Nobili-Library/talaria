@@ -98,7 +98,7 @@ class LibraryUserController extends ApiController
             return $this->response->paginator($collection, new $this->transformer())->morph();
         }
         else
-            $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+            $this->response->errorUnauthorized(trans('auth.unauthorized'));
 
     }
 

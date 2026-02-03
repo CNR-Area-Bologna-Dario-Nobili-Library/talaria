@@ -15,5 +15,5 @@ return [
 
     'failed' => 'Le credenziali inserite non sono corrette.',
     'throttle' => 'Troppi tentativi di login. Riprovare tra :seconds secondi.',
-    'unauthorized'=> 'Non sei abilitato per accedere a questa risorsa',    
+    'unauthorized'=> 'Questa azione non è autorizzata',    
 ];

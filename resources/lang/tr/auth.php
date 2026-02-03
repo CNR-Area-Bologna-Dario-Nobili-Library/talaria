@@ -15,5 +15,5 @@ return [
 
     'failed' => 'Bu bilgiler kayıtlarımızdakilerle eşleşmiyor.',
     'throttle' => 'Çok fazla giriş denemesi yapıldı. Lütfen :seconds sonra tekrar deneyin.',
-    'unauthorized'=> 'Bu kaynağa erişim izniniz yok.',     
+    'unauthorized'=> '???This action is unauthorized',        
 ];

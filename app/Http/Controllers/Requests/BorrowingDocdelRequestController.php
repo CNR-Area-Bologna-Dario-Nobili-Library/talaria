@@ -42,7 +42,7 @@ class BorrowingDocdelRequestController extends ApiController
                 $collection = $this->talaria->index( $this->model , $request);        
                 return $this->response->paginator($collection, new $this->transformer())->morph();
             }
-            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));    
+            else  $this->response->errorUnauthorized(trans('auth.unauthorized'));    
         }
         else //normal borrow
         {
@@ -63,7 +63,7 @@ class BorrowingDocdelRequestController extends ApiController
                 return $this->response->paginator($collection, new $this->transformer())->morph();
                    
             }
-            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+            else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
         }       
     }
 
@@ -128,7 +128,7 @@ class BorrowingDocdelRequestController extends ApiController
             $collection = $this->talaria->index($model, $request);
             return $this->response->paginator($collection, new $this->transformer())->morph();
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
      }
 
 
@@ -168,7 +168,7 @@ class BorrowingDocdelRequestController extends ApiController
 
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
          
      }
 
@@ -188,7 +188,7 @@ class BorrowingDocdelRequestController extends ApiController
             $model = $this->talaria->show($model, $request, $id);            
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
        
         
      }
@@ -261,9 +261,9 @@ class BorrowingDocdelRequestController extends ApiController
     
                 return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
             }
-            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+            else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
 
        
     }
@@ -303,9 +303,9 @@ class BorrowingDocdelRequestController extends ApiController
                 else //if i delete the model 
                     return $this->response->noContent();
             }
-            else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+            else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
     }
 }
 

@@ -114,7 +114,7 @@ class DeliveryController extends ApiController
             return $this->response->array($collection->toArray());
 
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
         */
 
         //option list must be public available

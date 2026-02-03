@@ -35,7 +35,7 @@ trait UserControllerTrait
                 $roles = (is_array($request->input('roles'))) ? $request->input('roles') : [$request->input('roles')];
                 if( $model->syncRoles($roles) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Roles']), 'error');
+                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Roles']), 'error');
                 }
             }
             //Update relation with Roles
@@ -44,7 +44,7 @@ trait UserControllerTrait
 //                $resources = (is_array($request->input('resources'))) ? $request->input('resources') : [$request->input('resources')];
 //                if( $model->syncRoles($roles) )
 //                {
-//                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Roles']), 'error');
+//                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Roles']), 'error');
 //                }
             }
 
@@ -58,7 +58,7 @@ trait UserControllerTrait
                     {
                         if(!$model->meta()->updateOrCreate(['meta_key' => $key], ['meta_key' => $key, 'meta_value' => $meta]))
                         {
-                            $model->addInternalMessage(trans('apitalaria::response.update_meta_failed'), 'error');
+                            $model->addInternalMessage(trans('response.update_meta_failed'), 'error');
                         }
                     }
                 }
@@ -86,7 +86,7 @@ trait UserControllerTrait
                 $roles = (is_array($request->input('roles'))) ? $request->input('roles') : [$request->input('roles')];
                 if( $model->syncRoles($roles) )
                 {
-                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Roles']), 'error');
+                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Roles']), 'error');
                 }
             }
             //Update relation with Roles
@@ -95,7 +95,7 @@ trait UserControllerTrait
 //                $resources = (is_array($request->input('resources'))) ? $request->input('resources') : [$request->input('resources')];
 //                if( $model->syncRoles($roles) )
 //                {
-//                    $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Roles']), 'error');
+//                    $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Roles']), 'error');
 //                }
             }
 
@@ -109,7 +109,7 @@ trait UserControllerTrait
                     {
                         if(!$model->meta()->updateOrCreate(['meta_key' => $key], ['meta_key' => $key, 'meta_value' => $meta]))
                         {
-                            $model->addInternalMessage(trans('apitalaria::response.update_meta_failed'), 'error');
+                            $model->addInternalMessage(trans('response.update_meta_failed'), 'error');
                         }
                     }
                 }
