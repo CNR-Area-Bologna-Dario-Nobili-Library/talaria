@@ -126,7 +126,7 @@ class LibraryController extends ApiController
             return $lib->operators();
         }
         
-        $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));        
+        $this->response->errorUnauthorized(trans('auth.unauthorized'));        
         
         
     }
@@ -162,7 +162,7 @@ class LibraryController extends ApiController
             return $lib->operators();        
         }
         
-        $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));        
+        $this->response->errorUnauthorized(trans('auth.unauthorized'));        
     }
 
     public function operator(Request $request, $id,$userid) {
@@ -492,7 +492,7 @@ class LibraryController extends ApiController
 
         //If create fails
         if (!$model->exists) {
-            throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('apitalaria::response.create_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('response.create_failed'), $model->getInternalErrors());
         }
         
         $model->setPermissionOnObject([

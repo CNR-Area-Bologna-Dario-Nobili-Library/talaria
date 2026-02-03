@@ -127,7 +127,7 @@ trait AuthControllerTrait
 //			$token_perms = base64_encode((string)json_encode($token_perms));
 			return $this->response->array($token_perms);            
 		}
-		return $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+		return $this->response->errorUnauthorized(trans('auth.unauthorized'));
 	}*/
 
     //Get all user's permissions

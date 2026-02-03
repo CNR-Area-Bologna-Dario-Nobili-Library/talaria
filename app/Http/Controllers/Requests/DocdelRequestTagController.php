@@ -50,7 +50,7 @@ class DocdelRequestTagController extends ApiController
             return $this->response->paginator($collection, new $this->transformer())->morph();
         }
         else
-            $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+            $this->response->errorUnauthorized(trans('auth.unauthorized'));
 
     }*/
 
@@ -78,7 +78,7 @@ class DocdelRequestTagController extends ApiController
 
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();        
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
 
     }
 

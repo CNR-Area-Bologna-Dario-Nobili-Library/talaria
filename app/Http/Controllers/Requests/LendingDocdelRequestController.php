@@ -62,7 +62,7 @@ class LendingDocdelRequestController extends ApiController
             $collection = $this->talaria->index( $this->model , $request);                                
             return $this->response->paginator($collection, new $this->transformer())->morph();
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
     }
 
  
@@ -114,7 +114,7 @@ class LendingDocdelRequestController extends ApiController
                     return $this->response->noContent();
                 
             }
-            else $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));            
+            else $this->response->errorUnauthorized(trans('auth.unauthorized'));            
         }
              
     }
@@ -158,7 +158,7 @@ class LendingDocdelRequestController extends ApiController
             $model = $this->talaria->update($model, $request, $lid);
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
         }
-        else $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));      
+        else $this->response->errorUnauthorized(trans('auth.unauthorized'));      
 
     }
 

@@ -179,7 +179,7 @@ class Dispatcher extends BaseController
         //If create fails
         if(!$model->exists)
         {
-            throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('apitalaria::response.create_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('response.create_failed'), $model->getInternalErrors());
         }
 
         if( $onStored )
@@ -204,7 +204,7 @@ class Dispatcher extends BaseController
         {
             if( \Schema::hasColumn($model->getTable(), 'updated_at') && $model->updated_at->ne(\Carbon\Carbon::parse($request->input('updated_at'))) )
             {
-                throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(trans('apitalaria::response.update_failed'));
+                throw new \Symfony\Component\HttpKernel\Exception\ConflictHttpException(trans('response.update_failed'));
             }
         }
 
@@ -247,7 +247,7 @@ class Dispatcher extends BaseController
          */
         if(!$model->update())
         {
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.update_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.update_failed'), $model->getInternalErrors());
         }
 
         if( $onUpdated )
@@ -274,7 +274,7 @@ class Dispatcher extends BaseController
 
         if(!$model->delete())
         {
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.delete_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.delete_failed'), $model->getInternalErrors());
         }
 
         if( $onDeleted )
@@ -336,7 +336,7 @@ class Dispatcher extends BaseController
 
         if(!$model->forceDelete())
         {
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.destroy_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.destroy_failed'), $model->getInternalErrors());
         }
 
         if( $onDestroyed )
@@ -390,7 +390,7 @@ class Dispatcher extends BaseController
 
         if(!$model->restore())
         {
-            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.restore_failed'), $model->getInternalErrors());
+            throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.restore_failed'), $model->getInternalErrors());
         }
 
         if( $onRestored )
@@ -553,7 +553,7 @@ class Dispatcher extends BaseController
         elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo)
         {
             if(!$relation->associate($objects)->exists)
-                throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.attach_failed'), $model->getInternalErrors());
+                throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.attach_failed'), $model->getInternalErrors());
         }
 
 
@@ -649,7 +649,7 @@ class Dispatcher extends BaseController
         elseif ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo)
         {
             if(!$relation->dissociate()->exists)
-                throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.detach_failed'), $model->getInternalErrors());
+                throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.detach_failed'), $model->getInternalErrors());
         }
 
         /*
@@ -735,7 +735,7 @@ class Dispatcher extends BaseController
             $granted_permissions = (is_array($request->input('granted_permissions'))) ? $request->input('granted_permissions') : [$request->input('granted_permissions')];
             if( $model->setPermissionOnObject($granted_permissions) )
             {
-                $model->addInternalMessage(trans('apitalaria::response.update_relation_failed', ['name' => 'Granted_permissions']), 'error');
+                $model->addInternalMessage(trans('response.update_relation_failed', ['name' => 'Granted_permissions']), 'error');
             }
         }
 

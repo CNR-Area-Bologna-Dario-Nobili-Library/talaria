@@ -15,5 +15,5 @@ return [
 
     'failed' => 'Estas credenciales no coinciden con nuestros registros.',
     'throttle' => 'Demasiados intentos de inicio de sesión. Inténtelo nuevamente en :seconds segundos.',
-    'unauthorized'=> 'No está autorizado para acceder a este recurso',       
+    'unauthorized'=> '???This action is unauthorized',        
 ];

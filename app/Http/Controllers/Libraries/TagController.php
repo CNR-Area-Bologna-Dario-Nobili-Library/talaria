@@ -75,7 +75,7 @@ class TagController extends ApiController
             });
             return $this->response->item($model, new $this->transformer())->setMeta($model->getInternalMessages())->morph();
         }    
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
     }
 
     //NOTE: i cannot auth the model (because is an OptionList)
@@ -92,7 +92,7 @@ class TagController extends ApiController
 
             return $this->response->array($collection->toArray());
         }
-        else  $this->response->errorUnauthorized(trans('apitalaria::auth.unauthorized'));
+        else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
     }
 
     // ApiControllerTrait@delete override    

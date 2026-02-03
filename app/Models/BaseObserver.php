@@ -51,15 +51,15 @@ class BaseObserver
 //                    print_r(get_class($model));
 //                    print_r($model->toArray());
 //                    exit(print_r($this->validator->errors()));
-                    //throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('apitalaria::response.create_failed'), $this->validator->errors());
-                    throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('apitalaria::response.create_failed'), $this->validator->errors());
+                    //throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('response.create_failed'), $this->validator->errors());
+                    throw new \Dingo\Api\Exception\StoreResourceFailedException(trans('response.create_failed'), $this->validator->errors());
 }
                 else
                 {
 //                    print_r(get_class($model));
 //                    print_r($model->toArray());
 //                    exit(print_r($this->validator->errors()));
-                    throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('apitalaria::response.update_failed'), $this->validator->errors());
+                    throw new \Dingo\Api\Exception\UpdateResourceFailedException(trans('response.update_failed'), $this->validator->errors());
                 }
             }
         }
