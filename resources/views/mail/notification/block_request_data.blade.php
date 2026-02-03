@@ -21,9 +21,10 @@
         @isset($request_borrowing_status) <b>@lang('globals.app.requests.borrowing_status'):</b> @lang('globals.app.requests.'.$request_borrowing_status) <br/> @endisset 
         @isset($request_request_date) <b>@lang('globals.app.requests.request_date'):</b> {{$request_request_date}} <br/>  @endisset     
         @isset($request_request_note) <b>@lang('globals.app.requests.request_note'):</b> {{$request_request_note}} <br/> @endisset 
-        @isset($request_borrowing_protnr)  <b>@lang('globals.app.requests.borrowing_protnr'):</b>{{$request_borrowing_protnr}} <br/> @endisset        
+        @isset($request_borrowing_protnr)  <b>@lang('globals.app.requests.borrowing_protnr'):</b>{{$request_borrowing_protnr}} <br/> @endisset                
         @isset($request_request_special_delivery) @if ($request_request_special_delivery==1)  <b>@lang('globals.app.requests.request_special_delivery'):</b> @lang('globals.app.global.yes') <br/> @endif @endisset
         @isset($request_request_pdf_editorial)  @if ($request_request_pdf_editorial==1) <b>@lang('globals.app.requests.request_pdf_editorial'):</b> @lang('globals.app.global.yes') <br/> @endif @endisset            
+        @isset($request_fulfill_location)  <b>@lang('globals.app.requests.fulfill_location'):</b>{{$request_fulfill_location}} <br/> @endisset        
         @isset($request_fulfill_inventorynr)  <b>@lang('globals.app.requests.fulfill_inventorynr'):</b>{{$request_fulfill_inventorynr}} <br/> @endisset        
         @isset($request_lending_protnr)  <b>@lang('globals.app.requests.lending_protnr'):</b>{{$request_lending_protnr}} <br/> @endisset       
         @isset($request_lending_status) <b>@lang('globals.app.requests.lending_status'):</b> @lang('globals.app.requests.'.$request_lending_status) <br/>  @endisset 
