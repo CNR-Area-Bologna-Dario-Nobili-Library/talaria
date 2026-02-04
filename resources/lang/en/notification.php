@@ -14,7 +14,7 @@ return [
     'LibraryHasBeenDisabledNotification_title'=>'Library has been disabled',
     'LibraryHasBeenDisabledBecauseBadBehaviourNotification_title'=>'Library has been disabled for bad behaviour',
     'LibraryHasBeenDisabledBecauseSubscriptionExpiredNotification'=>'Library has been disabled because of subscription expired',
-    'LibraryHasBeenDisabledBecauseDidntPaidNotification'=>'Library has been disabled because it did not pay',
+    'LibraryHasBeenDisabledBecauseDidntPaidNotification'=>'Library has been disabled because of missing payment',
     'LibraryHasToRenewSubscriptionNotification'=>'Library has to renew its subscription',
     'RequestReceivedNotification_title'=>'An item has been requested from your library',
     'RequestWillSupplyNotification_title'=>'An item will be supplied to your library',
