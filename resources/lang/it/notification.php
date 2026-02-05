@@ -28,7 +28,7 @@ return [
     'CancelAcceptedNotification_title'=>'La richiesta di annullamento è stata accettata',
     'LibraryOperatorInvitationNotification_title'=>'Una biblioteca ti invita come operatore',
     'LibraryOperatorInvitationDeleteNotification_title'=>'Una biblioteca ha rimosso alcune tue autorizzazioni come operatore',
-    'LibraryOperatorInvitationDeleteNewUserNotification_title'=>'Una biblioteca ha rimosso alcunie tue autorizzazioni come operatore',
+    'LibraryOperatorInvitationDeleteNewUserNotification_title'=>'Una biblioteca ha rimosso alcune tue autorizzazioni come operatore',
     'LibraryOperatorInvitationUpdateNotification_title'=>'Una biblioteca ha aggiornato le tue autorizzazioni come operatore',
     'OperatorDeleteNotification_title'=>'Le tue autorizzazioni da operatore sono state rimosse',
     'OperatorAcceptedInvitationNotification_title'=>'L\'invito è stato accettato dall\'operatore',
