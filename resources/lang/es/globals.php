@@ -9,7 +9,7 @@ $globalTrans=[
     'delivery_data_header'=>'???Pickup point detail',
     'borrowing_library_data_header'=>'???Borrowing library',
     'lending_library_data_header'=>'???Lending library',
-    'request_link'=>'???Click here to open the request',
+    'request_link'=>'???Click here to manage the request',
     'users_list_link'=>'???Click here to open users list',
     'my_libraries_list_link'=>'???Click here to open your libraries list',
 ];

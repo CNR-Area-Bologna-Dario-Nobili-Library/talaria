@@ -9,7 +9,7 @@ $globalTrans=[
     'delivery_data_header'=>'Punto di ritiro',
     'borrowing_library_data_header'=>'Biblioteca richiedente',
     'lending_library_data_header'=>'Biblioteca fornitrice',
-    'request_link'=>'Clicca qui per aprire la richiesta',
+    'request_link'=>'Clicca qui per gestire la richiesta',
     'users_list_link'=>'Clicca qui per aprire la lista utenti',
     'my_libraries_list_link'=>'Clicca qui per aprire la lista delle tue biblioteche',
 ];

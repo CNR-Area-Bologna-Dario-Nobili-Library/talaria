@@ -22,7 +22,7 @@ class CancelRequestedNotification extends RequestNotification
         $lr=LendingDocdelRequest::findOrFail($model->id);
         parent::__construct($lr);
 
-        $this->url=config('app.frontend_url').'/library/'.$this->object->library->id.'/lending/'.$this->object->id;  
+        $this->url=config('app.frontend_url').'/library/'.$this->object->library->id.'/lending/';  
             
     }    
 }

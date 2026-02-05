@@ -22,7 +22,7 @@ class RequestCopyCompletedNotification extends RequestNotification
 
         parent::__construct($br);  
 
-        $this->url=config('app.frontend_url').'/library/'.$this->object->borrowingLibrary->id.'/borrowing/'.$this->object->id;  
+        $this->url=config('app.frontend_url').'/library/'.$this->object->borrowingLibrary->id.'/borrowing/';  
             
     }    
 }

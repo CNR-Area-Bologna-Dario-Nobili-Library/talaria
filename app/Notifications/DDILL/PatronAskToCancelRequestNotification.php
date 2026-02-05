@@ -18,7 +18,7 @@ class PatronAskToCancelRequestNotification extends RequestNotification
     {                
         parent::__construct($model);  
 
-        $this->url=config('app.frontend_url').'/library/'.$this->object->borrowingLibrary->id.'/borrowing/'.$this->object->id;  
+        $this->url=config('app.frontend_url').'/library/'.$this->object->borrowingLibrary->id.'/borrowing/';  
             
     }    
 }
