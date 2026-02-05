@@ -29,7 +29,7 @@ class PatronBorrowingRequestNotification extends BaseNotification
         $patron=$this->object->patron;
 
         //NOTE: We used last DD request ID as #Borrowing Req. ID because of one-to-many relationships Patron Docdel Request-> BorrowingDocdelRequest 
-        $this->url=config('app.frontend_url').'/library/'.$request->Library->id.'/borrowing/'.$request->lastDocdelRequest()->id;   
+        $this->url=config('app.frontend_url').'/library/'.$request->Library->id.'/borrowing/';   
         
         $this->addTitleIdentifier($request->lastDocdelRequest()->id); //prepend title with # #Borrowing Req. ID  -         
 
