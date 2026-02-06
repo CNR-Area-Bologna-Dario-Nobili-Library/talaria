@@ -76,5 +76,6 @@ export const fields = {
         name: "email",
         order: 3,
         error: "app.global.invalid_email",
+        disabled: true,
     },
 }

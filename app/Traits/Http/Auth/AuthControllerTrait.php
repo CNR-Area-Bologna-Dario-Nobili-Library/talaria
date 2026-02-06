@@ -246,6 +246,10 @@ trait AuthControllerTrait
 	public function updateMe(Request $request)
 	{
 		$user = Auth::user();
+
+		// Remove email from request - email cannot be changed after registration
+		$request->request->remove('email');
+
 		$controller = \App::make('App\Http\Controllers\Users\UserController');
 		$controller->talaria->disableAuthorize();
 		$update = $controller->update($request, $user->id);
