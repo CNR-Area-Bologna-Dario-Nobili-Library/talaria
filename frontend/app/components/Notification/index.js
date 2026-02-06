@@ -7,6 +7,8 @@ import {
   Button,
   TabContent,
   TabPane,
+  UncontrolledDropdown,
+  DropdownItem,
 } from 'reactstrap';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -137,6 +139,29 @@ const Notification = props => {
     }, 400);
   };
 
+  // Mark notification as read when clicked (not toggling)
+  const handleNotificationClick = notify => {
+    // Only mark as read if it's currently unread
+    if (!notify.read_at && !pendingIds.has(notify.id)) {
+      setPendingIds(prev => {
+        const next = new Set(prev);
+        next.add(notify.id);
+        return next;
+      });
+
+      dispatch(markNotificationAsRead(notify.id, true));
+
+      setTimeout(() => {
+        dispatch(requestNotifications());
+        setPendingIds(prev => {
+          const next = new Set(prev);
+          next.delete(notify.id);
+          return next;
+        });
+      }, 400);
+    }
+  };
+
   const getTabNotifications = () => {
     switch (activeTab) {
       case 'unread':
@@ -174,6 +199,16 @@ const Notification = props => {
     setAnimatedIds([]);
   };
 
+  const handleMarkAllAsRead = () => {
+    const unreadIds = unreadNotifications.map(n => n.id);
+    unreadIds.forEach(id => {
+      dispatch(markNotificationAsRead(id, true));
+    });
+    setTimeout(() => {
+      dispatch(requestNotifications());
+    }, 400);
+  };
+
   function extractLibraryName(title) {
     const hashIndex = title.indexOf('#');
     if (hashIndex !== -1) {
@@ -193,9 +228,9 @@ const Notification = props => {
   }
   // build this before return()
   const tabs = [
-    { key: 'all', label: intl.formatMessage(messages.tabAll) },
-    { key: 'unread', label: intl.formatMessage(messages.tabUnread) },
-    { key: 'read', label: intl.formatMessage(messages.tabRead) },
+    { key: 'all', label: intl.formatMessage(messages.tabAll), count: allNotifications.length },
+    { key: 'unread', label: intl.formatMessage(messages.tabUnread), count: unreadNotifications.length },
+    { key: 'read', label: intl.formatMessage(messages.tabRead), count: readNotifications.length },
   ];
 
   return (
@@ -223,40 +258,59 @@ const Notification = props => {
             onScroll={lazyLoad}
             className="notification-dropdown-menu"
           >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                padding: '8px 10px',
-              }}
-            >
+            {/* Header Section */}
+            <div className="notification-header">
+              <div className="notification-header-content">
+                <h6 className="notification-title">
+                  <FormattedMessage {...messages.header} />
+                </h6>
+                {unreadNotifications.length > 0 && (
+                  <UncontrolledDropdown>
+                    <DropdownToggle
+                      tag="button"
+                      className="notification-header-menu-btn"
+                    >
+                      <i className="fa fa-ellipsis-h" />
+                    </DropdownToggle>
+                    <DropdownMenu right className="notification-header-dropdown">
+                      <DropdownItem onClick={handleMarkAllAsRead} className="notification-header-dropdown-item">
+                        <i className="fa fa-check" />
+                        <FormattedMessage {...messages.markAllAsRead} />
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                )}
+              </div>
+            </div>
 
-              {tabs.map(tab => (
-                <button
-                  key={tab.key}
-                  className={
-                    'notification-tab-btn ' +
-                    (activeTab === tab.key ? 'active' : '')
-                  }
-                  onClick={() => setActiveTab(tab.key)}
-                >
-                  {tab.label}{' '}
-                </button>
-              ))}
+            {/* Filter Tabs Section */}
+            <div className="notification-tabs-container">
+                {tabs.map(tab => {
+                  const isActive = activeTab === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      className={
+                        'notification-tab-btn ' +
+                        (isActive ? 'active' : '')
+                      }
+                      onClick={() => setActiveTab(tab.key)}
+                    >
+                      <span>{tab.label}</span>
+                      <span className="tab-count">{tab.count}</span>
+                    </button>
+                  );
+                })}
             </div>
 
             <TabContent activeTab={activeTab}>
               <TabPane tabId={activeTab}>
                 {getTabNotifications().length === 0 ? (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      padding: '20px',
-                      color: '#999',
-                    }}
-                  >
-                    <i className="bi bi-bell-slash fs-3" />
-                    <p className="mt-2 mb-0 fw-semibold">
+                  <div className="notification-empty">
+                    <div className="notification-empty-icon">
+                      <i className="fa fa-bell-slash" />
+                    </div>
+                    <p>
                       {activeTab === 'unread' ? (
                         <FormattedMessage {...messages.emptyUnread} />
                       ) : activeTab === 'read' ? (
@@ -273,10 +327,7 @@ const Notification = props => {
                       const parsed = parseNotification(notify);
                       const isUnread = !notify.read_at;
 
-                      /**
- * Converts absolute URLs from the backend into relative paths to prevent React Router from incorrectly appending the full URL to the current path.
- * <Link> component navigates correctly in this case
- */
+
                       const notificationUrl = (notify && notify.data && notify.data.url) || '#';
                       let relativePath = notificationUrl;
 
@@ -299,41 +350,42 @@ const Notification = props => {
                               ? ' animated-entry'
                               : '')
                           }
+                          onClick={() => handleNotificationClick(notify)}
                         >
-                          <div className="notification-row">
-                            <div className="notification-text">
-                              <Link
-                                to={relativePath}
-                                className="notification-title"
-                              >
-                                {(notify && notify.data && notify.data.title) ||
-                                  ''}
-                              </Link>
-                            </div>
-
-                            <button
-                              className={
-                                'notification-action-btn ' +
-                                (isUnread ? 'unread' : 'read')
-                              }
-                              onClick={() => handleToggleReadStatus(notify)}
-                              disabled={pendingIds.has(notify.id)}
-                            >
-                              <i
-                                className={
-                                  isUnread
-                                    ? 'bi bi-check2'
-                                    : 'bi bi-arrow-counterclockwise'
-                                }
-                                style={{ fontSize: '1rem' }}
-                              />{' '}
-                              {isUnread ? (
-                                <FormattedMessage {...messages.markAsRead} />
-                              ) : (
-                                <FormattedMessage {...messages.markAsUnread} />
-                              )}
-                            </button>
+                          {/* Blue dot indicator */}
+                          <div className="notification-dot-container">
+                            <div className={`notification-dot ${isUnread ? 'show' : ''}`} />
                           </div>
+
+                          {/* Content */}
+                          <div className="notification-content">
+                            <Link
+                              to={relativePath}
+                              className="notification-link"
+                            >
+                              {(notify && notify.data && notify.data.title) || ''}
+                            </Link>
+                          </div>
+
+                          {/* Envelope icon button - Toggle Read/Unread */}
+                          <button
+                            className="notification-icon-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleToggleReadStatus(notify);
+                            }}
+                            disabled={pendingIds.has(notify.id)}
+                            title={isUnread ? intl.formatMessage(messages.markAsRead) : intl.formatMessage(messages.markAsUnread)}
+                            aria-label={isUnread ? intl.formatMessage(messages.markAsRead) : intl.formatMessage(messages.markAsUnread)}
+                          >
+                            <i
+                              className={
+                                isUnread
+                                  ? 'fa fa-envelope'
+                                  : 'fa fa-envelope-open'
+                              }
+                            />
+                          </button>
                         </div>
                       );
                     })
@@ -341,29 +393,31 @@ const Notification = props => {
               </TabPane>
             </TabContent>
 
-            <div className="notification-footer-button">
-              {visibleCount < getTabNotifications().length ? (
-                <Button
-                  className="load-more-btn"
-                  size="sm"
-                  onClick={handleLoadMore}
-                >
-                  <FormattedMessage {...messages.loadMore} />
-                </Button>
-              ) : getTabNotifications().length > 5 ? (
-                <Button
-                  className="load-more-btn"
-                  size="sm"
-                  onClick={handleShowLess}
-                >
-                  <FormattedMessage {...messages.showLess} />
-                </Button>
-              ) : null}
-            </div>
+            {(getTabNotifications().length > 5 || visibleCount > 5) && (
+              <div className="notification-footer-button">
+                {visibleCount < getTabNotifications().length ? (
+                  <Button
+                    className="load-more-btn"
+                    size="sm"
+                    onClick={handleLoadMore}
+                  >
+                    <FormattedMessage {...messages.loadMore} />
+                  </Button>
+                ) : (
+                  <Button
+                    className="load-more-btn"
+                    size="sm"
+                    onClick={handleShowLess}
+                  >
+                    <FormattedMessage {...messages.showLess} />
+                  </Button>
+                )}
+              </div>
+            )}
 
             <div className="notification-footer-link">
               <Link to="/user/notifications" className="go-to-inbox-link">
-                <i className="bi bi-inbox" />
+                <i className="fa fa-inbox" />
                 <span>
                   <FormattedMessage {...messages.goToInbox} />
                 </span>
