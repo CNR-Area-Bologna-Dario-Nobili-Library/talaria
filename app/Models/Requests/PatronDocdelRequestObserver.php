@@ -74,7 +74,7 @@ class PatronDocdelRequestObserver extends BaseObserver
                 
                         
                 //Notify to patron
-                $user= $u=User::findOrFail($pdr->patron->id);            
+                $user=User::findOrFail($pdr->patron->id);            
                 $pnwr=new PatronRequestRequestedNotification($pdr); 
                 $user->notify($pnwr);
                 RealtimeBroadcaster::fromNotification($pdr, $user, $pnwr);

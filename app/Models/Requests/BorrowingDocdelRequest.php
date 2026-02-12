@@ -14,6 +14,7 @@ use Auth;
 use App\Resolvers\StatusResolver;
 use App\Models\Libraries\Library;
 use App\Models\Users\User;
+use App\Notifications\DDILL\PatronAskToCancelDirectRequestNotification;
 use App\Notifications\DDILL\PatronAskToCancelRequestNotification;
 use App\Notifications\DDILL\RequestCanceledNotification;
 use App\Support\RealtimeBroadcaster;
@@ -262,7 +263,7 @@ class BorrowingDocdelRequest extends DocdelRequest
                         $newstatus="canceledDirect";                        
                         return $this->changeStatus($newstatus,$others);                     
                     } 
-                    else if($this->lendinglibrary && $this->lending_status!="requestReceived" && $this->borrowing_status!="cancelRequested") //cancel with lender
+                    else if($this->lendinglibrary && $this->lending_status!="requestReceived" && $this->borrowing_status!="cancelRequested") //cancel with lender (that has acceptted to supply)
                     {                          
                         $newstatus="cancelRequested";                                                                            
                         return $this->changeStatus($newstatus,$others);                     
@@ -274,18 +275,22 @@ class BorrowingDocdelRequest extends DocdelRequest
                         //l'utente ha chiesto di cancellare          
                         if($this->patrondocdelrequest && $this->user_cancel_date)
                         {
+                            //note: we'll notify to lender in the canceledDirect status code directly
+
                             $newstatus="canceledDirect";  
                             $others=array_merge($others,['lending_archived'=>1,'lending_status'=>'canceledAccepted']);
-                            return $this->changeStatus($newstatus,$others);                                             
+                            return $this->changeStatus($newstatus,$others);   
                         }
                         else //borrow vuole cancellare la nuova richiesta (inviata al lender ma mai accettato) (caso 6a)
                         {
-                            //Notify to lending library manager+lending operators   before resetting request                          
+                            //Notify to lending library manager+lending operators before resetting request   (lender has not yet accepted to supply)    
+                            //note: we'll notify to lender here because we've to change the status to newrequest                                        
                        
                             $cancelNotification=new RequestCanceledNotification($this);
                             
                             if($this->lendinglibrary() && $this->all_lender==0) //(will notify only to the specific lender, not to ALL))  
                             {
+                               
                                 //find who to be notified
                                 
                                 $operators=array();
@@ -340,10 +345,10 @@ class BorrowingDocdelRequest extends DocdelRequest
                     $others=array_merge($others,['cancel_date'=>Carbon::now(),'archived'=>1,'lending_status'=>'canceledAccepted','lending_archived'=>1]);
 
                         //patron ha chiesto di cancellare   
-                        if($this->patrondocdelrequest && $this->user_cancel_date)
+                        if($this->patrondocdelrequest && $this->patrondocdelrequest->cancel_date) //NOTE: cannot check user_cancel_date because wasn't already saved (will save it after statusChange)
                         {                                                                        
-                            //Notify to borrower/deliver/manager that patron ask cancel                        
-                            $patronaskcancelNotification=new PatronAskToCancelRequestNotification($this);
+                            //Notify to borrower/deliver/manager that patron has canceled                        
+                            $patronaskcancelNotification=new PatronAskToCancelDirectRequestNotification($this);
                                 
                             //find who to be notified
 
@@ -373,7 +378,38 @@ class BorrowingDocdelRequest extends DocdelRequest
                                         $lu->notify($patronaskcancelNotification);            
                                         RealtimeBroadcaster::fromNotification($this, $lu, $patronaskcancelNotification);          
                                     }
-                            }                                                         
+                            }          
+                                                                              
+                            //notify to lender that borrow canceled (maybe because of his patron)
+                            $cancelNotification=new RequestCanceledNotification($this);
+                            
+                            if($this->lendinglibrary() && $this->all_lender==0) //(will notify only to the specific lender, not to ALL))  
+                            {
+                                //find who to be notified
+                                
+                                $operators=array();
+                                $lloperators=$this->lendingLibraryLendingOperators();
+                                if($lloperators && $lloperators->count()>0)
+                                    $operators+=$lloperators->toArray();
+
+                                $manoperators=$this->lendingLibraryManageOperators();
+                                if($manoperators && $manoperators->count()>0)
+                                    $operators+=$manoperators->toArray();                            
+                                
+                                //unique operators
+                                if($operators && sizeof($operators)>0)
+                                {
+                                    $operatorsID=array_unique(array_map(function($op) { return $op['user_id']; }, $operators)); 
+
+                                    //Notify ...
+                                    if($operatorsID && sizeof($operatorsID)>0)
+                                        foreach ($operatorsID as $item) {
+                                            $lu=User::findOrFail($item);                 
+                                            $lu->notify($cancelNotification);            
+                                            RealtimeBroadcaster::fromNotification($this, $lu, $cancelNotification);          
+                                        }
+                                }
+                            }
                         }
 
 
@@ -386,9 +422,10 @@ class BorrowingDocdelRequest extends DocdelRequest
                         'cancel_request_date'=>Carbon::now(),
                         'lending_status'=>'cancelRequested'
                     ]);
+                        //NOTA: la notifica al lender viene già mandata tramite statusFlow
 
                         //patron ha chiesto di cancellare   
-                        if($this->patrondocdelrequest && $this->user_cancel_date)
+                        if($this->patrondocdelrequest && $this->patrondocdelrequest->cancel_date)
                         {                                                                        
                             //Notify to borrower/deliver/manager that patron ask cancel                        
                             $patronaskcancelNotification=new PatronAskToCancelRequestNotification($this);

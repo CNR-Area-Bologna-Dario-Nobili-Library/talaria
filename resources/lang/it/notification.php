@@ -24,7 +24,7 @@ return [
     'RequestDeliveredToDeskNotification_title'=>'Un item è stato ricevuto dal desk',
     'RequestNotDeliveredToDeskNotification_title'=>'Un item non è stato ricevuto dal desk',
     'CancelRequestedNotification_title'=>'Richiesta di annullamento',
-    'RequestCanceledNotification_title'=>'La tua richiesta stata cancellata',
+    'RequestCanceledNotification_title'=>'La richiesta stata cancellata',
     'CancelAcceptedNotification_title'=>'La richiesta di annullamento è stata accettata',
     'LibraryOperatorInvitationNotification_title'=>'Una biblioteca ti invita come operatore',
     'LibraryOperatorInvitationDeleteNotification_title'=>'Una biblioteca ha rimosso alcune tue autorizzazioni come operatore',
@@ -46,5 +46,6 @@ return [
     'PatronRequestReceivedNotification_title'=>'L\'item richiesto è stato consegnato dalla biblioteca',
     'PatronRequestNotReceivedNotification_title'=>'L\'item richiesto non puo\' essere consegnato dalla biblioteca',
     'PatronAskToCancelRequestNotification_title'=>'L\'utente richiede la cancellazione della richiesta',
+    'PatronAskToCancelDirectRequestNotification_title'=>'L\'utente ha cancellato la richiesta',
     'PatronRequestHasBeenCanceledNotification_title'=>'La tua richiesta è stata annullata',
 ];

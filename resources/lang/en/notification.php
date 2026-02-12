@@ -46,6 +46,7 @@ return [
     'PatronRequestReceivedNotification_title'=>'Your item request has been fulfilled by the library',
     'PatronRequestNotReceivedNotification_title'=>'The item you have requested cannot be supplied by the library',    
     'PatronAskToCancelRequestNotification_title'=>'Patron asks to cancel',
+    'PatronAskToCancelDirectRequestNotification_title'=>'Patron has canceled the request',
     'PatronRequestHasBeenCanceledNotification_title'=>'You have canceled your item request',
 
 ];
