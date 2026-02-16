@@ -307,6 +307,8 @@
   "app.components.LendingsList.LendingSelected": "Selected",
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Would you like to invite selected operator?",
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage": "You're not allowed to invite yourself as operator",
+  "app.components.LibraryInviteOperatorForm.alreadyAssigned": "??? already assigned",
+  "app.components.LibraryInviteOperatorForm.pending": "??? pending",
   "app.components.LibraryInviteOperator.inviteOperator": "Invite operator",
   "app.components.LibraryInviteOperator.intro": "You can invite other colleagues as library operators. First, search for user by surname or email address.",
   "app.components.LibraryInviteOperator.paragraph1": "If a user is found, then assign permissions and invite your colleague!",

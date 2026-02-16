@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useIntl } from 'react-intl';
 import Select, { components } from 'react-select';
-import './style.scss'; 
+import './style.scss';
 import confirm from 'reactstrap-confirm';
 
 import LibraryInviteOperatorForm from '../LibraryInviteOperatorForm';
 
 const LibraryInviteOperator = props => {
-  const { usersData, searchUserCallback, inviteOpCallback, auth,filterPerm } = props;
+  const { history, usersData, searchUserCallback, inviteOpCallback, auth,filterPerm,libraryId, userLibraryAbilitiesData, onGetUserAbilities,onClearUserAbilities} = props;
   const intl = useIntl();
-
+  
   const [selectedUser, setSelectedUser] = useState(null);
   const [usersOptions, setUsersOptions] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -21,6 +21,20 @@ const LibraryInviteOperator = props => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [isManualEntry, setIsManualEntry] = useState(false);
+    const existingAbilities = (userLibraryAbilitiesData && userLibraryAbilitiesData.data || []);
+
+  useEffect(() => {
+    if (selectedUser && userLibraryAbilitiesData && userLibraryAbilitiesData.data && userLibraryAbilitiesData.data.length > 0) {
+      // Check if any ability is active (not pending or rejected)
+      const isActiveOperator = userLibraryAbilitiesData.data.some(
+        a => a.status !== 'pending' && a.status !== 'rejected'
+      );
+      if (isActiveOperator) {
+        // Redirect to edit page if user is already an active operator in this library
+        history.push(`/library/${libraryId}/manage/operators/${selectedUser.id}/edit`);
+      }
+    }
+  }, [selectedUser, userLibraryAbilitiesData, history, libraryId]);
 
   const formStyles = {
     display: showForm ? 'block' : 'none',
@@ -59,6 +73,15 @@ const LibraryInviteOperator = props => {
     setFullName('');
     setEmail('');
     setIsManualEntry(false);
+    if(onClearUserAbilities) onClearUserAbilities();
+  };
+
+  const fetchUserAbilities = (userId) => {
+    if (!libraryId || !userId) {
+      if(onClearUserAbilities) onClearUserAbilities();
+      return;
+    }
+    if(onGetUserAbilities) onGetUserAbilities(libraryId, userId);
   };
 
   const onSearchInputChange = (query, e) => {
@@ -77,7 +100,7 @@ const LibraryInviteOperator = props => {
     }
   };
 
-  const onSearchSelectChange = (val, typeaction) => {
+  const onSearchSelectChange = async (val, typeaction) => {
     if (typeaction.action === 'clear') {
       resetSearchResults();
     } else if (typeaction.action === 'select-option') {
@@ -85,6 +108,9 @@ const LibraryInviteOperator = props => {
       setShowForm(true);
       setShowAddUserManuallyLink(false);
       setIsManualEntry(false);
+      if (val.value && val.value.id) {
+        fetchUserAbilities(val.value.id);
+      }
     }
   };
 
@@ -188,6 +214,7 @@ const LibraryInviteOperator = props => {
             setEmail={setEmail}
             isManualEntry={isManualEntry}
             filterPerm={filterPerm}
+            existingAbilities={existingAbilities}
           />
         </div>
       </div>

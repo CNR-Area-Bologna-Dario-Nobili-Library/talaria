@@ -74,6 +74,13 @@ const identifiersOptionListSelector = () =>
     substate => (substate.libraryIdentifierTypesOptionList)
 );  
 
+const makeSelectUserLibraryAbilities = () =>
+  createSelector(
+    selectLibraryDomain,
+    substate => substate.userLibraryAbilities
+  );
+
+
 export const makeSelectLibraryList = () =>
   createSelector(
     selectLibraryDomain,
@@ -85,4 +92,4 @@ export const makeSelectLibraryList = () =>
 
 
 export default makeSelectLibrary;
-export {  isLibraryLoading,tagsOptionListSelector, fileUploadNameSelector,countriesOptionListSelector,librarySubjectOptionListSelector,institutionsOptionListSelector,institutionTypesOptionListSelector,institutionsByTypeCountryOptionListSelector,libraryProjectsOptionListSelector,identifiersOptionListSelector };
+export {  isLibraryLoading,tagsOptionListSelector, fileUploadNameSelector,countriesOptionListSelector,librarySubjectOptionListSelector,institutionsOptionListSelector,institutionTypesOptionListSelector,institutionsByTypeCountryOptionListSelector,libraryProjectsOptionListSelector,identifiersOptionListSelector, makeSelectUserLibraryAbilities };

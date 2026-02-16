@@ -322,7 +322,6 @@
   "app.components.Notification.loadMore": "???Load More",
   "app.components.Notification.showLess": "???Show Less",
   "app.components.Notification.goToInbox": "???Go to Notification Inbox",
-
   "app.containers.NotificationInbox.header": "???Notifications",
   "app.containers.NotificationInbox.searchLabel": "???Search Notifications",
   "app.containers.NotificationInbox.searchPlaceholderDescription": "???Description",
@@ -370,6 +369,8 @@
   "app.components.LendingsList.LendingSelected": "Seçili",
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Would you like to invite selected operator?",
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage": "Kendinizi operatör olarak davet edemezsiniz",
+  "app.components.LibraryInviteOperatorForm.alreadyAssigned": "??? already assigned",
+  "app.components.LibraryInviteOperatorForm.pending": "??? pending",
   "app.components.LibraryInviteOperator.inviteOperator": "Operatör davet et",
   "app.components.LibraryInviteOperator.intro": "Diğer iş arkadaşlarınızı kütüphane operatörü olarak davet edebilirsiniz. Önce, soy isim veya email adresi ile kullanıcı arayın.",
   "app.components.LibraryInviteOperator.paragraph1": "Bir kullanıcı bulunursa, izinleri atayın ve iş arkadaşınızı davet edin!",

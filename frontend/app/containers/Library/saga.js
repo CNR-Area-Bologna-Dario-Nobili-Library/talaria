@@ -46,7 +46,8 @@ import { REQUEST_USERS_LIST, REQUEST_UPDATE_USER, REQUEST_DELETE_USER,
       REQUEST_INVITE_LIBRARY_OPERATOR,
       REQUEST_GET_INSTITUTIONS_TYPE_COUNTRY_OPTIONLIST,
       REQUEST_GET_LIBRARY_PROJECTS_OPTIONLIST,
-      REQUEST_GET_LIBRARY_OPTIONLIST
+      REQUEST_GET_LIBRARY_OPTIONLIST,
+      REQUEST_GET_USER_LIBRARY_ABILITIES
     } from './constants';
 import {
   requestError,
@@ -93,6 +94,8 @@ import {
   requestGetUsersOptionItemsSuccess,
   requestGetLibraryPendingOperators,
   requestLibraryOptionListSuccess,
+  requestGetUserLibraryAbilitiesSuccess,
+  requestGetUserLibraryAbilitiesFail
 } from './actions';
 
 import { toast } from "react-toastify";
@@ -135,6 +138,7 @@ import {getLibraryUsersList, updateLibraryUser, deleteLibraryUser, createUser,
     getlibraryProjectsOptionList,
     inviteLibraryOperator,
     getLibraryOptionList,
+    getUserLibraryAbilities
 } from '../../utils/api'    
 
 import {getOA,getPubmedReferenceByPMID,getFindISSN,getFindISBN, getFindISSN_ACNP} from '../../utils/apiExternal';
@@ -1107,6 +1111,19 @@ export function* requestFindISSNISBNsaga(action) {
 }
 
 
+export function* requestGetUserLibraryAbilitiesSaga(action) {
+  const options = {
+    method: 'get',
+    library_id: action.library_id,
+    user_id: action.user_id
+  };
+  try {
+    const request = yield call(getUserLibraryAbilities, options);
+    yield put(requestGetUserLibraryAbilitiesSuccess(request));
+  } catch(e) {
+    yield put(requestGetUserLibraryAbilitiesFail(e.message));
+  }
+}
 
 
 /**
@@ -1185,5 +1202,5 @@ export default function* librarySaga() {
   yield takeEvery(REQUEST_FIND_UPDATE_BORROWING_OA,findUpdateOABorrowingSaga);
 
   yield takeLatest(UPLOAD_REQUEST,uploadFileSaga); 
-  
+  yield takeLatest(REQUEST_GET_USER_LIBRARY_ABILITIES, requestGetUserLibraryAbilitiesSaga);
 }

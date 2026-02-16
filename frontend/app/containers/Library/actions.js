@@ -79,7 +79,11 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
   REQUEST_CLEAR_LIBRARY_OPTIONLIST,
-  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST
+  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST,
+  REQUEST_GET_USER_LIBRARY_ABILITIES,
+  REQUEST_GET_USER_LIBRARY_ABILITIES_SUCCESS,
+  REQUEST_GET_USER_LIBRARY_ABILITIES_FAIL,
+  REQUEST_CLEAR_USER_LIBRARY_ABILITIES,
    
   } from "./constants";
 
@@ -802,6 +806,36 @@ return {
       result
     };
   }
+
+  export function requestGetUserLibraryAbilities(library_id, user_id) {
+    return {
+      type: REQUEST_GET_USER_LIBRARY_ABILITIES,
+      library_id,
+      user_id
+    };
+  }
+
+  export function requestGetUserLibraryAbilitiesSuccess(result) {
+    return {
+      type: REQUEST_GET_USER_LIBRARY_ABILITIES_SUCCESS,
+      result
+    };
+  }
+
+  export function requestGetUserLibraryAbilitiesFail(error) {
+    return {
+      type: REQUEST_GET_USER_LIBRARY_ABILITIES_FAIL,
+      error
+    };
+  }
+
+  export function requestClearUserLibraryAbilities() {
+    return {
+      type: REQUEST_CLEAR_USER_LIBRARY_ABILITIES
+    };
+  }
+
+
   
   export function requestUpdateLibraryOperatorPermissions(library_id,userid,permissions,message) {
     return {

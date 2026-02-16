@@ -169,7 +169,7 @@ trait AuthControllerTrait
 
             
 
-            $newstatus = intval($request->input(['status'])); //accept only status                
+            $newstatus = intval($request->input('status')); //accept only status                
             $userToApply=null;
             
             //apply new status (accept/reject to the pending permission)

@@ -8,7 +8,8 @@ import makeSelectLibrary,{isLibraryLoading} from "../selectors";
 import {compose} from "redux";
 import messages from './messages'
 import { connect } from 'react-redux';
-import {requestGetUsersOptionItems,requestInviteLibraryOperator} from '../actions';
+import {requestGetUsersOptionItems,requestInviteLibraryOperator, requestGetUserLibraryAbilities, requestClearUserLibraryAbilities} from '../actions';
+import { makeSelectUserLibraryAbilities } from '../selectors';
 import OperatorsList from '../../../components/OperatorsList';
 import confirm from "reactstrap-confirm";
 import {useIntl} from 'react-intl';
@@ -39,8 +40,8 @@ function LibraryInviteOperatorPage(props) {
  }
 
  
-  return (            
-          <LibraryInviteOperator filterPerm={(permList)=>filterLendPerm(permList)} auth={auth} usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)}/>
+  return (
+          <LibraryInviteOperator history={props.history} filterPerm={(permList)=>filterLendPerm(permList)} auth={auth} usersData={library.searchUsersOptionList} searchUserCallback={(q)=>searchUserCallback(q)} inviteOpCallback={(opdata)=>inviteCb(opdata)} libraryId={match.params.library_id} userLibraryAbilitiesData={props.userLibraryAbilitiesData} onGetUserAbilities={props.onGetUserAbilities} onClearUserAbilities={props.onClearUserAbilities}/>
 
   ); 
 }
@@ -48,10 +49,13 @@ function LibraryInviteOperatorPage(props) {
 const mapStateToProps = createStructuredSelector({
   library: makeSelectLibrary(),
   isLoading: isLibraryLoading(),
+  userLibraryAbilitiesData: makeSelectUserLibraryAbilities()
 });
 
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
+  onGetUserAbilities: (libraryId, userId) => dispatch(requestGetUserLibraryAbilities(libraryId, userId)),
+  onClearUserAbilities: () => dispatch(requestClearUserLibraryAbilities())
 })
 
 const withConnect = connect(
@@ -60,4 +64,3 @@ const withConnect = connect(
 );
 
 export default compose(withConnect)(LibraryInviteOperatorPage);
-

@@ -32,7 +32,7 @@
   "app.global.status": "Status",
   "app.global.preferred": "Preferred",
   "app.global.privacy_policy_accepted": "Privacy policy",
-  "app.global.preflang":"Email and notification preferred language",
+  "app.global.preflang": "Email and notification preferred language",
   "app.global.user_service_email": "Service email address",
   "app.global.service_email": "Receive email notifications",
   "app.global.userCreateSuccess": "User profile created successfully",
@@ -322,7 +322,6 @@
   "app.components.Notification.loadMore": "Load More",
   "app.components.Notification.showLess": "Show Less",
   "app.components.Notification.goToInbox": "Go to Notification Inbox",
-
   "app.containers.NotificationInbox.header": "Notifications",
   "app.containers.NotificationInbox.searchLabel": "Search Notifications",
   "app.containers.NotificationInbox.searchPlaceholderDescription": "Description",
@@ -367,11 +366,11 @@
   "app.containers.NotificationInbox.confirmDeleteBulkMessage": "Are you sure you want to delete {count} selected notification(s)? This action cannot be undone.",
   "app.containers.NotificationInbox.selectNotificationsMessage": "Please select notifications to delete..",
   "app.containers.NotificationInbox.deleteNotificationSelected": "Delete selected",
- 
   "app.components.LendingsList.LendingSelected": "Selected",
-
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Would you like to invite selected operator?",
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage": "You're not allowed to invite yourself as operator",
+  "app.components.LibraryInviteOperatorForm.alreadyAssigned": "already assigned",
+  "app.components.LibraryInviteOperatorForm.pending": "pending",
   "app.components.LibraryInviteOperator.inviteOperator": "Invite operator",
   "app.components.LibraryInviteOperator.intro": "You can invite other colleagues as library operators. First, search for user by surname or email address.",
   "app.components.LibraryInviteOperator.paragraph1": "If a user is found, then assign permissions and invite your colleague!",

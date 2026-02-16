@@ -62,7 +62,11 @@ import {DEFAULT_ACTION, REQUEST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_SUCCESS,
   REQUEST_GET_LIBRARY_OPTIONLIST_FAIL,
   REQUEST_CLEAR_LIBRARY_OPTIONLIST,
-  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST
+  REQUEST_CLEAR_INSTITUTIONS_OPTIONLIST,
+  REQUEST_GET_USER_LIBRARY_ABILITIES,
+  REQUEST_GET_USER_LIBRARY_ABILITIES_SUCCESS,
+  REQUEST_GET_USER_LIBRARY_ABILITIES_FAIL,
+  REQUEST_CLEAR_USER_LIBRARY_ABILITIES
 } from "./constants";
 
 export const initialState = {
@@ -122,6 +126,11 @@ export const initialState = {
   pending_operators:{},
   pending_operator:{},
   searchUsersOptionList: [],
+  userLibraryAbilities: {
+    data: [],
+    loading: false,
+    error: null,
+  },
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -570,6 +579,27 @@ const libraryReducer = (state = initialState, action) =>
         draft.loading = false;
         draft.error = action.error;
         break;
+
+      case REQUEST_GET_USER_LIBRARY_ABILITIES:
+        draft.userLibraryAbilities.loading = true;
+        draft.userLibraryAbilities.error = null;
+        break;
+      case REQUEST_GET_USER_LIBRARY_ABILITIES_SUCCESS:
+        draft.userLibraryAbilities.loading = false;
+        draft.userLibraryAbilities.data = action.result;
+        break;
+      case REQUEST_GET_USER_LIBRARY_ABILITIES_FAIL:
+        draft.userLibraryAbilities.loading = false;
+        draft.userLibraryAbilities.error = action.error;
+        break;
+      case REQUEST_CLEAR_USER_LIBRARY_ABILITIES:
+        draft.userLibraryAbilities = {
+          data: [],
+          loading: false,
+          error: null,
+        };
+        break;
+
     }
   });
 

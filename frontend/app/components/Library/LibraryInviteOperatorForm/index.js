@@ -7,7 +7,7 @@ import {toast} from 'react-toastify'
 import {translatePerm} from '../../../utils/utilityFunctions'
 
 const LibraryInviteOperatorForm = props => {
-  const { submitCallback, userData, history,auth,filterPerm } = props;
+  const { submitCallback, userData, history, auth, filterPerm, existingAbilities = [] } = props;
   console.log('LibraryInviteOperatorForm', props);
 
   const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
@@ -184,18 +184,24 @@ const LibraryInviteOperatorForm = props => {
             <h5 className="card-title">{intl.formatMessage({id: 'app.global.permissions'})}</h5>
             <ul>
               {opPerms &&
-                Object.keys(opPerms).map(op => (
-                  <li key={op}>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleCheckbox(op, !opPerms[op])}
-                      name={op}
-                      checked={opPerms[op]}
-                      disabled={op !== 'manage' && opPerms['manage']}
-                    />{' '}
-                    {translatePerm(op)}
-                  </li>
-                ))}
+                Object.keys(opPerms).map(op => { const foundAbility = existingAbilities.find(a => a.name === op); 
+                  const alreadyHas = !!foundAbility; const status = foundAbility ? foundAbility.status : null;
+                  const isDisabled = alreadyHas || (op !== 'manage' && opPerms['manage']);
+                  return (
+                    <li key={op} style={alreadyHas ? { color: '#999' } : {}}>
+                      <input
+                        type="checkbox"
+                        onChange={() => handleCheckbox(op, !opPerms[op])}
+                        name={op}
+                        checked={alreadyHas || opPerms[op]}
+                        disabled={isDisabled}
+                      />{' '}
+                      {translatePerm(op)}
+                      {alreadyHas && status === 'pending' && <span style={{ marginLeft: '8px', fontSize: '0.85em' }}>({intl.formatMessage({id: 'app.components.LibraryInviteOperatorForm.pending'})})</span>}
+                      {alreadyHas && status !== 'pending' && <span style={{ marginLeft: '8px', fontSize: '0.85em' }}>({intl.formatMessage({id: 'app.components.LibraryInviteOperatorForm.alreadyAssigned'})})</span>}
+                    </li>
+                  );
+                })}
             </ul>
           </div>
         </div>

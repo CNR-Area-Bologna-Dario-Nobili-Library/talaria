@@ -177,10 +177,38 @@ class LibraryController extends ApiController
         $lib=$this->model->findOrFail($id);
         $user=User::findOrFail($userid);
 
-        $this->authorize($lib);         
-        $lib_userabilities=$user->getAbilities()->where("entity_id",$lib->id)->where("entity_type","App\Models\Libraries\Library");               
-               
-        return $lib_userabilities->values()->all();              
+        $this->authorize($lib);
+
+        // Get existing abilities
+        $existing = $user->getAbilities()
+            ->where("entity_id", $lib->id)
+            ->where("entity_type", "App\Models\Libraries\Library")
+            ->pluck('name')->toArray();
+
+        // Get pending abilities
+        $pending = TemporaryAbility::where('entity_id', $id)
+            ->where('entity_type', 'App\Models\Libraries\Library')
+            ->where('user_id', $userid)
+            ->where('status', config('constants.temporary_ability_status.waiting', 0))
+            ->pluck('abilities')->toArray();
+
+        $pendingAbilities = [];
+        foreach ($pending as $abilities) {
+            $pendingAbilities = array_merge($pendingAbilities, explode(',', $abilities));
+        }
+
+        // Combine and return as objects with 'name' and 'status' key
+        $all = [];
+        foreach($existing as $ex) {
+            $all[$ex] = ['name' => $ex, 'status' => 'active'];
+        }
+        foreach($pendingAbilities as $p) {
+            if(!isset($all[$p])) {
+                $all[$p] = ['name' => $p, 'status' => 'pending'];
+            }
+        }
+        
+        return array_values($all);
     }
 
      //only admin,comunity manager and library manager can see operators                   
@@ -212,22 +240,68 @@ class LibraryController extends ApiController
      }
 
      public function pending_operatorsStore(Request $request, $id){
-        
+
         $lib=$this->model->findOrFail($id);
-         
-        $this->authorize($lib);    
-                
+
+        $this->authorize($lib);
+
+        // Filter out abilities user already has or has pending
+        $requestedAbilities = $request->input('abilities');
+        $userId = $request->input('user_id');
+        $userEmail = $request->input('user_email');
+
+        if ($requestedAbilities) {
+            $requestedArray = array_map('trim', explode(',', $requestedAbilities));
+            $blockedAbilities = [];
+
+            // Check existing abilities (user_id required)
+            if ($userId) {
+                $user = User::find($userId);
+                if ($user) {
+                    $existing = $user->getAbilities()
+                        ->where('entity_id', $id)
+                        ->where('entity_type', 'App\Models\Libraries\Library')
+                        ->pluck('name')->toArray();
+                    $blockedAbilities = array_merge($blockedAbilities, $existing);
+                }
+            }
+
+            // Check pending invitations
+            $pendingQuery = TemporaryAbility::where('entity_id', $id)
+                ->where('entity_type', 'App\Models\Libraries\Library')
+                ->where('status', config('constants.temporary_ability_status.waiting', 0));
+
+            if ($userId) {
+                $pendingQuery->where('user_id', $userId);
+            } elseif ($userEmail) {
+                $pendingQuery->where('user_email', $userEmail);
+            }
+
+            foreach ($pendingQuery->pluck('abilities') as $abilities) {
+                $blockedAbilities = array_merge($blockedAbilities, explode(',', $abilities));
+            }
+
+            // Filter and validate
+            $newAbilities = array_diff($requestedArray, array_unique($blockedAbilities));
+
+            if (empty($newAbilities)) {
+                return $this->response->errorBadRequest('User already has all selected permissions');
+            }
+
+            $request->merge(['abilities' => implode(',', $newAbilities)]);
+        }
+
         $tempPerm=new TemporaryAbility($request->all());
-        
-        //set entity_type+entity_id 
+
+        //set entity_type+entity_id
         $tempPerm->setEntity("library",$id);
-        $tempPerm->save();    
-        
+        $tempPerm->save();
+
         //SEND notification to user (existing or not)
         $tempPerm->notifyInvitationToUser();
-        
-        return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();             
-        
+
+        return $this->response->item($tempPerm, new TemporaryAbilityTransformer())->morph();
+
      }
 
      public function pending_operatorsUpdate(Request $request, $id,$pendingid){

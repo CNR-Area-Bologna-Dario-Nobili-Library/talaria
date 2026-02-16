@@ -322,7 +322,6 @@
   "app.components.Notification.loadMore": "Carica altre",
   "app.components.Notification.showLess": "Visualizza meno",
   "app.components.Notification.goToInbox": "Vai alla lista",
-
   "app.containers.NotificationInbox.header": "Notifiche",
   "app.containers.NotificationInbox.searchLabel": "Cerca notifiche",
   "app.containers.NotificationInbox.searchPlaceholderDescription": "Descrizione",
@@ -367,11 +366,11 @@
   "app.containers.NotificationInbox.confirmDeleteBulkMessage": "Sei sicuro di voler cancellare {count} notifiche? L'azione non puo' essere annullata",
   "app.containers.NotificationInbox.selectNotificationsMessage": "Selezionare le notifiche da eliminare",
   "app.containers.NotificationInbox.deleteNotificationSelected": "Elimina quelle selezionate",
-
   "app.components.LendingsList.LendingSelected": "Selezionati",
-
   "app.components.LibraryInviteOperator.askInviteOperatorMessage": "Invitare l'operatore selezionato?",
   "app.components.LibraryInviteOperatorForm.cannotInviteYourselfMessage": "Non è possibile invitare se stessi come operatori",
+  "app.components.LibraryInviteOperatorForm.alreadyAssigned": "??? already assigned",
+  "app.components.LibraryInviteOperatorForm.pending": "??? pending",
   "app.components.LibraryInviteOperator.inviteOperator": "Invita operatore",
   "app.components.LibraryInviteOperator.intro": "È possibile invitare altri operatori della biblioteca. Per prima cosa, cerca se l'utente esiste già inserendo il suo cognome o l’indirizzo e-mail.",
   "app.components.LibraryInviteOperator.paragraph1": "Se trovi l’utente, assegna i permessi e inoltra l’invito!",

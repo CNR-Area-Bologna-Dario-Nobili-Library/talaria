@@ -329,8 +329,15 @@ export const deleteLibraryPendingOperator = (options) => {
 
 export const inviteLibraryOperator = (options) => {
   options = getOption(options);
-  const library_id = options.library_id    
+  const library_id = options.library_id
   return request(`${BASE_URL}/api/v1/libraries/${library_id}/pending_operators`, options)
+};
+
+export const getUserLibraryAbilities = (options) => {
+  options = getOption(options);
+  const library_id = options.library_id;
+  const user_id = options.user_id;
+  return request(`${BASE_URL}/api/v1/libraries/${library_id}/operators/${user_id}/abilities`, options)
 };
 
 // Reference //
