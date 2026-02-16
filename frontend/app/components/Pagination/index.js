@@ -8,7 +8,7 @@ import './style.scss'
 
 
 const Pagination = (props) => {
-    const {current_page, total_pages, linkToPage,total,count,per_page} = props
+    const {current_page, total_pages, linkToPage,total,count,per_page, pageSizeOptions = [20, 50, 100]} = props
     
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -27,11 +27,9 @@ const Pagination = (props) => {
                         {per_page}
                     </DropdownToggle>
                     <DropdownMenu>
-                        <DropdownItem onClick={() => linkToPage(1, 20)}>20</DropdownItem>
-                        <DropdownItem onClick={() => linkToPage(1, 50)}>50</DropdownItem>
-                        <DropdownItem onClick={() => linkToPage(1, 100)}>100</DropdownItem>                        
-                        {/* <DropdownItem divider/>
-                        <DropdownItem onClick={() => setPageSize(50)}>ALL</DropdownItem> */}
+                        {pageSizeOptions.map(size => (
+                            <DropdownItem key={size} onClick={() => linkToPage(1, size)}>{size}</DropdownItem>
+                        ))}
                     </DropdownMenu>
                 </Dropdown>
             </span>
@@ -56,7 +54,8 @@ const Pagination = (props) => {
 Pagination.propTypes = {
     linkToPage: PropTypes.func.isRequired,
     current_page: PropTypes.number.isRequired,
-    total_pages: PropTypes.number.isRequired
+    total_pages: PropTypes.number.isRequired,
+    pageSizeOptions: PropTypes.array
 };
 
 export default Pagination

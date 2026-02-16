@@ -7,7 +7,7 @@ const BASE_ADMIN_URL=BASE_URL+"/api/v1/admin";
 // Libraries //
 export const admin_getLibrariesList = (options) => {
   const page = options.page?options.page:1;
-  const pageSize = options.pageSize?options.pageSize:20;
+  const pageSize = options.pageSize?options.pageSize:'';
   const query = options.query?options.query:'';    
   const profileType=options.profile_type?options.profile_type:''
   const country=options.country?options.country:''
@@ -53,7 +53,7 @@ export const admin_updateLibrary = (options) => {
 // Institutions //
 export const admin_getInstitutionsList = (options) => {
   const page = options.page?options.page:1;
-  const pageSize = options.pageSize?options.pageSize:20;
+  const pageSize = options.pageSize?options.pageSize:'';
   const query = options.query?options.query:'';    
   const country=options.country?options.country:''
   const institution_type=options.institution_type?options.institution_type:''
