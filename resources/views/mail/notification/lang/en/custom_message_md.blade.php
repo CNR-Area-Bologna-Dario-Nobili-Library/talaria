@@ -2,7 +2,7 @@
 {{-- Content --}}
 @section('content')
 Welcome {{$name}} {{$email}}
-Thanks for join our community!
+Thanks for joining our community!
     @component('mail::button', ['url' => $url ])
         Click here to login
     @endcomponent
