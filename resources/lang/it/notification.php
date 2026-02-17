@@ -29,7 +29,7 @@ return [
     'LibraryOperatorInvitationNotification_title'=>'Una biblioteca ti invita come operatore',
     'LibraryOperatorInvitationDeleteNotification_title'=>'Una biblioteca ha rimosso alcune tue autorizzazioni come operatore',
     'LibraryOperatorInvitationDeleteNewUserNotification_title'=>'Una biblioteca ha rimosso alcune tue autorizzazioni come operatore',
-    'LibraryOperatorInvitationUpdateNotification_title'=>'Una biblioteca ha aggiornato le tue autorizzazioni come operatore',
+    'LibraryOperatorUpdatePermissionsNotification_title'=>'Una biblioteca ha aggiornato le tue autorizzazioni come operatore',
     'OperatorDeleteNotification_title'=>'Le tue autorizzazioni da operatore sono state rimosse',
     'OperatorAcceptedInvitationNotification_title'=>'L\'invito è stato accettato dall\'operatore',
     'OperatorRejectedInvitationNotification_title'=>'L\'invito è stato rifiutato dall\'operatore',
