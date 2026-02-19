@@ -216,9 +216,9 @@ const AppNotificationListener = (props) => {
         url.indexOf('/to-deliver') !== -1 ||
         url.indexOf('/borrowing') !== -1;
 
-      // Note: We only suppress on lending page, NOT borrowing page - borrower should see notifications
-      var userOnLendingPage = isOnLendingPage();
-      if (isBorrowingLendingNotif && (notifierId === currentUserId || userOnLendingPage)) {
+      // Note: We only suppress if the current user is the notifier (to avoid double toasts for own actions)
+      // We DO NOT suppress just because user is on lending page - they need to see requests from others
+      if (isBorrowingLendingNotif && (notifierId === currentUserId)) {
 
        // Mark as seen so store list watcher won't show it either
         var filterKey = normalizeEvtKey(eventData);
@@ -317,7 +317,10 @@ const AppNotificationListener = (props) => {
       url.indexOf('/borrowing') !== -1
     );
 
-    if (isBorrowingLendingUrl && (isOnLendingPage() || Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS)) {
+    var notifierId = latest.data && latest.data.notifier_id != null ? Number(latest.data.notifier_id) : null;
+    var currentUserId = resolveUserId(props);
+
+    if (isBorrowingLendingUrl && (notifierId === currentUserId || Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS)) {
       lastUnreadCount.current = unreadTotal;
       return;
     }
