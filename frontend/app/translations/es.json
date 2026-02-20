@@ -377,6 +377,7 @@
   "app.components.LibraryInviteOperator.paragraph2": "Si no lo encuentras, rellena el formulario con su nombre, apellido y email, añade permisos, e invita a tu colega!",
   "app.components.LibraryInviteOperator.searchBox": "Busca a un bibliotecario/a rellenando su nombre, apellido o email",
   "app.components.LibraryInviteOperator.clickHereToInvite": "Si no lo encuentras, clica el botón de abajo para invitarle como operador.",
+  "app.components.LibraryInviteOperator.pendingOperatorMessage": "??? This operator has a pending invitation. Please wait for them to accept the invitation.",
   "app.components.LandingPageLibrariesBox.importFromOpenurlButton": "Importar de OpenURL/Pubmed",
   "app.components.LandingPageLibrariesBox.newRequestButton": "Nueva petición",
   "app.components.LandingPageLibrariesBox.currentPermissionsList": "Mis permisos",

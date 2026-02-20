@@ -1,0 +1,52 @@
+.editPermissionsForm {
+    .intro {
+        margin-bottom: 10px;        
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+        align-items: center;
+
+        .btn {
+            border-radius: 50px; // Pill shape
+            padding: 10px 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            
+            i {
+                margin-right: 8px;
+            }
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+                background: linear-gradient(135deg, #34ce57 0%, #28a745 100%);
+            }
+
+            &:active:not(:disabled) {
+                transform: translateY(1px);
+                box-shadow: 0 2px 10px rgba(40, 167, 69, 0.3);
+            }
+
+            &:disabled {
+                background: #e9ecef !important;
+                color: #adb5bd !important;
+                box-shadow: none !important;
+                cursor: not-allowed;
+                transform: none !important;
+            }
+        }
+    }
+}

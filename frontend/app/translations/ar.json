@@ -315,6 +315,7 @@
   "app.components.LibraryInviteOperator.paragraph2": "If a user is not found, fill the form with name, surname and email, add permissions and invite!",
   "app.components.LibraryInviteOperator.searchBox": "Search for a user filling his name, surname or email",
   "app.components.LibraryInviteOperator.clickHereToInvite": "If you have not found the user, please click on the button below  to invite the operator.",
+  "app.components.LibraryInviteOperator.pendingOperatorMessage": "??? This operator has a pending invitation. Please wait for them to accept the invitation.",
   "app.components.LandingPageLibrariesBox.importFromOpenurlButton": "Import from OpenURL/Pubmed",
   "app.components.LandingPageLibrariesBox.newRequestButton": "New request",
   "app.components.LandingPageLibrariesBox.currentPermissionsList": "My permissions",

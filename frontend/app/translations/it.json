@@ -377,6 +377,7 @@
   "app.components.LibraryInviteOperator.paragraph2": "Se non trovi l’utente, compila il modulo con nome, cognome ed email, aggiungi i permessi e inoltra l'invito!",
   "app.components.LibraryInviteOperator.searchBox": "Cerca l'utente inserendo il cognome o l'indirizzo email",
   "app.components.LibraryInviteOperator.clickHereToInvite": "Se non hai trovato l’utente, usa il pulsante per invitare l’operatore.",
+  "app.components.LibraryInviteOperator.pendingOperatorMessage": "??? This operator has a pending invitation. Please wait for them to accept the invitation.",
   "app.components.LandingPageLibrariesBox.importFromOpenurlButton": "Importa da OpenURL/Pubmed",
   "app.components.LandingPageLibrariesBox.newRequestButton": "Nuova richiesta",
   "app.components.LandingPageLibrariesBox.currentPermissionsList": "I miei permessi",
