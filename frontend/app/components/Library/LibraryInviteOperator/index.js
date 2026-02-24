@@ -4,6 +4,7 @@ import Select, { components } from 'react-select';
 import './style.scss';
 import confirm from 'reactstrap-confirm';
 
+
 import LibraryInviteOperatorForm from '../LibraryInviteOperatorForm';
 
 const LibraryInviteOperator = props => {
@@ -21,17 +22,27 @@ const LibraryInviteOperator = props => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [isManualEntry, setIsManualEntry] = useState(false);
-    const existingAbilities = (userLibraryAbilitiesData && userLibraryAbilitiesData.data || []);
+  const [isPending, setIsPending] = useState(false);
+  const existingAbilities = (userLibraryAbilitiesData && userLibraryAbilitiesData.data || []);
 
   useEffect(() => {
+    setIsPending(false);
     if (selectedUser && userLibraryAbilitiesData && userLibraryAbilitiesData.data && userLibraryAbilitiesData.data.length > 0) {
+      
+      const isPendingOperator = userLibraryAbilitiesData.data.some(
+        a => a.status === 'pending'
+      );
+
       // Check if any ability is active (not pending or rejected)
       const isActiveOperator = userLibraryAbilitiesData.data.some(
         a => a.status !== 'pending' && a.status !== 'rejected'
       );
+
       if (isActiveOperator) {
         // Redirect to edit page if user is already an active operator in this library
         history.push(`/library/${libraryId}/manage/operators/${selectedUser.id}/edit`);
+      } else if (isPendingOperator) {
+         setIsPending(true);
       }
     }
   }, [selectedUser, userLibraryAbilitiesData, history, libraryId]);
@@ -73,6 +84,7 @@ const LibraryInviteOperator = props => {
     setFullName('');
     setEmail('');
     setIsManualEntry(false);
+    setIsPending(false);
     if(onClearUserAbilities) onClearUserAbilities();
   };
 
@@ -201,8 +213,8 @@ const LibraryInviteOperator = props => {
       </div>
 
       <div className="row mt-2" style={formStyles}>
-        <div className="col col-md-8">
-          <LibraryInviteOperatorForm
+        <div className="col col-md-12">
+            <LibraryInviteOperatorForm
             auth={auth}
             submitCallback={inviteUser}
             userData={selectedUser}
@@ -214,6 +226,7 @@ const LibraryInviteOperator = props => {
             setEmail={setEmail}
             isManualEntry={isManualEntry}
             filterPerm={filterPerm}
+            isPending={isPending}
             existingAbilities={existingAbilities}
           />
         </div>

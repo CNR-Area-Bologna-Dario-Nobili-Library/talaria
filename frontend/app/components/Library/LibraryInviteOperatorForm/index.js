@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Input, FormFeedback, FormGroup, Label } from 'reactstrap';
 import { useIntl } from 'react-intl';
-import messages from './messages';
 import './style.scss';
 import {toast} from 'react-toastify'
 import {translatePerm} from '../../../utils/utilityFunctions'
 
 const LibraryInviteOperatorForm = props => {
-  const { submitCallback, userData, history, auth, filterPerm, existingAbilities = [] } = props;
+  const { submitCallback, userData, history, auth, filterPerm, isPending, existingAbilities = [] } = props;
   console.log('LibraryInviteOperatorForm', props);
 
   const patrons_enabled=(process.env.MANAGE_PATRONS && process.env.MANAGE_PATRONS=="true")?true:false;
@@ -53,20 +52,43 @@ const LibraryInviteOperatorForm = props => {
         } else {
           setFormData({});
         }
-        }, [userData])
+        // Always reset permissions when user changes 
+        if(!isPending) {
+           resetPerms();
+        }
+      }, [userData, isPending])
+
       
-      
-      useEffect( ()=> {   
-        setSaveDisabled(true); 
-        Object.keys(opPerms).forEach(p => {
-          //console.log("perm:",p+": "+opPerms[p])
-          if(opPerms[p]) 
-          {
-            setSaveDisabled(false); 
-            return;
-          }
-        });
-      },[opPerms])
+
+        useEffect(() => {
+        if(!isPending) {
+             let hasPerm = false;
+             Object.keys(opPerms).forEach(p => {
+              if(opPerms[p]) hasPerm = true;
+            });
+            setSaveDisabled(!hasPerm);
+        }
+      }, [opPerms, isPending]);
+
+      // Effect to populate permissions when isPending becomes true
+      useEffect(() => {
+        if (isPending) {
+             setSaveDisabled(true);
+             if (existingAbilities && existingAbilities.length > 0) {
+                 // Use filtered init perms as base but reset values
+                 let newPerms = filterPerm({...initPerms});
+                 
+                 Object.keys(newPerms).forEach(k => newPerms[k] = false);
+    
+                 existingAbilities.forEach(ability => {
+                   if (ability.status === 'pending' && newPerms.hasOwnProperty(ability.name)) {
+                     newPerms[ability.name] = true;
+                   }
+                 });
+                 setOpPerms(newPerms);
+            }
+        }
+      }, [isPending, existingAbilities]);
     
       const resetPerms=() => {    
         setOpPerms(filterPerm(initPerms))
@@ -80,6 +102,7 @@ const LibraryInviteOperatorForm = props => {
     
       //if manager has been selected, reset all other permissions (because a manager can do any operations)
       const handleCheckbox = (op,val) => {
+        if(isPending) return;
         if(op=="manage") {
           Object.keys(opPerms).forEach(p => {
             if(p!="manage")
@@ -122,7 +145,7 @@ const LibraryInviteOperatorForm = props => {
 
   return (
     mounted && (
-      <div className="editPermissionsForm">      
+      <div className="editPermissionsForm">   
         <div className="card">
           <div className="card-body">
             {/* <h5 className='card-title'>User</h5> */}
@@ -140,6 +163,7 @@ const LibraryInviteOperatorForm = props => {
                 value={formData.name || ''}
                 onChange={e => handleFormChange(e)}
                 required
+                disabled={isPending}
               />
             </FormGroup>
             <FormGroup>
@@ -156,6 +180,7 @@ const LibraryInviteOperatorForm = props => {
                 value={formData.surname || ''}
                 onChange={e => handleFormChange(e)}
                 required
+                disabled={isPending}
               />
             </FormGroup>
             <FormGroup>
@@ -173,32 +198,41 @@ const LibraryInviteOperatorForm = props => {
                 onChange={e => handleFormChange(e)}
                 invalid={!emailValid}
                 required
+                disabled={isPending}
               />
               {!emailValid && <FormFeedback>{intl.formatMessage({id: 'app.global.invalid_email'})}</FormFeedback>}
             </FormGroup>
           </div>
         </div>
 
+        {isPending && (
+          <div className="alert alert-warning w-100">
+             <i className="fa-solid fa-clock me-2"></i> {intl.formatMessage({id: 'app.components.LibraryInviteOperator.pendingOperatorMessage', defaultMessage: 'This operator has a pending invitation. Please wait for them to accept the invitation.'})}
+          </div>
+        )}   
         <div className="card">
           <div className="card-body">
             <h5 className="card-title">{intl.formatMessage({id: 'app.global.permissions'})}</h5>
             <ul>
               {opPerms &&
-                Object.keys(opPerms).map(op => { const foundAbility = existingAbilities.find(a => a.name === op); 
-                  const alreadyHas = !!foundAbility; const status = foundAbility ? foundAbility.status : null;
-                  const isDisabled = alreadyHas || (op !== 'manage' && opPerms['manage']);
+                Object.keys(opPerms).map(op => {
+                  const isDisabled = (op !== 'manage' && opPerms['manage']) || isPending;
+                  const isChecked = opPerms[op];
+                  
+                  // Check if this specific permission is pending to show label
+                  const isSpecificPending = isPending && isChecked; 
+
                   return (
-                    <li key={op} style={alreadyHas ? { color: '#999' } : {}}>
+                    <li key={op}>
                       <input
                         type="checkbox"
                         onChange={() => handleCheckbox(op, !opPerms[op])}
                         name={op}
-                        checked={alreadyHas || opPerms[op]}
+                        checked={isChecked}
                         disabled={isDisabled}
                       />{' '}
                       {translatePerm(op)}
-                      {alreadyHas && status === 'pending' && <span style={{ marginLeft: '8px', fontSize: '0.85em' }}>({intl.formatMessage({id: 'app.components.LibraryInviteOperatorForm.pending'})})</span>}
-                      {alreadyHas && status !== 'pending' && <span style={{ marginLeft: '8px', fontSize: '0.85em' }}>({intl.formatMessage({id: 'app.components.LibraryInviteOperatorForm.alreadyAssigned'})})</span>}
+                      {isSpecificPending && <span style={{ marginLeft: '8px', fontSize: '0.85em', fontStyle: 'italic', color: '#666' }}>({intl.formatMessage({id: 'app.components.LibraryInviteOperatorForm.pending', defaultMessage: 'pending'})})</span>}
                     </li>
                   );
                 })}
@@ -206,14 +240,16 @@ const LibraryInviteOperatorForm = props => {
           </div>
         </div>
 
-        <Button disabled={saveDisabled} color="success" onClick={submitForm}>
-          {intl.formatMessage({ id: 'app.global.save' })}
-        </Button>
-        {history && (
-          <Button color="secondary" onClick={() => history.goBack()}>
-            {intl.formatMessage({ id: 'app.global.cancel' })}
+        <div className="action-buttons">
+          <Button disabled={saveDisabled} className="btn-save" onClick={submitForm}>
+            <i className="fa-solid fa-save"></i> {intl.formatMessage({ id: 'app.global.save' })}
           </Button>
-        )}
+          {history && (
+            <Button color="secondary" className="btn" onClick={() => history.goBack()}>
+              {intl.formatMessage({ id: 'app.global.cancel' })}
+            </Button>
+          )}
+        </div>
       </div>
     )
   );

@@ -377,6 +377,7 @@
   "app.components.LibraryInviteOperator.paragraph2": "Bir kullanıcı bulunamazsa, formu isim, soy ad ve email ile doldurun, izinleri ekleyin ve davet edin!",
   "app.components.LibraryInviteOperator.searchBox": "İsim, soyisim veya emailini doldurarak bir kullanıcı arayın",
   "app.components.LibraryInviteOperator.clickHereToInvite": "Kullanıcıyı bulamadıysanız aşağıdaki butona tıklayarak operatörü davet edin.",
+  "app.components.LibraryInviteOperator.pendingOperatorMessage": "??? This operator has a pending invitation. Please wait for them to accept the invitation.",
   "app.components.LandingPageLibrariesBox.importFromOpenurlButton": "OpenURL/Pubmed'den içeri aktarın.",
   "app.components.LandingPageLibrariesBox.newRequestButton": "Yeni talep",
   "app.components.LandingPageLibrariesBox.currentPermissionsList": "İzinlerim",
