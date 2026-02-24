@@ -81,7 +81,7 @@ const LibraryInviteOperatorForm = props => {
                  Object.keys(newPerms).forEach(k => newPerms[k] = false);
     
                  existingAbilities.forEach(ability => {
-                   if (ability.status === 'pending' && newPerms.hasOwnProperty(ability.name)) {
+                   if (ability.status === 'pending' && ability.name in newPerms) {
                      newPerms[ability.name] = true;
                    }
                  });

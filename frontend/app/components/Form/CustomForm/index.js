@@ -223,7 +223,7 @@ const CustomForm = (props) => {
             let dataToSend = {}
             // Nel caso ci siano option list, allora restituisci solo l id / value del risultato
              Object.keys(formData).map(key => {
-                dataToSend[key] = typeof formData[key] === 'object' && formData[key].hasOwnProperty('value') ?  formData[key].value : formData[key]
+                dataToSend[key] = typeof formData[key] === 'object' && 'value' in formData[key] ?  formData[key].value : formData[key]
                 
             })
             // Tutto ok invia Form!
