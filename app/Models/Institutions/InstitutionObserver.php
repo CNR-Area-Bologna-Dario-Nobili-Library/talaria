@@ -3,16 +3,31 @@
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class InstitutionObserver extends BaseObserver
 {
 
-    protected $rules = [        
-        'name' => 'required|string',
-        'institution_type_id'=>'required|integer|exists:institution_types,id',
-//        'user_id' => 'required|integer|exists:users,id',
-    ];
+    public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
 
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return [           
+            'name' => 'required|string',
+            'institution_type_id'=>'required|integer|exists:institution_types,id',
+            'status'=>['required','integer',Rule::in([
+                config("constants.institution_status.pending"),
+                config("constants.institution_status.enabled"),
+                config("constants.institution_status.disabled")
+            ])],
+            'country_id'=> 'required|integer|exists:countries,id',
+    //        'user_id' => 'required|integer|exists:users,id',
+        ];
+    }
 
     protected function setConditionalRules($model)
     {

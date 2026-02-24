@@ -10,7 +10,7 @@ use App\Notifications\Library\PatronDeletedByLibraryNotification;
 use App\Notifications\Library\PatronCancelledJoinRequestNotification;
 use App\Support\RealtimeBroadcaster;
 use \Auth;
-
+use Illuminate\Validation\Rule;
 
 class LibraryUserObserver extends BaseObserver
 {
@@ -19,6 +19,11 @@ class LibraryUserObserver extends BaseObserver
 //        'library_id' => 'sometimes|required|integer|exists:libraries,id',
         'library_id' => 'required|integer|exists:libraries,id',
         'user_id' => 'required|integer|exists:users,id',
+        'status'=>['nullable','integer',Rule::in([
+            config("constants.libraryuser_status.pending"),
+            config("constants.libraryuser_status.enabled"),
+            config("constants.libraryuser_status.disabled"),            
+        ])],
     ];
 
 

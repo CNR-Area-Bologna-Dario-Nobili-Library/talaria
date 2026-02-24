@@ -9,14 +9,41 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+
+/* Note: laravel validation rules can be used are described here: https://laravel.com/docs/6.x/validation#rule-boolean */
 
 class LendingDocdelRequestObserver extends BaseObserver
 {
 
-    protected $rules = [
-        'lending_library_id' => 'nullable|integer|exists:libraries,id',
-        'reference_id' => 'required|integer|exists:references,id',
-    ];
+ public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
+
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return  [
+            'lending_library_id' => 'nullable|integer|exists:libraries,id',
+            'borrowing_library_id' => 'nullable|integer|exists:libraries,id',
+            'reference_id' => 'required|integer|exists:references,id',
+            'lending_status'=>['nullable','string',Rule::in([
+                "requestReceived",
+                "willSupply",
+                "cancelRequested",
+                "canceledAccepted",
+                "unFilled",
+                "copyCompleted"
+            ])],
+            'all_lender'=>'nullable|boolean',
+            'lending_archived'=>'nullable|boolean',
+            'lending_operator_id' => 'nullable|integer|exists:users,id',
+            'file_status'=>'nullable|integer|max:2',
+            'fulfill_type'=>'nullable|integer|max:7',
+            'notfulfill_type'=>'nullable|integer|max:7',     
+        ];
+    }
 
     public function creating($model)
     {

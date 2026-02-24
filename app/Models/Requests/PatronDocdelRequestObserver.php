@@ -8,17 +8,54 @@ use App\Notifications\DDILL\PatronRequestRequestedNotification;
 use \Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use App\Support\RealtimeBroadcaster; 
-
+use App\Support\RealtimeBroadcaster;
+use Illuminate\Validation\Rule;
 
 class PatronDocdelRequestObserver extends BaseObserver
 {
 
-    protected $rules = [
-        'borrowing_library_id' => 'required|integer|exists:libraries,id',
-        'reference_id' => 'required|integer|exists:references,id',
-        'delivery_id' => 'required|integer|exists:deliveries,id',
-    ];
+    public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
+
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return [
+            'borrowing_library_id' => 'required|integer|exists:libraries,id',
+            'reference_id' => 'required|integer|exists:references,id',
+            'delivery_id' => 'required|integer|exists:deliveries,id',
+            'archived'=>'nullable|boolean',
+            'cost_policy'=>['nullable','integer',Rule::in([
+                config("constants.patrondocdelrequest_cost_policy.deny"),
+                config("constants.patrondocdelrequest_cost_policy.accept"),
+                config("constants.patrondocdelrequest_cost_policy.inform")
+            ])],
+            'cost_policy_status'=>['nullable','integer',Rule::in([
+                config("constants.patrondocdelrequest_cost_policy_status.rejected"),
+                config("constants.patrondocdelrequest_cost_policy_status.accepted"),
+                config("constants.patrondocdelrequest_cost_policy_status.notanswer")
+            ])],
+            'notfulfill_type'=>['nullable','integer',Rule::in([
+                config("constants.patrondocdelrequest_notfulfill_type.notavailable"),
+                config("constants.patrondocdelrequest_notfulfill_type.usernotenabled"),
+                config("constants.patrondocdelrequest_notfulfill_type.usernottaken"),
+                config("constants.patrondocdelrequest_notfulfill_type.userrejectcost"),
+                config("constants.patrondocdelrequest_notfulfill_type.usernotanswercost"),
+                config("constants.patrondocdelrequest_notfulfill_type.notfreerlyavail"),
+                config("constants.patrondocdelrequest_notfulfill_type.wrongmetadata"),
+                config("constants.patrondocdelrequest_notfulfill_type.lostdocument")
+            ])],
+            'delivery_format'=>['nullable','integer',Rule::in([
+                config("constants.patrondocdelrequest_delivery_format.PaperCopy"),
+                config("constants.patrondocdelrequest_delivery_format.File"),
+                config("constants.patrondocdelrequest_delivery_format.URL"),
+                config("constants.patrondocdelrequest_delivery_format.Other")
+            ])],
+            'status'=>'nullable|in:requested,canceled,waitingForCost,costAccepted,costNotAccepted,costNotAnswered,readyToDelivery,received,notReceived',         
+        ];
+    }
 
 
     protected function setConditionalRules($model)

@@ -11,15 +11,53 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Requests\DocdelRequest;
 use Exception;
+use Illuminate\Validation\Rule;
 
 class BorrowingDocdelRequestObserver extends BaseObserver
 {
+    public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
 
-    protected $rules = [
-        'borrowing_library_id' => 'required|integer|exists:libraries,id',
-        'reference_id' => 'required|integer|exists:references,id',
-        'patron_docdel_request_id' => 'nullable|integer|exists:patron_docdel_requests,id',
-    ];
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return [
+            'docdel_request_parent_id'=> 'nullable|integer|exists:docdel_requests,id',
+            'borrowing_library_id' => 'nullable|integer|exists:libraries,id',
+            'reference_id' => 'required|integer|exists:references,id',
+            'patron_docdel_request_id' => 'nullable|integer|exists:patron_docdel_requests,id',
+            'borrowing_status'=>['nullable','string',Rule::in([
+                "newrequest",
+                "canceled",
+                "canceledDirect",
+                "cancelRequested",
+                "requested",
+                "fulfilled",
+                "documentReady",
+                "documentNotReady",
+                "notReceived",
+                "notDeliveredToUserDirect",
+                "notDeliveredToUser",
+                "deliveredToUser",
+                "deliveredToUserDirect",
+                "deliveringToDesk",
+                "deskReceived",
+                "deskNotReceived"
+            ])],
+            'archived'=>'nullable|boolean',
+            'forward'=>'nullable|boolean',
+            'desk_delivery_format'=>['nullable','integer',Rule::in([
+                config("constants.borrowingdocdelrequest_desk_delivery_format.PaperCopy"),
+                config("constants.borrowingdocdelrequest_desk_delivery_format.File")
+            ])],
+            'trash_type'=>'nullable|integer|min:1|max:2',
+            'operator_id' => 'nullable|integer|exists:users,id',
+            'request_special_delivery'=>'nullable|boolean',
+            'request_pdf_editorial'=>'nullable|boolean',
+        ];
+    }
 
 
     protected function setConditionalRules($model)

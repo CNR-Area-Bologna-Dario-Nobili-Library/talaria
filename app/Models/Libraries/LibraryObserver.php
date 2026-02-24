@@ -3,15 +3,42 @@
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
+
+
 
 class LibraryObserver extends BaseObserver
 {
 
-    protected $rules = [        
-        'name' => 'required|string',
-//        'user_id' => 'required|integer|exists:users,id',
-    ];
+    public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
 
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return [        
+            'name' => 'required|string',
+            'profile_type'=>['required','integer',Rule::in([config('constants.library_profile_type.basic'),config('constants.library_profile_type.full')])],
+            'institution_id'=> 'required|integer|exists:institutions,id',
+            'subject_id'=> 'required|integer|exists:subjects,id',
+            'country_id'=> 'required|integer|exists:countries,id',            
+            'status'=>['nullable','integer',Rule::in([
+                config("constants.library_status.new"),
+                config("constants.library_status.enabled"),
+                config("constants.library_status.disabled"),
+                config("constants.library_status.renewing"),
+                config("constants.library_status.disabled_bad"),
+                config("constants.library_status.disabled_subscription_expired"),
+                config("constants.library_status.disabled_didntpaid")
+            ])],
+    //        'user_id' => 'required|integer|exists:users,id',
+        ];
+
+    }
+    
+    
 
     protected function setConditionalRules($model)
     {
