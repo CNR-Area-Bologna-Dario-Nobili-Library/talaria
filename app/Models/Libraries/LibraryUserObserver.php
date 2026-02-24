@@ -15,16 +15,25 @@ use Illuminate\Validation\Rule;
 class LibraryUserObserver extends BaseObserver
 {
 
-    protected $rules = [
-//        'library_id' => 'sometimes|required|integer|exists:libraries,id',
-        'library_id' => 'required|integer|exists:libraries,id',
-        'user_id' => 'required|integer|exists:users,id',
-        'status'=>['nullable','integer',Rule::in([
-            config("constants.libraryuser_status.pending"),
-            config("constants.libraryuser_status.enabled"),
-            config("constants.libraryuser_status.disabled"),            
-        ])],
-    ];
+    public function __construct()
+    {
+        $this->rules = $this->initRules();
+        parent::__construct();
+    }
+
+    //Nota: in questo caso non ho potuto preparare l'array $rules perchè config() viene risolta a run-time mentre l'array $rules viene creato a compile-time, quindi ho dovuto creare un metodo initRules() che viene chiamato a run-time per inizializzare l'array $rules
+    protected function initRules() {
+        return [
+    //        'library_id' => 'sometimes|required|integer|exists:libraries,id',
+            'library_id' => 'required|integer|exists:libraries,id',
+            'user_id' => 'required|integer|exists:users,id',
+            'status'=>['nullable','integer',Rule::in([
+                config("constants.libraryuser_status.pending"),
+                config("constants.libraryuser_status.enabled"),
+                config("constants.libraryuser_status.disabled"),            
+            ])],
+        ];
+    }
 
 
     protected function setConditionalRules($model)
