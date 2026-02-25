@@ -8,7 +8,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Requests\BorrowingDocdelRequest;
+use App\Models\Requests\PatronDocdelRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AutomaticCleanDDRequests implements ShouldQueue
 {
@@ -52,6 +54,43 @@ class AutomaticCleanDDRequests implements ShouldQueue
         }
     }
 
+    //NOTA: quando è in "received" potrebbe dover scaricare il file ... in questo caso non posso archiviare, devo aspettare che sia scaricato, 
+    //ma attualmente non gestiamo questo "flag" :( 
+    //=> al max posso archiviare quelle "notReceived" o "canceled" 
+    //PER IL MOMENTO E' DISATTIVATA - VA REIMPLEMENTATA QUANDO RIVEDREMO LA GESTIONE DEI PATRON
+    private function archiveFinalStatePatronRequests() {
+        $req=PatronDocdelRequest::whereRaw("status='received' or status='notReceived' or status='canceled'")
+        ->whereRaw("DATEDIFF(now(),fulfill_date) >= 30")->get();        
+        foreach($req as $prequest)
+        {            
+            $prequest->archived=1; //archives this request
+            $prequest->archived_date=Carbon::now();  
+            $prequest->save();         
+        }
+
+    }
+
+    //archive DD request (not patronreq) which are in final status from 30days from creation date
+    private function archiveFinalStateDocdelRequests() {
+        $reqborrowings=BorrowingDocdelRequest::whereRaw("borrowing_status='documentReady'  or borrowing_status='documentNotReady'  or borrowing_status='notReceived'")        
+        ->where('patron_docdel_request_id','=','null')
+        ->where('archived','=','0')
+        ->whereRaw("DATEDIFF(now(),created_at) >= 30")->get();        
+        foreach($reqborrowings as $borr)
+        {   
+            //archive this request    
+            $borr->archived=1;
+            $borr->archived_date=Carbon::now();            
+            $borr->save();
+
+            // DELETE FILE
+            if($borr->filehash)
+                $borr->deleteFile();
+        }
+
+    }
+
+    
     /* 20/11/25 NON piu usate 
     private function archiveAsNotReceivedNewForwardedRequests() {        
         $reqborrowings=BorrowingDocdelRequest::where('borrowing_status','=','newrequest')
@@ -89,9 +128,15 @@ class AutomaticCleanDDRequests implements ShouldQueue
      */
     public function handle()
     {
+        //Log::info("Start job ".get_class($this)." at ".Carbon::now());
+        
         $this->updateCanceledRequests();
-        $this->resetNotAcceptedRequests();
+        $this->resetNotAcceptedRequests();        
+        $this->archiveFinalStateDocdelRequests();
+        //$this->archiveFinalStatePatronRequests();
         //$this->archiveAsNotReceivedNewForwardedRequests();
         //$this->archiveAsReceivedRequests();
+        
+        //Log::info("End job");
     }
 }
