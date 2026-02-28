@@ -456,10 +456,10 @@ class LibraryController extends ApiController
         //Convert coordinated to decimal if needed
         $lon = $request->input('lon');
         $lat = $request->input('lat');
-        if ($request->has('lon') && !is_numeric($lon))
+        if ($request->has('lon') && !is_null($lon) && !is_numeric($lon))
             $lon = Helper::convertCoordinateToDecimal($lon);
 
-        if ($request->has('lat') && !is_numeric($lat)) 
+        if ($request->has('lat') && !is_null($lat) && !is_numeric($lat))
             $lat = Helper::convertCoordinateToDecimal($lat);
         $model->lon = $lon ?? $model->lon;
         $model->lat = $lat ?? $model->lat;
