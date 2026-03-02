@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-        Patron cancelled their registration request from your library
+        Kullanıcı sizin kütüphanenize kayıt talebini iptal etti
     </p>
 
     <p>

@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has approved your registration request
+        Kütüphane, kayıt talebinizi kabul etti
     </p>
 
     <p>

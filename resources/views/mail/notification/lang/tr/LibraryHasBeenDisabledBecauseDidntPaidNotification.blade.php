@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-    The library {{$name}} has been disabled because didn't paid. 
+    {{$name}} adlı kütüphane hesabı yapılmayan ödeme nedeniyle askıya alındı.
     </p>
     
     <p class="contacts">@lang('notification.comm_manager_contacts')</p>

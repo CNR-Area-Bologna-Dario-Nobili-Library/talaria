@@ -2,10 +2,10 @@
 
 @section('content')    
     <p>
-        Hello!<br/> 
+        Merhaba <br/> 
         
-        Your password has been changed.
+        Şifreniz değiştirildi.
     </p>
 
-    <p> In case you have not changed your password, please contact the support team.</p>
+    <p>Eğer şifrenizi değiştiremediyseniz, lütfen destek ekibiyle iletişime geçiniz.</p>
 @endsection
