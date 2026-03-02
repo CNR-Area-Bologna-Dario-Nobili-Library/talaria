@@ -152,7 +152,6 @@ function resolveUserId(props) {
 
 function toastSuppressed() {
   if (typeof window === 'undefined') return false;
-  if (window.__SUPPRESS_NOTIF_TOAST) return true;
   const until = window.__SUPPRESS_NOTIF_TOAST_UNTIL || 0;
   return Date.now() < until;
 }
@@ -277,10 +276,9 @@ const AppNotificationListener = (props) => {
       app.notifications && app.notifications.unreaded_total != null
         ? Number(app.notifications.unreaded_total) || 0
         : list.filter(function(n) { return n && (n.read_at == null || n.read === false); }).length;
-    var unreadIncreased = unreadTotal > (lastUnreadCount.current || 0);
 
-    // If nothing new and we just handled a realtime event, skip to avoid dupes
-    if (!unreadIncreased && Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS) {
+    // If we just handled a realtime event, skip to avoid duplicate toast
+    if (Date.now() - lastRealtimeMsRef.current < REALTIME_LIST_COOLDOWN_MS) {
       lastUnreadCount.current = unreadTotal;
       return;
     }

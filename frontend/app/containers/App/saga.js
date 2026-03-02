@@ -41,10 +41,9 @@ export function* updateNotificationsAsReadSaga() {
 
   try {
     if (typeof window !== 'undefined') {
-      window.__SUPPRESS_NOTIF_TOAST = true;
       window.__SUPPRESS_NOTIF_TOAST_UNTIL = Date.now() + 1500;
     }
-    yield call(updateNotificationsAsRead, options); 
+    yield call(updateNotificationsAsRead, options);
     yield put(requestSuccess());
 
     yield put(getNotifications());
@@ -61,7 +60,6 @@ export function* markNotificationAsReadSaga({ id, setToRead }) {
 
   try {
     if (typeof window !== 'undefined') {
-      window.__SUPPRESS_NOTIF_TOAST = true;
       window.__SUPPRESS_NOTIF_TOAST_UNTIL = Date.now() + 1500; // 1.5s shield
     }
 
