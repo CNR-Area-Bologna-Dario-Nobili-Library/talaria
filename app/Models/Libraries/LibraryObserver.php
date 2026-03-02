@@ -112,6 +112,7 @@ class LibraryObserver extends BaseObserver
             try {
                 $client->updateByQuery([
                     'index' => 'docdel_requests',
+                    'conflicts' => 'proceed',
                     'body' => [
                         'query' => [
                             'term' => ["$field.id" => $model->id]
