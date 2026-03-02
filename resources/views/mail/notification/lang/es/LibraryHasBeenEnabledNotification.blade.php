@@ -3,14 +3,14 @@
 
 @section('content')    
     <p>
-    Your library registration request has been approved. Please login and revise your library data, correct or update them in your Library/Profile menu. You can now start requesting documents from other libraries.
+    La solicitud de registro de tu biblioteca ha sido aprobada. Por favor, inicia sesión y revisa, corrije o actualiza tus datos en el menú Biblioteca/Perfil. Ya puedes solicitar documentos de otras bibliotecas.
     </p>
 
     @yield('library_data')
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to go to dashboard
+           Clicar aquí para ir al panel de control.
         </a>
     </div>
     

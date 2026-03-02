@@ -2,17 +2,17 @@
 
 @section('content')    
     <p> 
-        Hello!<br/> 
+        ¡Hola!<br/> 
         
-        You are receiving this email because we received a password reset request for your account. 
+        Recibes este mensaje porque hemos recibido una solicitud de restablecimiento de contraseña para tu cuenta.
     </p>
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-        Click here to reset your password
+        Clica aquí para restablecer su contraseña
         </a>
-        <p class="text-muted">(This password reset link will expire in {{$count}} minutes)</p>
+        <p class="text-muted">(Este restablecimiento de contraseña expirará en {{$count}} minutos)</p>
     </div>    
 
-    <p>If you did not request a password reset, no further action is required.</p>
+    <p>Si no solicitaste un restablecimiento de contraseña, no se requiere ninguna otra acción por tu parte.</p>
 @endsection

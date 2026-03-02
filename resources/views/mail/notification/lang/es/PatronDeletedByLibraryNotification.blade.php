@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has deleted your registration
+        La biblioteca ha eliminado tu registro
     </p>
 
     <p>

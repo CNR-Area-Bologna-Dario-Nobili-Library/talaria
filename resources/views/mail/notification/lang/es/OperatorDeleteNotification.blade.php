@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},<br/><br/>
-        {{$entity_name}} removed your operator permissions.
+        Estimado/a {{$name}} {{$surname}},<br/><br/>
+        {{$entity_name}} canceló tus permisos como operador.
     </p>
 @endsection

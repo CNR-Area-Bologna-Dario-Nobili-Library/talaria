@@ -3,14 +3,14 @@
 
 @section('content')    
     <p> 
-        Welcome {{$user_name}} {{$user_surname}} in our community!
+        ¡Bienvenido/a {{$user_name}} {{$user_surname}} a nuestra comunidad!
     </p>
 
     @yield('user_data');
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to login
+           Clica aquí para iniciar sesión
         </a>
     </div>    
 @endsection

@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        Your registration request is awaiting for approval by the librarians
+        Tu solicitud de registro está pendiente de aprovación por parte de los bibliotecarios/as.
     </p>
 
     <p>

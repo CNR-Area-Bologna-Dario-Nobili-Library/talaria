@@ -2,10 +2,10 @@
 
 @section('content')    
     <p> 
-        Hello!<br/> 
+        ¡Hola!<br/> 
         
-        Your password has been changed.
+        Tu contraseña ha sido cambiado.
     </p>
 
-    <p> In case you have not changed your password, please contact the support team.</p>
+    <p>En caso de que no hayas cambiado tu contraseña, por favor contacta con el equipo de soporte.</p>
 @endsection

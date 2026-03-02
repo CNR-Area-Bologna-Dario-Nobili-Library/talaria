@@ -2,8 +2,8 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},<br/><br/>
-        the library {{$lib_name}} has removed these permissions: 
+        Estimado/a {{$name}} {{$surname}},<br/><br/>
+        La biblioteca {{$lib_name}} ha revocado estos permisos:
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent        
     </p>

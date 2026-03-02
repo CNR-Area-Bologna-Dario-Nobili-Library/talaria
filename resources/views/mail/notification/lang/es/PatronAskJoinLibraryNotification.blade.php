@@ -5,7 +5,7 @@
 
 @section('content')    
     <p>
-        A new patron has requested to join your library
+        Un nuevo usuario ha solicitado unirse a tu biblioteca
     </p>
 
     <p>
