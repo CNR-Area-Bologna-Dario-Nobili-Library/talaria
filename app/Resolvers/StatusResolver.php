@@ -281,16 +281,24 @@ class StatusResolver
                 $users=$unique->values()->all();
                 
                 //$collection->unique('user_id')->each(function ($arr,$coll) {                       
+                $currentUserId = $this->user ? $this->user->id : null;
+
                 foreach($users as $arr)
                 {
                     $item=$arr[0];
                     $noti=$arr[1];
-                      
-                    $bn=new $noti($this->model);      
-                
+
+                    // Skip notifying the user who performed the action
+                    if($currentUserId && $item["user_id"] == $currentUserId) {
+                        Log::info("Skip notify to action user: ".$item["email"]);
+                        continue;
+                    }
+
+                    $bn=new $noti($this->model);
+
                     $u=User::findOrFail($item["user_id"]);
                     Log::info("notify to User: ".$u->user_service_email);
-                    $u->notify($bn);                
+                    $u->notify($bn);
                     RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                }   
                                                                                       
                 //});
