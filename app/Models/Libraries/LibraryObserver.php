@@ -1,8 +1,10 @@
 <?php namespace App\Models\Libraries;
 
 use App\Models\BaseObserver;
+use App\Models\Requests\BorrowingDocdelRequestTransformer;
 use \Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 
@@ -69,8 +71,17 @@ class LibraryObserver extends BaseObserver
 
     public function saved($model)
     {        
-        return parent::saved($model);
+        // Return in case of new library
+        if ($model->wasRecentlyCreated) {
+            return;
+        }
 
+        // Sync to ES only if one of these fields has changed
+        $relevantFields = ['name', 'institution_id', 'country_id', 'subject_id'];
+        if ($model->wasChanged($relevantFields)) {
+            $this->syncWithElasticsearch($model);
+        }
+        return parent::saved($model);
     }
 
     public function deleting($model)
@@ -86,5 +97,36 @@ class LibraryObserver extends BaseObserver
         return parent::restoring($model);
     }
     
+    protected function syncWithElasticsearch($model)
+    {
+        /** @var Elasticsearch\Client $client */
+        $client = app('Elasticsearch\Client');
+
+        // Get the transformer to create the library object suited for ES
+        $transformer = new BorrowingDocdelRequestTransformer();
+        $libraryData = $transformer->createLibraryObject($model);
+
+        // Library can be borrowing or lending, so update both sides
+        $fieldsToUpdate = ['borrowing_library', 'lending_library'];
+        foreach ($fieldsToUpdate as $field) {
+            try {
+                $client->updateByQuery([
+                    'index' => 'docdel_requests',
+                    'body' => [
+                        'query' => [
+                            'term' => ["$field.id" => $model->id]
+                        ],
+                        'script' => [
+                            'source' => "ctx._source.$field = params.newData",
+                            'params' => ['newData' => $libraryData],
+                            'lang' => 'painless'
+                        ]
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                Log::error("Error updating $field in elasticsearch: " . $e->getMessage());
+            }
+        }
+    }
     
 }
