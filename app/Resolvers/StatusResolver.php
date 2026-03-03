@@ -143,7 +143,7 @@ class StatusResolver
      */
     public function changeStatus($newStatus,$others=null,$userCheck=true)
     {
-        Log::info("StatusRes: CLASS:".class_basename($this->model)." Status:".$newStatus);
+        //Log::info("StatusRes: CLASS:".class_basename($this->model)." Status:".$newStatus);
         
         if($newStatus === $this->status)
             return $this->model->getStatus();
@@ -192,7 +192,7 @@ class StatusResolver
 
     public function jobs() {
         //executing jobs   
-        Log::info("StatusRes JOBS");
+        //Log::info("StatusRes JOBS");
         $this->flow = collect($this->flow_tree[$this->model->getStatus()]); 
         if($this->flow->has('jobs'))
         {                      
@@ -200,7 +200,7 @@ class StatusResolver
                 $jobclass::dispatchNow($this->model);                
             }
         }
-        Log::info("Status resolver jobs exit");  
+        //Log::info("Status resolver jobs exit");  
     }
 
     public function notify()
@@ -209,7 +209,7 @@ class StatusResolver
         $collection = new Collection(); //collection of array object [user, notificationClass] that has to receive the notification (of the class specified) and it expects users of the form [user_id,email] because they come from "userwithpermissions.. " (i.e. from "operators") 
         if($this->flow->has('notify'))
         {
-             Log::info("Status resolver NOTIFY:");  
+             //Log::info("Status resolver NOTIFY:");  
             foreach ($this->flow->get('notify') as $entity=>$methodarr) {
                 
                     switch ($entity){
@@ -230,7 +230,7 @@ class StatusResolver
                                                 
                                 $method=$entry[0];
                                 $users=$this->model->$method();  //returns a Collection of User object
-                                Log::info("method: ".$method);
+                                //Log::info("method: ".$method);
 
                                 if (is_object($users) && $users instanceof User) //is just a single User
                                 {
@@ -241,7 +241,7 @@ class StatusResolver
 
                                     $users->add($myu);
 
-                                    Log::info("user singolo");
+                                    //Log::info("user singolo");
                                 }   
 
                                 $classname="App\\Notifications\\".$entry[1];       
@@ -290,14 +290,14 @@ class StatusResolver
 
                     // Skip notifying the user who performed the action
                     if($currentUserId && $item["user_id"] == $currentUserId) {
-                        Log::info("Skip notify to action user: ".$item["email"]);
+                        //Log::info("Skip notify to action user: ".$item["email"]);
                         continue;
                     }
 
                     $bn=new $noti($this->model);
 
                     $u=User::findOrFail($item["user_id"]);
-                    Log::info("notify to User: ".$u->user_service_email);
+                    //Log::info("notify to User: ".$u->user_service_email);
                     $u->notify($bn);
                     RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                }   
                                                                                       
@@ -306,7 +306,7 @@ class StatusResolver
 
             }
         }
-         Log::info("Status resolver notify exit");  
+         //Log::info("Status resolver notify exit");  
         //return false;
     }
 
