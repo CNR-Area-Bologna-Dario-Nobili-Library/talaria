@@ -3,6 +3,7 @@
 use App\Models\BaseObserver;
 use \Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class InstitutionObserver extends BaseObserver
@@ -57,8 +58,13 @@ class InstitutionObserver extends BaseObserver
 
     public function saved($model)
     {
-        return parent::saved($model);
+        // Sync to elasticsearch only if name, country_id or institution_type_id changes
+        $relevantFields = ['name', 'country_id', 'institution_type_id'];
 
+        if ($model->wasChanged($relevantFields)) {
+            $this->syncWithElasticsearch($model);
+        }
+        return parent::saved($model);
     }
 
     public function deleting($model)
@@ -71,6 +77,58 @@ class InstitutionObserver extends BaseObserver
     public function restoring($model)
     {
         return parent::restoring($model);
+    }
+
+    protected function syncWithElasticsearch($model)
+    {
+        /** @var Client $client */
+        $client = app('Elasticsearch\Client');
+        
+        // Need to update every request that involves any library beloging to this institution
+        $libraryIds = $model->libraries()->pluck('id')->toArray();
+
+        if (empty($libraryIds)) {
+            return;
+        }
+
+        // Libraries can be borrowing or lending, so update both sides
+        $fieldsToUpdate = ['borrowing_library', 'lending_library'];
+
+        foreach ($fieldsToUpdate as $field) {
+            try {
+                $client->updateByQuery([
+                    'index' => 'docdel_requests',
+                    'conflicts' => 'proceed',
+                    'body' => [
+                        'query' => [
+                            // Find requests where the library belongs to this institution
+                            'terms' => ["$field.id" => $libraryIds]
+                        ],
+                        'script' => [
+                            'source' => "
+                                ctx._source.$field.institution.name = params.instName;
+                                ctx._source.$field.institution.institution_type.id = params.instTypeId;
+                                ctx._source.$field.institution.institution_type.name = params.instTypeName;
+                                ctx._source.$field.institution.country.id = params.countryId;
+                                ctx._source.$field.institution.country.name = params.countryName;
+                                ctx._source.$field.institution.country.code = params.countryCode;
+                            ",
+                            'params' => [
+                                'instName' => $model->name ?? null,
+                                'instTypeId' => $model->institution_type->id ?? null,
+                                'instTypeName' => $model->institution_type->name ?? null,
+                                'countryId' => $model->country->id ?? null,
+                                'countryName' => $model->country->name ?? null,
+                                'countryCode' => $model->country->code ?? null
+                            ],
+                            'lang' => 'painless'
+                        ]
+                    ]
+                ]);
+            } catch (\Exception $e) {
+                Log::error("Error updating $field in elasticsearch: " . $e->getMessage());
+            }
+        }
     }
 
 }
