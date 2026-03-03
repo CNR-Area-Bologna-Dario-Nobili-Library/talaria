@@ -9,6 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Requests\BorrowingDocdelRequest;
 use App\Models\Requests\PatronDocdelRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class AutomaticDeleteUploadedFiles implements ShouldQueue
 {
@@ -47,7 +49,9 @@ class AutomaticDeleteUploadedFiles implements ShouldQueue
      */
     public function handle()
     {        
+        Log::info("Start job ".get_class($this)." at ".Carbon::now());
         $this->deleteFileFromArchivedRequests();
         $this->deleteFileFromArchivedPatronRequests();    
+        Log::info("End job ".get_class($this)." at ".Carbon::now());
     }
 }
