@@ -3,7 +3,7 @@
 @section('content')    
     <p>
         Estimado/a {{$name}} {{$surname}},<br/><br/>
-        La biblioteca {{$lib_name}} ha actualizado tus permisos de operador<br/>
+        La biblioteca {{$lib_name}} ha actualizado tus permisos de operador/a<br/>
         Tus permisos son:
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent

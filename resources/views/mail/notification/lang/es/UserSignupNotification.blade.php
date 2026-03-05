@@ -6,7 +6,7 @@
         ¡Bienvenido/a {{$user_name}} {{$user_surname}} a nuestra comunidad!
     </p>
 
-    @yield('user_data');
+    @yield('user_data')
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">

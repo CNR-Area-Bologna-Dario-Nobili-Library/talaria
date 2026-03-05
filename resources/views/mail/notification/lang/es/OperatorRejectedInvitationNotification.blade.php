@@ -2,6 +2,6 @@
 
 @section('content')    
     <p>
-        {{$name}} {{$surname}} ha rechazado la invitación como operador.
+        {{$name}} {{$surname}} ha rechazado la invitación como operador/a.
     </p> 
 @endsection
