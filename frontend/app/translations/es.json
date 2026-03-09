@@ -794,7 +794,7 @@
   "app.routes.ReferenceNew": "Nueva referencia",
   "app.routes.RequestNew": "Nueva petición",
   "app.routes.RequestDetail": "Detalles de la petición",
-  "app.routes.Operators": "Operadores",
+  "app.routes.Operators": "Operadores/as",
   "app.routes.PendingOperators": "Invitaciones en proceso",
   "app.routes.NewOperator": "Invitar a operador/a",
   "app.routes.Searches": "Búsquedas",
