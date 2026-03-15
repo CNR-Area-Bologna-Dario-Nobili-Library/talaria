@@ -36,9 +36,9 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule)
-    {        
-        $schedule->job(new AutomaticCleanDDRequests)->everyFiveMinutes()->withoutOverlapping();
+    {               
         $schedule->job(new AutomaticDeleteUploadedFiles)->dailyAt('00:01')->withoutOverlapping();            
+        $schedule->job(new AutomaticCleanDDRequests)->dailyAt('00:30')->withoutOverlapping();
     }
 
     /**

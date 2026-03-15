@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-    The library {{$name}} has been deleted. 
+    {{$name}} adlı kütüphane silindi.
     </p>
     
     <p class="contacts">@lang('notification.comm_manager_contacts')</p>

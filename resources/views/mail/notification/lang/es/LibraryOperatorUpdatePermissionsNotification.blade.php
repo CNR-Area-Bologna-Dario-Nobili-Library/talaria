@@ -2,9 +2,9 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},<br/><br/>
-        the library {{$lib_name}} updated your operator permissions<br/>
-        Your permissions are: 
+        Estimado/a {{$name}} {{$surname}},<br/><br/>
+        La biblioteca {{$lib_name}} ha actualizado tus permisos de operador/a<br/>
+        Tus permisos son:
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent
     </p> 

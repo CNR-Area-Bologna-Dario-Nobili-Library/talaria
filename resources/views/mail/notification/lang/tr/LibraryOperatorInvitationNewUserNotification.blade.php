@@ -2,18 +2,18 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},<br/><br/>
-        the library {{$lib_name}} has invited you as operator<br/>
-        Your permissions are: 
+        Sayın {{$name}} {{$surname}},<br/><br/> 
+        {{$lib_name}} adlı kütüphane sizi operatör olarak davet etti. <br/>
+        İzinleriniz:
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent
 
-        It seems that you do not have an account on the system. You have to sign up first!
+        Sistemde hesabınız yok gibi görünüyor. Önce kayıt olmalısınız!
     </p>
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to signup
+           Buraya tıklayarak kayıt olun
         </a>
     </div>    
 @endsection

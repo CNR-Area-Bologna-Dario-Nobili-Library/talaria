@@ -128,7 +128,7 @@ class AutomaticCleanDDRequests implements ShouldQueue
      */
     public function handle()
     {
-        //Log::info("Start job ".get_class($this)." at ".Carbon::now());
+        Log::info("Start job ".get_class($this)." at ".Carbon::now());
         
         $this->updateCanceledRequests();
         $this->resetNotAcceptedRequests();        
@@ -137,6 +137,6 @@ class AutomaticCleanDDRequests implements ShouldQueue
         //$this->archiveAsNotReceivedNewForwardedRequests();
         //$this->archiveAsReceivedRequests();
         
-        //Log::info("End job");
+        Log::info("End job ".get_class($this)." at ".Carbon::now());
     }
 }

@@ -2,8 +2,8 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},<br/><br/>
-        the library {{$lib_name}} has removed these permissions: 
+        Sayın {{$name}} {{$surname}},<br/><br/> 
+        {{$lib_name}} adlı kütüphane bu izinleri kaldırdı. 
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent        
     </p>

@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-        Patron cancelled their registration request from your library
+        El usuario canceló su solicitud de registro en tu biblioteca
     </p>
 
     <p>

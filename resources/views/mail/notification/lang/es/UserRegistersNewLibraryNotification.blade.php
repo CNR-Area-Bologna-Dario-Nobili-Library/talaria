@@ -3,14 +3,14 @@
 
 @section('content')    
     <p>
-    The library has been successfully registered, but you must wait for activation from the community manager.
+    La biblioteca se ha registrado correctamente, pero tienes que esperar la activación por parte del administrador de la comunidad.
     </p>
 
     @yield('library_data');
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to go to dashboard
+           Clica aquí para ir al panel de control
         </a>
     </div>    
 @endsection

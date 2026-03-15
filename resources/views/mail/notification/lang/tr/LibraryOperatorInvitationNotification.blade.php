@@ -2,16 +2,16 @@
 
 @section('content')    
     <p>
-        Dear {{$name}} {{$surname}},
-        the library {{$lib_name}} has invited you as operator
-        Your permissions are:
+        Sayın {{$name}} {{$surname}},<br/><br/> 
+        {{$lib_name}} adlı kütüphane sizi operatör olarak davet etti. <br/>
+        İzinleriniz:
         @component('mail.notification.custom_permission_list', ['abilities' => $abilities])
         @endcomponent
     </p>
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to accept/deny
+           Buraya tıklayarak kabul edebilir veya reddedebilirsiniz
         </a>
     </div>    
 @endsection

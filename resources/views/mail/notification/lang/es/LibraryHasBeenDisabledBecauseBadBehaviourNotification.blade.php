@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-    The library {{$name}} has been disabled for bad behaviour. 
+    La biblioteca {{$name}} ha sido desactivada por actuación indadecuada.
     </p>
     
     <p class="contacts">@lang('notification.comm_manager_contacts')</p>

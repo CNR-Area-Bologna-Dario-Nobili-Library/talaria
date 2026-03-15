@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-    The library {{$name}} has to renew its subscription. 
+    La biblioteca {{$name}} tiene que renovar su suscripción.
     </p>
     
     <p class="contacts">@lang('notification.comm_manager_contacts')</p>

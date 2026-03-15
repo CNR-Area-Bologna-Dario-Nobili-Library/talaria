@@ -224,8 +224,6 @@ class BorrowingDocdelRequestController extends ApiController
             if($model->library && $model->library->id==$l->id) 
             {        
 
-                $model = $this->talaria->update($model, $request, $bid);
-                            
                 if($request->has("reference"))
                 {    
                     
@@ -234,6 +232,8 @@ class BorrowingDocdelRequestController extends ApiController
                     //NOTE: this will not call Policy, and will overwrite model!!            
                     $model->reference()->update($reffields);                   
                 }
+
+                $model = $this->talaria->update($model, $request, $bid);
                 
                 if($request->has("forward") && $request->input("forward")==1)
                 {

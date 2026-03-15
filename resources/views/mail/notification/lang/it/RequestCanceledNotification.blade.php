@@ -2,6 +2,6 @@
 
 @section('content')    
     <p>
-    La richiesta #{{$id}} è stata cancellata dalla biblioteca richiedenteon è richiesta alcuna ulteriore azione da parte tua.
+    La richiesta #{{$id}} è stata cancellata dalla biblioteca richiedente. Non è richiesta alcuna ulteriore azione da parte tua.
     </p>    
 @endsection

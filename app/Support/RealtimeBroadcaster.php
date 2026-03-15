@@ -24,10 +24,10 @@ class RealtimeBroadcaster
         $payload['timestamp'] = $payload['timestamp'] ?? now()->toIso8601String();
 
         // Single unified broadcast - NO instanceof checks needed
-        Log::info('🔔 Broadcasting unified notification', [
+        /*Log::info('🔔 Broadcasting unified notification', [
             'type' => $payload['type'] ?? 'generic',
             'target_user' => $notifiable->id ?? null            
-        ]);        
+        ]);*/        
         // Only one event needed!
         event(new AppNotificationEvent($payload));
     }

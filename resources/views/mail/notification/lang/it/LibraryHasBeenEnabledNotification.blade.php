@@ -3,7 +3,7 @@
 
 @section('content')    
     <p>
-    Your library registration request has been approved. Please login and revise your library data, correct or update them in your Library/Profile menu. You can now start requesting documents from other libraries.
+    La richiesta di registrazione della tua biblioteca è stata approvata. Effettua il login e rivedi i dati, correggili o aggiornali nel menu "La mia biblioteca/Profilo biblioteca". Ora puoi iniziare a richiedere documenti alle altre biblioteche.
     </p>
 
     @yield('library_data')

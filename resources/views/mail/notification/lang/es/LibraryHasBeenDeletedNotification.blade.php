@@ -2,7 +2,7 @@
 
 @section('content')    
     <p>
-    The library {{$name}} has been deleted. 
+    La biblioteca {{$name}} ha sido borrada.
     </p>
     
     <p class="contacts">@lang('notification.comm_manager_contacts')</p>

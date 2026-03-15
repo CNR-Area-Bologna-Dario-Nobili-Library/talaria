@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has deleted your registration
+        Kütüphane, kaydınızı sildi
     </p>
 
     <p>

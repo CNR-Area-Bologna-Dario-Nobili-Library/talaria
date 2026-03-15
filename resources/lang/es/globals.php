@@ -3,15 +3,15 @@
 use App\Helper\Helper;
 
 $globalTrans=[
-    'user_data_header'=>'???User detail',    
-    'reference_data_header'=>'???Reference detail',
-    'request_data_header'=>'???Request detail',
-    'delivery_data_header'=>'???Pickup point detail',
-    'borrowing_library_data_header'=>'???Borrowing library',
-    'lending_library_data_header'=>'???Lending library',
-    'request_link'=>'???Click here to manage the request',
-    'users_list_link'=>'???Click here to open users list',
-    'my_libraries_list_link'=>'???Click here to open your libraries list',
+    'user_data_header'=>'Datos del usuario',    
+    'reference_data_header'=>'Datos del documento',
+    'request_data_header'=>'Datos de la petición',
+    'delivery_data_header'=>'Información sobre el punto de recogida',
+    'borrowing_library_data_header'=>'Biblioteca solicitante',
+    'lending_library_data_header'=>'Biblioteca suministradora',
+    'request_link'=>'Clicar aquí para gestionar la petición',
+    'users_list_link'=>'Clicar aquí para abrir la lista de usuarios',
+    'my_libraries_list_link'=>'Clicar aquí para abrir tu lista de bibliotecas',
 ];
 
 //add translations from frontend

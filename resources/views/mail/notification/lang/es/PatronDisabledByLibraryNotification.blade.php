@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has discarded your registration request
+        La biblioteca ha descartado tu solicitud de registro
     </p>
 
     <p>

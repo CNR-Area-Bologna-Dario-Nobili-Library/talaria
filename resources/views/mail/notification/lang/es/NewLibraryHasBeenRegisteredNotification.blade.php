@@ -3,14 +3,14 @@
 
 @section('content')    
     <p>
-    A new library has requested registration. Please go in the admin dashboard and manage the request from the Libraries list.
+    Una nueva biblioteca ha solicitado registrarse. Por favor, ve al panel de administración y resuelve la petición desde la Lista de Bibliotecas.
     </p>
 
     @yield('library_data')
 
     <div class="buttonBlock">
         <a href="{{ $notification_url }}" class="button">
-           Click here to go to admin dashboard
+           Clica aquí para ir al panel de administración
         </a>
     </div>    
 @endsection

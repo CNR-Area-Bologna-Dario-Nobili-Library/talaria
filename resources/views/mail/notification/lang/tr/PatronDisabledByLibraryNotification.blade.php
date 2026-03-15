@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has discarded your registration request
+        Kütüphane, kayıt talebinizi iptal etti
     </p>
 
     <p>

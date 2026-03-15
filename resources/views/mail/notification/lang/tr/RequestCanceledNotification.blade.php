@@ -2,6 +2,6 @@
 
 @section('content')    
     <p>
-    Request #{{$id}} has been deleted by the Borrowing library. No further action is needed on your part.
+    #{{$id}} adlı talep istek yapan kütüphane tarafından silindi. İşlem yapmanıza gerek yok.
     </p>    
 @endsection

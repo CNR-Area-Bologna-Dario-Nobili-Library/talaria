@@ -4,7 +4,7 @@
 
 @section('content')    
     <p>
-        The library has approved your registration request
+        La biblioteca ha aprobado tu solicitud de registro
     </p>
 
     <p>

@@ -2,6 +2,6 @@
 
 @section('content')    
     <p>
-        Operator invitation was accepted by {{$name}} {{$surname}}
+        Operatör daveti {{$name}} {{$surname}} tarafından kabul edildi
     </p> 
 @endsection
