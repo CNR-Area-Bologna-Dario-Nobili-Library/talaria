@@ -16,7 +16,7 @@ class PatronDocdelRequestPolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct([]); //nessuno bypassa questa policy,
     }
     
     //filtrata dall'owner nel controller

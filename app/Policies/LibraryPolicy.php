@@ -7,6 +7,7 @@ use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
 
+
 class LibraryPolicy extends BasePolicy
 {
     /**
@@ -16,7 +17,7 @@ class LibraryPolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct();
     }
 
     public function show(User $user, Model $model)

@@ -36,11 +36,7 @@ class PatronDocdelRequest extends BaseModel
         'borrowing_library_id', //id biblioteca alla quale ho inviato la rich.
         'reference_id',
         //'user_id', //usiamo create_by
-        'librarycounter', //serve???  rm_countbib: ogni biblio si vede le rich utente partire da 1 usando questo campo
-        //'status',  //status NON deve essere fillable perchè lo gestisco tramite StatusProvider
-        'request_date',        
-        'cancel_date', //data annullamento/cancellazione
-        'fulfill_date', //data evasione/inevasione        
+        'librarycounter', //serve???  rm_countbib: ogni biblio si vede le rich utente partire da 1 usando questo campo        
         'cost_policy', //Politica di Accettazione Costi: 0=Non accetta nessun costo; 1=Accetta qualunque costo; 2=Vuole essere informato
         'cost_policy_status', //1-accettatto,2-non accettato,3-non risp
         'waiting_cost_date', //data richieasta accettaz costo
@@ -66,10 +62,21 @@ class PatronDocdelRequest extends BaseModel
         // filename  //lo mettiamo anche qui x file dato all'utente (se licenza lo consente)?
         //	rm_tempo_consegna_ut  	Tempo totale di consegna: rm_dataeva-rm_datarichie
         // 	rm_tempo_iniziolav 	 	Tempo per la presa in gestionde da parte della bib: dd_datarichie-rm_datarichie
-        // 	rm_tempo_finelav        Tempo per la consegna del doc ricevuto da parte della bib: rm_dataeva-dd_dataeva
+        // 	rm_tempo_finelav        Tempo per la consegna del doc ricevuto da parte della bib: rm_dataeva-dd_dataeva                
+    ];
 
-        
-        
+    protected $visible=[               
+        'id',
+        'created_at',
+        'updated_at',        
+    ];
+
+    protected $guarded= [
+        'request_date',        
+        'cancel_date', //data annullamento/cancellazione
+        'fulfill_date', //data evasione/inevasione        
+        'status',//status NON deve essere fillable perchè lo gestisco tramite StatusProvider    
+
     ];
 
     protected static $observerClass=PatronDocdelRequestObserver::class;
@@ -77,6 +84,12 @@ class PatronDocdelRequest extends BaseModel
     protected $simpleSearchFields=["pub_title"]; //ricerca sul riferimento
 
     protected $statusField="status";
+
+    public function __construct()
+    {
+        parent::__construct();                   
+        $this->visible=array_merge($this->visible,$this->fillable,$this->guarded);                          
+    }
 
 
     public function reference()

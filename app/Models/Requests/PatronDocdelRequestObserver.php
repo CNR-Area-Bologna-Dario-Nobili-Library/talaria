@@ -76,13 +76,21 @@ class PatronDocdelRequestObserver extends BaseObserver
     {            
         //Note: instead of calling ::create method, i've used filled
         //because otherwise it will not run constructor, so i cannot fill all
-        //fields (inherited by DocDelRequest), but just BorrowingDocdelRequest's own fields
+        //fields (inherited by DocDelRequest), but just BorrowingDocdelRequest's own fields     
          $br=new BorrowingDocdelRequest();
+         /* we cannot use fill() because these fields are guarded and will be ignored!! 
          $br->fill([                     
             'patron_docdel_request_id'=>$model->id,
             'reference_id'=>$model->reference_id,
             'borrowing_library_id'=>$model->borrowing_library_id,            
-         ]);
+         ]);*/
+
+         //so set them manually
+         $br->patron_docdel_request_id=$model->id;
+         $br->reference_id=$model->reference_id;
+         $br->borrowing_library_id=$model->borrowing_library_id;
+
+
          if($br->save())
          {  
             // Notify...          

@@ -16,7 +16,7 @@ class BorrowingDocdelRequestPolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct([]); //nessuno bypassa questa policy,
     }
     
     //non essendoci il model, la filtro dal controller e qui ritorno true
@@ -47,7 +47,7 @@ class BorrowingDocdelRequestPolicy extends BasePolicy
     }
 
     public function canManage(User $user, Model $model)
-    {           
+    {         
         return $user->can('manage', $model->library)||
                $user->can('borrow', $model->library)||
                $user->can('deliver', $model->library);                             

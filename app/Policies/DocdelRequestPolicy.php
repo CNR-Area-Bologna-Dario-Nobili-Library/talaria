@@ -16,7 +16,7 @@ class DocdelRequestPolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct([]);//nessuno bypassa questa policy,
     }
 
     public function create(User $user, Model $model)

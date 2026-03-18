@@ -22,7 +22,7 @@ class Institution extends BaseModel
     protected static $observerClass = InstitutionObserver::class;
 
     protected $attributes= [
-        'status'=>1, 
+     'status'=>1, 
     ];
 
     protected $fillable = [
@@ -40,6 +40,11 @@ class Institution extends BaseModel
         'administrative_email',
         'administrative_phone',
         'terzo_code', /*codice in SIGLA, SOLO gli amminiistrativi lo possono vedere/modificare*/
+    ];
+
+    //NOT MASS FILLABLE
+    protected $guarded=[
+        'status'       
     ];
 
     public function libraries()

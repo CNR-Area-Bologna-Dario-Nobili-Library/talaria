@@ -12,19 +12,21 @@ use App\Models\Libraries\Tag;
 use Carbon\Carbon;
 use Auth;
 use App\Resolvers\StatusResolver;
-use Illuminate\Support\Facades\Log;
 
 class LendingDocdelRequest extends DocdelRequest
 {
 
     private $lending_attributes=[
-        'lending_status', //stato rich. borrow
         'lending_notes', //dd_note_interne     
+        'lending_protnr', //dd_nproteva        
         'lending_archived', //0|1 indica se la rich è archiviata
+    ];
+
+    protected $lending_guarded=[        
+        'lending_status', //status req. lending        
         'lending_archived_date',
-        'lending_protnr', //dd_nproteva
-        'all_lender',  
         'lending_operator_id',      
+        'all_lender',          
     ];
      
     protected static $observerClass=LendingDocdelRequestObserver::class;
@@ -35,9 +37,11 @@ class LendingDocdelRequest extends DocdelRequest
     public function __construct()
     {
         parent::__construct();
-        
+        $this->guarded=array_merge($this->guarded,$this->lending_guarded);
         $this->fillable=array_merge($this->fillable,$this->lending_attributes);        
-        $this->visible=array_merge($this->visible,$this->lending_attributes);
+        $this->visible=array_merge($this->visible,$this->lending_attributes,$this->guarded);      
+        //$this->visible=array_merge($this->visible,$this->fillable,$this->guarded); --- IGNORE ---
+        //$this->visible=array_merge($this->visible,$this->fillable); --- IGNORE ---
     }
 
 

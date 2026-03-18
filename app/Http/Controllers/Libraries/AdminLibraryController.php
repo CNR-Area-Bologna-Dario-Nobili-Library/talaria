@@ -10,7 +10,6 @@ use App\Models\Libraries\LibraryTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AdminApiController;
-use Illuminate\Support\Facades\Log;
 use App\Helper\Helper;
 use App\Models\Users\User;
 use App\Notifications\Library\LibraryHasBeenDeletedNotification;
