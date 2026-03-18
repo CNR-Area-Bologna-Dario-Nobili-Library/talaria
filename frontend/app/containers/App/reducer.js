@@ -41,25 +41,29 @@ const appReducer = (state = initialState, action) =>
         draft.notifications.unreaded_total =
           initialState.notifications.unreaded_total;
         break;
-      case MARK_ALL_AS_READ:
+      case MARK_ALL_AS_READ: {
         const now = new Date().toISOString();
         draft.notifications.data.forEach(notification => {
           notification.read = true;
           notification.read_at = now;
         });
+        draft.notifications.unreaded_total = 0;
         break;
+      }
       case MARK_NOTIFICATION_AS_READ: {
         const notification = draft.notifications.data.find(
           n => n.id === action.id,
         );
         if (notification) {
+          const wasUnread = !notification.read_at;
           notification.read_at = action.setToRead
             ? new Date().toISOString()
             : null;
+          const isNowUnread = !notification.read_at;
+          if (wasUnread !== isNowUnread) {
+            draft.notifications.unreaded_total = Math.max(0,draft.notifications.unreaded_total + (isNowUnread ? 1 : -1),);
+          }
         }
-        draft.notifications.unreaded_total = draft.notifications.data.filter(
-          n => !n.read_at,
-        ).length;
         break;
       }
 

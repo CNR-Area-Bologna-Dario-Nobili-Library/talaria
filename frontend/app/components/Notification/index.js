@@ -249,7 +249,7 @@ const Notification = props => {
                 (animateBell ? 'bell-animated' : '')
               }
             >
-              {unreadTotal > 0 && <span className="count">{unreadTotal}</span>}
+              {unreadNotifications.length > 0 && <span className="count">{unreadNotifications.length}</span>}
             </i>
           </DropdownToggle>
 

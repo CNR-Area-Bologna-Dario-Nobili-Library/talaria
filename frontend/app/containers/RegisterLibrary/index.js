@@ -481,6 +481,7 @@ const RegisterLibrary = props => {
     setBasicProfile(!basicProfile);
     if (fields.opac.hidden === false) {
       fields.opac.required = false;
+      fields.opac.value = '';
       //fields.subject_id.required = false;
       //fields.subject_id.value = 1
       fields.opac.hidden = true;
