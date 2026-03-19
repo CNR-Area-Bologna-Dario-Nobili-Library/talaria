@@ -16,8 +16,9 @@ class ReferencePolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct([]); //nessuno bypassa questa policy,
     }
+    
 
     public function index(User $user, Model $model)
     {

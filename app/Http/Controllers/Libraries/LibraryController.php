@@ -370,8 +370,7 @@ class LibraryController extends ApiController
 
 
     public function update(Request $request, $id)
-    {       
-        
+    {               
         //can update profile_type only if user is library's manager (policy will check user's role)
 
         if (!empty($this->validate))
@@ -386,12 +385,7 @@ class LibraryController extends ApiController
         //if user is not admin/comm manager CANNOT edit inst/project/identifier
         //and cannot change all fields regarding subscription (cost, imbalance, ...) unless during subscription period
         if (!is_null($u) && !($u->hasRole('super-admin')||$u->hasRole('manager'))) 
-        {
-            if($request->filled('lat'))
-                unset ($request["lat"]);
-            
-            if($request->filled('lon'))
-                unset ($request["lon"]);            
+        {    
 
             if($request->has('project_id'))
                 unset ($request["project_id"]);                
@@ -539,7 +533,6 @@ class LibraryController extends ApiController
             $lat = Helper::convertCoordinateToDecimal($latcoordinates);
             $model->lat= $lat;
         }
-        //Log::info("MODEL DATA IS " . $model);
       
         $model->save();
 

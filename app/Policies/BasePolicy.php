@@ -6,18 +6,41 @@ use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Bouncer;
+//use Illuminate\Support\Facades\Log;
 
 class BasePolicy
 {
     use HandlesAuthorization;
 
+    private $bypassRoles=['super-admin','manager']; //ruoli che bypassano i controlli di policy (quindi non esegue nemmeno il codice dentro alla Policy show/index .....! )
+
+    public function __construct($bypass=null)
+    {      
+        if(!is_null($bypass))
+            $this->bypassRoles=$bypass;
+        
+    }
+
     public function before($user, $ability)
     {
-        //con questa regola il super-admin e manager bypassano qualunque controllo di policy (quindi non esegue nemmeno il codice dentro alla Policy show/index .....! )
-        if ($user->hasRole('super-admin')||$user->hasRole('manager')) {
-            return true;
+        //Log::info("USER:".$user->id);
+        //Log::info("BasePolicy-beforeeee");
+        //if(!is_null($this->bypassRoles))
+        //    Log::info("filter:".implode(',',$this->bypassRoles));
+        
+        if(!is_null($this->bypassRoles) && !empty($this->bypassRoles)) {
+                     
+            if($user->hasRole($this->bypassRoles)) {
+                    //Log::info("I'm GOD !");
+                    return true; //ritorno true per bypassare tutte le policy (quindi di default super-admin e manager bypassano tutto)                    
+            }                
+                        
         }
+        //Log::info("No policy bypass");
+        
+        return null; //ritorno null per far continuare l'esecuzione normale della policy (quindi se super-admin/manager ritorna true e bypassa tutto, altrimenti continua con i normali controlli)                
     }
+
 
     public function canManage(User $user, Model $model)
     {

@@ -18,33 +18,37 @@ use App\Notifications\DDILL\PatronAskToCancelDirectRequestNotification;
 use App\Notifications\DDILL\PatronAskToCancelRequestNotification;
 use App\Notifications\DDILL\RequestCanceledNotification;
 use App\Support\RealtimeBroadcaster;
-use Illuminate\Support\Facades\Log;
+
 
 
 class BorrowingDocdelRequest extends DocdelRequest
 {
 
     private $borrowing_attributes=[        
-        'docdel_request_parent_id', //id della docdelrequest "padre" (se una rich. viene reinoltrata N volte, tutte le N avranno come parent la rich. originale, in modo da ricostruire lo storico!)
-        'patron_docdel_request_id',
         'accept_cost_status', //Stato accettazione utente dopo richiesta: 1=Biblio richiede accettazione, 2=Ute accetta, 3=Ute non accetta
         'accept_cost_date', //quando ha accettato/rifiutato il costo                
-        'ready_date', //the document is available for download or is just arrived from mail
-        'download', //file/url downloaded
-        'download_date', //file/url downloaded date
-        'forward_date', //date in which i decided to forward the req
-        'trash_date', //data cestinamento
         'trash_type', //tipo cestinamento (trash=1,trashHC=2)
+        'download', //file/url downloaded
         'borrowing_notes', //dd_note_interne              
         'borrowing_protnr', //dd_nprotrichie
+        'desk_delivery_format', //formato di invio del della biblio al desk  (1=file/2=carta)                      
+        'user_license', //(NULL=non impostato, 0=can't send pdf to user, 1=ok can send pdf to user,2=not specified in the lic.)        
         'archived', //0|1 indica se la rich è archiviata
-        'archived_date',
         'forward', //0|1 indica se la rich è stata reinoltrata (la rich reinoltrata avrà parent_id=id di questa richiesta)
-        'desk_delivery_format', //formato di invio del della biblio al desk  (1=file/2=carta)              
+    ];
+
+    protected $borrowing_guarded=[        
+        'docdel_request_parent_id', //id della docdelrequest "padre" (se una rich. viene reinoltrata N volte, tutte le N avranno come parent la rich. originale, in modo da ricostruire lo storico!)
+        'patron_docdel_request_id',
+        'trash_date', //data cestinamento
+        'operator_id',        
+        'archived_date',
+        'borrowing_status',        
+        'download_date', //file/url downloaded date        
+        'ready_date', //the document is available for download or is just arrived from mail                
+        'forward_date', //date in which i decided to forward the req        
         'desk_received_date', //data ricezione posta al desk
         'desk_delivery_date', //data spedizione posta al desk
-        'operator_id',
-        'user_license', //(NULL=non impostato, 0=can't send pdf to user, 1=ok can send pdf to user,2=not specified in the lic.)
         'user_cancel_date', //data rich canc da utente (uguale a pdr.cancel_date)         
         'user_delivery_date', //data consegna/nonconsegna a utente
     ];
@@ -59,9 +63,9 @@ class BorrowingDocdelRequest extends DocdelRequest
     public function __construct()
     {
         parent::__construct();
-        
+        $this->guarded=array_merge($this->guarded,$this->borrowing_guarded);
         $this->fillable=array_merge($this->fillable,$this->borrowing_attributes);        
-        $this->visible=array_merge($this->visible,$this->borrowing_attributes);
+        $this->visible=array_merge($this->visible,$this->borrowing_attributes,$this->guarded);    
     }
 
     public function patrondocdelrequest()

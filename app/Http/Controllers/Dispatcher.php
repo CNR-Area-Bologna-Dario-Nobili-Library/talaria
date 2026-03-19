@@ -29,7 +29,7 @@ class Dispatcher extends BaseController
     }
 
     public function index(Builder $collection, Request $request, callable $onIndexing=null, callable $onIndexed=null)
-    {
+    {        
         if($this->haveToAuthorize)
         {
             $this->authorize($collection->getModel());
@@ -83,7 +83,7 @@ class Dispatcher extends BaseController
     }
 
     public function optionList(Model $model, Request $request, callable $onListing=null, callable $onListed=null)
-    {
+    {        
         if($this->haveToAuthorize)
             $this->authorize($model);
 
@@ -146,7 +146,6 @@ class Dispatcher extends BaseController
 
     public function store(Model $model, Request $request, callable $onStored = null, callable $onStoring = null)
     {
-
         if($this->haveToAuthorize)
         {
             $this->authorize($model);
@@ -161,9 +160,10 @@ class Dispatcher extends BaseController
             return !is_null($val);
         });
 
+        //NOTE: fill will save all fields but not $guarded (this is a Laravel specification), so we have to manage them separately (see few lines below this)
         $model = $model->fill($new_model);
        
-        //if admin/manager update guarded fields (if presents in request) by properties
+        //NOTA: manual mangement of $guarded fields: if admin/manager i can update guarded fields (if presents in request)
         $u=Auth::user();                                                  
         if (!is_null($u) && ($u->hasRole('super-admin')||$u->hasRole('manager'))) 
         {
@@ -196,10 +196,7 @@ class Dispatcher extends BaseController
     {
         $model = $id ? $model->findOrFail($id) : $model;
         if($this->haveToAuthorize)
-        {
             $this->authorize($model);
-        }
-
         if($this->verifyUpdateTime && $request->get('updated_at'))
         {
             if( \Schema::hasColumn($model->getTable(), 'updated_at') && $model->updated_at->ne(\Carbon\Carbon::parse($request->input('updated_at'))) )

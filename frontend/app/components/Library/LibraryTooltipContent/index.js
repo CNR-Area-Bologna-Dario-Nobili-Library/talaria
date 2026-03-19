@@ -20,8 +20,8 @@ const LibraryTooltipContent = (props) => {
                             <div className='text-start'>
                                 {data.country && <span className='country'>{data.country.data.name}&nbsp;</span>}
                                 {data.town && <span>{data.town}</span>}
-                                {data.ill_email && <div><i class="fa-solid fa-envelope"></i>&nbsp;{data.ill_email}</div>}
-                                {data.ill_phone && <div><i class="fa-solid fa-phone"></i>&nbsp;{data.ill_phone}</div>}
+                                {data.ill_email && <div><i className="fa-solid fa-envelope"></i>&nbsp;{data.ill_email}</div>}
+                                {data.ill_phone && <div><i className="fa-solid fa-phone"></i>&nbsp;{data.ill_phone}</div>}
                             </div>
 
                         </div>                      

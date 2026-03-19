@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+
 class BorrowingDocdelRequestController extends ApiController
 {
     public function __construct(BorrowingDocdelRequest $model, BorrowingDocdelRequestTransformer $transformer)
@@ -158,10 +159,15 @@ class BorrowingDocdelRequestController extends ApiController
             //Create new borrow with reference: ID + borrowing_library_id: request->library
             //return newly created borrowing
             $model = $this->model;
+            /* we cannot use fill() because these fields are guarded!! 
             $model->fill([
                 "reference_id"=>$rid,             
                 "borrowing_library_id"=>$request->route()->parameters['library']
-            ]);
+            ]);*/
+
+            //set them manually...
+            $model->reference_id=$rid;
+            $model->borrowing_library_id=$request->route()->parameters['library'];
 
             $model->save();
             
@@ -196,7 +202,6 @@ class BorrowingDocdelRequestController extends ApiController
      //override update()
      public function update(Request $request, $id)
      {                 
-
         $libid = $request->route()->parameters['library'];
 
         $l=\App\Models\Libraries\Library::find($libid);
@@ -232,7 +237,6 @@ class BorrowingDocdelRequestController extends ApiController
                     //NOTE: this will not call Policy, and will overwrite model!!            
                     $model->reference()->update($reffields);                   
                 }
-
                 $model = $this->talaria->update($model, $request, $bid);
                 
                 if($request->has("forward") && $request->input("forward")==1)
@@ -264,8 +268,6 @@ class BorrowingDocdelRequestController extends ApiController
             else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
         }
         else  $this->response->errorUnauthorized(trans('auth.unauthorized'));
-
-       
     }
 
     

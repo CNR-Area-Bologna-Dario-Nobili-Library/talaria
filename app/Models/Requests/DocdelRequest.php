@@ -16,32 +16,21 @@ class DocdelRequest extends BaseModel
     protected $fillable=[
         'reference_id',
         'borrowing_library_id',
-        'lending_library_id',  
-        'lending_archived', //inherited: this is defined also here in order to be changed by borrowingdocdelrequest too and not only by lendingdocdelrequest
-        'lending_archived_date', //inherited: this is defined also here in order to be changed by borrowingdocdelrequest too and not only by lendingdocdelrequest                      
-        'borrowing_status', //status req. borrow
-        'lending_status', //status req. lending
-        'request_type', //0=DD 1: ILL        
-        'request_date', 
+        'lending_library_id',
         'request_note', 
         'request_special_delivery', //special delivery for blind people
         'request_pdf_editorial', //want original PDF (not OA)
         'on_cost', //outside network ILL cost
-        'fulfill_date', 
         'fulfill_location', 
         'fulfill_note', 
         'fulfill_type',    //tipo evasione 
 	    'notfulfill_type', //tipo inevasione 
         'filename',
         'filehash',
-        //'file_id', //TODO & CHECK
-        'file_status', //File status: 0-not available; 1-available; 2-available and converted by HC server
-        'cancel_request_date', //data richiesta annullamento alla lender
-        'cancel_date', //data accettazione richiesta annullamento da lender
-        'fulfill_inventorynr',        
-        'all_lender', //0=no, 1=all lending library will see this request, 2=some lending libraries will see this request        
+        //'file_id', //TODO & CHECK       
+        'fulfill_inventorynr',                
         'url',        
-        'orphaned',
+        'lending_archived', //inherited: this is defined also here in order to be changed by borrowingdocdelrequest too and not only by lendingdocdelrequest        
         
         
 
@@ -58,15 +47,31 @@ class DocdelRequest extends BaseModel
         'updated_at',        
     ];
 
+    //Questi campi NON sono aggiornati in blocco (es tramite request->input (vedi dispatcher->update()) ma solo tramite assegnazione diretta)
+    protected $guarded=[                      
+        'request_type', //0=DD 1: ILL  
+        'request_date', //data richiesta
+        'fulfill_date', 
+        'file_status', //File status: 0-not available; 1-available; 2-available and converted by HC server                
+        'cancel_request_date', //data richiesta annullamento alla lender
+        'cancel_date', //data accettazione richiesta annullamento da lender
+        'all_lender', //0=no, 1=all lending library will see this request, 2=some lending libraries will see this request      
+        'orphaned',  
+        'borrowing_status', //status req. borrow
+        'lending_status', //status req. lending        
+        'lending_archived_date', //inherited: this is defined also here in order to be changed by borrowingdocdelrequest too and not only by lendingdocdelrequest                           
+
+    ];
+
     public function __construct()
     {
         parent::__construct();
         
         //$this->attributes=$this->docdel_attributes;
 
-        //$this->fillable=$this->docdel_attributes;        
+        //$this->fillable=$this->docdel_attributes;          
+        $this->visible=array_merge($this->visible,$this->fillable,$this->guarded);
         
-        $this->visible=array_merge($this->visible,$this->fillable);
     }
 
     //NOTE: the reference is also setted by PatronDocdelRequest when created,

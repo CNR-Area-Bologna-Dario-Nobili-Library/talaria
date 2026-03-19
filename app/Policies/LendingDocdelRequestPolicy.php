@@ -6,7 +6,6 @@ use App\Policies\BasePolicy;
 use App\Models\Users\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class LendingDocdelRequestPolicy extends BasePolicy
 {
@@ -17,7 +16,7 @@ class LendingDocdelRequestPolicy extends BasePolicy
      */
     public function __construct()
     {
-        //
+        parent::__construct([]); //nessuno bypassa questa policy,
     }
     
     //non essendoci il model, la filtro dal controller e qui ritorno true
