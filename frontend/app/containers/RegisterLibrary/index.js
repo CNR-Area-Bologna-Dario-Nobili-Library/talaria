@@ -75,6 +75,7 @@ const RegisterLibrary = props => {
   const [itemsreport, setItemsreport] = useState([]);
   const [sortingcount, setSortingcount] = useState(0);
   const [lastGeoCoords, setLastGeoCoords] = useState(null);
+  const [formKey, setFormKey] = useState(0);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -495,6 +496,7 @@ const RegisterLibrary = props => {
         const { opac, order_opac, ...rest } = prevData;
         return rest; // This delete opac and opac_order from the data
       });
+      setFormKey(prev => prev + 1); // Force CustomForm to clear formData
     } else {
       //fields.subject_id.required = true;
       fields.opac.required = true;
@@ -550,6 +552,7 @@ const RegisterLibrary = props => {
       {/* CARICA TUTTI GLI STEP DEL FORM SECONDO I FIELDS FILTRATI per STEP */}
       {Object.keys(currentFields).length > 0 && currentStep <= totalSteps - 1 && (
         <CustomForm
+          key={formKey}
           submitCallBack={formData =>
             onChangeStep(
               formData,
