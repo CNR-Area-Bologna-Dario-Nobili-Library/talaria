@@ -12,7 +12,7 @@ use App\Models\Requests\PatronDocdelRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class AutomaticCleanDDRequests implements ShouldQueue
+class ScheduledJobs implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -26,7 +26,24 @@ class AutomaticCleanDDRequests implements ShouldQueue
         //
     }
 
-    private function updateCanceledRequests() {
+     private function deleteFileFromArchivedRequests() {        
+        //<1 days ago archived request with file and not patron request
+        $requests=BorrowingDocdelRequest::where('patron_docdel_request_id','=',null)->where('archived','1')->whereNotNull('filehash')->whereRaw('DATEDIFF(now(),archived_date) <= 1')->get();        
+        foreach($requests as $req)
+            $req->deleteFile();        
+    }
+
+     private function deleteFileFromArchivedPatronRequests() {        
+        //<1 days ago archived patron request with file
+        $requests=PatronDocdelRequest::where('archived','1')->whereNotNull('filehash')->whereRaw('DATEDIFF(now(),archived_date) <= 1')->get();        
+        foreach($requests as $req)
+            $req->deleteFile();        
+    }
+
+     //TODO: delete files of "not archived request that were in a final status from 30days"
+
+
+     private function updateCanceledRequests() {
         //automatic "accept cancel" for borrowing request in cancelRequested state
         $borrowings=BorrowingDocdelRequest::where(
          [
@@ -116,27 +133,27 @@ class AutomaticCleanDDRequests implements ShouldQueue
             //change to notReceived & archived with reason "NotAvailableForILL"         
             $borr->changeStatus("documentReady",['archived'=>1,'fulfill_date'=>Carbon::now(),'notfulfill_type'=>config("constants.borrowingdocdelrequest_notfulfill_type.NotAvailableForILL"),'lending_status'=>null,'all_lender'=>0,'lending_library_id'=>null]);                
         }
-    }*/
-    
+    }*/ 
+
 
     /**
      * Execute the job.
      *
      * @return void
-     * 
-     * NOTE: this job is called from app\Console\Kernel.php, through the artisan queue command runned by crontab
      */
     public function handle()
-    {
+    {        
         Log::info("Start job ".get_class($this)." at ".Carbon::now());
-        
+        $this->deleteFileFromArchivedRequests();
+        $this->deleteFileFromArchivedPatronRequests();    
+
         $this->updateCanceledRequests();
         $this->resetNotAcceptedRequests();        
         $this->archiveFinalStateDocdelRequests();
         //$this->archiveFinalStatePatronRequests();
         //$this->archiveAsNotReceivedNewForwardedRequests();
         //$this->archiveAsReceivedRequests();
-        
+
         Log::info("End job ".get_class($this)." at ".Carbon::now());
     }
 }
