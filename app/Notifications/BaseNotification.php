@@ -61,7 +61,7 @@ class BaseNotification extends Notification
         //pass url to extraDataArr so in the email we can use notification url
         $this->extraDataArr+=['notification_url'=>$this->url];
 
-        return (new BaseMailMessage($this->title,$this->extraDataArr,"mail.notification.lang.$lang.".class_basename(get_class($this)),false));      //will look for "resources/view/mail/notificatiom/<lang>/<ClassName>.blade.php    
+        return (new BaseMailMessage($this->title,$this->extraDataArr,"mail.notification.".class_basename(get_class($this)),false));      //will look for "resources/view/mail/notification/<ClassName>.blade.php    
     }
 
     /**
