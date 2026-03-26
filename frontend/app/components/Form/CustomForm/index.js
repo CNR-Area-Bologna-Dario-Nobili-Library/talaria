@@ -199,6 +199,15 @@ const CustomForm = (props) => {
         }
     },[])
 
+    useEffect(() => {
+        if (props.clearOpacKey > 0) {
+            setFormData(prev => {
+                const { opac, ...rest } = prev;
+                return rest;
+            });
+        }
+    }, [props.clearOpacKey]);
+
     const clearDatefunction = (field_name, value) => {
         setSelectedDate(null)
         setFormData({ ...formData, [field_name]: null, 'order':1});
@@ -224,7 +233,7 @@ const CustomForm = (props) => {
             // Nel caso ci siano option list, allora restituisci solo l id / value del risultato
              Object.keys(formData).map(key => {
                 dataToSend[key] = formData[key] != null && typeof formData[key] === 'object' && 'value' in formData[key] ?  formData[key].value : formData[key]
-                
+
             })
             // Tutto ok invia Form!
             submitCallBack(dataToSend)
