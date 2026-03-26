@@ -141,7 +141,7 @@ The flag `-i` asks the user to input the new password. If you want to automatica
 
 ### FILE STORAGE
 
-All uploaded files are stored temporarly in the `/storage/app/public` folder and will be automatically removed everyday at 23:00 by a Laravel scheduled job (see `AutomaticDeleteUploadedFiles.php`).
+All uploaded files are stored temporarly in the `/storage/app/public` folder and will be automatically removed everyday at 23:00 by a Laravel scheduled job (see `ScheduledJobs.php`).
 
 ### CUSTOMIZATION
 

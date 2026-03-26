@@ -289,17 +289,18 @@ class StatusResolver
                     $noti=$arr[1];
 
                     // Skip notifying the user who performed the action
-                    if($currentUserId && $item["user_id"] == $currentUserId) {
+                    /*if($currentUserId && $item["user_id"] == $currentUserId) {
                         //Log::info("Skip notify to action user: ".$item["email"]);
                         continue;
-                    }
+                    }*/
 
                     $bn=new $noti($this->model);
 
                     $u=User::findOrFail($item["user_id"]);
                     //Log::info("notify to User: ".$u->user_service_email);
                     $u->notify($bn);
-                    RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                }   
+                    RealtimeBroadcaster::fromNotification($this->model, $u, $bn);                
+                }   
                                                                                       
                 //});
 
