@@ -73,7 +73,7 @@ services:
     volumes:
       - ./:/application   
     ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
-    entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose & sleep 300; done"
+    entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose --no-interaction; sleep 60; done"
     restart: always
   
 
