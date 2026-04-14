@@ -50,11 +50,11 @@ const OperatorsList = props => {
     );
   };
 
+  //this panel can be managed only by library manager or by super-admin+manager  (route will filter this) ...
+  // they can only change other perm, not their
   const canEditOrDelete = userid => {
     return (
-      (userid != auth.user.id &&
-        !auth.permissions.roles.includes('super-admin')) ||
-      (userid != auth.user.id && auth.permissions.roles.includes('manager'))
+      userid != auth.user.id
     );
   };
 
