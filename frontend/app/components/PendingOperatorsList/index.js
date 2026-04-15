@@ -50,18 +50,16 @@ const PendingOperatorsList = props => {
     );
   };
 
-  //only commmanager+library man can edit temp permission of any users (only other perm, not mine)
+
+  //this panel can be managed only by library manager or by super-admin+manager  (route will filter this) ...
+  // they can only change other perm, not their
   const canEditOrDelete = tempop => {
     let userid = tempop.user ? tempop.user.data.id : tempop.user_id;
     let useremail = tempop.user ? tempop.user.data.email : tempop.user_email;
     return (
-      (((userid != null && userid != auth.user.id) ||
-        auth.user.email != useremail) &&
-        !auth.permissions.roles.includes('super-admin')) ||
-      (((userid != null && userid != auth.user.id) ||
-        auth.user.email != useremail) &&
-        auth.permissions.roles.includes('manager'))
-    );
+      ((userid != null && userid != auth.user.id) ||
+        auth.user.email != useremail)
+    );  
   };
 
   return (
