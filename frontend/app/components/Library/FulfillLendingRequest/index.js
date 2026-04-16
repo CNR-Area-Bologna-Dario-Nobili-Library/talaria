@@ -49,8 +49,11 @@ const FulfillLendingRequest = props => {
         handleChange(value,'fulfill_note');  
     }
     const handlerURL = (event) => {
-        const value = event.target.value
-        handleChange(value,'url');  
+        let value = event.target.value
+        if (value && !/^https?:\/\//i.test(value)) {
+            value = 'https://' + value;
+        }
+        handleChange(value,'url');
     }
 
     const handlerinventorynr = (event) => {
