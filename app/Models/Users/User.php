@@ -20,6 +20,7 @@ use App\Models\References\Label;
 use App\Models\References\Reference;
 use App\Models\Requests\PatronDocdelRequest;
 use App\Notifications\Account\PasswordChangedNotification;
+use Illuminate\Support\Facades\Log;
 
 class User extends UserBase
 {
@@ -193,6 +194,22 @@ class User extends UserBase
         if(isset($this->user_service_email) && $this->user_service_email!="")         
             return $this->user_service_email;
         else return $this->email;
+    }
+
+    public function notify($notification) {
+    
+        try{
+            parent::notify($notification);            
+        } 
+        //catch Mail Exception like unknown recipient .... to avoid to block notification completely!
+        //i.e: in case of wrong email address, the notification will be sent by broadcast but not sent by mail, so the user will receive the notification in app and not lose it completely!
+        catch (\Swift_TransportException $e) {
+                Log::error("SwitftMailer exception error: " . $e->getMessage());
+        }
+        //catch general exeception
+        catch (\Exception $e) {                
+                Log::error("Exception error: " . $e->getMessage());
+        }        
     }
 
     public function isPatronOf($libraryId) {
