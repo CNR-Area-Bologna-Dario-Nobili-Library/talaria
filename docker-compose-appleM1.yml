@@ -63,6 +63,7 @@ services:
       - laravel
     volumes:
       - ./:/application  
+      - ./docker/backend/php:/usr/local/etc/php
     ## for the queue worker, we use the same image, but run 
     ## artisan queue:work
     entrypoint: php /application/artisan queue:work --verbose --tries=3 --timeout=60
@@ -73,7 +74,8 @@ services:
     depends_on:
       - laravel
     volumes:
-      - ./:/application   
+      - ./:/application  
+      - ./docker/backend/php:/usr/local/etc/php 
     ## for the scheduler we use an infinite while loop (with a sleep of 5min) instead of using a cron script
     entrypoint: sh -c "while true; do php /application/artisan schedule:run --verbose --no-interaction; sleep 60; done"
     restart: always
@@ -256,7 +258,7 @@ services:
       - SERVER_SSL_KEY="/usr/share/kibana/kibana.key"
       - SERVER_SSL_CERTIFICATE="/usr/share/kibana/kibana.cert"
       # to not check SSL certs use ELASTICSEARCH_SSL_VERIFICATIONMODE=none 
-      #- ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+      # - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
       - ELASTICSEARCH_SSL_VERIFICATIONMODE=certificate
     volumes:
       - "${SSL_API_KEY_PATH}:/usr/share/kibana/kibana.key"
