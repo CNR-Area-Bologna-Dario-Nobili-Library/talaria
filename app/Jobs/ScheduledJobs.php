@@ -89,10 +89,11 @@ class ScheduledJobs implements ShouldQueue
 
     //archive DD request (not patronreq) which are in final status from 30days from creation date
     private function archiveFinalStateDocdelRequests() {
-        $reqborrowings=BorrowingDocdelRequest::whereRaw("borrowing_status='documentReady'  or borrowing_status='documentNotReady'  or borrowing_status='notReceived'")        
-        ->where('patron_docdel_request_id','=','null')
-        ->where('archived','=','0')
-        ->whereRaw("DATEDIFF(now(),created_at) >= 30")->get();        
+        $reqborrowings = BorrowingDocdelRequest::whereIn('borrowing_status', ['documentReady', 'documentNotReady', 'notReceived'])
+            ->whereNull('patron_docdel_request_id')
+            ->where('archived','0')
+            ->whereRaw("DATEDIFF(now(),created_at) >= 30")
+            ->get();
         foreach($reqborrowings as $borr)
         {   
             //archive this request    
