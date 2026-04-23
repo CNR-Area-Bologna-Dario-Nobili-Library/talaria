@@ -71,7 +71,7 @@ const routes = [
      ]
   },
   {
-    path: '/borrowing', name: `Borrowing`, header: true, component: SubRouteSwitch, permissions: ['manage','borrow'], resource: {type: 'libraries', key: 'library_id',},
+    path: '/borrowing', name: `Borrowing`, header: true, component: SubRouteSwitch, permissions: ['manage','borrow'],roles:["super-admin"], resource: {type: 'libraries', key: 'library_id',},
     children: [      
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/borrowing/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:4 },
       { path: '/', icon: "share", exact: true, name: `PendingRequests`, component: BorrowingPage,url: '/borrowing',sidebar: true, order:2 },       
@@ -81,7 +81,7 @@ const routes = [
      ]
   },
   {
-    path: '/lending', name: `Lending`, header: true, component: SubRouteSwitch, permissions: ['manage','lend'],resource: {type: 'libraries', key: 'library_id',},
+    path: '/lending', name: `Lending`, header: true, component: SubRouteSwitch, permissions: ['manage','lend'],roles:["super-admin"],resource: {type: 'libraries', key: 'library_id',},
     children: [
       { path: '/tags', icon:'tag', exact: true, name: `Tags`, url: '/lending/tags', component: TagsPage,permissions: ['manage','borrow','lend'],sidebar: true, order:4 },
       { path: '/', icon: "share", exact: true, name: `PendingRequests`, component: LendingPage,url: '/lending',sidebar: true, order:1}, 
@@ -91,7 +91,7 @@ const routes = [
     ]
   },
   {
-    path: '/delivery', name: `Delivery`, header: true, component: SubRouteSwitch, permissions: ['manage','deliver'], hide: hidePatronRoutes(), resource: {type: 'libraries', key: 'library_id',},
+    path: '/delivery', name: `Delivery`, header: true, component: SubRouteSwitch, permissions: ['manage','deliver'], roles: ["super-admin"], hide: hidePatronRoutes(), resource: {type: 'libraries', key: 'library_id',},
     children: [
       { path: '', icon:'truck', exact: true, name: `PendingRequests`, component: DeliveryPage,url: '/delivery',sidebar: true, order:1 },
       { path: '/:id?/:op?', exact: true, name: `RequestUpdate`, component: BorrowingRequestPage, sidebar: false},      
@@ -99,7 +99,7 @@ const routes = [
      ]
   },
   {
-    path: '/patrons', name: `LibraryUsers`, component: SubRouteSwitch, header: true, permissions: ['manage','manage-users'],  hide: hidePatronRoutes(),resource: {type: 'libraries', key: 'library_id',},
+    path: '/patrons', name: `LibraryUsers`, component: SubRouteSwitch, header: true, permissions: ['manage','manage-users'],roles:["super-admin"],  hide: hidePatronRoutes(),resource: {type: 'libraries', key: 'library_id',},
     children: [
      /*  { path: '/patron/new', icon: "plus", name: `LibraryUserNew`, url: `/patron/user/new`, component: ReferencesPage, sidebar: true}, */
       { path: '/patron/:id?',  name: `LibraryUser`, url:'/patrons/patron',  component: UserPage},
