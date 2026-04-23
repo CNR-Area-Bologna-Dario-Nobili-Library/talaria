@@ -28,7 +28,7 @@ class ScheduledJobs implements ShouldQueue
 
      private function deleteFileFromArchivedRequests() {        
         //<1 days ago archived request with file and not patron request
-        $requests=BorrowingDocdelRequest::where('patron_docdel_request_id','=',null)->where('archived','1')->whereNotNull('filehash')->whereRaw('DATEDIFF(now(),archived_date) <= 1')->get();        
+        $requests=BorrowingDocdelRequest::whereNull('patron_docdel_request_id')->where('archived','1')->whereNotNull('filehash')->whereRaw('DATEDIFF(now(),archived_date) <= 1')->get();        
         foreach($requests as $req)
             $req->deleteFile();        
     }
@@ -45,12 +45,7 @@ class ScheduledJobs implements ShouldQueue
 
      private function updateCanceledRequests() {
         //automatic "accept cancel" for borrowing request in cancelRequested state
-        $borrowings=BorrowingDocdelRequest::where(
-         [
-            ['borrowing_status','=','cancelRequested'],
-            ['lending_status','=','cancelRequested']
-         ]
-        )
+        $borrowings=BorrowingDocdelRequest::whereRaw("(borrowing_status='cancelRequested' AND lending_status='cancelRequested')")
         ->whereNotNull('cancel_request_date')
         ->whereRaw("DATEDIFF(now(),cancel_request_date) >= 2")->get();        
         foreach($borrowings as $borr)             
@@ -60,9 +55,9 @@ class ScheduledJobs implements ShouldQueue
 
     private function resetNotAcceptedRequests() {
         //automatic "restart as new" for orphaned borrowing request in requested state in 20 days
-        $reqborrowings=BorrowingDocdelRequest::where('borrowing_status','=','requested')
-        ->where('lending_status','=','requestReceived')
-        ->where('all_lender','=','1')
+        $reqborrowings=BorrowingDocdelRequest::where('borrowing_status','requested')
+        ->where('lending_status','requestReceived')
+        ->where('all_lender','1')
         ->whereNotNull('request_date')
         ->whereRaw("DATEDIFF(now(),request_date) >= 20")->get();        
         foreach($reqborrowings as $borr)
@@ -76,7 +71,7 @@ class ScheduledJobs implements ShouldQueue
     //=> al max posso archiviare quelle "notReceived" o "canceled" 
     //PER IL MOMENTO E' DISATTIVATA - VA REIMPLEMENTATA QUANDO RIVEDREMO LA GESTIONE DEI PATRON
     private function archiveFinalStatePatronRequests() {
-        $req=PatronDocdelRequest::whereRaw("status='received' or status='notReceived' or status='canceled'")
+        $req=PatronDocdelRequest::whereIn("status",['received', 'notReceived', 'canceled'])
         ->whereRaw("DATEDIFF(now(),fulfill_date) >= 30")->get();        
         foreach($req as $prequest)
         {            
