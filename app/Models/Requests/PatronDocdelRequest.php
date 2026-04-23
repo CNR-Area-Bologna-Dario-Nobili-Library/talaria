@@ -73,6 +73,7 @@ class PatronDocdelRequest extends BaseModel
 
     protected $guarded= [
         'request_date',        
+        'archived_date', //data archiviazione
         'cancel_date', //data annullamento/cancellazione
         'fulfill_date', //data evasione/inevasione        
         'status',//status NON deve essere fillable perchè lo gestisco tramite StatusProvider    
