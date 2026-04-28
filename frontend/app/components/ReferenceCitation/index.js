@@ -24,17 +24,17 @@ const ReferenceCitation = props => {
     const [showExtra,setShowExtra]=useState(false);
 
     return (data && 
-        <div className={"referenceCit "+(customClass?customClass:'')}>
+        <div className={"referenceCit "+(customClass?customClass:'')}> 
             <span className="mat_type"><i className={`${matTypeIcon(data.material_type)}`}></i></span>
             <div className="title">                
             {referenceurl && <NavLink to={`${referenceurl(data.id)}`}>
-                <p><span className="pub_title">{data.pub_title}</span> &nbsp; 
-                {data.material_type === 1 && <span className="part_title">{data.part_title}</span>}
+                <p><span className="pub_title">{data.pub_title}</span> &nbsp;                 
+                {(data.material_type === 1 || data.material_type === 2 || data.material_type === 5 ) && <span className="part_title">{data.part_title}</span>}
                 </p>
             </NavLink>}
             {!referenceurl && 
                 <p><span className="pub_title">{data.pub_title}</span> &nbsp; 
-                {data.material_type === 1 && <span className="part_title">{data.part_title}</span>}
+                {(data.material_type === 1 || data.material_type === 2 || data.material_type === 5 ) && <span className="part_title">{data.part_title}</span>}
                 </p>
             }
             </div>            
